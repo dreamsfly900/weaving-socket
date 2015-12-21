@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="UserCtrHuoGuo">
+        <attr name="uctrhg_line0_tv1" format="string"></attr>
+        <attr name="uctrhg_line0_tv2" format="string"></attr>
+        <attr name="uctrhg_line1_tv1" format="string"></attr>
+        <attr name="uctrhg_line1_tv2" format="string"></attr>
+        <attr name="uctrhg_line2_tv1" format="string"></attr>
+        <attr name="uctrhg_line2_tv2" format="string"></attr>
+        <attr name="uctrhg_line3_tv1" format="string"></attr>
+        <attr name="uctrhg_line3_tv2" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtr03">
+        <attr name="uctr03_tvswchon" format="string"></attr>
+        <attr name="uctr03_tvswchoff" format="string"></attr>
+        <attr name="uctr03_tvswch" format="integer"></attr>
+        <attr name="uctr03_checked" format="boolean"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtr04">
+        <attr name="uctr04_tvtext" format="string"></attr>
+        <attr name="uctr04_imgsrc" format="integer"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtr05">
+        <attr name="uctr05_progresstext" format="string"></attr>
+        <attr name="uctr05_progress" format="integer"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtr06">
+        <attr name="uctr06_tvtext" format="string"></attr>
+        <attr name="uctr06_imgsrc" format="integer"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtrposition01">
+        <attr name="uctrpst01_tvhanzi" format="string"></attr>
+        <attr name="uctrpst01_tvshuzi" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtrSpeed01">
+        <attr name="uctrspeed01_tvhanzi" format="string"></attr>
+        <attr name="uctrspeed01_tvshuzi" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UserCtrWindSpeed">
+        <attr name="uctrwindspeed_jibie" format="string"></attr>
+        <attr name="uctrwindspeed_tvshuzi" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtrTime01">
+        <attr name="uctrtime_title" format="string"></attr>
+        <attr name="uctrtime_content" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtrWenDu">
+        <attr name="uctrwendu_title" format="string"></attr>
+        <attr name="uctrwendu_dushu" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtrDianLiu">
+        <attr name="uctrdianliu_title" format="string"></attr>
+        <attr name="uctrdianliu_dushu" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtrDianYa">
+        <attr name="uctrdianya_title" format="string"></attr>
+        <attr name="uctrdianya_dushu" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtr08XY">
+        <attr name="uctrxy_hz" format="string"></attr>
+        <attr name="uctrxy_num" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="UCtrList">
+        <attr name="uctrlisttitletv1" format="string"></attr>
+        <attr name="uctrlisttitletv2" format="string"></attr>
+    </declare-styleable>
+</resources>

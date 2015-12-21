@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var ws;
+        var takon = "";
+        function ToggleConnectionClicked() {
+            try {
+                var SOCKECT_ADDR = "ws://localhost:11001/chat";
+
+                //                if ($.browser.mozilla) {
+                //                    ws = new MozWebSocket(SOCKECT_ADDR);
+                //                } else {
+                ws = new WebSocket(SOCKECT_ADDR);
+                ws.binaryType = "arraybuffer";
+
+                // }
+
+                // ws = new WebSocket("ws://localhost:1818/chat"); //连接服务器		
+
+                ws.onopen = function (event) { alert("已经与服务器建立了连接\r\n当前连接状态：" + this.readyState); };
+                ws.onmessage = function (evt) {
+                    if (typeof (evt.data) == "string") {
+                        alert("接收到服务器发送的数据：\r\n" + evt.data);
+                    } else {
+
+                        var text;
+                        //evt.data blob类型
+                        if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(event.data)) {
+                            var tempbtye = new Uint8Array(evt.data);//转成byte[] 类型，或者其他array类型
+                            var bytesRead = tempbtye.length;
+                            if (tempbtye[0] == 0x99) {
+                                var myDate = new Date();
+                                var timeout = myDate.toLocaleTimeString();//记录当前时间
+                                if (bytesRead > 1) {
+                                    var b = [bytesRead - 1];
+                                    var t = tempbtye;
+                                    for (var i = 1; i < t.length; i++) {
+                                        b[i] = t[i];
+                                    }
+                                    tempbtye = b;
+                                    bytesRead = bytesRead - (1);
+                                } else { return;}
+
+                            }
+                            var a = tempbtye[1];
+                            var temp2 = Utf8ArrayToStr(tempbtye, 2, a);//通过index起点，和len 长度从btye[] 转成utf8 
+                            var len = parseInt(temp2);
+                              text = Utf8ArrayToStr(tempbtye, 2 + a, len);//通过index起点，和len 长度从btye[] 转成utf8 
+                        }
+                        if (tempbtye[0] == 0xff)
+                            if (text.indexOf('token') >= 0)
+                                takon = text.split('|')[1];
+                        alert("接收到服务器发送的数据：\r\n" + text);
+                    }
+
+
+                };
+                ws.onclose = function (event) { alert("已经与服务器断开连接\r\n当前连接状态：" + this.readyState); };
+                ws.onerror = function (e) {
+                     
+                    alert("WebSocket异常！" + e.message);
+                    
+                };
+            } catch (ex) {
+                alert(ex.message);
+            }
+        };
+        function Utf8ArrayToStr(array, i, len) {
+            var out, c;
+            var char2, char3;
+
+            out = "";
+           
+            len = parseInt(i) + parseInt(len);
+            while (i < len) {
+                c = array[i++];
+                switch (c >> 4) {
+                    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                        // 0xxxxxxx
+                        out += String.fromCharCode(c);
+                        break;
+                    case 12: case 13:
+                        // 110x xxxx   10xx xxxx
+                        char2 = array[i++];
+                        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                        break;
+                    case 14:
+                        // 1110 xxxx  10xx xxxx  10xx xxxx
+                        char2 = array[i++];
+                        char3 = array[i++];
+                        out += String.fromCharCode(((c & 0x0F) << 12) |
+                                       ((char2 & 0x3F) << 6) |
+                                       ((char3 & 0x3F) << 0));
+                        break;
+                }
+            }
+
+            return out;
+        }
+
+        String.prototype.getBytes = function () {
+            var bytes = [];
+            for (var i = 0; i < this.length; i++) {
+                var charCode = this.charCodeAt(i);
+                var cLen = Math.ceil(Math.log(charCode) / Math.log(256));
+                for (var j = 0; j < cLen; j++) {
+                    bytes.push((charCode << (j * 8)) & 0xFF);
+                }
+            }
+            return bytes;
+        }
+        function SendData() {
+            try {
+                var test = '{"Request":"Send_content","Root":"","Parameter":"","Token":"' + takon + '","Querycount":0,"Number":null}';
+                var sendb =  test.getBytes();
+                var lens = (sendb.length+'').getBytes();
+               //不清楚getBytes 是不是utf8格式
+                //byte[] b = new byte[2 + lens.Length + sendb.Length];
+                var bytes = [2 + lens.length + sendb.length];
+               // var b = new Int8Array(bytes);
+                bytes[0] = 0x01;
+                bytes[1] = lens.length;
+                //lens.CopyTo(b, 2);
+                for (var i = 0; i < lens.length; i++) {
+                    bytes[i + 2] = lens[i];
+                }
+                for (var i = 0; i < sendb.length; i++) {
+                    bytes[i + 2 + lens.length] = sendb[i];
+                }
+                var b = new Int8Array(bytes);
+                //sendb.CopyTo(b, 2 + lens.Length);
+               
+              
+               
+                
+                ws.send(b);
+            } catch (ex) {
+                alert(ex.message);
+            }
+        };
+
+        function seestate() {
+            alert(ws.readyState);
+        }
+       
+    </script>
+</head>
+<body>
+    <button id='ToggleConnection' type="button" onclick='ToggleConnectionClicked();'>
+        连接服务器</button><br />
+    <br />
+    <button id='ToggleConnection' type="button" onclick='SendData();'>
+        发送我的名字：beston</button><br />
+    <br />
+    <button id='ToggleConnection' type="button" onclick='seestate();'>
+        查看状态</button><br />
+    <br />
+</body>
+</html>

@@ -1,0 +1,56 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="tvheight">25dp</dimen>
+    <dimen name="imagehuoguo">35dp</dimen>
+    <dimen name="imagecaidan">30dp</dimen>
+
+    <dimen name="tvwidths">80dp</dimen>
+    <dimen name="tvwidthstime">120dp</dimen>
+    <dimen name="tvwidthl">120dp</dimen>
+    <dimen name="tvhanziwidth">60dp</dimen>
+    <dimen name="tvspeedwidth">60dp</dimen>
+    <dimen name="tvjibie">30dp</dimen>
+    <dimen name="bacwidthtime">241dp</dimen>
+    <dimen name="bacwidth">201dp</dimen>
+    <dimen name="bacheight">27dp</dimen>
+    <dimen name="tvxywidth">45dp</dimen>
+    <dimen name="tvxyheight">55dp</dimen>
+
+    <dimen name="listwidths">300dp</dimen>
+    <dimen name="listheights">150dp</dimen>
+    <dimen name="listwidthl">301dp</dimen>
+    <dimen name="listheightl">131dp</dimen>
+    <dimen name="listtitleheight">30dp</dimen>
+
+    <dimen name="progresswidths">35dp</dimen>
+    <dimen name="progressheights">100dp</dimen>
+    <dimen name="progresswidthl">36dp</dimen>
+    <dimen name="progressheightl">148dp</dimen>
+    <dimen name="progresstextheight">45dp</dimen>
+
+
+    <dimen name="imagewidth">20dp</dimen>
+
+    <dimen name="linemarginleft">25dp</dimen>
+
+    <dimen name="magintop">15dp</dimen>
+    <dimen name="magins">6dp</dimen>
+    <dimen name="maginleft">20dp</dimen>
+    <dimen name="progressmagintop">2dp</dimen>
+    <dimen name="loginmagintop">15dp</dimen>
+
+    <dimen name="tvsize">15sp</dimen>
+    <dimen name="tvsizelarge">25sp</dimen>
+    <dimen name="tvsizesmall">11sp</dimen>
+    <dimen name="tvxysizehz">16sp</dimen>
+    <dimen name="tvxysizenum">24sp</dimen>
+    <dimen name="tvsizelogin">20sp</dimen>
+
+
+    <dimen name="padleft">5dp</dimen>
+    <dimen name="xypading">2dp</dimen>
+    <dimen name="listpadleft">20dp</dimen>
+
+</resources>

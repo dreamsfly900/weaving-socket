@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbac"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/haidilaoapha" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorview" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/loginmagintop"
+            android:layout_marginBottom="@dimen/loginmagintop"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="用户名："
+                android:textSize="@dimen/tvsizelogin" />
+
+            <EditText
+                android:id="@+id/etname"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:background="#00ffffff"
+                android:textSize="@dimen/tvsizelogin" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorview" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/loginmagintop"
+            android:layout_marginBottom="@dimen/loginmagintop"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvpaswd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="密    码："
+                android:textSize="@dimen/tvsizelogin" />
+
+            <EditText
+                android:id="@+id/etpass"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:background="#00ffffff"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textSize="@dimen/tvsizelogin" />
+        </LinearLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorview" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/rememberpswd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:checked="false"
+                android:text="记住密码"
+                android:layout_marginTop="@dimen/loginmagintop"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/btlogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:layout_marginRight="70dp"
+                android:text="登录"
+                android:textSize="@dimen/tvsizelogin"
+                android:textColor="#bf3232"
+                android:background="@drawable/btnbac"/>
+     <!--   <Button
+            android:id="@+id/btexit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:text="退出" />-->
+        </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="@dimen/bacwidth"
+        android:layout_height="@dimen/bacheight"
+        android:orientation="horizontal"
+        android:background="@drawable/tvbac"
+        android:gravity="center">
+    <TextView
+        android:id="@+id/uctr_time01_tv1"
+        android:layout_width="@dimen/tvwidthl"
+        android:layout_height="@dimen/tvheight"
+        android:textSize="@dimen/tvsize"
+        android:text="累计时间"
+        android:textColor="@color/colortextwit"
+        android:background="@color/colortvblk"
+        android:gravity="center" />
+    <TextView
+        android:id="@+id/uctr_time01_tv2"
+        android:layout_width="@dimen/tvwidths"
+        android:layout_height="@dimen/tvheight"
+        android:textSize="@dimen/tvsize"
+        android:gravity="center"
+        android:background="@color/colortvwit"
+        android:layout_marginLeft="-1dp"/>
+    </LinearLayout>
+</LinearLayout>

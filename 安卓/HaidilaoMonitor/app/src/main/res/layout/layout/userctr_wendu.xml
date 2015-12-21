@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/uctr_wendu_img"
+            android:layout_width="@dimen/imagewidth"
+            android:layout_height="@dimen/imagewidth"
+            android:src="@drawable/iconfont_wenduji"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/uctr_wendu_tv1"
+            android:layout_width="@dimen/tvwidthl"
+            android:layout_height="@dimen/tvheight"
+            android:gravity="center_vertical"
+            android:text="吊钩电机1电压"
+            android:textColor="@color/colortextblk"
+            android:textSize="@dimen/tvsize" />
+
+        <TextView
+            android:id="@+id/uctr_wendu_tv2"
+            android:layout_width="@dimen/tvwidths"
+            android:layout_height="@dimen/tvheight"
+            android:background="@color/colortemper"
+            android:gravity="center"
+            android:text="380.00"
+            android:textColor="@color/colortextwit"
+            android:textSize="@dimen/tvsize" />
+        <TextView
+            android:id="@+id/uctr_wendu"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tvheight"
+            android:gravity="center_vertical"
+            android:text="℃"
+            android:textColor="@color/colortextblk"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
