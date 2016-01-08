@@ -1,8 +1,11 @@
-﻿using System;
+﻿using MyInterface;
+using StandardModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using TCPclient;
 
@@ -10,12 +13,14 @@ namespace client
 {
     public class P2Pclient
     {
+        _base_manage xmhelper = new _base_manage();
+
         TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
         public delegate void istimeout();
         public event istimeout timeoutevent;
-        public delegate void errormessage(int type,string error);
+        public delegate void errormessage(int type, string error);
         public event errormessage ErrorMge;
         bool isok = false;
         bool isreceives = false;
@@ -26,7 +31,7 @@ namespace client
         public event P2Preceive P2PreceiveEvent;
         UDP udp;
         bool NATUDP = false;
-        String IP;int PORT;
+        String IP; int PORT;
         public bool Isline
         {
             get
@@ -39,7 +44,46 @@ namespace client
                 isline = value;
             }
         }
-
+        List<object> objlist = new List<object>();
+        public void AddListenClass(object obj)
+        {
+            GetAttributeInfo(obj.GetType(), obj);
+            //xmhelper.AddListen()
+            //objlist.Add(obj);
+        }
+        public void DeleteListenClass(object obj)
+        {
+            GetAttributeInfo(obj.GetType(), obj);
+            //xmhelper.AddListen()
+            //objlist.Add(obj);
+        }
+        public void deleteAttributeInfo(Type t, object obj)
+        {
+            foreach (MethodInfo mi in t.GetMethods())
+            {
+                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                if (myattribute == null)
+                { }
+                else
+                {
+                    xmhelper.DeleteListen(mi.Name);
+                }
+            }
+        }
+        public void GetAttributeInfo(Type t, object obj)
+        {
+            foreach (MethodInfo mi in t.GetMethods())
+            {
+                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                if (myattribute == null)
+                { }
+                else
+                {
+                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi, true);
+                    xmhelper.AddListen(mi.Name, del as RequestData, myattribute.Type);
+                }
+            }
+        }
         public string Tokan
         {
             get
@@ -55,6 +99,8 @@ namespace client
 
         public P2Pclient(bool _NATUDP)
         {
+            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
             NATUDP = _NATUDP;
             if (NATUDP)
             {
@@ -62,18 +108,30 @@ namespace client
                 udp.receiveevent += udp_receiveevent;
             }
         }
-        public bool start(string ip, int port, int _timeout)
+
+        private void Xmhelper_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
+        {
+            if (ErrorMge != null)
+                ErrorMge(0, message);
+        }
+
+        private void P2Pclient_receiveServerEvent(byte command, string text)
+        {
+            xmhelper.init(text, null);
+        }
+
+        public bool start(string ip, int port, int _timeout, bool takon)
         {
             mytimeout = _timeout;
             IP = ip;
             PORT = port;
-          return  start(ip, port);
+            return start(ip, port, takon);
         }
-        public bool Restart()
+        public bool Restart(bool takon)
         {
-            return start(IP, PORT);
+            return start(IP, PORT, takon);
         }
-        public bool start(string ip, int port)
+        public bool start(string ip, int port, bool takon)
         {
             try
             {
@@ -96,6 +154,15 @@ namespace client
                     isreceives = true;
                     System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receives));
                 }
+                int ss = 0;
+                if (!takon) return true;
+                while (Tokan == null)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    ss++;
+                    if (ss > 10)
+                        return false;
+                }
                 return true;
             }
             catch (Exception e)
@@ -115,13 +182,31 @@ namespace client
         public bool p2psend(byte command, string text, IPEndPoint ep)
         {
             return udp.send(command, text, ep);
-
         }
 
         private string tokan;
+        public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
+        {
+            _baseModel b = new _baseModel();
+            b.Request = Request;
+            b.Token = this.Tokan;
+            b.SetParameter<T>(Parameter);
+            b.Querycount = Querycount;
+            send(command, b.Getjson());
+            return true;
+        }
+        public bool SendRoot<T>(byte command, String Request, T Root, int Querycount)
+        {
+            _baseModel b = new _baseModel();
+            b.Request = Request;
+            b.Token = this.Tokan;
+            b.SetRoot<T>(Root);
+            b.Querycount = Querycount;
+            send(command, b.Getjson());
+            return true;
+        }
         public bool send(byte command, string text)
         {
-
             try
             {
                 byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
@@ -144,7 +229,6 @@ namespace client
             isok = false;
             Isline = false;
             tcpc.Close();
-            
         }
         void receives(object obj)
         {
@@ -154,13 +238,11 @@ namespace client
                 try
                 {
                     byte[] tempb = null;
-                    labered:
+                labered:
                     int bytesRead = tcpc.Client.Available;
 
                     if (bytesRead > 0)
                     {
-
-
                         byte[] tempbtye = new byte[bytesRead];
                         tcpc.Client.Receive(tempbtye);
                         if (tempb != null)
@@ -170,7 +252,7 @@ namespace client
                             Array.Copy(tempbtye, 0, tempbtyes, tempb.Length, tempbtye.Length);
                             tempbtye = tempbtyes;
                         }
-                        labe881:
+                    labe881:
                         if (tempbtye[0] == 0x99)
                         {
                             timeout = DateTime.Now;
@@ -203,7 +285,6 @@ namespace client
                             {
                                 if (temp.IndexOf("token") >= 0)
                                     Tokan = temp.Split('|')[1];
-                                
                             }
                             else if (receiveServerEvent != null)
                                 receiveServerEvent(tempbtye[0], temp);
@@ -232,28 +313,19 @@ namespace client
                         if (ts.Seconds > mytimeout)
                         {
                             Isline = false;
-                            // stop();
-                            //  isreceives = false;
+                            //stop();
+                            //isreceives = false;
                             timeoutevent();
-
-                            //   return;
-
+                            //return;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    
                     if (ErrorMge != null)
                         ErrorMge(1, e.Message);
-                     
                 }
-
-
-
             }
         }
-
-      
     }
 }

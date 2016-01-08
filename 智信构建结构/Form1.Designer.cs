@@ -70,6 +70,7 @@
             this.txt_IP.Name = "txt_IP";
             this.txt_IP.Size = new System.Drawing.Size(168, 21);
             this.txt_IP.TabIndex = 3;
+            this.txt_IP.Text = "127.0.0.1";
             // 
             // txt_port
             // 
@@ -77,6 +78,7 @@
             this.txt_port.Name = "txt_port";
             this.txt_port.Size = new System.Drawing.Size(168, 21);
             this.txt_port.TabIndex = 4;
+            this.txt_port.Text = "8989";
             // 
             // lab_info
             // 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StandardModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -167,6 +168,32 @@ namespace MyInterface
             }
         }
     }
+    public class InstallFun : System.Attribute
+    {
+        private string type;
+
+        /// <summary>
+        /// 标识这个方法是执行一次即卸载，还是长期执行
+        /// </summary>
+        /// <param name="type">forever,或noce</param>
+        public InstallFun(string type)
+        {
+            Type = type;
+        }
+
+        public string Type
+        {
+            get
+            {
+                return type;
+            }
+
+            set
+            {
+                type = value;
+            }
+        }
+    }
     public class MyInterface
     {
         String[] parameter;
@@ -215,7 +242,20 @@ namespace MyInterface
     }
     public abstract class TCPCommand
     {
+        _base_manage bm = new _base_manage();
         private QueueTable globalQueueTable;
+        public TCPCommand()
+        {
+            Bm.errorMessageEvent += Bm_errorMessageEvent; ;
+        }
+        public bool Runbase(String data, System.Net.Sockets.Socket soc)
+        {
+           
+            Bm.init(data, soc);
+            return true;
+        }
+       
+        public abstract void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message);
 
         public QueueTable GlobalQueueTable
         {
@@ -225,6 +265,20 @@ namespace MyInterface
             }
 
         }
+
+        public _base_manage Bm
+        {
+            get
+            {
+                return bm;
+            }
+
+            set
+            {
+                bm = value;
+            }
+        }
+
         public void SetGlobalQueueTable(QueueTable qt)
         {
 
@@ -250,7 +304,27 @@ namespace MyInterface
       public abstract void TCPCommand_EventDeleteConnSoc(Socket soc);
        
       public abstract bool Run(String data, System.Net.Sockets.Socket soc);
-      public bool send(Socket soc, byte command, string text)
+        public bool SendParameter<T>(Socket soc, byte command, String Request, T Parameter, int Querycount,String Tokan)
+        {
+            _baseModel b = new _baseModel();
+            b.Request = Request;
+            
+            b.SetParameter<T>(Parameter);
+            b.Querycount = Querycount;
+            send(soc,command, b.Getjson());
+            return true;
+        }
+        public bool SendRoot<T>(Socket soc, byte command, String Request, T Root, int Querycount, String Tokan)
+        {
+            _baseModel b = new _baseModel();
+            b.Request = Request;
+           
+            b.SetRoot<T>(Root);
+            b.Querycount = Querycount;
+            send(soc,command, b.Getjson());
+            return true;
+        }
+        public bool send(Socket soc, byte command, string text)
       {
 
           try

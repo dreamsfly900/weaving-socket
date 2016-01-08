@@ -24,67 +24,67 @@ namespace P2P
               // listener.Listen(10000);
                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
-               System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receives));
+              // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receives));
            }
            catch (Exception e) { throw e; }
        }
 
-       private void receives(object state)
-       {
-           while (true)
-           {
-               try
-               {
-                   NETcollectionUdp[] netclist = getUdpList();
-                   foreach (NETcollectionUdp tempnetc in netclist)
-                   {
-                       IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                       EndPoint remoteEndPoint = anyEndPoint;
-                       if (tempnetc.Soc != null)
-                       {
-                           byte[] data;
-                           if (tempnetc.Soc.Available > 1)
-                           {
-                               data = new byte[tempnetc.Soc.Available];
-                               int recv = tempnetc.Soc.Receive(data, 0, data.Length, SocketFlags.None);
-                               tempnetc.Soc.SendTo(data, tempnetc.Iep);
-                           }
-                       }
-                   }
-                   System.Threading.Thread.Sleep(100);
-               }
-               catch (Exception e)
-               {
-                   System.IO.StreamWriter sw = new System.IO.StreamWriter("send.txt", true);
-                   sw.WriteLine(e.Message);
-                   sw.Close();
-               }
-           }
-       }
+       //private void receives(object state)
+       //{
+       //    while (true)
+       //    {
+       //        try
+       //        {
+       //            NETcollectionUdp[] netclist = getUdpList();
+       //            foreach (NETcollectionUdp tempnetc in netclist)
+       //            {
+       //                IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
+       //                EndPoint remoteEndPoint = anyEndPoint;
+       //                if (tempnetc.Soc != null)
+       //                {
+       //                    byte[] data;
+       //                    if (tempnetc.Soc.Available > 1)
+       //                    {
+       //                        data = new byte[tempnetc.Soc.Available];
+       //                        int recv = tempnetc.Soc.Receive(data, 0, data.Length, SocketFlags.None);
+       //                        tempnetc.Soc.SendTo(data, tempnetc.Iep);
+       //                    }
+       //                }
+       //            }
+       //            System.Threading.Thread.Sleep(100);
+       //        }
+       //        catch (Exception e)
+       //        {
+       //            System.IO.StreamWriter sw = new System.IO.StreamWriter("send.txt", true);
+       //            sw.WriteLine(e.Message);
+       //            sw.Close();
+       //        }
+       //    }
+       //}
 
-       public bool mapping(int port,NETcollectionUdp  netc)
-       {
-           try
-              {   
-                   NETcollectionUdp[] netclist = getUdpList();
-                   foreach (NETcollectionUdp tempnetc in netclist)
-                   {
-                       if (tempnetc.Port == port)
-                       {
-                           return false;
-                       }
-                   }
-               Socket listeners = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-               listeners.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-               IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
-               listeners.Blocking = false;
-               listeners.Bind(localEndPoint);
-               netc.Soc= listeners;
-               return true;
-           }
-           catch  { return false; }
+       //public bool mapping(int port,NETcollectionUdp  netc)
+       //{
+       //    try
+       //       {   
+       //            NETcollectionUdp[] netclist = getUdpList();
+       //            foreach (NETcollectionUdp tempnetc in netclist)
+       //            {
+       //                if (tempnetc.Port == port)
+       //                {
+       //                    return false;
+       //                }
+       //            }
+       //        Socket listeners = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+       //        listeners.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+       //        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
+       //        listeners.Blocking = false;
+       //        listeners.Bind(localEndPoint);
+       //        netc.Soc= listeners;
+       //        return true;
+       //    }
+       //    catch  { return false; }
             
-       }
+       //}
        int minport = 33333;
        int max = 99999;
        private string loaclip;
@@ -100,17 +100,17 @@ namespace P2P
            int command = me.Command;
            if (command == 0x9c)
            {
-               if (minport > max)
-                   minport = 33333;
-           lable999:
-               int temp = minport++;
-               if (mapping(temp, me.Iep))
-               {
-                   me.Iep.Port = temp;
-                   me.Iep.Localiep = new IPEndPoint(IPAddress.Parse(loaclip), temp);
-                   send(0x98, loaclip + ":" + temp, (IPEndPoint)me.Iep.Iep);
-               }
-               else goto lable999;
+           //    if (minport > max)
+           //        minport = 33333;
+           //lable999:
+           //    int temp = minport++;
+           //    if (mapping(temp, me.Iep))
+           //    {
+           //        me.Iep.Port = temp;
+           //        me.Iep.Localiep = new IPEndPoint(IPAddress.Parse(loaclip), temp);
+                   send(0x98, me.Iep.Iep.ToString()+ me.Iep.Iep.Port+"---"+ me.Iep.Iep.Address.ToString(), (IPEndPoint)me.Iep.Iep);
+           //    }
+           //    else goto lable999;
            }
          
                if (receiveevent != null)
@@ -158,13 +158,18 @@ namespace P2P
            {
                try
                {
-                   System.Threading.Thread.Sleep(8000);
-                   //  ArrayList al = new ArrayList();
-                   // al.Clone()
-                   NETcollectionUdp[] netlist = getUdpList();
+                   System.Threading.Thread.Sleep(2000);
+                    //  ArrayList al = new ArrayList();
+                    // al.Clone()
+                    NETcollectionUdp[] netclist = getUdpList();
+                    
+                    NETcollectionUdp[] netlist = getUdpList();
                    foreach(NETcollectionUdp nudp in netlist)
                    {
-                       TimeSpan ts = DateTime.Now - nudp.Timeout;
+                        IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                        EndPoint remoteEndPoint = anyEndPoint;
+                        send(0x99, "", remoteEndPoint);
+                        TimeSpan ts = DateTime.Now - nudp.Timeout;
                        if (ts.Seconds > 30)
                        {
                            nudp.Soc.Close();

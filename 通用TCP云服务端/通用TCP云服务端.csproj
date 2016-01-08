@@ -67,10 +67,6 @@
       <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
       <Name>MyInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StandardModel\标准实体类库.csproj">
-      <Project>{d16f2d11-fdc2-4299-8a4a-dd11ba2b78b7}</Project>
-      <Name>标准实体类库</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TCPclient\TCPclient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>TCPclient</Name>

@@ -23,7 +23,7 @@ namespace TCPclient
                 serport = _serport;
                 listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 0);
                 listener.Bind(localEndPoint);
                 // listener.Listen(10000);
                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
@@ -39,7 +39,7 @@ namespace TCPclient
                 try
                 {
                     send(0x99, "", new IPEndPoint(IPAddress.Parse(ip), serport));
-                    System.Threading.Thread.Sleep(10000);
+                    System.Threading.Thread.Sleep(1000);
                 }
                 catch (Exception e) { throw e; }
             }
@@ -63,14 +63,26 @@ namespace TCPclient
             // tcpc.Close();
             return true;
         }
+
+        public bool send(byte[] b, EndPoint ep)
+        {
+
+            try
+            { 
+                listener.SendTo(b, ep);
+            }
+            catch { return false; }
+            // tcpc.Close();
+            return true;
+        }
         void receiveeventto(object obj)
         {
             modelevent me = (modelevent)obj;
-            if (me.Command == 0x98)
-            {
-                IPEndPoint iep = new IPEndPoint(IPAddress.Parse(me.Data.Split(':')[0]), int.Parse(me.Data.Split(':')[1]));
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao2), iep);
-            }
+            //if (me.Command == 0x98)
+            //{
+            //    IPEndPoint iep = new IPEndPoint(IPAddress.Parse(me.Data.Split(':')[0]), int.Parse(me.Data.Split(':')[1]));
+            //    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao2), iep);
+            //}
             if (receiveevent != null)
                 receiveevent(me.Command, me.Data, me.Iep);
 
@@ -157,6 +169,7 @@ namespace TCPclient
                     me.Command = tempbtye[0];
                     me.Data = temp;
                     me.Iep = remoteEndPoint;
+                    
                     System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
                     timeout = DateTime.Now;
                     if (bytesRead > (2 + a + len))

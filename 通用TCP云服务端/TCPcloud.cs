@@ -55,10 +55,12 @@ namespace cloud
                         if (t.IsSubclassOf(typeof(TCPCommand)))
                         {
                             CommandItem ci = new CommandItem();
-                            TCPCommand Ic = ab.CreateInstance(t.FullName) as TCPCommand;
+                            object obj = ab.CreateInstance(t.FullName);
+                            TCPCommand Ic = obj as TCPCommand;
                             ci.MyICommand = Ic;
                             ci.CommName = Ic.Getcommand();
                             Ic.SetGlobalQueueTable(qt);
+                            GetAttributeInfo( Ic,obj.GetType(), obj);
                             listcomm.Add(ci);
                         }
                     }
@@ -68,6 +70,28 @@ namespace cloud
             {
                 if (EventMylog != null)
                     EventMylog("加载异常", ex.Message);
+            }
+        }
+        public  void GetAttributeInfo(TCPCommand Ic,Type t,object obj)
+        {
+
+            foreach (MethodInfo mi in t.GetMethods())
+            {
+
+                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                if (myattribute == null)
+                {
+
+                }
+                else
+                {
+
+                   
+                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi,true);
+                    Ic.Bm.AddListen(mi.Name, del as RequestData, myattribute.Type);
+
+
+                }
             }
         }
         void p2psev_EventDeleteConnSoc(System.Net.Sockets.Socket soc)
@@ -102,7 +126,7 @@ namespace cloud
 
         }
  
-
+        
         void p2psev_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
         {
             try
@@ -136,6 +160,12 @@ namespace cloud
                 }
             }
             catch { return; }
+            exec(command,data,soc);
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(exec));
+        }
+
+        public void exec(byte command, string data, System.Net.Sockets.Socket soc)
+        {
             foreach (CommandItem CI in listcomm)
             {
                 if (CI.CommName == command)
@@ -143,16 +173,16 @@ namespace cloud
                     try
                     {
                         CI.MyICommand.Run(data, soc);
+                        CI.MyICommand.Runbase(data, soc); 
                     }
-                    catch(Exception ex) {
+                    catch (Exception ex)
+                    {
                         if (EventMylog != null)
                             EventMylog("receiveevent", ex.Message);
                     }
                 }
             }
         }
-
-
         public class CommandItem
         {
             byte commName;

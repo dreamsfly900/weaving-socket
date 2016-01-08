@@ -9,7 +9,7 @@ using System.Threading;
 namespace P2P 
 {
     public delegate void myreceive(byte command, String data, Socket soc);
-    public delegate void NATthrough(String data, EndPoint ep);
+    public delegate void NATthrough(byte command,String data, EndPoint ep);
     public delegate void UpdataListSoc(Socket soc);
     public delegate void deleteListSoc(Socket soc);
     public interface ITcpBasehelper
@@ -72,7 +72,7 @@ namespace P2P
           
              
              if (NATthroughevent != null)
-                 NATthroughevent(data, NETc.Iep);
+                 NATthroughevent(command,data, NETc.Iep);
        
      }
 

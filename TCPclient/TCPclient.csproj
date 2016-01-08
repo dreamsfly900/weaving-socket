@@ -57,6 +57,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UDP.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyInterface\MyInterface.csproj">
+      <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
+      <Name>MyInterface</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
