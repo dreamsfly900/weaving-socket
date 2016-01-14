@@ -335,9 +335,8 @@ namespace MyInterface
               b[0] = command;
               b[1] = (byte)lens.Length;
               lens.CopyTo(b, 2);
-              sendb.CopyTo(b, 2 + lens.Length);
-
-              soc.Send(b);
+              sendb.CopyTo(b, 2 + lens.Length); 
+              soc.Send(b); 
           } 
           catch { return false; }
           // tcpc.Close();

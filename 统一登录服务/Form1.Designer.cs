@@ -38,6 +38,10 @@
             this.重写加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.启动WEB网关ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.重写加载WEB节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.开放端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.内部端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.增加节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,10 +57,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.开放端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
-            this.内部端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
+            this.端口比例ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.服务节点节点状态.SuspendLayout();
@@ -107,7 +109,8 @@
             this.启动WEB网关ToolStripMenuItem,
             this.重写加载WEB节点ToolStripMenuItem,
             this.开放端口ToolStripMenuItem,
-            this.内部端口ToolStripMenuItem});
+            this.内部端口ToolStripMenuItem,
+            this.端口比例ToolStripMenuItem});
             this.开始ToolStripMenuItem.Name = "开始ToolStripMenuItem";
             this.开始ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.开始ToolStripMenuItem.Text = "开始";
@@ -140,6 +143,34 @@
             this.重写加载WEB节点ToolStripMenuItem.Text = "重写加载WEB节点";
             this.重写加载WEB节点ToolStripMenuItem.Click += new System.EventHandler(this.重写加载WEB节点ToolStripMenuItem_Click);
             // 
+            // 开放端口ToolStripMenuItem
+            // 
+            this.开放端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox1});
+            this.开放端口ToolStripMenuItem.Name = "开放端口ToolStripMenuItem";
+            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.开放端口ToolStripMenuItem.Text = "开放端口";
+            // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox1.Text = "11001";
+            // 
+            // 内部端口ToolStripMenuItem
+            // 
+            this.内部端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox2});
+            this.内部端口ToolStripMenuItem.Name = "内部端口ToolStripMenuItem";
+            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.内部端口ToolStripMenuItem.Text = "内部端口";
+            // 
+            // toolStripTextBox2
+            // 
+            this.toolStripTextBox2.Name = "toolStripTextBox2";
+            this.toolStripTextBox2.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox2.Text = "9998";
+            // 
             // 节点ToolStripMenuItem
             // 
             this.节点ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -152,13 +183,13 @@
             // 增加节点ToolStripMenuItem
             // 
             this.增加节点ToolStripMenuItem.Name = "增加节点ToolStripMenuItem";
-            this.增加节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.增加节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.增加节点ToolStripMenuItem.Text = "增加节点";
             // 
             // 删除节点ToolStripMenuItem
             // 
             this.删除节点ToolStripMenuItem.Name = "删除节点ToolStripMenuItem";
-            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.删除节点ToolStripMenuItem.Text = "删除节点";
             // 
             // 从网关节点ToolStripMenuItem
@@ -272,33 +303,19 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // 开放端口ToolStripMenuItem
+            // 端口比例ToolStripMenuItem
             // 
-            this.开放端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripTextBox1});
-            this.开放端口ToolStripMenuItem.Name = "开放端口ToolStripMenuItem";
-            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.开放端口ToolStripMenuItem.Text = "开放端口";
+            this.端口比例ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox3});
+            this.端口比例ToolStripMenuItem.Name = "端口比例ToolStripMenuItem";
+            this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.端口比例ToolStripMenuItem.Text = "转发比例";
             // 
-            // toolStripTextBox1
+            // toolStripTextBox3
             // 
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
-            this.toolStripTextBox1.Text = "11001";
-            // 
-            // 内部端口ToolStripMenuItem
-            // 
-            this.内部端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripTextBox2});
-            this.内部端口ToolStripMenuItem.Name = "内部端口ToolStripMenuItem";
-            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.内部端口ToolStripMenuItem.Text = "内部端口";
-            // 
-            // toolStripTextBox2
-            // 
-            this.toolStripTextBox2.Name = "toolStripTextBox2";
-            this.toolStripTextBox2.Size = new System.Drawing.Size(100, 23);
-            this.toolStripTextBox2.Text = "9998";
+            this.toolStripTextBox3.Name = "toolStripTextBox3";
+            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox3.Text = "10";
             // 
             // Form1
             // 
@@ -359,6 +376,8 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripMenuItem 内部端口ToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox2;
+        private System.Windows.Forms.ToolStripMenuItem 端口比例ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox3;
     }
 }
 

@@ -510,7 +510,7 @@ namespace P2P
                     }
                 }
                 catch { }
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(10);
             }
         }
 
@@ -518,21 +518,38 @@ namespace P2P
         {
             while (true)
             {
-                // Set the event to nonsignaled state.
-                allDone.Reset();
 
-                //开启异步监听socket
-                //    Console.WriteLine("Waiting for a connection");
-                try
-                {
-                    listener.BeginAccept(
-                              new AsyncCallback(AcceptCallback),
-                              listener);
-                    System.Threading.Thread.Sleep(100);
-                }
-                catch { }
-                // 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
-                allDone.WaitOne();
+                Socket handler = listener.Accept();
+                //if (listener == null)
+                //    return;
+                //Socket handler = listener.EndAccept(ar);
+
+                // Create the state object.
+                NETcollection netc = new NETcollection();
+                netc.Soc = handler;
+                listconn.Add(netc);
+                System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
+                t.Start(handler);
+                System.Threading.Thread.Sleep(50);
+              //  handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
+              
+                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
+
+                // Set the event to nonsignaled state.
+                //allDone.Reset();
+
+                ////开启异步监听socket
+                ////    Console.WriteLine("Waiting for a connection");
+                //try
+                //{
+                //    listener.BeginAccept(
+                //              new AsyncCallback(AcceptCallback),
+                //              listener);
+                System.Threading.Thread.Sleep(1);
+                //}
+                //catch { }
+                //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
+                //allDone.WaitOne();
             }
 
         }

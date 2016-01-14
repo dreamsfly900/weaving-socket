@@ -40,6 +40,7 @@ namespace 统一登录服务
         {
             isweb = false;
             gw = new GateWay(isweb);
+            gw.Proportion = Convert.ToInt32(toolStripTextBox3.Text);
             gw.EventMylog += Gw_EventMylog;
             if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text),int.Parse(toolStripTextBox2.Text)))
             {
@@ -53,18 +54,26 @@ namespace 统一登录服务
         {
             listBox1.Items.Clear();
             listBox2.Items.Clear();
-            if (!isweb)
+
+            try
             {
-                foreach (CommandItem ci in gw.CommandItemS)
+                if (!isweb)
                 {
-                    listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-状态：" + ci.Client.Isline);
+                    foreach (CommandItem ci in gw.CommandItemS)
+                    {
+                        foreach (P2Pclient cl in ci.Client)
+                        {
+                            listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-状态：" + cl.Isline + "-未处理消息：" + cl.ListData.Count);
+                        }
+                    }
+                    foreach (WayItem ci in gw.WayItemS)
+                    {
+                        listBox2.Items.Add("ip:" + ci.Ip + "端口：" + ci.Port + "-状态：" + ci.Client.Isline + "-在线人数:" + ci.Num);
+                    }
+                    toolStripStatusLabel2.Text = "连接人数：" + gw.ConnObjlist.Count + "  ";
                 }
-                foreach (WayItem ci in gw.WayItemS)
-                {
-                    listBox2.Items.Add("ip:" + ci.Ip +"端口："+ ci.Port+ "-状态：" + ci.Client.Isline+"-在线人数:"+ci.Num);
-                }
-                toolStripStatusLabel2.Text = "连接人数：" + gw.ConnObjlist.Count;
             }
+            catch { }
              
         }
 

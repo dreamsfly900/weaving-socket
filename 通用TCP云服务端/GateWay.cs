@@ -9,6 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -17,13 +19,27 @@ namespace cloud
     public delegate void Mylog(string type, string log);
     public class GateWay
     {
+        public class ThreadList<T> :List<T>
+        {
+            public ThreadList<T> Clone()
+            {
+                BinaryFormatter Formatter = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.Clone));
+                MemoryStream stream = new MemoryStream();
+                Formatter.Serialize(stream, this);
+                stream.Position = 0;
+                ThreadList<T> clonedObj = Formatter.Deserialize(stream) as ThreadList<T>;
+                stream.Close();
+                return clonedObj;
+            }
+
+        }
         protected ITcpBasehelper p2psev;
 
         List<CommandItem> listcomm = new List<CommandItem>();
         QueueTable qt = new QueueTable();
-
+        private int proportion=10;
         public event Mylog EventMylog;
-        public List<ConnObj> ConnObjlist = new List<ConnObj>();
+       // public List<ConnObj> ConnObjlist = new List<ConnObj>();
         public List<CommandItem> CommandItemS = new List<CommandItem>();
         public List<WayItem> WayItemS = new List<WayItem>();
 
@@ -36,6 +52,7 @@ namespace cloud
             else
                 p2psev = new p2psever();
         }
+        
         public bool Run(string loaclIP, int port, int port2)
         {
             // Mycommand comm = new Mycommand(, connectionString);
@@ -114,11 +131,14 @@ namespace cloud
             {
                 foreach (CommandItem ci in CommandItemS)
                 {
-                    if (!ci.Client.Isline)
+                    foreach (P2Pclient Client in ci.Client)
                     {
-                        if (ci.Client.Restart(false))
+                        if (!Client.Isline)
                         {
-                            V_timeoutevent();
+                            if (Client.Restart(false))
+                            {
+                                V_timeoutevent();
+                            }
                         }
                     }
                 }
@@ -150,6 +170,7 @@ namespace cloud
                         if (coob.Token == _0x01.Token)
                         {
                             p2psev.send(coob.Soc, command, text);
+                            return;
                         }
                 }
             }
@@ -162,7 +183,10 @@ namespace cloud
             {
                 foreach (CommandItem ci in CommandItemS)
                 {
-                    ci.Client.stop();
+                    foreach (P2Pclient Client in ci.Client)
+                    {
+                        Client.stop();
+                    }
                 }
                 CommandItemS.Clear();
                 XmlDocument xml = new XmlDocument();
@@ -173,12 +197,14 @@ namespace cloud
                     ci.Ip = xn.Attributes["ip"].Value;
                     ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
-                    ci.Client = new P2Pclient(false);
-                    ci.Client.receiveServerEvent += V_receiveServerEvent;
-                    ci.Client.timeoutevent += V_timeoutevent;
-                    ci.Client.ErrorMge += V_ErrorMge;
-                    if (ci.Client.start(ci.Ip, ci.Port, false))
+                    P2Pclient p2p=  new P2Pclient(false);
+
+                    p2p.receiveServerEvent += V_receiveServerEvent;
+                    p2p.timeoutevent += V_timeoutevent;
+                    p2p.ErrorMge += V_ErrorMge;
+                    if (p2p.start(ci.Ip, ci.Port, false))
                     {
+                        ci.Client.Add(p2p);
                         CommandItemS.Add(ci);
                     }
                     else
@@ -313,9 +339,16 @@ namespace cloud
         {
             try
             {
-                int count = ConnObjlist.Count;
-                ConnObj[] coobjs = new ConnObj[count];
-                ConnObjlist.CopyTo(0, coobjs, 0, count);
+                ConnObj[] coobjs=new ConnObj[0];
+                int count = 0;
+                try
+                {
+                     count = ConnObjlist.Count;
+                    coobjs = new ConnObj[count];
+                    ConnObjlist.CopyTo(coobjs);
+                }
+                catch { }
+                //ThreadList<ConnObj> coobjs = ConnObjlist.Clone();
                 foreach (ConnObj coob in coobjs)
                 {
                     if (coob != null)
@@ -330,7 +363,10 @@ namespace cloud
 
                                 foreach (CommandItem ci in comItems)
                                 {
-                                    ci.Client.send(0xff, "out|" + coob.Token);
+
+                                    ci.Client[0].send(0xff, "out|" + coob.Token);
+                                       
+                                   
                                 }
                             }
                             catch { }
@@ -343,9 +379,11 @@ namespace cloud
                     EventMylog("加载异常", ex.Message);
             }
         }
-
+      public ThreadList<ConnObj> ConnObjlist = new ThreadList<ConnObj>();
+        //ThreadSafeDictionary<string, ConnObj> ConnObjlist = new ThreadSafeDictionary<string, ConnObj>();
         protected void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
         {
+          
             ConnObj cobj = new ConnObj();
             cobj.Soc = soc;
             IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
@@ -354,13 +392,35 @@ namespace cloud
             try
             {
                 if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
+                {
                     ConnObjlist.Add(cobj);
+
+                }
+                int len = ConnObjlist.Count / Proportion;
+                foreach (CommandItem ci in CommandItemS)
+                {
+                    if (len > ci.Client.Count)
+                    {
+                        P2Pclient p2p = new P2Pclient(false);
+
+                        p2p.receiveServerEvent += V_receiveServerEvent;
+                        p2p.timeoutevent += V_timeoutevent;
+                        p2p.ErrorMge += V_ErrorMge;
+                        if (p2p.start(ci.Ip, ci.Port, false))
+                        {
+                            ci.Client.Add(p2p);
+                            
+                        }
+                    }
+                    
+                }
+               
                 int count = CommandItemS.Count;
                 CommandItem[] comItems = new CommandItem[count];
                 CommandItemS.CopyTo(0, comItems, 0, count);
                 foreach (CommandItem ci in comItems)
-                {
-                    ci.Client.send(0xff, "in|" + cobj.Token);
+                { 
+                    ci.Client[0].send(0xff, "in|" + cobj.Token);
                 }
             }
             catch (Exception ex)
@@ -377,18 +437,21 @@ namespace cloud
                 return;
             string key = "";
             string ip = "";
-            try
-            {
-                key = DecryptDES(_0x01.Token, "lllssscc");
-                 ip = key.Split('|')[0];
-            }
-            catch { return; }
+            //try
+            //{
+            //    key = DecryptDES(_0x01.Token, "lllssscc");
+            //     ip = key.Split('|')[0];
+            //}
+            //catch { return; }
             IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
 
-            if (clientipe.Address.ToString() == ip)
-            {
+            //if (clientipe.Address.ToString() == ip)
+            //{
                 int count = CommandItemS.Count;
-                CommandItem[] comItems = new CommandItem[count];
+            int counts = ConnObjlist.Count;
+                ConnObj[] coobjs = new ConnObj[counts];
+                ConnObjlist.CopyTo(coobjs);
+            CommandItem[] comItems = new CommandItem[count];
                 CommandItemS.CopyTo(0, comItems, 0, count);
                 foreach (CommandItem ci in comItems)
                 {
@@ -396,7 +459,14 @@ namespace cloud
                     {
                         if (ci.CommName == command)
                         {
-                            if (!ci.Client.send(command, data))
+                        int i = 0;
+                        for (int s = 0; s < counts; s++)
+                            if(coobjs[s]!=null)
+                            if (coobjs[s].Token == _0x01.Token)
+                                i = s;
+                        int len = i / Proportion;
+                        
+                        if (!ci.Client[len>= ci.Client.Count? ci.Client.Count-1: len].send(command, data))
                             {
                                 p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，请联系管理人员。");
                             }
@@ -405,14 +475,28 @@ namespace cloud
                     }
                 }
                 p2psev.send(soc, 0xff, "你所请求的服务是不存在的。");
-            }
-            else
-            {
-                p2psev.send(soc, 0xff, "您的请求是非法的~");
-            }
+           // }
+            //else
+            //{
+            //    p2psev.send(soc, 0xff, "您的请求是非法的~");
+            //}
 
         }
         private byte[] Keys = { 0xEF, 0xAB, 0x56, 0x78, 0x90, 0x34, 0xCD, 0x12 };
+
+        public int Proportion
+        {
+            get
+            {
+                return proportion;
+            }
+
+            set
+            {
+                proportion = value;
+            }
+        }
+
         /// <summary>
         /// DES加密字符串
         /// </summary>
@@ -501,7 +585,7 @@ namespace cloud
             }
         }
 
-        public P2Pclient Client
+        public List<P2Pclient> Client
         {
             get
             {
@@ -515,7 +599,7 @@ namespace cloud
         }
         String ip = "";
         int port;
-        P2Pclient client;
+         List<P2Pclient> client=new List<P2Pclient>();
     }
     public class WayItem
     {
@@ -591,6 +675,7 @@ namespace cloud
         int port;
         P2Pclient client;
     }
+    [Serializable]
     public class ConnObj
     {
         byte[] makes;
@@ -606,9 +691,9 @@ namespace cloud
                 makes = value;
             }
         }
-        Socket soc;
+      
         string _Token;
-
+        Socket soc;
         public Socket Soc
         {
             get
@@ -634,5 +719,9 @@ namespace cloud
                 _Token = value;
             }
         }
+
+      
+
+        Socket tosoc;
     }
 }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using TCPclient;
 
 namespace client
@@ -97,6 +98,19 @@ namespace client
             }
         }
 
+        public List<byte[]> ListData
+        {
+            get
+            {
+                return listtemp;
+            }
+
+            set
+            {
+                listtemp = value;
+            }
+        }
+
         public P2Pclient(bool _NATUDP)
         {
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
@@ -152,7 +166,10 @@ namespace client
                 if (!isreceives)
                 {
                     isreceives = true;
-                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receives));
+                    System.Threading.Thread t=new System.Threading.Thread(new ParameterizedThreadStart(receives));
+                    t.Start();
+                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
+                    t1.Start();
                 }
                 int ss = 0;
                 if (!takon) return true;
@@ -230,6 +247,125 @@ namespace client
             Isline = false;
             tcpc.Close();
         }
+        class temppake { public byte command; public string date; }
+        void rec(object obj)
+        {
+            temppake str = obj as temppake;
+            receiveServerEvent(str.command, str.date);
+        }
+
+        void unup()
+        {
+            while (isok)
+            {
+                System.Threading.Thread.Sleep(10);
+                try
+                {
+                    int i = 0;
+                    int count = ListData.Count;
+
+                    if (count > 0)
+                    {
+                        
+                        int bytesRead = ListData[i]!=null? ListData[i].Length:0;
+                        if (bytesRead == 0) continue;
+                        byte[] tempbtye = new byte[bytesRead];
+                        Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                        _0x99:
+                        if (tempbtye[0] == 0x99)
+                        {
+                            
+                            if (bytesRead > 1)
+                            {
+                                byte[] b = new byte[bytesRead - 1];
+                                byte[] t = tempbtye;
+                                Array.Copy(t, 1, b, 0, b.Length);
+                                ListData[i] = b;
+                                tempbtye = b;
+                                goto _0x99;
+                            }
+                            else {
+                                ListData.RemoveAt(i);
+                                continue;
+                            } 
+                        }
+                        labe881:
+                        if (bytesRead > 2)
+                        {
+                            int a = tempbtye[1];
+                            if (bytesRead > 2 + a)
+                            {
+                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                int len = int.Parse(temp);
+
+                                labered:
+                                if ((len + 2 + a) > tempbtye.Length)
+                                {
+                                    ListData.RemoveAt(i);
+                                    byte[] temps = new byte[tempbtye.Length];
+                                    Array.Copy(tempbtye, temps, temps.Length);
+                                    tempbtye = new byte[temps.Length + ListData[i].Length];
+                                    Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                                  
+                                    goto labered;
+                                }
+                                else if (tempbtye.Length > (len + 2 + a))
+                                {
+                                    byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
+                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    ListData[i] = temps;
+
+                                } else if (tempbtye.Length == (len + 2 + a)) 
+                                    { ListData.RemoveAt(i); }
+                               
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                try
+                                {
+                                    temppake str = new temppake();
+                                    str.command = tempbtye[0];
+                                    str.date = temp;
+                                    if (tempbtye[0] == 0xff)
+                                    {
+                                        if (temp.IndexOf("token") >= 0)
+                                            Tokan = temp.Split('|')[1];
+                                        else
+                                        {
+                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                
+                                            //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+                                            //tt.Start(str);
+                                        }
+                                    }
+                                    else if (receiveServerEvent != null)
+                                    {
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+
+                                        //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+                                        //tt.Start(str);
+                                        // receiveServerEvent();
+                                    }
+                                    continue;
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, "unup:" + e.Message);
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    if (ErrorMge != null)
+                        ErrorMge(3, "unup:" + e.Message);
+                }
+            }
+        }
+
+          List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
             while (isok)
@@ -237,22 +373,15 @@ namespace client
                 System.Threading.Thread.Sleep(50);
                 try
                 {
-                    byte[] tempb = null;
-                labered:
+                 
+                
                     int bytesRead = tcpc.Client.Available;
-
+                  
                     if (bytesRead > 0)
                     {
                         byte[] tempbtye = new byte[bytesRead];
                         tcpc.Client.Receive(tempbtye);
-                        if (tempb != null)
-                        {
-                            byte[] tempbtyes = new byte[tempbtye.Length + tempb.Length];
-                            Array.Copy(tempb, tempbtyes, tempb.Length);
-                            Array.Copy(tempbtye, 0, tempbtyes, tempb.Length, tempbtye.Length);
-                            tempbtye = tempbtyes;
-                        }
-                    labe881:
+                        _0x99:
                         if (tempbtye[0] == 0x99)
                         {
                             timeout = DateTime.Now;
@@ -262,50 +391,17 @@ namespace client
                                 byte[] t = tempbtye;
                                 Array.Copy(t, 1, b, 0, b.Length);
                                 tempbtye = b;
-                                bytesRead = bytesRead - (1);
-                            }
-                            continue;
+                               // bytesRead = bytesRead - (1);
+                                goto _0x99;
+                            }else
+                             continue;
                         }
-                        int a = tempbtye[1];
-                        String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                        int len = int.Parse(temp);
-                        if (len > tempbtye.Length)
+                        lock (this)
                         {
-                            tempb = new byte[tempbtye.Length];
-                            Array.Copy(tempbtye, tempb, tempbtye.Length);
-                            goto labered;
-                        }
-                        //int b = netc.Buffer[2 + a+1];
-                        //temp = System.Text.ASCIIEncoding.ASCII.GetString(netc.Buffer, 2 + a + 1, b);
-                        //len = int.Parse(temp);
-                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                        try
-                        {
-                            if (tempbtye[0] == 0xff)
-                            {
-                                if (temp.IndexOf("token") >= 0)
-                                    Tokan = temp.Split('|')[1];
-                            }
-                            else if (receiveServerEvent != null)
-                                receiveServerEvent(tempbtye[0], temp);
-                        }
-                        catch (Exception e)
-                        {
-                            if (ErrorMge != null)
-                                ErrorMge(1, e.Message);
-                        }
-
-                        if (bytesRead > (2 + a + len))
-                        {
-                            byte[] b = new byte[bytesRead - (2 + a + len)];
-                            byte[] t = tempbtye;
-                            Array.Copy(t, (2 + a + len), b, 0, b.Length);
-
-                            tempbtye = b;
-                            bytesRead = bytesRead - (2 + a + len);
-                            goto labe881;
+                            ListData.Add(tempbtye);
                         }
                         timeout = DateTime.Now;
+                        
                     }
                     else
                     {
@@ -323,7 +419,7 @@ namespace client
                 catch (Exception e)
                 {
                     if (ErrorMge != null)
-                        ErrorMge(1, e.Message);
+                        ErrorMge(2, e.Message);
                 }
             }
         }

@@ -107,6 +107,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="网关负载说明.docx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="node.xml" />
