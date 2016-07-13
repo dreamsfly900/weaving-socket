@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\统一登录服务\bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\文档说明\智信构建说明\服务端\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
