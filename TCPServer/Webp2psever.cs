@@ -25,10 +25,10 @@ namespace P2P
         public event UpdataListSoc EventUpdataConnSoc;
        
         public event deleteListSoc EventDeleteConnSoc;
-        string New_Handshake="";
+       
         public Webp2psever()
         {
-
+            string New_Handshake = "";
             //Switching Protocols
             New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
             New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
@@ -351,7 +351,8 @@ namespace P2P
 
         public byte[] ManageHandshake(byte[] receivedDataBuffer,int HandshakeLength)
         {
-            New_Handshake = "";
+            string New_Handshake = "";
+            
             New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
             New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
             New_Handshake += "Connection: Upgrade" + Environment.NewLine;
@@ -549,70 +550,70 @@ namespace P2P
         /// </summary>
         /// <param name="message">数据</param>
         /// <returns>数据包</returns>
-        private   byte[] PackData(byte[] buffer)
-        {
+        //private   byte[] PackData(byte[] buffer)
+        //{
               
-          byte[] _extend = new byte[0];
-          byte[] _mask = new byte[0];
-          byte[] _content = buffer;
-        //帧头
-        DataFrameHeader _header ;
-            int length = _content.Length;
+        //  byte[] _extend = new byte[0];
+        //  byte[] _mask = new byte[0];
+        //  byte[] _content = buffer;
+        ////帧头
+        //DataFrameHeader _header ;
+        //    int length = _content.Length;
 
-            if (length < 126)
-            {
-                _extend = new byte[0];
-                _header = new DataFrameHeader(true, false, false, false, 2, false, length);
-            }
-            else if (length < 65536)
-            {
+        //    if (length < 126)
+        //    {
+        //        _extend = new byte[0];
+        //        _header = new DataFrameHeader(true, false, false, false, 2, false, length);
+        //    }
+        //    else if (length < 65536)
+        //    {
                 
               
-                _header = new DataFrameHeader(true, false, false, false, 2, false, 126);
-                _extend = new byte[2];
-                _extend[0] = (byte)(length & 0xFF>>8);
-                _extend[1] = (byte)(length  & 0xFF);
-            }
-            else
-            {
-                _extend = new byte[8];
-                _header = new DataFrameHeader(true, false, false, false, 2, false, 127);
+        //        _header = new DataFrameHeader(true, false, false, false, 2, false, 126);
+        //        _extend = new byte[2];
+        //        _extend[0] = (byte)(length & 0xFF>>8);
+        //        _extend[1] = (byte)(length  & 0xFF);
+        //    }
+        //    else
+        //    {
+        //        _extend = new byte[8];
+        //        _header = new DataFrameHeader(true, false, false, false, 2, false, 127);
 
-                int left = length;
-                int unit = 256;
+        //        int left = length;
+        //        int unit = 256;
 
-                for (int i = 7; i > 1; i--)
-                {
-                    _extend[i] = (byte)(left % unit);
-                    left = left / unit;
+        //        for (int i = 7; i > 1; i--)
+        //        {
+        //            _extend[i] = (byte)(left % unit);
+        //            left = left / unit;
 
-                    if (left == 0)
-                        break;
-                }
-            }
+        //            if (left == 0)
+        //                break;
+        //        }
+        //    }
 
-            return GetBytes(_header, _extend, _mask, _content);
+        //    return GetBytes(_header, _extend, _mask, _content);
     
-        }
-        public byte[] GetBytes(DataFrameHeader _header,byte[] _extend, byte[] _mask, byte[] _content)
-        {
-            byte[] buffer = new byte[2 + _extend.Length + _mask.Length + _content.Length];
-            Buffer.BlockCopy(_header.GetBytes(), 0, buffer, 0, 2);
-            Buffer.BlockCopy(_extend, 0, buffer, 2, _extend.Length);
-            Buffer.BlockCopy(_mask, 0, buffer, 2 + _extend.Length, _mask.Length);
-            Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
+        //}
+        //public byte[] GetBytes(DataFrameHeader _header,byte[] _extend, byte[] _mask, byte[] _content)
+        //{
+        //    byte[] buffer = new byte[2 + _extend.Length + _mask.Length + _content.Length];
+        //    Buffer.BlockCopy(_header.GetBytes(), 0, buffer, 0, 2);
+        //    Buffer.BlockCopy(_extend, 0, buffer, 2, _extend.Length);
+        //    Buffer.BlockCopy(_mask, 0, buffer, 2 + _extend.Length, _mask.Length);
+        //    Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
           
-            return buffer;
-        }
-        private byte[] Mask(byte[] data, byte[] mask)
-        {
-            for (var i = 0; i < data.Length; i++)
-            {
-                data[i] = (byte)(data[i] ^ mask[i % 4]);
-            }
+        //    return buffer;
+        //}
+        //private byte[] Mask(byte[] data, byte[] mask)
+        //{
+        //    for (var i = 0; i < data.Length; i++)
+        //    {
+        //        data[i] = (byte)(data[i] ^ mask[i % 4]);
+        //    }
 
-            return data;
-        }
+        //    return data;
+        //}
         public bool send(int index, byte command, string text)
         {
 

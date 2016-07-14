@@ -24,6 +24,7 @@
         }
         function SendData()
         {
+            for (var i = 0; i < 500;i++)
             socket.SendData(0x01, "Send_content", { a: 'b' }, { b: 'c' })
         }
     </script>
