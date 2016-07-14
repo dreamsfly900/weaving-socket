@@ -45,8 +45,20 @@ namespace P2P
         }
 
         int state;
-        // Received data string.
-        public StringBuilder sb = new StringBuilder();
+        public List<byte[]> Datalist
+        {
+            get
+            {
+                return datalist;
+            }
+
+            set
+            {
+                datalist = value;
+            }
+        }
+
+        List<byte[]> datalist = new List<byte[]>();
     }
     public class NETcollectionUdp
     {

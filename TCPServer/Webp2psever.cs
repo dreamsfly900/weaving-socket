@@ -92,8 +92,11 @@ namespace P2P
                         {
                             if (netc.State != 0)
                             {
-                                byte[] bp = PackData(new byte[] { 0x99 });
-                                netc.Soc.Send(bp);
+                                DataFrame df = new DataFrame();
+                                df.setByte(new byte[] { 0x99 });
+
+
+                                netc.Soc.Send(df.GetBytes());
                             }
                            
                           
@@ -290,6 +293,8 @@ namespace P2P
                     masks = value;
                 }
             }
+
+          
         }
         void receiveeventto(object obj)
         {
