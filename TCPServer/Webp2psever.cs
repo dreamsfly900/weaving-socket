@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using WebSocketServer;
 
 namespace P2P
 {
@@ -27,8 +28,8 @@ namespace P2P
         string New_Handshake="";
         public Webp2psever()
         {
-         
 
+            //Switching Protocols
             New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
             New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
             New_Handshake += "Connection: Upgrade" + Environment.NewLine;
@@ -89,8 +90,11 @@ namespace P2P
                     {
                         try
                         {
-                           byte[] bp = PackData(new byte[] { 0x99});
-                            netc.Soc.Send(bp);
+                            if (netc.State != 0)
+                            {
+                                byte[] bp = PackData(new byte[] { 0x99 });
+                                netc.Soc.Send(bp);
+                            }
                            
                           
 
@@ -178,33 +182,33 @@ namespace P2P
                 EventDeleteConnSoc(state as Socket);
         }
 
-        void AcceptCallback(IAsyncResult ar)
-        {
-            try
-            {
-                allDone.Set();
-                Socket listener = (Socket)ar.AsyncState;
-                if (listener == null)
-                    return;
-                Socket handler = listener.EndAccept(ar);
+        //void AcceptCallback(IAsyncResult ar)
+        //{
+        //    try
+        //    {
+        //        allDone.Set();
+        //        Socket listener = (Socket)ar.AsyncState;
+        //        if (listener == null)
+        //            return;
+        //        Socket handler = listener.EndAccept(ar);
 
-                // Create the state object.
-                NETcollection netc = new NETcollection();
-                netc.Soc = handler;
+        //        // Create the state object.
+        //        NETcollection netc = new NETcollection();
+        //        netc.Soc = handler;
              
-                System.Threading.Thread.Sleep(100);
-                handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
-                System.Threading.Thread.Sleep(50);
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
-                listconn.Add(netc);
-                // netc.Buffer 
+        //        System.Threading.Thread.Sleep(100);
+        //        handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
+        //        System.Threading.Thread.Sleep(50);
+        //        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
+        //        listconn.Add(netc);
+        //        // netc.Buffer 
 
 
-            }
-            catch { }
-            // allDone.Set();
+        //    }
+        //    catch { }
+        //    // allDone.Set();
 
-        }
+        //}
         /// <summary>
         /// 打包握手信息
         /// </summary>
@@ -213,7 +217,7 @@ namespace P2P
         private static byte[] PackHandShakeData(string secKeyAccept)
         {
             var responseBuilder = new StringBuilder();
-            responseBuilder.Append("HTTP/1.1 101 Switching Protocols" + Environment.NewLine);
+            responseBuilder.Append("HTTP/1.1 101 Web Socket Protocol Handshake" + Environment.NewLine);
             responseBuilder.Append("Upgrade: websocket" + Environment.NewLine);
             responseBuilder.Append("Connection: Upgrade" + Environment.NewLine);
             responseBuilder.Append("Sec-WebSocket-Accept: " + secKeyAccept + Environment.NewLine + Environment.NewLine);
@@ -320,7 +324,12 @@ namespace P2P
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
 
                 byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
-                 handler.BeginSend(aaa, 0, aaa.Length, 0, HandshakeFinished, handler);
+                handler.Send(aaa);
+                System.Threading.Thread.Sleep(50);
+                netc.State = 1;
+                System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
+                t.Start(handler);
+                // handler.BeginSend(aaa, 0, aaa.Length, 0, HandshakeFinished, handler);
             }
             catch(Exception e)
             {
@@ -342,6 +351,12 @@ namespace P2P
 
         public byte[] ManageHandshake(byte[] receivedDataBuffer,int HandshakeLength)
         {
+            New_Handshake = "";
+            New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
+            New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
+            New_Handshake += "Connection: Upgrade" + Environment.NewLine;
+            New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
+            New_Handshake += Environment.NewLine;
             string header = "Sec-WebSocket-Version:";
            
             byte[] last8Bytes = new byte[8];
@@ -611,14 +626,30 @@ namespace P2P
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                byte[] bp = PackData(b);
-                soc.Send(bp);
-           
+                DataFrame bp = new DataFrame();
+                bp.setByte(b);
+                soc.Send(bp.GetBytes());
+
             }
             catch { return false; }
             // tcpc.Close();
             return true;
         }
+        public  IPAddress getLocalmachineIPAddress()
+        {
+            string strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+
+            foreach (IPAddress ip in ipEntry.AddressList)
+            {
+                //IPV4
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    return ip;
+            }
+
+            return ipEntry.AddressList[0];
+        }
+
         public bool send(Socket soc, byte command, string text)
         {
 
@@ -631,8 +662,10 @@ namespace P2P
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                byte[] bp = PackData(b);
-                soc.Send(bp);
+                DataFrame bp = new DataFrame();
+                bp.setByte(b);
+                soc.Send(bp.GetBytes());
+                //soc.Send(bp);
             }
             catch  { return false; }
             // tcpc.Close();
@@ -654,7 +687,7 @@ namespace P2P
                             if (netc.State == 0)
                             {
                                 netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
-                                listconn.Find(p=>p==netc).State = 1;
+                               // listconn.Find(p=>p==netc).State = 1;
                             }
                             else
                                 netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);

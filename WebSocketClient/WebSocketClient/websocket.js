@@ -64,7 +64,7 @@
         ws.onclose = function (event) { if (options.close != null) options.close(this.readyState); };
         ws.onerror = function (event) {
             if (options.error!=null)
-                options.error(event.message);
+                options.error(event.data);
             
         };
         this.soc = ws;
