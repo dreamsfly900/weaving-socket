@@ -59,6 +59,7 @@ namespace P2P
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
+           
         }
        
         //void udp_receiveevent(byte command, string data, NETcollectionUdp NETc)
@@ -118,8 +119,9 @@ namespace P2P
                 catch { }
             }
         }
-        private   byte[] AnalyticData(byte[] recBytes, int recByteLength,ref byte[] masks)
+        private   byte[] AnalyticData(byte[] recBytes, int recByteLength,ref byte[] masks,ref int lens)
         {
+            lens = 0;
             if (recByteLength < 2) { return new byte[0] ; }
 
             bool fin = (recBytes[0] & 0x80) == 0x80; // 1bit，1表示最后一帧  
@@ -135,7 +137,6 @@ namespace P2P
             }
 
             int payload_len = recBytes[1] & 0x7F; // 数据长度  
-
           
             byte[] payload_data;
 
@@ -143,6 +144,7 @@ namespace P2P
             {
                 Array.Copy(recBytes, 4, masks, 0, 4);
                 payload_len = (UInt16)(recBytes[2] << 8 | recBytes[3]);
+                lens = 8;
                 payload_data = new byte[payload_len];
                 Array.Copy(recBytes, 8, payload_data, 0, payload_len);
 
@@ -156,7 +158,7 @@ namespace P2P
                     uInt64Bytes[i] = recBytes[9 - i];
                 }
                 UInt64 len = BitConverter.ToUInt64(uInt64Bytes, 0);
-
+                lens = 14;
                 payload_data = new byte[len];
                 for (UInt64 i = 0; i < len; i++)
                 {
@@ -165,6 +167,7 @@ namespace P2P
             }
             else
             {
+                lens = 6;
                 Array.Copy(recBytes, 2, masks, 0, 4);
                 payload_data = new byte[payload_len];
                 Array.Copy(recBytes, 6, payload_data, 0, payload_len);
@@ -212,45 +215,46 @@ namespace P2P
         //    // allDone.Set();
 
         //}
-        /// <summary>
-        /// 打包握手信息
-        /// </summary>
-        /// <param name="secKeyAccept">Sec-WebSocket-Accept</param>
-        /// <returns>数据包</returns>
-        private static byte[] PackHandShakeData(string secKeyAccept)
-        {
-            var responseBuilder = new StringBuilder();
-            responseBuilder.Append("HTTP/1.1 101 Web Socket Protocol Handshake" + Environment.NewLine);
-            responseBuilder.Append("Upgrade: websocket" + Environment.NewLine);
-            responseBuilder.Append("Connection: Upgrade" + Environment.NewLine);
-            responseBuilder.Append("Sec-WebSocket-Accept: " + secKeyAccept + Environment.NewLine + Environment.NewLine);
-            //如果把上一行换成下面两行，才是thewebsocketprotocol-17协议，但居然握手不成功，目前仍没弄明白！
-            //responseBuilder.Append("Sec-WebSocket-Accept: " + secKeyAccept + Environment.NewLine);
-            //responseBuilder.Append("Sec-WebSocket-Protocol: chat" + Environment.NewLine);
+        ///// <summary>
+        ///// 打包握手信息
+        ///// </summary>
+        ///// <param name="secKeyAccept">Sec-WebSocket-Accept</param>
+        ///// <returns>数据包</returns>
+        //private static byte[] PackHandShakeData(string secKeyAccept)
+        //{
+        //    var responseBuilder = new StringBuilder();
+        //    responseBuilder.Append("HTTP/1.1 101 Web Socket Protocol Handshake" + Environment.NewLine);
+        //    responseBuilder.Append("Upgrade: websocket" + Environment.NewLine);
+        //    responseBuilder.Append("Connection: Upgrade" + Environment.NewLine);
+        //    responseBuilder.Append("Sec-WebSocket-Accept: " + secKeyAccept + Environment.NewLine + Environment.NewLine);
+        //    //如果把上一行换成下面两行，才是thewebsocketprotocol-17协议，但居然握手不成功，目前仍没弄明白！
+        //    //responseBuilder.Append("Sec-WebSocket-Accept: " + secKeyAccept + Environment.NewLine);
+        //    //responseBuilder.Append("Sec-WebSocket-Protocol: chat" + Environment.NewLine);
 
-            return Encoding.UTF8.GetBytes(responseBuilder.ToString());
-        }
+        //    return Encoding.UTF8.GetBytes(responseBuilder.ToString());
+        //}
 
-        /// <summary>
-        /// 生成Sec-WebSocket-Accept
-        /// </summary>
-        /// <param name="handShakeText">客户端握手信息</param>
-        /// <returns>Sec-WebSocket-Accept</returns>
-        private static string GetSecKeyAccetp(byte[] handShakeBytes, int bytesLength)
-        {
-            string handShakeText = Encoding.UTF8.GetString(handShakeBytes, 0, bytesLength);
-            string key = string.Empty;
-            Regex r = new Regex(@"Sec\-WebSocket\-Key:(.*?)\r\n");
-            Match m = r.Match(handShakeText);
-            if (m.Groups.Count != 0)
-            {
-                key = Regex.Replace(m.Value, @"Sec\-WebSocket\-Key:(.*?)\r\n", "$1").Trim();
-            }
-            System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
+        ///// <summary>
+        ///// 生成Sec-WebSocket-Accept
+        ///// </summary>
+        ///// <param name="handShakeText">客户端握手信息</param>
+        ///// <returns>Sec-WebSocket-Accept</returns>
+        //private static string GetSecKeyAccetp(byte[] handShakeBytes, int bytesLength)
+        //{
+        //    string handShakeText = Encoding.UTF8.GetString(handShakeBytes, 0, bytesLength);
+        //    string key = string.Empty;
+        //    Regex r = new Regex(@"Sec\-WebSocket\-Key:(.*?)\r\n");
+        //    Match m = r.Match(handShakeText);
+        //    if (m.Groups.Count != 0)
+        //    {
+        //        key = Regex.Replace(m.Value, @"Sec\-WebSocket\-Key:(.*?)\r\n", "$1").Trim();
+        //    }
+        //    System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
            
-            byte[] encryptionString = SHA1.Create().ComputeHash(Encoding.ASCII.GetBytes(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
-            return Convert.ToBase64String(encryptionString);
-        }
+        //    byte[] encryptionString = SHA1.Create().ComputeHash(Encoding.ASCII.GetBytes(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
+        //    return Convert.ToBase64String(encryptionString);
+        //}
+
         private void UpdataConnSoc(object state)
         {
             if (EventUpdataConnSoc != null)
@@ -505,43 +509,44 @@ namespace P2P
                     listconn.Remove(netc);
                 }
                 
-                if (bytesRead > 0)
-                {
-                    // There  might be more data, so store the data received so far.
+                //if (bytesRead > 0)
+                //{
+                //    // There  might be more data, so store the data received so far.
                     byte[] tempbtye = new byte[bytesRead];
 
-                    //netc.Buffer.CopyTo(tempbtye, 0);
-                    Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                    byte[] masks = new byte[4];
-                    tempbtye =AnalyticData(tempbtye, bytesRead,ref masks);
-                    bytesRead = tempbtye.Length;
-                    labe881:
-                    int a = tempbtye[1];
-                    String temp2 = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                    int len = int.Parse(temp2);
-                    //int b = netc.Buffer[2 + a+1];
-                    //temp = System.Text.ASCIIEncoding.ASCII.GetString(netc.Buffer, 2 + a + 1, b);
-                    //len = int.Parse(temp);
-                    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                    modelevent me = new modelevent();
-                    me.Command = tempbtye[0];
-                    me.Data = temp;
-                    me.Soc = netc.Soc;
-                    me.Masks = masks;
-                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                //netc.Buffer.CopyTo(tempbtye, 0);
+                Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
+                 netc.Datalist.Add(tempbtye);
+                //    byte[] masks = new byte[4];
+                //    tempbtye =AnalyticData(tempbtye, bytesRead,ref masks);
+                //    bytesRead = tempbtye.Length;
+                //    labe881:
+                //    int a = tempbtye[1];
+                //    String temp2 = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                //    int len = int.Parse(temp2);
+                //    //int b = netc.Buffer[2 + a+1];
+                //    //temp = System.Text.ASCIIEncoding.ASCII.GetString(netc.Buffer, 2 + a + 1, b);
+                //    //len = int.Parse(temp);
+                //    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                //    modelevent me = new modelevent();
+                //    me.Command = tempbtye[0];
+                //    me.Data = temp;
+                //    me.Soc = netc.Soc;
+                //    me.Masks = masks;
+                //    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
 
-                    if (bytesRead > (2 + a + len))
-                    {
-                        byte[] b = new byte[bytesRead - (2 + a + len)];
-                        byte[] t = tempbtye;
-                        Array.Copy(t, (2 + a + len), b, 0, b.Length);
+                //    if (bytesRead > (2 + a + len))
+                //    {
+                //        byte[] b = new byte[bytesRead - (2 + a + len)];
+                //        byte[] t = tempbtye;
+                //        Array.Copy(t, (2 + a + len), b, 0, b.Length);
 
-                        tempbtye = b;
-                        bytesRead = bytesRead - (2 + a + len);
-                        goto labe881;
-                    }
+                //        tempbtye = b;
+                //        bytesRead = bytesRead - (2 + a + len);
+                //        goto labe881;
+                //    }
 
-                }
+                //}
             }
             catch
             {
@@ -689,22 +694,128 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
-                            netc.Buffer = new byte[netc.Soc.Available];
+                           // netc.Buffer = new byte[netc.Soc.Available];
                             if (netc.State == 0)
                             {
-                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
+                                netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
                                // listconn.Find(p=>p==netc).State = 1;
                             }
                             else
-                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                                netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                        }
+                        if (netc.Datalist.Count> 0)
+                        {
+                            if (!netc.Ispage)
+                            {
+                                netc.Ispage = true;
+                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                t.Start(netc);
+                                //  packageDataHandler pdh = new packageDataHandler(packageData);
+                                // pdh.BeginInvoke(netc, null, null);
+                            }
                         }
                     }
                 }
-                catch { }
-                System.Threading.Thread.Sleep(10);
+                catch (Exception ex)
+                { }
+             
             }
         }
+        public delegate void packageDataHandler(NETcollection netc);
+        private void packageData(object obj)
+        {
 
+            NETcollection netc = obj as NETcollection;
+
+            try {
+               
+                //  Array.Copy(netc.Datalist, ListData, count);
+
+                //while (true)
+                //{
+                    int count = netc.Datalist.Count;
+                    List<Byte[]> ListData = netc.Datalist;
+                    int i = 0;
+
+
+                    if (netc.Datalist.Count > 0)
+                    {
+
+                        int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
+                        if (bytesRead == 0) { netc.Ispage = false; return; };
+                        byte[] tempbtyes = new byte[bytesRead];
+                        Array.Copy(ListData[i], tempbtyes, tempbtyes.Length);
+                        byte[] masks = new byte[4];
+
+                        int lens = 0;
+                        byte[] tempbtye =AnalyticData(tempbtyes, bytesRead,ref masks,ref lens);
+                       
+                        labe881:
+                        if (tempbtye.Length > 0)
+                        {
+                            #region MyRegion
+
+                           
+                            int a = tempbtye[1];
+                            if (bytesRead > 2 + a)
+                            {
+                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                int len = int.Parse(temp);
+
+                               
+                                    if (tempbtye.Length == (len + 2 + a))
+                                {
+                                    if (bytesRead > tempbtye.Length+lens)
+                                    {
+                                        int aa = bytesRead - (tempbtye.Length + lens);
+                                        byte[] temptt = new byte[aa];
+                                        Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                                        ListData[i] = temptt;
+                                    }
+                                    else
+                                    ListData.RemoveAt(i);
+                                }
+                               // netc.Datalist.RemoveAt(i);
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                try
+                                {
+                                    modelevent me = new modelevent();
+                                    me.Command = tempbtye[0];
+                                    me.Data = temp;
+                                    me.Soc = netc.Soc;
+                                    me.Masks = masks;
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+
+                                    netc.Ispage = false; return;
+                                }
+                                catch (Exception e)
+                                {
+                                    netc.Ispage = false; return;
+                                }
+                              
+                            }
+                            #endregion
+                        }
+                       else if (bytesRead>0)
+                        {
+                            ListData.RemoveAt(i);
+                            byte[] temps = new byte[tempbtyes.Length];
+                            Array.Copy(tempbtyes, temps, temps.Length);
+                            tempbtyes = new byte[temps.Length + ListData[i].Length];
+                            Array.Copy(temps, tempbtyes, temps.Length);
+                            Array.Copy(ListData[i],0, tempbtye, temps.Length, ListData[i].Length);
+                            netc.Ispage = false; return;
+                            // goto labered;
+                        }
+
+                    }
+               // }
+
+            }
+            catch(Exception ex)
+            { if(netc.Datalist.Count>0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
+            finally { netc.Ispage = false; }
+        }
         void Accept(object ias)
         {
             while (true)

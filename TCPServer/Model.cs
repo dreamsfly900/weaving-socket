@@ -45,6 +45,8 @@ namespace P2P
         }
 
         int state;
+
+        bool ispage = false;
         public List<byte[]> Datalist
         {
             get
@@ -55,6 +57,19 @@ namespace P2P
             set
             {
                 datalist = value;
+            }
+        }
+
+        public bool Ispage
+        {
+            get
+            {
+                return ispage;
+            }
+
+            set
+            {
+                ispage = value;
             }
         }
 
