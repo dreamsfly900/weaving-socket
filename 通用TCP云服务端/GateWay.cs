@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -386,11 +387,13 @@ namespace cloud
           
             ConnObj cobj = new ConnObj();
             cobj.Soc = soc;
-            IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-            cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+            //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+            //cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
 
             try
             {
+                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+                cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
                 if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
                 {
                     ConnObjlist.Add(cobj);
@@ -429,29 +432,51 @@ namespace cloud
                     EventMylog("EventUpdataConnSoc", ex.Message);
             }
         }
+        public  class JSON
+        {
 
+            public static T parse<T>(string jsonString)
+            {
+                using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
+                {
+                    return (T)new DataContractJsonSerializer(typeof(T)).ReadObject(ms);
+                }
+            }
+
+            public static string stringify(object jsonObject)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    new DataContractJsonSerializer(jsonObject.GetType()).WriteObject(ms, jsonObject);
+                    return Encoding.UTF8.GetString(ms.ToArray());
+                }
+            }
+        }
         protected void p2psev_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
         {
-            _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
-            if (_0x01.Token == null)
-                return;
-            string key = "";
-            string ip = "";
-            //try
-            //{
-            //    key = DecryptDES(_0x01.Token, "lllssscc");
-            //     ip = key.Split('|')[0];
-            //}
-            //catch { return; }
-            IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+            try
+            {
+                // JSON.parse<_baseModel>(data);// 
+                _baseModel _0x01 =Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
+                if (_0x01.Token == null)
+                    return;
+                string key = "";
+                string ip = "";
+                //try
+                //{
+                //    key = DecryptDES(_0x01.Token, "lllssscc");
+                //     ip = key.Split('|')[0];
+                //}
+                //catch { return; }
+                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
 
-            //if (clientipe.Address.ToString() == ip)
-            //{
+                //if (clientipe.Address.ToString() == ip)
+                //{
                 int count = CommandItemS.Count;
-            int counts = ConnObjlist.Count;
+                int counts = ConnObjlist.Count;
                 ConnObj[] coobjs = new ConnObj[counts];
                 ConnObjlist.CopyTo(coobjs);
-            CommandItem[] comItems = new CommandItem[count];
+                CommandItem[] comItems = new CommandItem[count];
                 CommandItemS.CopyTo(0, comItems, 0, count);
                 foreach (CommandItem ci in comItems)
                 {
@@ -459,14 +484,14 @@ namespace cloud
                     {
                         if (ci.CommName == command)
                         {
-                        int i = 0;
-                        for (int s = 0; s < counts; s++)
-                            if(coobjs[s]!=null)
-                            if (coobjs[s].Token == _0x01.Token)
-                                i = s;
-                        int len = i / Proportion;
-                        
-                        if (!ci.Client[len>= ci.Client.Count? ci.Client.Count-1: len].send(command, data))
+                            int i = 0;
+                            for (int s = 0; s < counts; s++)
+                                if (coobjs[s] != null)
+                                    if (coobjs[s].Token == _0x01.Token)
+                                        i = s;
+                            int len = i / Proportion;
+
+                            if (!ci.Client[len >= ci.Client.Count ? ci.Client.Count - 1 : len].send(command, data))
                             {
                                 p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，请联系管理人员。");
                             }
@@ -475,11 +500,13 @@ namespace cloud
                     }
                 }
                 p2psev.send(soc, 0xff, "你所请求的服务是不存在的。");
-           // }
-            //else
-            //{
-            //    p2psev.send(soc, 0xff, "您的请求是非法的~");
-            //}
+                // }
+                //else
+                //{
+                //    p2psev.send(soc, 0xff, "您的请求是非法的~");
+                //}
+            }
+            catch (Exception ex){ throw ex; }
 
         }
         private byte[] Keys = { 0xEF, 0xAB, 0x56, 0x78, 0x90, 0x34, 0xCD, 0x12 };

@@ -1,5 +1,6 @@
 ﻿using client;
 using cloud;
+using StandardModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,10 +22,26 @@ namespace 统一登录服务
         GateWay gw;
        
         bool isweb = true;
+        class A
+        {
+            public string a;
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
-          
-         
+            //try
+            //{
+            //    _baseModel bm = new _baseModel();
+            //    A aa = new A();
+            //    aa.a = "b";
+            //    bm.SetRoot<A>(aa);
+            // String str=   Newtonsoft.Json.JsonConvert.SerializeObject(bm);
+            //    string data = "{\"Request\":\"Send_content\",\"Root\":{\"a\":\"b\"},\"Parameter\":{\"b\":\"c\"},\"Token\":\"\",\"Querycount\":0,\"Number\":null}";
+            //    _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
+            //}
+            //catch (Exception ex)
+            //{
+            //}
+
         }
         public delegate void Mylog(Control c, string log);
         private void Gw_EventMylog(string type, string log)
@@ -57,8 +74,8 @@ namespace 统一登录服务
 
             try
             {
-                if (!isweb)
-                {
+              
+               {
                     foreach (CommandItem ci in gw.CommandItemS)
                     {
                         foreach (P2Pclient cl in ci.Client)

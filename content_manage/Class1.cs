@@ -11,8 +11,53 @@ namespace  manages
 {
     public class content_manage : MyInterface.TCPCommand
     {
-         
-     
+        public class Ccontext
+        {
+
+            string content;
+            string sendusername;
+            string recusername;
+
+            public string Content
+            {
+                get
+                {
+                    return content;
+                }
+
+                set
+                {
+                    content = value;
+                }
+            }
+
+            public string Sendusername
+            {
+                get
+                {
+                    return sendusername;
+                }
+
+                set
+                {
+                    sendusername = value;
+                }
+            }
+
+            public string Recusername
+            {
+                get
+                {
+                    return recusername;
+                }
+
+                set
+                {
+                    recusername = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 构造函数，用于加载事件
         /// </summary>

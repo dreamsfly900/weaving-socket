@@ -30,6 +30,21 @@ namespace P2P
             get { return buffer; }
             set { buffer = value; }
         }
+
+        public int State
+        {
+            get
+            {
+                return state;
+            }
+
+            set
+            {
+                state = value;
+            }
+        }
+
+        int state;
         // Received data string.
         public StringBuilder sb = new StringBuilder();
     }

@@ -396,10 +396,10 @@ namespace client
                             }else
                              continue;
                         }
-                        lock (this)
-                        {
+                        //lock (this)
+                        //{
                             ListData.Add(tempbtye);
-                        }
+                       // }
                         timeout = DateTime.Now;
                         
                     }

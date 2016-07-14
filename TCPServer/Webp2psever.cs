@@ -24,16 +24,28 @@ namespace P2P
         public event UpdataListSoc EventUpdataConnSoc;
        
         public event deleteListSoc EventDeleteConnSoc;
-        
+        string New_Handshake="";
         public Webp2psever()
         {
-          
-           // udp = new UDP(_loaclip);
+         
+
+            New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
+            New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
+            New_Handshake += "Connection: Upgrade" + Environment.NewLine;
+            New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
+            New_Handshake += Environment.NewLine;
+            // udp = new UDP(_loaclip);
         }
 
 
         public void start(int port)
         {
+            Handshake = "HTTP/1.1 101 Web Socket Protocol Handshake" + Environment.NewLine;
+            Handshake += "Upgrade: WebSocket" + Environment.NewLine;
+            Handshake += "Connection: Upgrade" + Environment.NewLine;
+            Handshake += "Sec-WebSocket-Origin: " + "{0}" + Environment.NewLine;
+            Handshake += string.Format("Sec-WebSocket-Location: " + "ws://{0}:" + port + "" + Environment.NewLine, "127.0.0.1");
+            Handshake += Environment.NewLine;
             listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             listener.Bind(localEndPoint);
@@ -227,6 +239,8 @@ namespace P2P
             {
                 key = Regex.Replace(m.Value, @"Sec\-WebSocket\-Key:(.*?)\r\n", "$1").Trim();
             }
+            System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
+           
             byte[] encryptionString = SHA1.Create().ComputeHash(Encoding.ASCII.GetBytes(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
             return Convert.ToBase64String(encryptionString);
         }
@@ -303,16 +317,148 @@ namespace P2P
                     listconn.Remove(netc);
                 }
                 byte[] tempbtye = new byte[bytesRead];
-
-                //netc.Buffer.CopyTo(tempbtye, 0);
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                handler.Send( PackHandShakeData(GetSecKeyAccetp(tempbtye, bytesRead)));
+
+                byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
+                 handler.BeginSend(aaa, 0, aaa.Length, 0, HandshakeFinished, handler);
             }
-            catch
+            catch(Exception e)
             {
 
             }
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
+        }
+
+        private void HandshakeFinished(IAsyncResult ar)
+        {
+            Socket handler = (Socket)ar.AsyncState;
+            handler.EndSend(ar);
+            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
+            t.Start(handler);
+            //handler.BeginReceive(receivedDataBuffer, 0, receivedDataBuffer.Length, 0, new AsyncCallback(Read), null);
+
+        }
+
+        public byte[] ManageHandshake(byte[] receivedDataBuffer,int HandshakeLength)
+        {
+            string header = "Sec-WebSocket-Version:";
+           
+            byte[] last8Bytes = new byte[8];
+
+            System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
+            String rawClientHandshake = decoder.GetString(receivedDataBuffer, 0, HandshakeLength);
+
+            Array.Copy(receivedDataBuffer, HandshakeLength - 8, last8Bytes, 0, 8);
+
+            //现在使用的是比较新的Websocket协议
+            if (rawClientHandshake.IndexOf(header) != -1)
+            {
+             //  isDataMasked = true;
+                string[] rawClientHandshakeLines = rawClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
+                string acceptKey = "";
+                foreach (string Line in rawClientHandshakeLines)
+                {
+                   // Console.WriteLine(Line);
+                    if (Line.Contains("Sec-WebSocket-Key:"))
+                    {
+                        acceptKey = ComputeWebSocketHandshakeSecurityHash09(Line.Substring(Line.IndexOf(":") + 2));
+                    }
+                }
+
+                New_Handshake = string.Format(New_Handshake, acceptKey);
+                byte[] newHandshakeText = Encoding.UTF8.GetBytes(New_Handshake);
+                //   ConnectionSocket.BeginSend(newHandshakeText, 0, newHandshakeText.Length, 0, HandshakeFinished, null);
+                return newHandshakeText;
+            }
+
+            string ClientHandshake = decoder.GetString(receivedDataBuffer, 0, HandshakeLength - 8);
+
+            string[] ClientHandshakeLines = ClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
+
+         //   logger.Log("新的连接请求来自" + ConnectionSocket.LocalEndPoint + "。正在准备连接 ...");
+
+            // Welcome the new client
+            foreach (string Line in ClientHandshakeLines)
+            {
+               // logger.Log(Line);
+                if (Line.Contains("Sec-WebSocket-Key1:"))
+                    BuildServerPartialKey(1, Line.Substring(Line.IndexOf(":") + 2));
+                if (Line.Contains("Sec-WebSocket-Key2:"))
+                    BuildServerPartialKey(2, Line.Substring(Line.IndexOf(":") + 2));
+                if (Line.Contains("Origin:"))
+                    try
+                    {
+                        Handshake = string.Format(Handshake, Line.Substring(Line.IndexOf(":") + 2));
+                    }
+                    catch
+                    {
+                        Handshake = string.Format(Handshake, "null");
+                    }
+            }
+            // Build the response for the client
+            byte[] HandshakeText = Encoding.UTF8.GetBytes(Handshake);
+            byte[] serverHandshakeResponse = new byte[HandshakeText.Length + 16];
+            byte[] serverKey = BuildServerFullKey(last8Bytes);
+            Array.Copy(HandshakeText, serverHandshakeResponse, HandshakeText.Length);
+            Array.Copy(serverKey, 0, serverHandshakeResponse, HandshakeText.Length, 16);
+
+            //logger.Log("发送握手信息 ...");
+            // ConnectionSocket.BeginSend(serverHandshakeResponse, 0, HandshakeText.Length + 16, 0, HandshakeFinished, null);
+            //    logger.Log(Handshake);
+            return serverHandshakeResponse;
+        }
+        private string Handshake;
+        private void BuildServerPartialKey(int keyNum, string clientKey)
+        {
+            string partialServerKey = "";
+            byte[] currentKey;
+            int spacesNum = 0;
+            char[] keyChars = clientKey.ToCharArray();
+            foreach (char currentChar in keyChars)
+            {
+                if (char.IsDigit(currentChar)) partialServerKey += currentChar;
+                if (char.IsWhiteSpace(currentChar)) spacesNum++;
+            }
+            try
+            {
+                currentKey = BitConverter.GetBytes((int)(Int64.Parse(partialServerKey) / spacesNum));
+                if (BitConverter.IsLittleEndian) Array.Reverse(currentKey);
+
+                if (keyNum == 1) ServerKey1 = currentKey;
+                else ServerKey2 = currentKey;
+            }
+            catch
+            {
+                if (ServerKey1 != null) Array.Clear(ServerKey1, 0, ServerKey1.Length);
+                if (ServerKey2 != null) Array.Clear(ServerKey2, 0, ServerKey2.Length);
+            }
+        }
+        private byte[] ServerKey1;
+        private byte[] ServerKey2;
+        private byte[] BuildServerFullKey(byte[] last8Bytes)
+        {
+            byte[] concatenatedKeys = new byte[16];
+            Array.Copy(ServerKey1, 0, concatenatedKeys, 0, 4);
+            Array.Copy(ServerKey2, 0, concatenatedKeys, 4, 4);
+            Array.Copy(last8Bytes, 0, concatenatedKeys, 8, 8);
+
+            // MD5 Hash
+            System.Security.Cryptography.MD5 MD5Service = System.Security.Cryptography.MD5.Create();
+            return MD5Service.ComputeHash(concatenatedKeys);
+        }
+        public static String ComputeWebSocketHandshakeSecurityHash09(String secWebSocketKey)
+        {
+            const String MagicKEY = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+            String secWebSocketAccept = String.Empty;
+            // 1. Combine the request Sec-WebSocket-Key with magic key.
+            String ret = secWebSocketKey + MagicKEY;
+            // 2. Compute the SHA1 hash
+            SHA1 sha = new SHA1CryptoServiceProvider();
+            byte[] sha1Hash = sha.ComputeHash(Encoding.UTF8.GetBytes(ret));
+            // 3. Base64 encode the hash
+            secWebSocketAccept = Convert.ToBase64String(sha1Hash);
+            return secWebSocketAccept;
         }
         private void ReadCallback(IAsyncResult ar)
         {
@@ -505,7 +651,13 @@ namespace P2P
                         if (netc.Soc.Available > 0)
                         {
                             netc.Buffer = new byte[netc.Soc.Available];
-                            netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                            if (netc.State == 0)
+                            {
+                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
+                                listconn.Find(p=>p==netc).State = 1;
+                            }
+                            else
+                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
                         }
                     }
                 }
@@ -525,13 +677,15 @@ namespace P2P
                 //Socket handler = listener.EndAccept(ar);
 
                 // Create the state object.
+
                 NETcollection netc = new NETcollection();
                 netc.Soc = handler;
+                netc.State = 0;
                 listconn.Add(netc);
-                System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
-                t.Start(handler);
-                System.Threading.Thread.Sleep(50);
-              //  handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
+                //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
+         
+                System.Threading.Thread.Sleep(1);
+               
               
                 //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
 
@@ -545,7 +699,7 @@ namespace P2P
                 //    listener.BeginAccept(
                 //              new AsyncCallback(AcceptCallback),
                 //              listener);
-                System.Threading.Thread.Sleep(1);
+              //  System.Threading.Thread.Sleep(1);
                 //}
                 //catch { }
                 //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
