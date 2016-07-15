@@ -306,8 +306,8 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
-                            netc.Buffer = new byte[netc.Soc.Available];
-                            netc.Soc.BeginReceive(netc.Buffer, 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                            
+                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
                         }
                     }
                 }

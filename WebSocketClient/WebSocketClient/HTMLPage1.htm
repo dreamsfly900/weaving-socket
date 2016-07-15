@@ -15,7 +15,7 @@
         function conn()
         {
              socket = new UDCsocket({
-                 ip: '192.168.11.144', port: 11001, conn: function () { alert("连接成功"); }
+                 ip: '127.0.0.1', port: 11001, conn: function () { alert("连接成功"); }
                , recData: function (text) { alert('收到内容' + text); }
                , close: function () { alert("连接关闭"); }
                 , error: function (msg) { alert("连接错误" + msg); }
