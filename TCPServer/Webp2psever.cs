@@ -11,21 +11,21 @@ using WebSocketServer;
 
 namespace P2P
 {
-    public class Webp2psever: ITcpBasehelper
+    public class Webp2psever : ITcpBasehelper
     {
         Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-         
+
         List<NETcollection> listconn = new List<NETcollection>();
-  
+
         public event myreceive receiveevent;
-        
+
         public event NATthrough NATthroughevent;
         public static ManualResetEvent allDone = new ManualResetEvent(false);
-      
+
         public event UpdataListSoc EventUpdataConnSoc;
-       
+
         public event deleteListSoc EventDeleteConnSoc;
-       
+
         public Webp2psever()
         {
             string New_Handshake = "";
@@ -59,9 +59,9 @@ namespace P2P
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
-           
+
         }
-       
+
         //void udp_receiveevent(byte command, string data, NETcollectionUdp NETc)
         //{
 
@@ -75,7 +75,7 @@ namespace P2P
         {
             return listconn.Count;
         }
-       
+
         public void xintiao(object obj)
         {
             while (true)
@@ -99,8 +99,8 @@ namespace P2P
 
                                 netc.Soc.Send(df.GetBytes());
                             }
-                           
-                          
+
+
 
                         }
                         catch
@@ -119,10 +119,10 @@ namespace P2P
                 catch { }
             }
         }
-        private   byte[] AnalyticData(byte[] recBytes, int recByteLength,ref byte[] masks,ref int lens)
+        private byte[] AnalyticData(byte[] recBytes, int recByteLength, ref byte[] masks, ref int lens)
         {
             lens = 0;
-            if (recByteLength < 2) { return new byte[0] ; }
+            if (recByteLength < 2) { return new byte[0]; }
 
             bool fin = (recBytes[0] & 0x80) == 0x80; // 1bit，1表示最后一帧  
             if (!fin)
@@ -137,7 +137,7 @@ namespace P2P
             }
 
             int payload_len = recBytes[1] & 0x7F; // 数据长度  
-          
+
             byte[] payload_data;
 
             if (payload_len == 126)
@@ -201,7 +201,7 @@ namespace P2P
         //        // Create the state object.
         //        NETcollection netc = new NETcollection();
         //        netc.Soc = handler;
-             
+
         //        System.Threading.Thread.Sleep(100);
         //        handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
         //        System.Threading.Thread.Sleep(50);
@@ -250,7 +250,7 @@ namespace P2P
         //        key = Regex.Replace(m.Value, @"Sec\-WebSocket\-Key:(.*?)\r\n", "$1").Trim();
         //    }
         //    System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
-           
+
         //    byte[] encryptionString = SHA1.Create().ComputeHash(Encoding.ASCII.GetBytes(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
         //    return Convert.ToBase64String(encryptionString);
         //}
@@ -298,7 +298,7 @@ namespace P2P
                 }
             }
 
-          
+
         }
         void receiveeventto(object obj)
         {
@@ -340,7 +340,7 @@ namespace P2P
                 t.Start(handler);
                 // handler.BeginSend(aaa, 0, aaa.Length, 0, HandshakeFinished, handler);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -358,17 +358,17 @@ namespace P2P
 
         }
 
-        public byte[] ManageHandshake(byte[] receivedDataBuffer,int HandshakeLength)
+        public byte[] ManageHandshake(byte[] receivedDataBuffer, int HandshakeLength)
         {
             string New_Handshake = "";
-            
+
             New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
             New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
             New_Handshake += "Connection: Upgrade" + Environment.NewLine;
             New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
             New_Handshake += Environment.NewLine;
             string header = "Sec-WebSocket-Version:";
-           
+
             byte[] last8Bytes = new byte[8];
 
             System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
@@ -379,12 +379,12 @@ namespace P2P
             //现在使用的是比较新的Websocket协议
             if (rawClientHandshake.IndexOf(header) != -1)
             {
-             //  isDataMasked = true;
+                //  isDataMasked = true;
                 string[] rawClientHandshakeLines = rawClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
                 string acceptKey = "";
                 foreach (string Line in rawClientHandshakeLines)
                 {
-                   // Console.WriteLine(Line);
+                    // Console.WriteLine(Line);
                     if (Line.Contains("Sec-WebSocket-Key:"))
                     {
                         acceptKey = ComputeWebSocketHandshakeSecurityHash09(Line.Substring(Line.IndexOf(":") + 2));
@@ -401,12 +401,12 @@ namespace P2P
 
             string[] ClientHandshakeLines = ClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
 
-         //   logger.Log("新的连接请求来自" + ConnectionSocket.LocalEndPoint + "。正在准备连接 ...");
+            //   logger.Log("新的连接请求来自" + ConnectionSocket.LocalEndPoint + "。正在准备连接 ...");
 
             // Welcome the new client
             foreach (string Line in ClientHandshakeLines)
             {
-               // logger.Log(Line);
+                // logger.Log(Line);
                 if (Line.Contains("Sec-WebSocket-Key1:"))
                     BuildServerPartialKey(1, Line.Substring(Line.IndexOf(":") + 2));
                 if (Line.Contains("Sec-WebSocket-Key2:"))
@@ -508,15 +508,15 @@ namespace P2P
                     netc.Soc.Close();
                     listconn.Remove(netc);
                 }
-                
+
                 //if (bytesRead > 0)
                 //{
                 //    // There  might be more data, so store the data received so far.
-                    byte[] tempbtye = new byte[bytesRead];
+                byte[] tempbtye = new byte[bytesRead];
 
                 //netc.Buffer.CopyTo(tempbtye, 0);
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                 netc.Datalist.Add(tempbtye);
+                netc.Datalist.Add(tempbtye);
                 //    byte[] masks = new byte[4];
                 //    tempbtye =AnalyticData(tempbtye, bytesRead,ref masks);
                 //    bytesRead = tempbtye.Length;
@@ -554,7 +554,7 @@ namespace P2P
             }
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
-        
+
         /// <summary>
         /// 打包服务器数据
         /// </summary>
@@ -562,7 +562,7 @@ namespace P2P
         /// <returns>数据包</returns>
         //private   byte[] PackData(byte[] buffer)
         //{
-              
+
         //  byte[] _extend = new byte[0];
         //  byte[] _mask = new byte[0];
         //  byte[] _content = buffer;
@@ -577,8 +577,8 @@ namespace P2P
         //    }
         //    else if (length < 65536)
         //    {
-                
-              
+
+
         //        _header = new DataFrameHeader(true, false, false, false, 2, false, 126);
         //        _extend = new byte[2];
         //        _extend[0] = (byte)(length & 0xFF>>8);
@@ -603,7 +603,7 @@ namespace P2P
         //    }
 
         //    return GetBytes(_header, _extend, _mask, _content);
-    
+
         //}
         //public byte[] GetBytes(DataFrameHeader _header,byte[] _extend, byte[] _mask, byte[] _content)
         //{
@@ -612,7 +612,7 @@ namespace P2P
         //    Buffer.BlockCopy(_extend, 0, buffer, 2, _extend.Length);
         //    Buffer.BlockCopy(_mask, 0, buffer, 2 + _extend.Length, _mask.Length);
         //    Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
-          
+
         //    return buffer;
         //}
         //private byte[] Mask(byte[] data, byte[] mask)
@@ -646,7 +646,7 @@ namespace P2P
             // tcpc.Close();
             return true;
         }
-        public  IPAddress getLocalmachineIPAddress()
+        public IPAddress getLocalmachineIPAddress()
         {
             string strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
@@ -678,7 +678,7 @@ namespace P2P
                 soc.Send(bp.GetBytes());
                 //soc.Send(bp);
             }
-            catch  { return false; }
+            catch { return false; }
             // tcpc.Close();
             return true;
         }
@@ -694,16 +694,16 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
-                           // netc.Buffer = new byte[netc.Soc.Available];
+                            // netc.Buffer = new byte[netc.Soc.Available];
                             if (netc.State == 0)
                             {
                                 netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
-                               // listconn.Find(p=>p==netc).State = 1;
+                                // listconn.Find(p=>p==netc).State = 1;
                             }
                             else
                                 netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
                         }
-                        if (netc.Datalist.Count> 0)
+                        if (netc.Datalist.Count > 0)
                         {
                             if (!netc.Ispage)
                             {
@@ -718,7 +718,7 @@ namespace P2P
                 }
                 catch (Exception ex)
                 { }
-             
+
             }
         }
         public delegate void packageDataHandler(NETcollection netc);
@@ -727,93 +727,94 @@ namespace P2P
 
             NETcollection netc = obj as NETcollection;
 
-            try {
-               
+            try
+            {
+
                 //  Array.Copy(netc.Datalist, ListData, count);
 
                 //while (true)
                 //{
-                    int count = netc.Datalist.Count;
-                    List<Byte[]> ListData = netc.Datalist;
-                    int i = 0;
+                int count = netc.Datalist.Count;
+                List<Byte[]> ListData = netc.Datalist;
+                int i = 0;
 
 
-                    if (netc.Datalist.Count > 0)
+                if (netc.Datalist.Count > 0)
+                {
+
+                    int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
+                    if (bytesRead == 0) { netc.Ispage = false; return; };
+                    byte[] tempbtyes = new byte[bytesRead];
+                    Array.Copy(ListData[i], tempbtyes, tempbtyes.Length);
+                    byte[] masks = new byte[4];
+
+                    int lens = 0;
+                    byte[] tempbtye = AnalyticData(tempbtyes, bytesRead, ref masks, ref lens);
+
+                    labe881:
+                    if (tempbtye.Length > 0)
                     {
+                        #region MyRegion
 
-                        int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
-                        if (bytesRead == 0) { netc.Ispage = false; return; };
-                        byte[] tempbtyes = new byte[bytesRead];
-                        Array.Copy(ListData[i], tempbtyes, tempbtyes.Length);
-                        byte[] masks = new byte[4];
 
-                        int lens = 0;
-                        byte[] tempbtye =AnalyticData(tempbtyes, bytesRead,ref masks,ref lens);
-                       
-                        labe881:
-                        if (tempbtye.Length > 0)
+                        int a = tempbtye[1];
+                        if (bytesRead > 2 + a)
                         {
-                            #region MyRegion
+                            String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                            int len = int.Parse(temp);
 
-                           
-                            int a = tempbtye[1];
-                            if (bytesRead > 2 + a)
+
+                            if (tempbtye.Length == (len + 2 + a))
                             {
-                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                                int len = int.Parse(temp);
-
-                               
-                                    if (tempbtye.Length == (len + 2 + a))
+                                if (bytesRead > tempbtye.Length + lens)
                                 {
-                                    if (bytesRead > tempbtye.Length+lens)
-                                    {
-                                        int aa = bytesRead - (tempbtye.Length + lens);
-                                        byte[] temptt = new byte[aa];
-                                        Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
-                                        ListData[i] = temptt;
-                                    }
-                                    else
+                                    int aa = bytesRead - (tempbtye.Length + lens);
+                                    byte[] temptt = new byte[aa];
+                                    Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                                    ListData[i] = temptt;
+                                }
+                                else
                                     ListData.RemoveAt(i);
-                                }
-                               // netc.Datalist.RemoveAt(i);
-                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                try
-                                {
-                                    modelevent me = new modelevent();
-                                    me.Command = tempbtye[0];
-                                    me.Data = temp;
-                                    me.Soc = netc.Soc;
-                                    me.Masks = masks;
-                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-
-                                    netc.Ispage = false; return;
-                                }
-                                catch (Exception e)
-                                {
-                                    netc.Ispage = false; return;
-                                }
-                              
                             }
-                            #endregion
-                        }
-                       else if (bytesRead>0)
-                        {
-                            ListData.RemoveAt(i);
-                            byte[] temps = new byte[tempbtyes.Length];
-                            Array.Copy(tempbtyes, temps, temps.Length);
-                            tempbtyes = new byte[temps.Length + ListData[i].Length];
-                            Array.Copy(temps, tempbtyes, temps.Length);
-                            Array.Copy(ListData[i],0, tempbtye, temps.Length, ListData[i].Length);
-                            netc.Ispage = false; return;
-                            // goto labered;
-                        }
+                            // netc.Datalist.RemoveAt(i);
+                            temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                            try
+                            {
+                                modelevent me = new modelevent();
+                                me.Command = tempbtye[0];
+                                me.Data = temp;
+                                me.Soc = netc.Soc;
+                                me.Masks = masks;
+                                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                receiveeventto(me);
+                                netc.Ispage = false; return;
+                            }
+                            catch (Exception e)
+                            {
+                                netc.Ispage = false; return;
+                            }
 
+                        }
+                        #endregion
                     }
-               // }
+                    else if (bytesRead > 0)
+                    {
+                        ListData.RemoveAt(i);
+                        byte[] temps = new byte[tempbtyes.Length];
+                        Array.Copy(tempbtyes, temps, temps.Length);
+                        tempbtyes = new byte[temps.Length + ListData[i].Length];
+                        Array.Copy(temps, tempbtyes, temps.Length);
+                        Array.Copy(ListData[i], 0, tempbtye, temps.Length, ListData[i].Length);
+                        netc.Ispage = false; return;
+                        // goto labered;
+                    }
+
+                }
+                // }
 
             }
-            catch(Exception ex)
-            { if(netc.Datalist.Count>0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
+            catch (Exception ex)
+            { if (netc.Datalist.Count > 0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
             finally { netc.Ispage = false; }
         }
         void Accept(object ias)
@@ -833,10 +834,10 @@ namespace P2P
                 netc.State = 0;
                 listconn.Add(netc);
                 //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
-         
+
                 System.Threading.Thread.Sleep(1);
-               
-              
+
+
                 //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
 
                 // Set the event to nonsignaled state.
@@ -849,7 +850,7 @@ namespace P2P
                 //    listener.BeginAccept(
                 //              new AsyncCallback(AcceptCallback),
                 //              listener);
-              //  System.Threading.Thread.Sleep(1);
+                //  System.Threading.Thread.Sleep(1);
                 //}
                 //catch { }
                 //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
@@ -858,78 +859,78 @@ namespace P2P
 
         }
     }
- public class DataFrameHeader
-{
-    private bool _fin;
-    private bool _rsv1;
-    private bool _rsv2;
-    private bool _rsv3;
-    private sbyte _opcode;
-    private bool _maskcode;
-    private sbyte _payloadlength;
-
-    public bool FIN { get { return _fin; } }
-
-    public bool RSV1 { get { return _rsv1; } }
-
-    public bool RSV2 { get { return _rsv2; } }
-
-    public bool RSV3 { get { return _rsv3; } }
-
-    public sbyte OpCode { get { return _opcode; } }
-
-    public bool HasMask { get { return _maskcode; } }
-
-    public sbyte Length { get { return _payloadlength; } }
-
-    public DataFrameHeader(byte[] buffer)
+    public class DataFrameHeader
     {
-        if (buffer.Length < 2)
-            throw new Exception("无效的数据头.");
+        private bool _fin;
+        private bool _rsv1;
+        private bool _rsv2;
+        private bool _rsv3;
+        private sbyte _opcode;
+        private bool _maskcode;
+        private sbyte _payloadlength;
 
-        //第一个字节
-        _fin = (buffer[0] & 0x80) == 0x80;
-        _rsv1 = (buffer[0] & 0x40) == 0x40;
-        _rsv2 = (buffer[0] & 0x20) == 0x20;
-        _rsv3 = (buffer[0] & 0x10) == 0x10;
-        _opcode = (sbyte)(buffer[0] & 0x0f);
+        public bool FIN { get { return _fin; } }
 
-        //第二个字节
-        _maskcode = (buffer[1] & 0x80) == 0x80;
-        _payloadlength = (sbyte)(buffer[1] & 0x7f);
+        public bool RSV1 { get { return _rsv1; } }
 
-    }
+        public bool RSV2 { get { return _rsv2; } }
 
-    //发送封装数据
-    public DataFrameHeader(bool fin, bool rsv1, bool rsv2, bool rsv3, sbyte opcode, bool hasmask, int length)
-    {
-        _fin = fin;
-        _rsv1 = rsv1;
-        _rsv2 = rsv2;
-        _rsv3 = rsv3;
-        _opcode = opcode;
-        //第二个字节
-        _maskcode = hasmask;
-        _payloadlength = (sbyte)length;
-    }
+        public bool RSV3 { get { return _rsv3; } }
 
-    //返回帧头字节
-    public byte[] GetBytes()
-    {
-        byte[] buffer = new byte[2] { 0, 0 };
+        public sbyte OpCode { get { return _opcode; } }
 
-        if (_fin) buffer[0] ^= 0x80;
-        if (_rsv1) buffer[0] ^= 0x40;
-        if (_rsv2) buffer[0] ^= 0x20;
-        if (_rsv3) buffer[0] ^= 0x10;
+        public bool HasMask { get { return _maskcode; } }
 
-        buffer[0] ^= (byte)_opcode;
+        public sbyte Length { get { return _payloadlength; } }
 
-        if (_maskcode) buffer[1] ^= 0x80;
-       
+        public DataFrameHeader(byte[] buffer)
+        {
+            if (buffer.Length < 2)
+                throw new Exception("无效的数据头.");
+
+            //第一个字节
+            _fin = (buffer[0] & 0x80) == 0x80;
+            _rsv1 = (buffer[0] & 0x40) == 0x40;
+            _rsv2 = (buffer[0] & 0x20) == 0x20;
+            _rsv3 = (buffer[0] & 0x10) == 0x10;
+            _opcode = (sbyte)(buffer[0] & 0x0f);
+
+            //第二个字节
+            _maskcode = (buffer[1] & 0x80) == 0x80;
+            _payloadlength = (sbyte)(buffer[1] & 0x7f);
+
+        }
+
+        //发送封装数据
+        public DataFrameHeader(bool fin, bool rsv1, bool rsv2, bool rsv3, sbyte opcode, bool hasmask, int length)
+        {
+            _fin = fin;
+            _rsv1 = rsv1;
+            _rsv2 = rsv2;
+            _rsv3 = rsv3;
+            _opcode = opcode;
+            //第二个字节
+            _maskcode = hasmask;
+            _payloadlength = (sbyte)length;
+        }
+
+        //返回帧头字节
+        public byte[] GetBytes()
+        {
+            byte[] buffer = new byte[2] { 0, 0 };
+
+            if (_fin) buffer[0] ^= 0x80;
+            if (_rsv1) buffer[0] ^= 0x40;
+            if (_rsv2) buffer[0] ^= 0x20;
+            if (_rsv3) buffer[0] ^= 0x10;
+
+            buffer[0] ^= (byte)_opcode;
+
+            if (_maskcode) buffer[1] ^= 0x80;
+
             buffer[1] ^= (byte)_payloadlength;
 
-        return buffer;
+            return buffer;
+        }
     }
-}
 }
