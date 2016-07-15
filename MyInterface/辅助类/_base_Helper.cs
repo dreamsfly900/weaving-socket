@@ -64,7 +64,9 @@ namespace StandardModel
                         {
                             if (md.rd != null)
                             {
-                                md.rd(soc, _0x01);
+                                //md.rd(soc, _0x01);
+                                RequestData rdh = new RequestData(md.rd);
+                                rdh.BeginInvoke(soc, _0x01, null, null);
                                 if (md.type == "once")
                                 {
                                     listmode.Remove(md); 
