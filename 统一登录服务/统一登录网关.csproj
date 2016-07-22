@@ -116,6 +116,7 @@
   <ItemGroup>
     <Content Include="node.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="nodeway.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

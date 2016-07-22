@@ -59,6 +59,9 @@ namespace P2P
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepackageData));
+
+
 
         }
 
@@ -119,7 +122,7 @@ namespace P2P
                 catch { }
             }
         }
-        private byte[] AnalyticData(byte[] recBytes, int recByteLength, ref byte[] masks, ref int lens)
+        private byte[] AnalyticData(byte[] recBytes, int recByteLength, ref byte[] masks, ref int lens, ref int payload_len)
         {
             lens = 0;
             if (recByteLength < 2) { return new byte[0]; }
@@ -136,7 +139,7 @@ namespace P2P
                 return new byte[0];// 不包含掩码的暂不处理
             }
 
-            int payload_len = recBytes[1] & 0x7F; // 数据长度  
+            payload_len = recBytes[1] & 0x7F; // 数据长度  
 
             byte[] payload_data;
 
@@ -517,36 +520,7 @@ namespace P2P
                 //netc.Buffer.CopyTo(tempbtye, 0);
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
                 netc.Datalist.Add(tempbtye);
-                //    byte[] masks = new byte[4];
-                //    tempbtye =AnalyticData(tempbtye, bytesRead,ref masks);
-                //    bytesRead = tempbtye.Length;
-                //    labe881:
-                //    int a = tempbtye[1];
-                //    String temp2 = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                //    int len = int.Parse(temp2);
-                //    //int b = netc.Buffer[2 + a+1];
-                //    //temp = System.Text.ASCIIEncoding.ASCII.GetString(netc.Buffer, 2 + a + 1, b);
-                //    //len = int.Parse(temp);
-                //    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                //    modelevent me = new modelevent();
-                //    me.Command = tempbtye[0];
-                //    me.Data = temp;
-                //    me.Soc = netc.Soc;
-                //    me.Masks = masks;
-                //    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-
-                //    if (bytesRead > (2 + a + len))
-                //    {
-                //        byte[] b = new byte[bytesRead - (2 + a + len)];
-                //        byte[] t = tempbtye;
-                //        Array.Copy(t, (2 + a + len), b, 0, b.Length);
-
-                //        tempbtye = b;
-                //        bytesRead = bytesRead - (2 + a + len);
-                //        goto labe881;
-                //    }
-
-                //}
+                //  System.Threading.Thread.Sleep(10);
             }
             catch
             {
@@ -555,75 +529,7 @@ namespace P2P
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
 
-        /// <summary>
-        /// 打包服务器数据
-        /// </summary>
-        /// <param name="message">数据</param>
-        /// <returns>数据包</returns>
-        //private   byte[] PackData(byte[] buffer)
-        //{
 
-        //  byte[] _extend = new byte[0];
-        //  byte[] _mask = new byte[0];
-        //  byte[] _content = buffer;
-        ////帧头
-        //DataFrameHeader _header ;
-        //    int length = _content.Length;
-
-        //    if (length < 126)
-        //    {
-        //        _extend = new byte[0];
-        //        _header = new DataFrameHeader(true, false, false, false, 2, false, length);
-        //    }
-        //    else if (length < 65536)
-        //    {
-
-
-        //        _header = new DataFrameHeader(true, false, false, false, 2, false, 126);
-        //        _extend = new byte[2];
-        //        _extend[0] = (byte)(length & 0xFF>>8);
-        //        _extend[1] = (byte)(length  & 0xFF);
-        //    }
-        //    else
-        //    {
-        //        _extend = new byte[8];
-        //        _header = new DataFrameHeader(true, false, false, false, 2, false, 127);
-
-        //        int left = length;
-        //        int unit = 256;
-
-        //        for (int i = 7; i > 1; i--)
-        //        {
-        //            _extend[i] = (byte)(left % unit);
-        //            left = left / unit;
-
-        //            if (left == 0)
-        //                break;
-        //        }
-        //    }
-
-        //    return GetBytes(_header, _extend, _mask, _content);
-
-        //}
-        //public byte[] GetBytes(DataFrameHeader _header,byte[] _extend, byte[] _mask, byte[] _content)
-        //{
-        //    byte[] buffer = new byte[2 + _extend.Length + _mask.Length + _content.Length];
-        //    Buffer.BlockCopy(_header.GetBytes(), 0, buffer, 0, 2);
-        //    Buffer.BlockCopy(_extend, 0, buffer, 2, _extend.Length);
-        //    Buffer.BlockCopy(_mask, 0, buffer, 2 + _extend.Length, _mask.Length);
-        //    Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
-
-        //    return buffer;
-        //}
-        //private byte[] Mask(byte[] data, byte[] mask)
-        //{
-        //    for (var i = 0; i < data.Length; i++)
-        //    {
-        //        data[i] = (byte)(data[i] ^ mask[i % 4]);
-        //    }
-
-        //    return data;
-        //}
         public bool send(int index, byte command, string text)
         {
 
@@ -694,27 +600,50 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
-                            // netc.Buffer = new byte[netc.Soc.Available];
+                            netc.Buffer = new byte[4096 * 2000];
                             if (netc.State == 0)
                             {
-                                netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback2), netc);
+                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
                                 // listconn.Find(p=>p==netc).State = 1;
                             }
                             else
-                                netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                                netc.Soc.BeginReceive(netc.Buffer, 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                            System.Threading.Thread.Sleep(5);
                         }
+
+                    }
+                }
+                catch (Exception ex)
+                { }
+
+            }
+        }
+        void receivepackageData(object ias)
+        {
+            while (true)
+            {
+                try
+                {
+                    NETcollection[] netlist = new NETcollection[listconn.Count];
+                    listconn.CopyTo(netlist);
+                    foreach (NETcollection netc in netlist)
+                    {
+
                         if (netc.Datalist.Count > 0)
                         {
+
                             if (!netc.Ispage)
                             {
                                 netc.Ispage = true;
-                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                t.Start(netc);
-                                //  packageDataHandler pdh = new packageDataHandler(packageData);
-                                // pdh.BeginInvoke(netc, null, null);
+                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                //t.Start(netc);
+                                packageDataHandler pdh = new packageDataHandler(packageData);
+                                pdh.BeginInvoke(netc, null, null);
                             }
+                            System.Threading.Thread.Sleep(10);
                         }
                     }
+
                 }
                 catch (Exception ex)
                 { }
@@ -741,7 +670,7 @@ namespace P2P
 
                 if (netc.Datalist.Count > 0)
                 {
-
+                    WebSocketServer.DataFrameHeader dfh = null;
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0) { netc.Ispage = false; return; };
                     byte[] tempbtyes = new byte[bytesRead];
@@ -749,7 +678,44 @@ namespace P2P
                     byte[] masks = new byte[4];
 
                     int lens = 0;
-                    byte[] tempbtye = AnalyticData(tempbtyes, bytesRead, ref masks, ref lens);
+                    int paylen = 0;
+                    byte[] tempbtye = null;
+                    try
+                    {
+                        DataFrame df = new DataFrame();
+                        // AnalyticData(tempbtyes, bytesRead, ref masks, ref lens, ref paylen);
+
+                        tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
+                        if (dfh.OpCode != 2)
+                        {
+                            ListData.RemoveAt(i);
+                            netc.Ispage = false; return;
+                        }
+
+                    }
+                    catch
+                    {
+                        if (paylen > bytesRead)
+                        {
+                            ListData.RemoveAt(i);
+                            byte[] temps = new byte[tempbtyes.Length];
+                            Array.Copy(tempbtyes, temps, temps.Length);
+                            tempbtyes = new byte[temps.Length + ListData[i].Length];
+                            Array.Copy(temps, tempbtyes, temps.Length);
+                            Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                            ListData[i] = tempbtyes;
+                        }
+                        else
+                        {
+                            ListData.RemoveAt(i);
+
+                        }
+                        netc.Ispage = false; return;
+                    }
+                    if (tempbtye == null)
+                    {
+                        netc.Ispage = false; return;
+                    }
 
                     labe881:
                     if (tempbtye.Length > 0)
@@ -761,10 +727,12 @@ namespace P2P
                         if (bytesRead > 2 + a)
                         {
                             String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                            int len = int.Parse(temp);
-
-
-                            if (tempbtye.Length == (len + 2 + a))
+                            int len = 0;
+                            try
+                            {
+                                len = int.Parse(temp);
+                            }
+                            catch
                             {
                                 if (bytesRead > tempbtye.Length + lens)
                                 {
@@ -772,21 +740,93 @@ namespace P2P
                                     byte[] temptt = new byte[aa];
                                     Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
                                     ListData[i] = temptt;
+                                    netc.Ispage = false; return;
+                                }
+
+                            }
+
+                            if (tempbtye.Length == (len + 2 + a))
+                            {
+                                try
+                                {
+                                    if (bytesRead > tempbtye.Length + lens)
+                                    {
+                                        int aa = bytesRead - (tempbtye.Length + lens);
+                                        byte[] temptt = new byte[aa];
+                                        Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                                        ListData[i] = temptt;
+                                    }
+                                    else if (bytesRead < tempbtye.Length + lens)
+                                    {
+
+
+                                    }
+                                    else
+                                        ListData.RemoveAt(i);
+
+                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
+                                len = tempbtye.Length - 2 - a;
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
+                                if (bytesRead > tempbtye.Length + lens)
+                                {
+                                    int aa = bytesRead - (tempbtye.Length + lens);
+                                    byte[] temptt = new byte[aa];
+
+
+                                    Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                                    ListData[i] = temptt;
+                                    try
+                                    {
+                                        temp = combine(temp, temptt, ListData);
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+
+
                                 }
                                 else
+                                {
                                     ListData.RemoveAt(i);
+                                    while (!(ListData.Count > 0))
+                                        System.Threading.Thread.Sleep(100);
+                                    try
+                                    {
+
+                                        temp = combine(temp, ListData[i], ListData);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }
+
+                                }
+
+                                // netc.Ispage = false; return;
                             }
-                            // netc.Datalist.RemoveAt(i);
-                            temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
+
+
                             try
                             {
+
                                 modelevent me = new modelevent();
                                 me.Command = tempbtye[0];
                                 me.Data = temp;
                                 me.Soc = netc.Soc;
                                 me.Masks = masks;
-                                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-                                receiveeventto(me);
+                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                //receiveeventto(me);
                                 netc.Ispage = false; return;
                             }
                             catch (Exception e)
@@ -797,17 +837,7 @@ namespace P2P
                         }
                         #endregion
                     }
-                    else if (bytesRead > 0)
-                    {
-                        ListData.RemoveAt(i);
-                        byte[] temps = new byte[tempbtyes.Length];
-                        Array.Copy(tempbtyes, temps, temps.Length);
-                        tempbtyes = new byte[temps.Length + ListData[i].Length];
-                        Array.Copy(temps, tempbtyes, temps.Length);
-                        Array.Copy(ListData[i], 0, tempbtye, temps.Length, ListData[i].Length);
-                        netc.Ispage = false; return;
-                        // goto labered;
-                    }
+
 
                 }
                 // }
@@ -815,7 +845,73 @@ namespace P2P
             }
             catch (Exception ex)
             { if (netc.Datalist.Count > 0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
-            finally { netc.Ispage = false; }
+
+        }
+
+
+        String combine(string temp, byte[] tempbtyes, List<byte[]> ListData)
+        {
+            WebSocketServer.DataFrameHeader dfh = null;
+
+            //  Array.Copy(ListData[0], tempbtyes, tempbtyes.Length);
+            byte[] masks = new byte[4];
+
+            int lens = 0;
+            int paylen = 0;
+            byte[] tempbtye = null;
+
+            DataFrame df = new DataFrame();
+
+            // AnalyticData(tempbtyes, bytesRead, ref masks, ref lens, ref paylen);
+            try
+            {
+                tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
+            }
+            catch
+            {
+
+                if (paylen > tempbtyes.Length)
+                {
+                    ListData.RemoveAt(0);
+                    byte[] temps = new byte[tempbtyes.Length];
+                    Array.Copy(tempbtyes, temps, temps.Length);
+                    tempbtyes = new byte[temps.Length + ListData[0].Length];
+                    Array.Copy(temps, tempbtyes, temps.Length);
+                    Array.Copy(ListData[0], 0, tempbtyes, temps.Length, ListData[0].Length);
+                    ListData[0] = tempbtyes;
+                    temp = combine(temp, ListData[0], ListData);
+                    return temp;
+                }
+
+            }
+            try
+            {
+                temp += System.Text.Encoding.UTF8.GetString(tempbtye);
+                if (ListData[0].Length > tempbtye.Length + lens)
+                {
+                    int aa = ListData[0].Length - (tempbtye.Length + lens);
+                    byte[] temptt = new byte[aa];
+                    Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                    ListData[0] = temptt;
+
+                }
+                else
+                {
+                    ListData.RemoveAt(0);
+
+                }
+                if (!dfh.FIN)
+                {
+                    while (!(ListData.Count > 0))
+                        System.Threading.Thread.Sleep(100);
+                    temp = combine(temp, ListData[0], ListData);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+            return temp;
         }
         void Accept(object ias)
         {

@@ -12,19 +12,27 @@ namespace WebSocketServer
         private byte[] _content = new byte[0];
         public DataFrame()
         { }
-        public string GetData(byte[] buffer)
+        public byte[] GetData(byte[] buffer, ref byte[] masks, ref int lens, ref int payload_len, ref DataFrameHeader dfh)
         {
+            lens = 0;
             //帧头
             _header = new DataFrameHeader(buffer);
+            dfh = _header;
+            payload_len = 0;
+            if (_header.OpCode != 2)
+            {
 
+            }
             //扩展长度
             if (_header.Length == 126)
             {
+                lens = 8;
                 _extend = new byte[2];
                 Buffer.BlockCopy(buffer, 2, _extend, 0, 2);
             }
             else if (_header.Length == 127)
             {
+                lens = 14;
                 _extend = new byte[8];
                 Buffer.BlockCopy(buffer, 2, _extend, 0, 8);
             }
@@ -34,17 +42,21 @@ namespace WebSocketServer
             {
                 _mask = new byte[4];
                 Buffer.BlockCopy(buffer, _extend.Length + 2, _mask, 0, 4);
-            }         
-   
+            }
+
             //消息体
             if (_extend.Length == 0)
             {
+                payload_len = _content.Length;
                 _content = new byte[_header.Length];
-                Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2 , _content, 0, _content.Length);
+                lens = _extend.Length + _mask.Length + 2;
+                Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
             }
             else if (_extend.Length == 2)
             {
                 int contentLength = (int)_extend[0] * 256 + (int)_extend[1];
+                payload_len = contentLength;
+                lens = _extend.Length + _mask.Length + 2;
                 _content = new byte[contentLength];
                 Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, contentLength > 1024 * 100 ? 1024 * 100 : contentLength);
             }
@@ -57,19 +69,21 @@ namespace WebSocketServer
                     len += (int)_extend[i] * n;
                     n *= 256;
                 }
+                payload_len = (int)len;
                 _content = new byte[len];
+                lens = _extend.Length + _mask.Length + 2;
                 Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
             }
 
             if (_header.HasMask) _content = Mask(_content, _mask);
-            return Text;
+            return _content;
         }
 
         public void setByte(byte[] contents)
         {
             _content = contents;
             int length = _content.Length;
-            
+
             if (length < 126)
             {
                 _extend = new byte[0];
@@ -110,16 +124,16 @@ namespace WebSocketServer
             Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
             return buffer;
         }
-        
-        public string Text 
-        { 
-            get 
+
+        public string Text
+        {
+            get
             {
                 if (_header.OpCode != 1)
                     return string.Empty;
 
-                return Encoding.UTF8.GetString(_content); 
-            } 
+                return Encoding.UTF8.GetString(_content);
+            }
         }
 
         private byte[] Mask(byte[] data, byte[] mask)
