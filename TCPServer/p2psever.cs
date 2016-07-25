@@ -62,7 +62,9 @@ namespace P2P
             }
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepage));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
+
         }
         public NETcollectionUdp[] getNATthrough()
         {
@@ -205,7 +207,11 @@ namespace P2P
                 {
 
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
-                    if (bytesRead == 0) { netc.Ispage = false; return; };
+                    if (bytesRead == 0)
+                    {
+                        if (ListData.Count > 0) ListData.RemoveAt(0);
+                        netc.Ispage = false; return;
+                    };
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
 
@@ -218,28 +224,46 @@ namespace P2P
                             String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
                             int len = int.Parse(temp);
 
-                            labered:
+
                             if ((len + 2 + a) > tempbtye.Length)
                             {
-                                ListData.RemoveAt(i);
-                                byte[] temps = new byte[tempbtye.Length];
-                                Array.Copy(tempbtye, temps, temps.Length);
-                                tempbtye = new byte[temps.Length + ListData[i].Length];
-                                Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                                try
+                                {
+                                    ListData.RemoveAt(i);
 
-                                goto labered;
+                                    byte[] temps = new byte[tempbtye.Length];
+                                    Array.Copy(tempbtye, temps, temps.Length);
+                                    byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                                    Array.Copy(temps, tempbtyes, temps.Length);
+                                    Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                    ListData[i] = tempbtyes;
+                                }
+                                catch
+                                {
+                                }
+                                netc.Ispage = false; return;
+
                             }
                             else if (tempbtye.Length > (len + 2 + a))
                             {
-                                byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
-                                ListData[i] = temps;
+                                try
+                                {
+                                    byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
+                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    ListData[i] = temps;
+                                }
+                                catch
+                                { }
                                 // netc.Ispage = false; return;
                             }
                             else if (tempbtye.Length == (len + 2 + a))
                             { ListData.RemoveAt(i); }
-
-                            temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                            try
+                            {
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                            }
+                            catch
+                            { }
                             try
                             {
                                 modelevent me = new modelevent();
@@ -257,6 +281,18 @@ namespace P2P
                                 netc.Ispage = false; return;
                             }
                         }
+                        else
+                        {
+                            ListData.RemoveAt(i);
+
+                            byte[] temps = new byte[tempbtye.Length];
+                            Array.Copy(tempbtye, temps, temps.Length);
+                            byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                            Array.Copy(temps, tempbtyes, temps.Length);
+                            Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                            ListData[i] = tempbtyes;
+                            netc.Ispage = false; return;
+                        }
                     }
 
                 }
@@ -264,7 +300,10 @@ namespace P2P
             }
             catch (Exception e)
             {
-                if (netc.Datalist.Count > 0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return;
+                if (netc.Datalist.Count > 0)
+                    netc.Datalist.RemoveAt(0);
+                netc.Ispage = false;
+                return;
 
             }
             finally { netc.Ispage = false; }
@@ -347,6 +386,34 @@ namespace P2P
             // tcpc.Close();
             return true;
         }
+        void receivepage(object ias)
+        {
+            while (true)
+            {
+                try
+                {
+                    NETcollection[] netlist = new NETcollection[listconn.Count];
+                    listconn.CopyTo(netlist);
+                    foreach (NETcollection netc in netlist)
+                    {
+
+                        if (netc.Datalist.Count > 0)
+                        {
+                            if (!netc.Ispage)
+                            {
+                                netc.Ispage = true;
+                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                //t.Start(netc);
+                                Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
+                                pdh.BeginInvoke(netc, null, null);
+                            }
+                        }
+                    }
+                }
+                catch { }
+                System.Threading.Thread.Sleep(10);
+            }
+        }
         void receive(object ias)
         {
             while (true)
@@ -359,20 +426,11 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
+                            netc.Buffer = new byte[4096 * 2000];
 
-                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+                            netc.Soc.BeginReceive(netc.Buffer, 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
                         }
-                        if (netc.Datalist.Count > 0)
-                        {
-                            if (!netc.Ispage)
-                            {
-                                netc.Ispage = true;
-                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                t.Start(netc);
-                                //  packageDataHandler pdh = new packageDataHandler(packageData);
-                                // pdh.BeginInvoke(netc, null, null);
-                            }
-                        }
+
                     }
                 }
                 catch { }

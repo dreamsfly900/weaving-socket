@@ -15,7 +15,7 @@ namespace P2P
     {
         Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-        List<NETcollection> listconn = new List<NETcollection>();
+        public List<NETcollection> listconn = new List<NETcollection>();
 
         public event myreceive receiveevent;
 
@@ -36,6 +36,7 @@ namespace P2P
             New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
             New_Handshake += Environment.NewLine;
             // udp = new UDP(_loaclip);
+
         }
 
 
@@ -608,14 +609,14 @@ namespace P2P
                             }
                             else
                                 netc.Soc.BeginReceive(netc.Buffer, 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
-                            System.Threading.Thread.Sleep(5);
-                        }
 
+                        }
+                        System.Threading.Thread.Sleep(5);
                     }
                 }
                 catch (Exception ex)
                 { }
-
+                System.Threading.Thread.Sleep(5);
             }
         }
         void receivepackageData(object ias)
@@ -640,10 +641,11 @@ namespace P2P
                                 packageDataHandler pdh = new packageDataHandler(packageData);
                                 pdh.BeginInvoke(netc, null, null);
                             }
-                            System.Threading.Thread.Sleep(10);
-                        }
-                    }
 
+                        }
+                        System.Threading.Thread.Sleep(5);
+                    }
+                    System.Threading.Thread.Sleep(5);
                 }
                 catch (Exception ex)
                 { }
@@ -747,29 +749,24 @@ namespace P2P
 
                             if (tempbtye.Length == (len + 2 + a))
                             {
-                                try
+
+                                if (bytesRead > tempbtye.Length + lens)
                                 {
-                                    if (bytesRead > tempbtye.Length + lens)
-                                    {
-                                        int aa = bytesRead - (tempbtye.Length + lens);
-                                        byte[] temptt = new byte[aa];
-                                        Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
-                                        ListData[i] = temptt;
-                                    }
-                                    else if (bytesRead < tempbtye.Length + lens)
-                                    {
-
-
-                                    }
-                                    else
-                                        ListData.RemoveAt(i);
-
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    int aa = bytesRead - (tempbtye.Length + lens);
+                                    byte[] temptt = new byte[aa];
+                                    Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+                                    ListData[i] = temptt;
                                 }
-                                catch (Exception e)
+                                else if (bytesRead < tempbtye.Length + lens)
                                 {
 
+
                                 }
+                                else
+                                    ListData.RemoveAt(i);
+
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
                             }
                             else
                             {
@@ -785,14 +782,9 @@ namespace P2P
 
                                     Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
                                     ListData[i] = temptt;
-                                    try
-                                    {
-                                        temp = combine(temp, temptt, ListData);
-                                    }
-                                    catch (Exception e)
-                                    {
 
-                                    }
+                                    temp = combine(temp, temptt, ListData);
+
 
 
                                 }
@@ -801,14 +793,10 @@ namespace P2P
                                     ListData.RemoveAt(i);
                                     while (!(ListData.Count > 0))
                                         System.Threading.Thread.Sleep(100);
-                                    try
-                                    {
 
-                                        temp = combine(temp, ListData[i], ListData);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                    }
+
+                                    temp = combine(temp, ListData[i], ListData);
+
 
                                 }
 
