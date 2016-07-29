@@ -229,14 +229,17 @@ namespace P2P
                             {
                                 try
                                 {
-                                    ListData.RemoveAt(i);
+                                    if (ListData.Count > 1)
+                                    {
+                                        ListData.RemoveAt(i);
 
-                                    byte[] temps = new byte[tempbtye.Length];
-                                    Array.Copy(tempbtye, temps, temps.Length);
-                                    byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                                    Array.Copy(temps, tempbtyes, temps.Length);
-                                    Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
-                                    ListData[i] = tempbtyes;
+                                        byte[] temps = new byte[tempbtye.Length];
+                                        Array.Copy(tempbtye, temps, temps.Length);
+                                        byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                                        Array.Copy(temps, tempbtyes, temps.Length);
+                                        Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                        ListData[i] = tempbtyes;
+                                    }
                                 }
                                 catch
                                 {
@@ -257,7 +260,7 @@ namespace P2P
                                 // netc.Ispage = false; return;
                             }
                             else if (tempbtye.Length == (len + 2 + a))
-                            { ListData.RemoveAt(i); }
+                            { if (ListData.Count > 0) ListData.RemoveAt(i); }
                             try
                             {
                                 temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
@@ -283,14 +286,17 @@ namespace P2P
                         }
                         else
                         {
-                            ListData.RemoveAt(i);
+                            if (ListData.Count > 1)
+                            {
+                                ListData.RemoveAt(i);
 
-                            byte[] temps = new byte[tempbtye.Length];
-                            Array.Copy(tempbtye, temps, temps.Length);
-                            byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                            Array.Copy(temps, tempbtyes, temps.Length);
-                            Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
-                            ListData[i] = tempbtyes;
+                                byte[] temps = new byte[tempbtye.Length];
+                                Array.Copy(tempbtye, temps, temps.Length);
+                                byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                                Array.Copy(temps, tempbtyes, temps.Length);
+                                Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                ListData[i] = tempbtyes;
+                            }
                             netc.Ispage = false; return;
                         }
                     }

@@ -166,9 +166,9 @@ namespace client
                 if (!isreceives)
                 {
                     isreceives = true;
-                    System.Threading.Thread t=new System.Threading.Thread(new ParameterizedThreadStart(receives));
+                    System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(receives));
                     t.Start();
-                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
+                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart(unup));
                     t1.Start();
                 }
                 int ss = 0;
@@ -233,8 +233,23 @@ namespace client
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
+                int count = (b.Length % 40960 == 0 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                if (count == 0)
+                {
+                    tcpc.Client.Send(b);
+                }
+                else
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                        byte[] temp = new byte[zz];
 
-                tcpc.Client.Send(b);
+                        Array.Copy(b, i * 40960, temp, 0, zz);
+                        tcpc.Client.Send(temp);
+                        System.Threading.Thread.Sleep(10);
+                    }
+                }
             }
             catch { return false; }
             // tcpc.Close();
@@ -266,15 +281,15 @@ namespace client
 
                     if (count > 0)
                     {
-                        
-                        int bytesRead = ListData[i]!=null? ListData[i].Length:0;
+
+                        int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
                         Array.Copy(ListData[i], tempbtye, tempbtye.Length);
                         _0x99:
                         if (tempbtye[0] == 0x99)
                         {
-                            
+
                             if (bytesRead > 1)
                             {
                                 byte[] b = new byte[bytesRead - 1];
@@ -284,10 +299,11 @@ namespace client
                                 tempbtye = b;
                                 goto _0x99;
                             }
-                            else {
+                            else
+                            {
                                 ListData.RemoveAt(i);
                                 continue;
-                            } 
+                            }
                         }
                         labe881:
                         if (bytesRead > 2)
@@ -306,7 +322,7 @@ namespace client
                                     Array.Copy(tempbtye, temps, temps.Length);
                                     tempbtye = new byte[temps.Length + ListData[i].Length];
                                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
-                                  
+
                                     goto labered;
                                 }
                                 else if (tempbtye.Length > (len + 2 + a))
@@ -315,9 +331,10 @@ namespace client
                                     Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     ListData[i] = temps;
 
-                                } else if (tempbtye.Length == (len + 2 + a)) 
-                                    { ListData.RemoveAt(i); }
-                               
+                                }
+                                else if (tempbtye.Length == (len + 2 + a))
+                                { ListData.RemoveAt(i); }
+
                                 temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 try
                                 {
@@ -331,7 +348,7 @@ namespace client
                                         else
                                         {
                                             System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                                
+
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                         }
@@ -365,7 +382,7 @@ namespace client
             }
         }
 
-          List<Byte[]> listtemp = new List<Byte[]>();
+        List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
             while (isok)
@@ -373,10 +390,10 @@ namespace client
                 System.Threading.Thread.Sleep(50);
                 try
                 {
-                 
-                
+
+
                     int bytesRead = tcpc.Client.Available;
-                  
+
                     if (bytesRead > 0)
                     {
                         byte[] tempbtye = new byte[bytesRead];
@@ -391,17 +408,18 @@ namespace client
                                 byte[] t = tempbtye;
                                 Array.Copy(t, 1, b, 0, b.Length);
                                 tempbtye = b;
-                               // bytesRead = bytesRead - (1);
+                                // bytesRead = bytesRead - (1);
                                 goto _0x99;
-                            }else
-                             continue;
+                            }
+                            else
+                                continue;
                         }
                         //lock (this)
                         //{
-                            ListData.Add(tempbtye);
-                       // }
+                        ListData.Add(tempbtye);
+                        // }
                         timeout = DateTime.Now;
-                        
+
                     }
                     else
                     {
