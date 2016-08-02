@@ -101,6 +101,7 @@ namespace P2P
                     listconn.CopyTo(netlist);
                     foreach (NETcollection netc in netlist)
                     {
+                        System.Threading.Thread.Sleep(80);
                         try
                         {
                             byte[] b = new byte[] { 0x99 };
@@ -120,6 +121,8 @@ namespace P2P
                         }
 
                     }
+
+                    GC.Collect();
                 }
                 catch { }
             }
@@ -215,7 +218,7 @@ namespace P2P
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
 
-                    labe881:
+
                     if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
@@ -412,12 +415,14 @@ namespace P2P
                                 //t.Start(netc);
                                 Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
                                 pdh.BeginInvoke(netc, null, null);
+
                             }
                         }
+                        System.Threading.Thread.Sleep(10);
                     }
                 }
                 catch { }
-                System.Threading.Thread.Sleep(10);
+
             }
         }
         void receive(object ias)
