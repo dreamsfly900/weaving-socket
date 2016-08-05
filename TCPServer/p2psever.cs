@@ -232,7 +232,7 @@ namespace P2P
                             {
                                 try
                                 {
-                                    if (ListData.Count > 1)
+                                    if (ListData.Count > 0)
                                     {
                                         ListData.RemoveAt(i);
 
@@ -279,6 +279,7 @@ namespace P2P
 
                                 //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
                                 receiveeventto(me);
+                                //if (ListData.Count > 0) ListData.RemoveAt(i);
                                 netc.Ispage = false; return;
 
                             }
@@ -289,7 +290,7 @@ namespace P2P
                         }
                         else
                         {
-                            if (ListData.Count > 1)
+                            if (ListData.Count > 0)
                             {
                                 ListData.RemoveAt(i);
 
@@ -437,9 +438,9 @@ namespace P2P
                     {
                         if (netc.Soc.Available > 0)
                         {
-                            netc.Buffer = new byte[4096 * 2000];
-
-                            netc.Soc.BeginReceive(netc.Buffer, 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                            // netc.Buffer = new byte[4096 * 2000];
+                            System.Threading.Thread.Sleep(10);
+                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Buffer.Length], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
                         }
 
                     }
