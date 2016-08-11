@@ -7,23 +7,23 @@
             conn: null,
             recData: null,
             close: null,
-            error:null
+            error: null
         }
     try {
         var ws;
         var settakon = this.settakon;
         var SOCKECT_ADDR = "ws://" + options.ip + ":" + options.port + "";
 
-      
+
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
-         
+
 
         ws.onopen = function (event) { options.conn(this.readyState); };
         var timeout;
         ws.onmessage = function (evt) {
             try {
-                var bytesRead= evt.data.length;
+                var bytesRead = evt.data.length;
                 var text;
                 //evt.data blob类型
                 if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(event.data)) {
@@ -56,16 +56,16 @@
                     if (options.recData != null)
                         options.recData(text);
             } catch (e) { alert(e.message); }
-             //   alert("接收到服务器发送的数据：\r\n" + text);
-            
+            //   alert("接收到服务器发送的数据：\r\n" + text);
+
 
 
         };
         ws.onclose = function (event) { if (options.close != null) options.close(this.readyState); };
         ws.onerror = function (event) {
-            if (options.error!=null)
+            if (options.error != null)
                 options.error(event.data);
-            
+
         };
         this.soc = ws;
     } catch (ex) {
@@ -114,12 +114,13 @@ UDCsocket.prototype = {
     soc: null,
     takon: "",
     settakon: function (str) {
-      //  alert(str);
+        //  alert(str);
 
         this.takon = str;
-       
+
     },
-    SendData: function (command,Request, Root, Parameter) {
+    SendData: function (command, Request, Root, Parameter) {
+
         try {
             if (takon == "") {
                 alert("takon不存在！");
@@ -127,13 +128,14 @@ UDCsocket.prototype = {
             }
             var test = new Object();
             test.Request = Request;
-            test.Root =  JSON.stringify(Root);
+            test.Root = JSON.stringify(Root);
             test.Parameter = JSON.stringify(Parameter);
             test.Token = takon;
             test.Querycount = 0;
             test.Number = null;
-            
-            var sendb = JSON.stringify(test).getBytes();
+            // alert(JSON.stringify(test));
+
+            var sendb = (JSON.stringify(test)).getBytes();
             var lens = (sendb.length + '').getBytes();
             //不清楚getBytes 是不是utf8格式
             //byte[] b = new byte[2 + lens.Length + sendb.Length];
@@ -160,13 +162,25 @@ UDCsocket.prototype = {
 }
 
 String.prototype.getBytes = function () {
-    var bytes = [];
-    for (var i = 0; i < this.length; i++) {
-        var charCode = this.charCodeAt(i);
-        var cLen = Math.ceil(Math.log(charCode) / Math.log(256));
-        for (var j = 0; j < cLen; j++) {
-            bytes.push((charCode << (j * 8)) & 0xFF);
+    //var bytes = [];
+    //for (var i = 0; i < this.length; i++) {
+    //    var charCode = this.charCodeAt(i);
+    //    var cLen = Math.ceil(Math.log(charCode) / Math.log(256));
+    //    for (var j = 0; j < cLen; j++) {
+    //        bytes.push((charCode << (j * 8)) & 0xFF);
+    //    }
+    //}
+
+    //return bytes;
+    var str = this;
+    var byteArray = [];
+    for (var i = 0; i < str.length; i++)
+        if (str.charCodeAt(i) <= 0x7F)
+            byteArray.push(str.charCodeAt(i));
+        else {
+            var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
+            for (var j = 0; j < h.length; j++)
+                byteArray.push(parseInt(h[j], 16));
         }
-    }
-    return bytes;
+    return byteArray;
 }
