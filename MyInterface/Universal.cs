@@ -342,6 +342,11 @@ namespace MyInterface
           // tcpc.Close();
           return true;
       }
+
+        public void Runcommand(byte command, string data, Socket soc)
+        {
+            
+        }
     }
     public class MySockets
     {

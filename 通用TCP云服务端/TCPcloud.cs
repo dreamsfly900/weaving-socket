@@ -138,6 +138,7 @@ namespace cloud
                     string[] temp = data.Split('|');
                     if (temp[0] == "in")
                     {
+
                         exec2(command, data, soc);
                         //加入onlinetoken
                         online ol = new online();
@@ -176,7 +177,10 @@ namespace cloud
 
                 try
                 {
-                    CI.MyICommand.Run(data, soc);
+
+                    CI.MyICommand.Runcommand(command, data, soc);
+
+
 
                 }
                 catch (Exception ex)
