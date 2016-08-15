@@ -111,10 +111,12 @@ namespace P2P
                         }
                         catch
                         {
-
+                            if (EventDeleteConnSoc != null)
+                                EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
                             try { netc.Soc.Close(); }
                             catch { }
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+
 
 
                             listconn.Remove(netc);
@@ -272,13 +274,15 @@ namespace P2P
                             { }
                             try
                             {
-                                modelevent me = new modelevent();
-                                me.Command = tempbtye[0];
-                                me.Data = temp;
-                                me.Soc = netc.Soc;
+                                //modelevent me = new modelevent();
+                                //me.Command = tempbtye[0];
+                                //me.Data = temp;
+                                //me.Soc = netc.Soc;
 
-                                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-                                receiveeventto(me);
+                                ////System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                //receiveeventto(me);
+                                if (receiveevent != null)
+                                    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
                                 //if (ListData.Count > 0) ListData.RemoveAt(i);
                                 netc.Ispage = false; return;
 
@@ -419,8 +423,9 @@ namespace P2P
 
                             }
                         }
-                        System.Threading.Thread.Sleep(10);
+
                     }
+                    System.Threading.Thread.Sleep(10);
                 }
                 catch { }
 
@@ -439,7 +444,7 @@ namespace P2P
                         if (netc.Soc.Available > 0)
                         {
                             // netc.Buffer = new byte[4096 * 2000];
-                            System.Threading.Thread.Sleep(10);
+                            //System.Threading.Thread.Sleep(1);
                             netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Buffer.Length], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
                         }
 
@@ -464,8 +469,10 @@ namespace P2P
                 NETcollection netc = new NETcollection();
                 netc.Soc = handler;
                 listconn.Add(netc);
-                System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
-                t.Start(handler);
+                if (EventUpdataConnSoc != null)
+                    EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
+                //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
+                //t.Start(handler);
                 //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
 
                 // Set the event to nonsignaled state.
@@ -478,7 +485,7 @@ namespace P2P
                 //    listener.BeginAccept(
                 //              new AsyncCallback(AcceptCallback),
                 //              listener);
-                System.Threading.Thread.Sleep(1);
+                //System.Threading.Thread.Sleep(1);
                 //}
                 //catch { }
                 //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
