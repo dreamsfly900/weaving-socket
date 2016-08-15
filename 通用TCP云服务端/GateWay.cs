@@ -399,11 +399,12 @@ namespace cloud
                     ConnObjlist.Add(cobj);
 
                 }
-                int len = ConnObjlist.Count / Proportion;
-                foreach (CommandItem ci in CommandItemS)
+                int len = (ConnObjlist.Count + 1) % Proportion;
+                if (len == 0)
                 {
-                    if (len > ci.Client.Count)
+                    foreach (CommandItem ci in CommandItemS)
                     {
+
                         P2Pclient p2p = new P2Pclient(false);
 
                         p2p.receiveServerEvent += V_receiveServerEvent;
@@ -412,11 +413,11 @@ namespace cloud
                         if (p2p.start(ci.Ip, ci.Port, false))
                         {
                             ci.Client.Add(p2p);
-
                         }
                     }
-
                 }
+
+
 
                 int count = CommandItemS.Count;
                 CommandItem[] comItems = new CommandItem[count];

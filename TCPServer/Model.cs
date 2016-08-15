@@ -15,7 +15,7 @@ namespace P2P
             get { return soc; }
             set { soc = value; }
         }
-        private int _BufferSize = 20480;
+        private int _BufferSize = 2048;
 
         public int BufferSize
         {
@@ -23,7 +23,7 @@ namespace P2P
             set { _BufferSize = value; }
         }
         // Receive buffer.
-        private byte[] buffer =new byte[20480];
+        private byte[] buffer = new byte[0];
 
         public byte[] Buffer
         {

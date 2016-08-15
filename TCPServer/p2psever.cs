@@ -111,12 +111,21 @@ namespace P2P
                         }
                         catch
                         {
-                            if (EventDeleteConnSoc != null)
-                                EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
-                            try { netc.Soc.Close(); }
+
+                            try
+                            {
+                                netc.Soc.Close();
+
+
+                            }
                             catch { }
                             //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-
+                            try
+                            {
+                                if (EventDeleteConnSoc != null)
+                                    EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                            }
+                            catch { }
 
 
                             listconn.Remove(netc);
@@ -445,7 +454,7 @@ namespace P2P
                         {
                             // netc.Buffer = new byte[4096 * 2000];
                             //System.Threading.Thread.Sleep(1);
-                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Buffer.Length], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
                         }
 
                     }
@@ -470,7 +479,7 @@ namespace P2P
                 netc.Soc = handler;
                 listconn.Add(netc);
                 if (EventUpdataConnSoc != null)
-                    EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
+                    EventUpdataConnSoc.BeginInvoke(handler, null, null);
                 //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
                 //t.Start(handler);
                 //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);

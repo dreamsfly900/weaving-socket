@@ -233,7 +233,7 @@ namespace client
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                int count = (b.Length % 40960 == 0 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
                 if (count == 0)
                 {
                     tcpc.Client.Send(b);
@@ -347,7 +347,8 @@ namespace client
                                             Tokan = temp.Split('|')[1];
                                         else
                                         {
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
 
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
@@ -355,8 +356,8 @@ namespace client
                                     }
                                     else if (receiveServerEvent != null)
                                     {
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-
+                                        // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                        receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();
