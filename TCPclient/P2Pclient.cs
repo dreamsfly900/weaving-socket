@@ -347,8 +347,9 @@ namespace client
                                             Tokan = temp.Split('|')[1];
                                         else
                                         {
-                                            receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            if (receiveServerEvent != null)
+                                                // receiveServerEvent.BeginInvoke (str.command, str.date,null,null);
+                                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
 
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
@@ -356,8 +357,10 @@ namespace client
                                     }
                                     else if (receiveServerEvent != null)
                                     {
-                                        // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                        receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                        //
+                                        if (receiveServerEvent != null)
+                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();
