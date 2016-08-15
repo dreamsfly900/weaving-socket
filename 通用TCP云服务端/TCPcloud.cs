@@ -96,35 +96,48 @@ namespace cloud
         }
         void p2psev_EventDeleteConnSoc(System.Net.Sockets.Socket soc)
         {
-            foreach (CommandItem CI in listcomm)
+            try
             {
-                try
+                int count = listcomm.Count;
+                CommandItem[] cilist = new CommandItem[count];
+                listcomm.CopyTo(0, cilist, 0, count);
+                foreach (CommandItem CI in cilist)
                 {
-                    CI.MyICommand.TCPCommand_EventDeleteConnSoc(soc);
-                }
-                catch (Exception ex)
-                {
-                    if (EventMylog != null)
-                        EventMylog("EventDeleteConnSoc", ex.Message);
+                    try
+                    {
+                        CI.MyICommand.TCPCommand_EventDeleteConnSoc(soc);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (EventMylog != null)
+                            EventMylog("EventDeleteConnSoc", ex.Message);
+                    }
                 }
             }
+            catch { }
         }
 
         void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
         {
-
-            foreach (CommandItem CI in listcomm)
+            try
             {
-                try
+                int count = listcomm.Count;
+                CommandItem[] cilist = new CommandItem[count];
+                listcomm.CopyTo(0, cilist, 0, count);
+                foreach (CommandItem CI in cilist)
                 {
-                    CI.MyICommand.TCPCommand_EventUpdataConnSoc(soc);
-                }
-                catch (Exception ex)
-                {
-                    if (EventMylog != null)
-                        EventMylog("EventUpdataConnSoc", ex.Message);
+                    try
+                    {
+                        CI.MyICommand.TCPCommand_EventUpdataConnSoc(soc);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (EventMylog != null)
+                            EventMylog("EventUpdataConnSoc", ex.Message);
+                    }
                 }
             }
+            catch { }
 
         }
 
