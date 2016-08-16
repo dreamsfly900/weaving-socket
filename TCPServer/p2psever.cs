@@ -60,11 +60,19 @@ namespace P2P
                 udp.start(port);
                 udp.receiveevent += udp_receiveevent;
             }
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepage));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
-            
+            System.Threading.Thread t = new Thread(new ParameterizedThreadStart(Accept));
+            t.Start();
+            System.Threading.Thread t1 = new Thread(new ParameterizedThreadStart(receive));
+            t1.Start();
+            System.Threading.Thread t2 = new Thread(new ParameterizedThreadStart(receivepage));
+            t2.Start();
+            System.Threading.Thread t3 = new Thread(new ParameterizedThreadStart(xintiao));
+            t3.Start();
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepage));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
+
         }
      public NETcollectionUdp[]  getNATthrough()
      {
@@ -101,7 +109,7 @@ namespace P2P
                  listconn.CopyTo(netlist);
                  foreach (NETcollection netc in netlist)
                  {
-                        System.Threading.Thread.Sleep(80);
+                        
                         try
                      {
                          byte[] b = new byte[] { 0x99 };

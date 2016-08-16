@@ -27,7 +27,7 @@ namespace client
         bool isreceives = false;
         bool isline = false;
         DateTime timeout;
-        int mytimeout = 30;
+        int mytimeout = 90;
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
         UDP udp;
@@ -345,10 +345,10 @@ namespace client
                                             Tokan = temp.Split('|')[1];
                                         else
                                         {
-                                            //if(receiveServerEvent!=null)
-                                            //receiveServerEvent.BeginInvoke (str.command, str.date,null,null);
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-
+                                            if (receiveServerEvent != null)
+                                               // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            receiveServerEvent(str.command, str.date);
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                         }
@@ -356,9 +356,10 @@ namespace client
                                     else if (receiveServerEvent != null) 
                                     {
                                         //
-                                        
+                                        if (receiveServerEvent != null)
                                              //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                        receiveServerEvent(str.command, str.date);
+                                        //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();

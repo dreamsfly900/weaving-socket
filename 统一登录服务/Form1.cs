@@ -78,10 +78,9 @@ namespace 统一登录服务
                {
                     foreach (CommandItem ci in gw.CommandItemS)
                     {
-                        foreach (P2Pclient cl in ci.Client)
-                        {
-                            listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-状态：" + cl.Isline + "-未处理消息：" + cl.ListData.Count);
-                        }
+                        
+                            listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + ci.Client.Count);
+                         
                     }
                     foreach (WayItem ci in gw.WayItemS)
                     {

@@ -397,8 +397,8 @@ namespace cloud
 
             try
             {
-                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff");// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
                 if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
                 {
                     ConnObjlist.Add(cobj);
@@ -409,26 +409,29 @@ namespace cloud
                     if(ci.Client[ci.Client.Count - 1]!=null)
                     ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
                 }
-                int len = (ConnObjlist.Count) % Proportion;
-                if (len == 0)
+                try
                 {
-                    if(ConnObjlist.Count> Proportion)
-                    foreach (CommandItem ci in CommandItemS)
+                    int len = (ConnObjlist.Count) % Proportion;
+                    if (len == 0)
                     {
-                            if ((ConnObjlist.Count / Proportion) > ci.Client.Count)
+                        if (ConnObjlist.Count > Proportion)
+                            foreach (CommandItem ci in CommandItemS)
                             {
-                                P2Pclient p2p = new P2Pclient(false);
-                                p2p.receiveServerEvent += (V_receiveServerEvent);
-                                p2p.timeoutevent += (V_timeoutevent);
-                                p2p.ErrorMge += (V_ErrorMge);
-                                if (p2p.start(ci.Ip, ci.Port, false))
+                                if ((ConnObjlist.Count / Proportion) > ci.Client.Count)
                                 {
-                                    ci.Client.Add(p2p);
+                                    P2Pclient p2p = new P2Pclient(false);
+                                    p2p.receiveServerEvent += (V_receiveServerEvent);
+                                    p2p.timeoutevent += (V_timeoutevent);
+                                    p2p.ErrorMge += (V_ErrorMge);
+                                    if (p2p.start(ci.Ip, ci.Port, false))
+                                    {
+                                        ci.Client.Add(p2p);
+                                    }
                                 }
                             }
                     }
                 }
-
+                catch { EventMylog("EventUpdataConnSoc---新建连接",""); }
 
 
                

@@ -57,10 +57,20 @@ namespace P2P
             //    udp.start(port);
             //    udp.receiveevent += udp_receiveevent;
             //}
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
-            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepackageData));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Accept));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
+            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepackageData));
+            System.Threading.Thread t = new Thread(new ParameterizedThreadStart(Accept));
+            t.Start();
+            System.Threading.Thread t1 = new Thread(new ParameterizedThreadStart(receive));
+            t1.Start();
+            System.Threading.Thread t2 = new Thread(new ParameterizedThreadStart(receivepackageData));
+            t2.Start();
+            System.Threading.Thread t3 = new Thread(new ParameterizedThreadStart(xintiao));
+            t3.Start();
+            System.Threading.Thread t4 = new Thread(new ParameterizedThreadStart(receiveconn));
+            t4.Start();
             //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveconn));
 
 
@@ -267,11 +277,11 @@ namespace P2P
                     netc.Soc.Close();
                     listconn.Remove(netc);
                 }
-                netc.State = 1;
+               
                 byte[] tempbtye = new byte[bytesRead];
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
                 //   System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback())
-
+                netc.State = 1;
                 //  System.Threading.Thread.Sleep(50);
                 new sendheaddele(sendhead).BeginInvoke(handler, tempbtye,null,null);
                 if (EventUpdataConnSoc != null)
@@ -463,8 +473,37 @@ namespace P2P
             }
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
-        
-        
+
+        private void ReadCallback3(object ar)
+        {
+            NETcollection netc = (NETcollection)ar;
+            Socket handler = netc.Soc;
+            //if (!netc.Soc.Poll(100, SelectMode.SelectRead))
+            //{
+            //    listconn.Remove(netc);
+            //    return;
+            //}
+            // Read data from the client socket. 
+            try
+            {
+                handler.Receive(netc.Buffer = new byte[netc.Soc.Available]);
+                //if (bytesRead > 0)
+                //{
+                //    // There  might be more data, so store the data received so far.
+                byte[] tempbtye = new byte[netc.Buffer.Length];
+             
+                //netc.Buffer.CopyTo(tempbtye, 0);
+                Array.Copy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length);
+                netc.Datalist.Add(tempbtye);
+                //  System.Threading.Thread.Sleep(10);
+            }
+            catch
+            {
+
+            }
+            //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
+        }
+
         public bool send(int index, byte command, string text)
         {
 
@@ -552,22 +591,7 @@ namespace P2P
                 
             }
         }
-        void receiveconn(object ias)
-        {
-
-            NETcollection netc = ias as  NETcollection;
-            while (true)
-            {
-                System.Threading.Thread.Sleep(1);
-                if (netc.Soc.Available > 200)
-                {
-                    netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
-                    return;
-                }
-                if (netc.State == 1)
-                    return;
-            }
-        }
+       
         void gg(object obj)
         {
             NETcollection[] netlist = obj as NETcollection[];
@@ -592,7 +616,8 @@ namespace P2P
                                     if(state==0)
                                     netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
                                     if(state==1)
-                                        netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReadCallback3), netc);
+                                    // netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
                                     // listconn.Find(p=>p==netc).State = 1;
                                 }
                             }
@@ -624,10 +649,12 @@ namespace P2P
                             if (!netc.Ispage)
                             {
                                 netc.Ispage = true;
-                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                t.Start(netc);
+
+                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                //t.Start(netc);
+                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
                                 //packageDataHandler pdh = new packageDataHandler(packageData);
-                                //pdh.BeginInvoke(netc, null, null);
+                               // pdh.BeginInvoke(netc, null, null);
                             }
                            // System.Threading.Thread.Sleep(1);
                         }
@@ -804,7 +831,7 @@ namespace P2P
                                 //t.Start(me);
                                 //receiveeventto(me);
                                 if (receiveevent != null)
-                                    receiveevent.BeginInvoke(me.Command, me.Data, me.Soc, null, null);
+                                    receiveevent(me.Command, me.Data, me.Soc);
                                 netc.Ispage = false; return;
                                 }
                                 catch (Exception e)
@@ -890,6 +917,89 @@ namespace P2P
            
             return temp;
         }
+
+        delegate void receiveconndele(object ias);
+        void receiveconn(object ias)
+        {
+
+          //  NETcollection netcs = ias as NETcollection;
+            while (true)
+            {
+                int c = connlist.Count;
+                 
+                NETcollection[] netlist = new NETcollection[c];
+                connlist.CopyTo(0, netlist, 0, c);
+                foreach (NETcollection netc in netlist)
+                {
+                    try
+                    {
+                        if (netc != null)
+                            if (netc.Soc != null)
+                                if(netc.State==0)
+                                if (netc.Soc.Available > 200)
+                                {
+                                        netc.Soc.Receive(netc.Buffer = new byte[netc.Soc.Available]);
+                                       // setherd(netc);
+                                     new receiveconndele(setherd).BeginInvoke(netc, null, null);
+                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
+                                        connlist.Remove(netc);
+                                        listconn.Add(netc);
+                                    
+                                }
+                    }
+                    catch { }
+                }
+                System.Threading.Thread.Sleep(1);
+            }
+        }
+
+        void setherd(object obj)
+        {
+            try
+            {
+                NETcollection netc = obj as NETcollection;
+              
+                sendhead(netc.Soc, netc.Buffer);
+                //  System.Threading.Thread.Sleep(50);
+                // new sendheaddele(sendhead).BeginInvoke(netc.Soc, netc.Buffer, null, null);
+
+                netc.State = 1;
+                if (EventUpdataConnSoc != null)
+                    EventUpdataConnSoc(netc.Soc);
+                    //EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
+            }
+            catch { }
+        }
+        void setherd2(object obj)
+        {
+            try
+            {
+                Socket soc = obj as Socket;
+                while (true)
+                {
+
+                    if (soc.Available < 200)
+                        System.Threading.Thread.Sleep(10);
+                    else
+                    {
+                        byte[] Buffer;
+                        soc.Receive(Buffer = new byte[soc.Available]);
+
+                        //  System.Threading.Thread.Sleep(50);
+                        new sendheaddele(sendhead).BeginInvoke(soc, Buffer, null, null);
+                        if (EventUpdataConnSoc != null)
+                            EventUpdataConnSoc.BeginInvoke(soc, null, null);
+                        NETcollection netc = new NETcollection();
+                        netc.Soc = soc;
+                        netc.State = 1;
+                        listconn.Add(netc);
+                        return;
+                    }
+                }
+            }
+            catch { }
+        }
+        List<NETcollection> connlist = new List<NETcollection>();
         void Accept(object ias)
         {
             while (true)
@@ -906,8 +1016,10 @@ namespace P2P
                     NETcollection netc = new NETcollection();
                     netc.Soc = handler;
                     netc.State = 0;
-                    listconn.Add(netc);
-                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveconn), netc);
+                    // listconn.Add(netc);
+                    connlist.Add(netc);
+                   // new receiveconndele(setherd2).BeginInvoke(handler, null, null);
+                    // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd2), handler);
                     //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
 
 
