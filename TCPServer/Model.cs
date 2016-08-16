@@ -23,7 +23,7 @@ namespace P2P
             set { _BufferSize = value; }
         }
         // Receive buffer.
-        private byte[] buffer = new byte[0];
+        private byte[] buffer =new byte[0];
 
         public byte[] Buffer
         {

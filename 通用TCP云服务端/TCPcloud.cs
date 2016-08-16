@@ -16,7 +16,7 @@ namespace cloud
         XmlDocument xml = new XmlDocument();
         List<CommandItem> listcomm = new List<CommandItem>();
         QueueTable qt = new QueueTable();
-        public delegate void Mylog(string type, string log);
+        public delegate void Mylog(string type,string log);
         public event Mylog EventMylog;
         List<online> onlines = new List<online>();
         public bool Run(MyInterface.MyInterface myI)
@@ -32,14 +32,14 @@ namespace cloud
             p2psev.receiveevent += p2psev_receiveevent;
             p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
             p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
-            //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
+         //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
             p2psev.start(Convert.ToInt32(myI.Parameter[4]));
             qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
             if (EventMylog != null)
-                EventMylog("连接", "连接启动成功");
-            return true;
+                EventMylog("连接","连接启动成功");
+               return true; 
         }
-        public void ReloadFlies()
+       public void ReloadFlies()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace cloud
                             ci.MyICommand = Ic;
                             ci.CommName = Ic.Getcommand();
                             Ic.SetGlobalQueueTable(qt);
-                            GetAttributeInfo(Ic, obj.GetType(), obj);
+                            GetAttributeInfo( Ic,obj.GetType(), obj);
                             listcomm.Add(ci);
                         }
                     }
@@ -72,7 +72,7 @@ namespace cloud
                     EventMylog("加载异常", ex.Message);
             }
         }
-        public void GetAttributeInfo(TCPCommand Ic, Type t, object obj)
+        public  void GetAttributeInfo(TCPCommand Ic,Type t,object obj)
         {
 
             foreach (MethodInfo mi in t.GetMethods())
@@ -86,8 +86,8 @@ namespace cloud
                 else
                 {
 
-
-                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi, true);
+                   
+                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi,true);
                     Ic.Bm.AddListen(mi.Name, del as RequestData, myattribute.Type);
 
 
@@ -101,7 +101,7 @@ namespace cloud
                 int count = listcomm.Count;
                 CommandItem[] cilist = new CommandItem[count];
                 listcomm.CopyTo(0, cilist, 0, count);
-                foreach (CommandItem CI in cilist)
+             foreach (CommandItem CI in cilist)
                 {
                     try
                     {
@@ -140,8 +140,8 @@ namespace cloud
             catch { }
 
         }
-
-
+ 
+        
         void p2psev_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
         {
             try
@@ -151,7 +151,7 @@ namespace cloud
                     string[] temp = data.Split('|');
                     if (temp[0] == "in")
                     {
-
+                        
                         exec2(command, data, soc);
                         //加入onlinetoken
                         online ol = new online();
@@ -164,7 +164,7 @@ namespace cloud
                         //移出onlinetoken
                         int count = onlines.Count;
                         online[] ols = new online[count];
-                        onlines.CopyTo(0, ols, 0, count);
+                        onlines.CopyTo(0,ols,0,count);
                         foreach (online ol in ols)
                         {
                             if (ol.Token == temp[1])
@@ -175,33 +175,32 @@ namespace cloud
                         }
                     }
                     return;
-                }
-                else
-                    exec(command, data, soc);
+                }else
+                exec(command, data, soc);
             }
             catch { return; }
-
+          
             //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(exec));
         }
         public void exec2(byte command, string data, System.Net.Sockets.Socket soc)
         {
             foreach (CommandItem CI in listcomm)
             {
+                 
+                    try
+                    {
+                  
+                        CI.MyICommand.Runcommand(command,data, soc);
+                   
 
-                try
-                {
 
-                    CI.MyICommand.Runcommand(command, data, soc);
-
-
-
-                }
-                catch (Exception ex)
-                {
-                    if (EventMylog != null)
-                        EventMylog("receiveevent", ex.Message);
-                }
-
+                    }
+                    catch (Exception ex)
+                    {
+                        if (EventMylog != null)
+                            EventMylog("receiveevent", ex.Message);
+                    }
+                
             }
         }
         public void exec(byte command, string data, System.Net.Sockets.Socket soc)
@@ -213,7 +212,7 @@ namespace cloud
                     try
                     {
                         CI.MyICommand.Run(data, soc);
-                        CI.MyICommand.Runbase(data, soc);
+                        CI.MyICommand.Runbase(data, soc); 
                     }
                     catch (Exception ex)
                     {

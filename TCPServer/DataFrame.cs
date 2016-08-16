@@ -12,7 +12,7 @@ namespace WebSocketServer
         private byte[] _content = new byte[0];
         public DataFrame()
         { }
-        public byte[] GetData(byte[] buffer, ref byte[] masks, ref int lens, ref int payload_len, ref DataFrameHeader dfh)
+        public byte[] GetData(byte[] buffer,ref byte[] masks,ref int lens,ref int payload_len,ref DataFrameHeader dfh)
         {
             lens = 0;
             //帧头
@@ -43,14 +43,14 @@ namespace WebSocketServer
                 _mask = new byte[4];
                 Buffer.BlockCopy(buffer, _extend.Length + 2, _mask, 0, 4);
             }
-
+             
             //消息体
             if (_extend.Length == 0)
             {
                 payload_len = _content.Length;
                 _content = new byte[_header.Length];
                 lens = _extend.Length + _mask.Length + 2;
-                Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
+                Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2 , _content, 0, _content.Length);
             }
             else if (_extend.Length == 2)
             {
@@ -70,7 +70,7 @@ namespace WebSocketServer
                     n *= 256;
                 }
                 payload_len = (int)len;
-                _content = new byte[len];
+               _content = new byte[len];
                 lens = _extend.Length + _mask.Length + 2;
                 Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
             }
@@ -83,7 +83,7 @@ namespace WebSocketServer
         {
             _content = contents;
             int length = _content.Length;
-
+            
             if (length < 126)
             {
                 _extend = new byte[0];
@@ -124,16 +124,16 @@ namespace WebSocketServer
             Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
             return buffer;
         }
-
-        public string Text
-        {
-            get
+        
+        public string Text 
+        { 
+            get 
             {
                 if (_header.OpCode != 1)
                     return string.Empty;
 
-                return Encoding.UTF8.GetString(_content);
-            }
+                return Encoding.UTF8.GetString(_content); 
+            } 
         }
 
         private byte[] Mask(byte[] data, byte[] mask)

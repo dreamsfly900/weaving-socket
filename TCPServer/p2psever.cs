@@ -6,38 +6,38 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace P2P
+namespace P2P 
 {
     public delegate void myreceive(byte command, String data, Socket soc);
-    public delegate void NATthrough(byte command, String data, EndPoint ep);
+    public delegate void NATthrough(byte command,String data, EndPoint ep);
     public delegate void UpdataListSoc(Socket soc);
     public delegate void deleteListSoc(Socket soc);
     public interface ITcpBasehelper
     {
-
+        
         void start(int port);
         int getNum();
         void xintiao(object obj);
         bool send(Socket soc, byte command, string text);
-        event myreceive receiveevent;
-        event NATthrough NATthroughevent;
+         event myreceive receiveevent; 
+         event NATthrough NATthroughevent; 
 
-        event UpdataListSoc EventUpdataConnSoc;
+         event UpdataListSoc EventUpdataConnSoc;
 
-        event deleteListSoc EventDeleteConnSoc;
-
+         event deleteListSoc EventDeleteConnSoc;
+       
 
     }
-    public class p2psever : ITcpBasehelper
+    public class p2psever: ITcpBasehelper
     {
         Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         UDP udp;
         List<NETcollection> listconn = new List<NETcollection>();
-
-        public event myreceive receiveevent;
+    
+        public event myreceive receiveevent; 
         public event NATthrough NATthroughevent;
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
-        public event UpdataListSoc EventUpdataConnSoc;
+        public static ManualResetEvent allDone = new ManualResetEvent(false); 
+        public event UpdataListSoc EventUpdataConnSoc; 
         public event deleteListSoc EventDeleteConnSoc;
         string loaclip;
         public p2psever(string _loaclip)
@@ -49,11 +49,11 @@ namespace P2P
         {
             udp = new UDP("127.0.0.1");
         }
-        public void start(int port)
+        public   void start(int port)
         {
             listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
-            listener.Bind(localEndPoint);
+            listener.Bind(localEndPoint); 
             listener.Listen(1000000);
             if (NATthroughevent != null)
             {
@@ -64,87 +64,86 @@ namespace P2P
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receive));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receivepage));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(xintiao));
-
+            
         }
-        public NETcollectionUdp[] getNATthrough()
-        {
-            return udp.getUdpList();
-        }
-        void udp_receiveevent(byte command, string data, NETcollectionUdp NETc)
-        {
+     public NETcollectionUdp[]  getNATthrough()
+     {
+        return udp.getUdpList();
+     }
+     void udp_receiveevent(byte command, string data, NETcollectionUdp NETc)
+     {
+          
+             
+             if (NATthroughevent != null)
+                 NATthroughevent(command,data, NETc.Iep);
+       
+     }
 
+     public int getNum()
+     {
+         return listconn.Count;
+     }
+     public bool p2psend(byte command, string text, IPEndPoint ep)
+     {
+         return udp.send(command, text, ep);
 
-            if (NATthroughevent != null)
-                NATthroughevent(command, data, NETc.Iep);
-
-        }
-
-        public int getNum()
-        {
-            return listconn.Count;
-        }
-        public bool p2psend(byte command, string text, IPEndPoint ep)
-        {
-            return udp.send(command, text, ep);
-
-        }
-        public void xintiao(object obj)
-        {
-            while (true)
-            {
-                try
-                {
-                    System.Threading.Thread.Sleep(8000);
-                    //  ArrayList al = new ArrayList();
-                    // al.Clone()
-                    NETcollection[] netlist = new NETcollection[listconn.Count];
-                    listconn.CopyTo(netlist);
-                    foreach (NETcollection netc in netlist)
-                    {
+     }
+     public void xintiao(object obj)
+     {
+         while (true)
+         {
+             try
+             {
+                 System.Threading.Thread.Sleep(8000);
+                 //  ArrayList al = new ArrayList();
+                 // al.Clone()
+                 NETcollection[] netlist = new NETcollection[listconn.Count];
+                 listconn.CopyTo(netlist);
+                 foreach (NETcollection netc in netlist)
+                 {
                         System.Threading.Thread.Sleep(80);
                         try
-                        {
-                            byte[] b = new byte[] { 0x99 };
+                     {
+                         byte[] b = new byte[] { 0x99 };
 
-                            netc.Soc.Send(b);
-
-                        }
-                        catch
-                        {
-
-                            try
-                            {
+                         netc.Soc.Send(b);
+                         
+                     }
+                     catch
+                     {
+                          
+                            try {
                                 netc.Soc.Close();
 
-
+                               
                             }
-                            catch { }
-                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-                            try
-                            {
-                                if (EventDeleteConnSoc != null)
-                                    EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
-                            }
-                            catch { }
+                         catch { }
+                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                            //try
+                            //{
+                            //    if (EventDeleteConnSoc != null)
+                            //        EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                            //}
+                            //catch { }
 
 
                             listconn.Remove(netc);
-                        }
+                     }
 
-                    }
+                 }
 
                     GC.Collect();
-                }
-                catch { }
-            }
-        }
+             }
+             catch { }
+         }
+     }
 
-        private void DeleteConnSoc(object state)
-        {
-            if (EventDeleteConnSoc != null)
-                EventDeleteConnSoc(state as Socket);
-        }
-
+     private void DeleteConnSoc(object state)
+     {
+         if (EventDeleteConnSoc!=null)
+         EventDeleteConnSoc(state as Socket);
+     }
+    
         //void AcceptCallback(IAsyncResult ar)
         //{
         //    try
@@ -173,8 +172,8 @@ namespace P2P
 
         private void UpdataConnSoc(object state)
         {
-            if (EventUpdataConnSoc != null)
-                EventUpdataConnSoc(state as Socket);
+            if (EventUpdataConnSoc!=null)
+            EventUpdataConnSoc(state as Socket);
         }
         class modelevent
         {
@@ -203,8 +202,8 @@ namespace P2P
         void receiveeventto(object obj)
         {
             modelevent me = (modelevent)obj;
-            if (receiveevent != null)
-                receiveevent(me.Command, me.Data, me.Soc);
+              if (receiveevent != null)
+                  receiveevent(me.Command, me.Data, me.Soc);
         }
 
         private void packageData(object obj)
@@ -221,15 +220,13 @@ namespace P2P
                 {
 
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
-                    if (bytesRead == 0)
-                    {
+                    if (bytesRead == 0) {
                         if (ListData.Count > 0) ListData.RemoveAt(0);
-                        netc.Ispage = false; return;
-                    };
+                        netc.Ispage = false; return; }; 
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
-
-
+                    
+                   
                     if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
@@ -283,12 +280,12 @@ namespace P2P
                             { }
                             try
                             {
-                                //modelevent me = new modelevent();
-                                //me.Command = tempbtye[0];
-                                //me.Data = temp;
-                                //me.Soc = netc.Soc;
+                                modelevent me = new modelevent();
+                                me.Command = tempbtye[0];
+                                me.Data = temp;
+                                me.Soc = netc.Soc;
 
-                                ////System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
                                 //receiveeventto(me);
                                 if (receiveevent != null)
                                     receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
@@ -347,7 +344,7 @@ namespace P2P
                 int bytesRead = 0;
                 try
                 {
-
+                   
                     bytesRead = handler.EndReceive(ar);
                 }
                 catch
@@ -364,9 +361,8 @@ namespace P2P
                     netc.Datalist.Add(tempbtye);
                 }
             }
-            catch
-            {
-
+            catch {
+                
             }
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
@@ -419,25 +415,25 @@ namespace P2P
                     listconn.CopyTo(netlist);
                     foreach (NETcollection netc in netlist)
                     {
-
+                        
                         if (netc.Datalist.Count > 0)
                         {
                             if (!netc.Ispage)
                             {
                                 netc.Ispage = true;
-                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                //t.Start(netc);
-                                Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
-                                pdh.BeginInvoke(netc, null, null);
+                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                t.Start(netc);
+                                //Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
+                                //pdh.BeginInvoke(netc, null, null);
 
                             }
                         }
-
+                     
                     }
                     System.Threading.Thread.Sleep(10);
                 }
                 catch { }
-
+                
             }
         }
         void receive(object ias)
@@ -446,21 +442,50 @@ namespace P2P
             {
                 try
                 {
-                    NETcollection[] netlist = new NETcollection[listconn.Count];
-                    listconn.CopyTo(netlist);
-                    foreach (NETcollection netc in netlist)
+
+                    int c = listconn.Count;
+                    //int count = (c / 2000) + 1;
+                    //if (c > 0)
+                    //    for (int i = 0; i < count; i++)
+                    //    {
+
+                    //        c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
+                    //        NETcollection[] netlist = new NETcollection[c];
+                    //        listconn.CopyTo(i * 2000, netlist, 0, c);
+                    //        new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000, null, null);
+                    //    }
+                    NETcollection[] netlist = new NETcollection[c];
+                    listconn.CopyTo(0, netlist, 0, c);
+                    getbuffer(netlist, 0, c);
+                }
+                catch { }
+                System.Threading.Thread.Sleep(10);
+            }
+        }
+
+        delegate void getbufferdelegate(NETcollection[] netlist, int index, int len);
+        void getbuffer(NETcollection[] netlist, int index, int len)
+        {
+            for (int i = index; i < len; i++)
+            {
+                NETcollection netc = netlist[i];
+                try
+                {
+                    if (netc.Soc != null)
                     {
                         if (netc.Soc.Available > 0)
                         {
-                            // netc.Buffer = new byte[4096 * 2000];
-                            //System.Threading.Thread.Sleep(1);
-                            netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Soc.Available, 0, new AsyncCallback(ReadCallback), netc);
+
+                             
+                                netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+
                         }
 
                     }
                 }
-                catch { }
-                System.Threading.Thread.Sleep(10);
+                catch
+                { }
+
             }
         }
 
@@ -478,31 +503,31 @@ namespace P2P
                 NETcollection netc = new NETcollection();
                 netc.Soc = handler;
                 listconn.Add(netc);
-                if (EventUpdataConnSoc != null)
-                    EventUpdataConnSoc.BeginInvoke(handler, null, null);
+                //if (EventUpdataConnSoc != null)
+                //    EventUpdataConnSoc.BeginInvoke(handler, null, null);
                 //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
                 //t.Start(handler);
-                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
 
-                // Set the event to nonsignaled state.
-                //allDone.Reset();
+                    // Set the event to nonsignaled state.
+                    //allDone.Reset();
 
-                ////开启异步监听socket
-                ////    Console.WriteLine("Waiting for a connection");
-                //try
-                //{
-                //    listener.BeginAccept(
-                //              new AsyncCallback(AcceptCallback),
-                //              listener);
-                //System.Threading.Thread.Sleep(1);
-                //}
-                //catch { }
-                //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
-                //allDone.WaitOne();
+                    ////开启异步监听socket
+                    ////    Console.WriteLine("Waiting for a connection");
+                    //try
+                    //{
+                    //    listener.BeginAccept(
+                    //              new AsyncCallback(AcceptCallback),
+                    //              listener);
+                    //System.Threading.Thread.Sleep(1);
+                    //}
+                    //catch { }
+                    //// 让程序等待，直到连接任务完成。在AcceptCallback里的适当位置放置allDone.Set()语句.
+                    //allDone.WaitOne();
             }
 
         }
 
-
+        
     }
 }
