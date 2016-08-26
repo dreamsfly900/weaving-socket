@@ -34,7 +34,7 @@ namespace 智信构建结构
                     if (t.Run(mif))
                     {
                         lab_info.Text = "连接启动成功！";
-                        t.ReloadFlies();//重新加载插件
+                        //t.ReloadFlies();//重新加载插件
                     }
                 }else
                 {
