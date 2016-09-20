@@ -33,7 +33,7 @@ namespace cloud
             p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
             p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
          //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
-            p2psev.start(Convert.ToInt32(myI.Parameter[4]));
+            p2psev.start(Convert.ToInt32(myI.Parameter[4]));//myI.Parameter[4]是端口号
             qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
             if (EventMylog != null)
                 EventMylog("连接","连接启动成功");

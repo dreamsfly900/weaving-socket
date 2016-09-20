@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "智信构建结构测试", "智信构建结构\智信构建结构测试.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "智信构建结构\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237} = {DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}
 		{A237E772-678D-490B-ADDF-1D4535D970B6} = {A237E772-678D-490B-ADDF-1D4535D970B6}
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端", "服务端", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyInterface", "MyInterface\MyInterface.csproj", "{FED411E6-075E-4DE0-8284-8CBD0879B55D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通用TCP云服务端", "通用TCP云服务端\通用TCP云服务端.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通用TCP云服务类库", "通用TCP云服务端\通用TCP云服务类库.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "文档说明", "文档说明", "{5B57293F-9B11-4799-9E4A-BCA82C622BFC}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,9 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "文档说明", "文档说�
 		文档说明\智信构建说明\服务端\P2PServer.dll = 文档说明\智信构建说明\服务端\P2PServer.dll
 		文档说明\智信构建说明\服务端\StandardModel.dll = 文档说明\智信构建说明\服务端\StandardModel.dll
 		文档说明\智信构建说明\服务端\UserTableTitle.xml = 文档说明\智信构建说明\服务端\UserTableTitle.xml
+		文档说明\智信构建说明\服务端\产品使用说明.doc = 文档说明\智信构建说明\服务端\产品使用说明.doc
 		文档说明\分布式通信方案.vsdx = 文档说明\分布式通信方案.vsdx
 		文档说明\智信构建说明\服务端\前后台通信数据等级范本.doc = 文档说明\智信构建说明\服务端\前后台通信数据等级范本.doc
-		文档说明\智信构建说明\服务端\大河智信构建产品使用说明.doc = 文档说明\智信构建说明\服务端\大河智信构建产品使用说明.doc
 		文档说明\无标题.jpg = 文档说明\无标题.jpg
 		文档说明\物联网平台化方案2015-1-9.doc = 文档说明\物联网平台化方案2015-1-9.doc
 		文档说明\物联网平台指令集合.docx = 文档说明\物联网平台指令集合.docx
@@ -38,23 +38,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "客户端", "客户端", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPclient", "TCPclient\TCPclient.csproj", "{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "后台接收示例", "后台接收示例", "{A09DECE8-C135-491D-BE71-C45D026D6337}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端业务逻辑示例", "服务端业务逻辑示例", "{A09DECE8-C135-491D-BE71-C45D026D6337}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "前台发送示例", "前台发送示例", "{71078A48-C6BA-4E2E-A22A-229EEBB665B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "前台测试", "前台测试\前台测试.csproj", "{F532CD50-A844-49DD-8AEF-619DF0694406}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "数据实体层", "数据实体层", "{27A69E5C-338F-4D95-A03A-53369BA7948B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C", "C\C.csproj", "{760EE9C1-FB62-44A9-8FCB-21BD5B8F42EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "content_manage", "content_manage\content_manage.csproj", "{B778F21D-C26C-491D-BD1D-EBF507F72289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "统一登录网关", "统一登录服务\统一登录网关.csproj", "{53047F4F-9839-40A7-B10B-CCAF1A66EA37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "统一B-C转发负载网关程序", "统一登录服务\统一B-C转发负载网关程序.csproj", "{53047F4F-9839-40A7-B10B-CCAF1A66EA37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPServer", "TCPServer\TCPServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "流媒体服务器", "流媒体服务器", "{86B0B0F5-1872-4390-93F8-AC2A46F9AAB4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "流媒体服务器（测试用）", "流媒体服务器（测试用）", "{86B0B0F5-1872-4390-93F8-AC2A46F9AAB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraServer", "WindowsFormsApplication1\CameraServer.csproj", "{48286D69-A549-43F1-9549-843376F00790}"
 EndProject
@@ -101,7 +99,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSocketClient", "WebSocke
 		SlnRelativePath = "WebSocketClient\WebSocketClient\"
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPTestApp", "WPTestApp", "{28421BE1-E449-4B7F-AED8-06F02BA046B4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WP前端测试程序", "WP前端测试程序", "{28421BE1-E449-4B7F-AED8-06F02BA046B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneApp", "PhoneApp\PhoneApp.csproj", "{C669DE88-6AA0-40FC-937B-9CBB4830FB2D}"
 EndProject
@@ -109,7 +107,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winform", "winform", "{83FC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB", "WEB", "{103F29CF-2D53-4613-A4E2-426873B32164}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "负载网关", "负载网关", "{5DC257E6-4B9E-4F64-8C0F-DA463F1895AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C-S类库", "C-S类库", "{451930B4-B3B3-4129-BA34-CA6113296709}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTU网关程序", "DTU网关程序\DTU网关程序.csproj", "{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}"
+EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AAA|Any CPU = AAA|Any CPU
 		AAA|ARM = AAA|ARM
@@ -665,6 +673,30 @@ Global
 		{C669DE88-6AA0-40FC-937B-9CBB4830FB2D}.Release|x86.ActiveCfg = Release|x86
 		{C669DE88-6AA0-40FC-937B-9CBB4830FB2D}.Release|x86.Build.0 = Release|x86
 		{C669DE88-6AA0-40FC-937B-9CBB4830FB2D}.Release|x86.Deploy.0 = Release|x86
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|Any CPU.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|ARM.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|ARM.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|x64.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|x64.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|x86.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.AAA|x86.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|ARM.Build.0 = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|x64.Build.0 = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|ARM.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|ARM.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|x64.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|x64.Build.0 = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -672,15 +704,14 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0} = {AFDAF284-45F3-406D-A585-AE187827F28A}
 		{FED411E6-075E-4DE0-8284-8CBD0879B55D} = {9A31E001-7D01-4333-9CF1-90B7D8AB69E3}
-		{BCB76C92-15DD-436C-9B5C-6D8D9671FA88} = {AFDAF284-45F3-406D-A585-AE187827F28A}
-		{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237} = {41BBBA6D-5ECA-476F-93DA-6795C01E4145}
+		{BCB76C92-15DD-436C-9B5C-6D8D9671FA88} = {5DC257E6-4B9E-4F64-8C0F-DA463F1895AF}
+		{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237} = {451930B4-B3B3-4129-BA34-CA6113296709}
 		{A09DECE8-C135-491D-BE71-C45D026D6337} = {AFDAF284-45F3-406D-A585-AE187827F28A}
 		{71078A48-C6BA-4E2E-A22A-229EEBB665B9} = {41BBBA6D-5ECA-476F-93DA-6795C01E4145}
 		{F532CD50-A844-49DD-8AEF-619DF0694406} = {83FCC670-FF22-4C0B-8383-093BD954246B}
-		{27A69E5C-338F-4D95-A03A-53369BA7948B} = {71078A48-C6BA-4E2E-A22A-229EEBB665B9}
-		{760EE9C1-FB62-44A9-8FCB-21BD5B8F42EC} = {27A69E5C-338F-4D95-A03A-53369BA7948B}
+		{760EE9C1-FB62-44A9-8FCB-21BD5B8F42EC} = {71078A48-C6BA-4E2E-A22A-229EEBB665B9}
 		{B778F21D-C26C-491D-BD1D-EBF507F72289} = {A09DECE8-C135-491D-BE71-C45D026D6337}
-		{53047F4F-9839-40A7-B10B-CCAF1A66EA37} = {AFDAF284-45F3-406D-A585-AE187827F28A}
+		{53047F4F-9839-40A7-B10B-CCAF1A66EA37} = {5DC257E6-4B9E-4F64-8C0F-DA463F1895AF}
 		{A237E772-678D-490B-ADDF-1D4535D970B6} = {AFDAF284-45F3-406D-A585-AE187827F28A}
 		{48286D69-A549-43F1-9549-843376F00790} = {86B0B0F5-1872-4390-93F8-AC2A46F9AAB4}
 		{149A62F0-7073-4F54-B91E-E0B041C1A3EC} = {86B0B0F5-1872-4390-93F8-AC2A46F9AAB4}
@@ -699,9 +730,7 @@ Global
 		{C669DE88-6AA0-40FC-937B-9CBB4830FB2D} = {28421BE1-E449-4B7F-AED8-06F02BA046B4}
 		{83FCC670-FF22-4C0B-8383-093BD954246B} = {71078A48-C6BA-4E2E-A22A-229EEBB665B9}
 		{103F29CF-2D53-4613-A4E2-426873B32164} = {71078A48-C6BA-4E2E-A22A-229EEBB665B9}
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
+		{451930B4-B3B3-4129-BA34-CA6113296709} = {41BBBA6D-5ECA-476F-93DA-6795C01E4145}
+		{8A2C3A30-7933-4C8C-94C2-02D407AA1C59} = {5DC257E6-4B9E-4F64-8C0F-DA463F1895AF}
 	EndGlobalSection
 EndGlobal

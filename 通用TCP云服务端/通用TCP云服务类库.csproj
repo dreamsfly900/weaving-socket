@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTUGateWay.cs" />
     <Compile Include="GateWay.cs" />
     <Compile Include="TCPcloud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

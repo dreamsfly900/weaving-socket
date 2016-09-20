@@ -9,6 +9,7 @@ using System.Threading;
 namespace P2P 
 {
     public delegate void myreceive(byte command, String data, Socket soc);
+    public delegate void myreceiveDtu(byte[] data, Socket soc);
     public delegate void NATthrough(byte command,String data, EndPoint ep);
     public delegate void UpdataListSoc(Socket soc);
     public delegate void deleteListSoc(Socket soc);
@@ -19,8 +20,9 @@ namespace P2P
         int getNum();
         void xintiao(object obj);
         bool send(Socket soc, byte command, string text);
-         event myreceive receiveevent; 
-         event NATthrough NATthroughevent; 
+         event myreceive receiveevent;
+         
+        event NATthrough NATthroughevent; 
 
          event UpdataListSoc EventUpdataConnSoc;
 

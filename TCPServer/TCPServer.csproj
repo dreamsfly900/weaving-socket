@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="DataFrame.cs" />
     <Compile Include="DataFrameHeader.cs" />
+    <Compile Include="DTUServer.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="p2psever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
