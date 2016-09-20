@@ -7,12 +7,15 @@ using System.Text;
 namespace StandardModel
 {
     public delegate void RequestData(Socket soc, _baseModel _0x01);
+    public delegate void RequestDataDtu(Socket soc, byte[] _0x01,String ip,int prot);
     public class _base_manage
     {
         class modelData {
              public string Request;
             public string type;
+            public bool dtu;
             public RequestData rd;
+            public RequestDataDtu rd2;
         }
         List<modelData> listmode = new List<modelData>();
      
@@ -31,6 +34,16 @@ namespace StandardModel
             md.Request = Request;
             md.rd = rd;
             md.type = type;
+            md.dtu = false;
+            listmode.Add(md);
+        }
+        public void AddListen(String Request, RequestDataDtu rd, String type,bool dtu)
+        {
+            modelData md = new modelData();
+            md.Request = Request;
+            md.rd2 = rd;
+            md.type = type;
+            md.dtu = dtu;
             listmode.Add(md);
         }
         public void DeleteListen(String Reques)
@@ -62,8 +75,20 @@ namespace StandardModel
                     {
                         if (md.Request == _0x01.Request)
                         {
-                            if (md.rd != null)
+                            if (md.rd2 != null && md.dtu==true)
                             {
+
+                                RequestDataDtu rdh = new RequestDataDtu(md.rd2);
+                                byte[] b= Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>(_0x01.Root); 
+                                rdh.BeginInvoke(soc, b, _0x01.Token.Split('|')[0],Convert.ToInt32(_0x01.Token.Split('|')[1]), null, null);
+                                if (md.type == "once")
+                                {
+                                    listmode.Remove(md);
+                                }
+                            }
+                            if (md.rd != null && md.dtu == false)
+                            {
+                               
                                 //md.rd(soc, _0x01);
                                 RequestData rdh = new RequestData(md.rd);
                                 rdh.BeginInvoke(soc, _0x01, null, null);

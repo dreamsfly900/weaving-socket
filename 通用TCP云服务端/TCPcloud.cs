@@ -85,10 +85,17 @@ namespace cloud
                 }
                 else
                 {
+                    if (myattribute.Dtu)
+                    {
+                        Delegate del = Delegate.CreateDelegate(typeof(RequestDataDtu), obj, mi, true);
+                        Ic.Bm.AddListen(mi.Name, del as RequestDataDtu, myattribute.Type,true);
+                    }
+                    else
+                    {
 
-                   
-                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi,true);
-                    Ic.Bm.AddListen(mi.Name, del as RequestData, myattribute.Type);
+                        Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi, true);
+                        Ic.Bm.AddListen(mi.Name, del as RequestData, myattribute.Type);
+                    }
 
 
                 }

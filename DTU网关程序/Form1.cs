@@ -15,5 +15,10 @@ namespace DTU网关程序
         {
             InitializeComponent();
         }
+
+        private void 启动WEB网关ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

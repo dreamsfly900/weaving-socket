@@ -171,7 +171,7 @@ namespace MyInterface
     public class InstallFun : System.Attribute
     {
         private string type;
-
+        bool dtu = false;
         /// <summary>
         /// 标识这个方法是执行一次即卸载，还是长期执行
         /// </summary>
@@ -180,7 +180,11 @@ namespace MyInterface
         {
             Type = type;
         }
-
+        public InstallFun(string type,bool _Dtu)
+        {
+            Type = type;
+            Dtu = _Dtu;
+        }
         public string Type
         {
             get
@@ -191,6 +195,19 @@ namespace MyInterface
             set
             {
                 type = value;
+            }
+        }
+
+        public bool Dtu
+        {
+            get
+            {
+                return dtu;
+            }
+
+            set
+            {
+                dtu = value;
             }
         }
     }

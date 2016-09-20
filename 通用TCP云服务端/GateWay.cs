@@ -137,7 +137,7 @@ namespace cloud
                         if(Client!=null)
                         if (!Client.Isline)
                         {
-                            if (Client.Restart(false))
+                            if (!Client.Restart(false))
                             {
                                 V_timeoutevent();
                             }
