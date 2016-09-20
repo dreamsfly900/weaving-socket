@@ -341,6 +341,16 @@ namespace MyInterface
             send(soc,command, b.Getjson());
             return true;
         }
+        public bool SendDtu(Socket soc, byte[] Root, String ip,int port)
+        {
+            _baseModel b = new _baseModel();
+            b.Request = "dtu";
+            b.Token = ip + "|" + port;
+            b.SetRoot<byte[]>(Root);
+            b.Querycount = 0;
+            send(soc, 0x00, b.Getjson());
+            return true;
+        }
         public bool send(Socket soc, byte command, string text)
       {
 
