@@ -384,7 +384,9 @@ namespace TCPServer
                 NETcollection netc = new NETcollection();
                 netc.Soc = handler;
                 listconn.Add(netc);
-                
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdataConnSoc), handler);
+
+
             }
 
         }

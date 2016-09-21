@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "智信构建结构\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -112,6 +112,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C-S类库", "C-S类库", "{451930B4-B3B3-4129-BA34-CA6113296709}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTU网关程序", "DTU网关程序\DTU网关程序.csproj", "{8A2C3A30-7933-4C8C-94C2-02D407AA1C59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "示例程序", "示例程序", "{C7677AF6-FE8A-4D89-B1AE-6B2B16DE4550}"
+	ProjectSection(SolutionItems) = preProject
+		示例程序.rar = 示例程序.rar
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution

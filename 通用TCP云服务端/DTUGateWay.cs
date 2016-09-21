@@ -1,5 +1,6 @@
 ﻿using client;
 using cloud;
+using StandardModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace TCPServer
         DTUServer DTUSer;
          
         public int V_ErrorMge { get; private set; }
-        public List<CommandItem> CommandItemS { get; private set; }
+        public List<CommandItem> CommandItemS = new List<CommandItem>();
        
         public event Mylog EventMylog;
         public DTUGateWay()
@@ -168,7 +169,27 @@ namespace TCPServer
 
         private void P2p_receiveServerEvent(byte command, string text)
         {
-            
+            try
+            {
+                _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(text);
+                try
+                {
+                    int count = ConnObjlist.Count;
+                    ConnObj[] coobjs = new ConnObj[count];
+                    ConnObjlist.CopyTo(0, coobjs, 0, count);
+                    foreach (ConnObj coob in coobjs)
+                    {
+                        if (coob != null)
+                            if (coob.Token == _0x01.Token)
+                            {
+                                coob.Soc.Send(_0x01.GetRoot<byte[]>());
+                                return;
+                            }
+                    }
+                }
+                catch (Exception ex) { EventMylog("转发", ex.Message); }
+            }
+            catch { }
         }
     }
 

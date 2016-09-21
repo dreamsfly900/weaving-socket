@@ -51,18 +51,21 @@ namespace cloud
                     Type[] types = ab.GetExportedTypes();
                     foreach (Type t in types)
                     {
-
-                        if (t.IsSubclassOf(typeof(TCPCommand)))
+                        try
                         {
-                            CommandItem ci = new CommandItem();
-                            object obj = ab.CreateInstance(t.FullName);
-                            TCPCommand Ic = obj as TCPCommand;
-                            ci.MyICommand = Ic;
-                            ci.CommName = Ic.Getcommand();
-                            Ic.SetGlobalQueueTable(qt);
-                            GetAttributeInfo( Ic,obj.GetType(), obj);
-                            listcomm.Add(ci);
+                            if (t.IsSubclassOf(typeof(TCPCommand)))
+                            {
+                                CommandItem ci = new CommandItem();
+                                object obj = ab.CreateInstance(t.FullName);
+                                TCPCommand Ic = obj as TCPCommand;
+                                ci.MyICommand = Ic;
+                                ci.CommName = Ic.Getcommand();
+                                Ic.SetGlobalQueueTable(qt);
+                                GetAttributeInfo(Ic, obj.GetType(), obj);
+                                listcomm.Add(ci);
+                            }
                         }
+                        catch { }
                     }
                 }
             }

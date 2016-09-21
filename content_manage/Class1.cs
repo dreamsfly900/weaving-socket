@@ -99,7 +99,14 @@ namespace  manages
             this.GetOnline(); 
           
         }
+        [InstallFun("forever",true)]
+        public void DTUcontent(Socket soc, byte[] _0x01, String ip, int prot)
+        {
 
+            SendDtu(soc, new byte[] { 22, 22, 22, 22, }, ip, prot);
+          
+
+        }
         public override byte Getcommand()
         {
             return 0x01;

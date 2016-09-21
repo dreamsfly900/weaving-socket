@@ -79,6 +79,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\通用TCP云服务端\通用TCP云服务类库.csproj">
+      <Project>{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}</Project>
+      <Name>通用TCP云服务类库</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
