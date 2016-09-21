@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml;
+using TCPclient;
 
 namespace TCPServer
 {
@@ -16,7 +17,8 @@ namespace TCPServer
          
         public int V_ErrorMge { get; private set; }
         public List<CommandItem> CommandItemS = new List<CommandItem>();
-       
+        public List<CommandItem> CommandItemS2 = new List<CommandItem>();
+
         public event Mylog EventMylog;
         public DTUGateWay()
         {
@@ -31,6 +33,7 @@ namespace TCPServer
             DTUSer.receiveeventDtu += DTUSer_receiveeventDtu;
             
             DTUSer.start(port);
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
         }
        
@@ -85,10 +88,11 @@ namespace TCPServer
                     }
             }
         }
-
+        List<dtuclient> listdtu = new List<dtuclient>();
         private void ReLoad()
         {
             ReloadFlies(null);
+            ReloadFlies2(null);
         }
         protected void ReloadFlies(object obj)
         {
@@ -134,12 +138,194 @@ namespace TCPServer
                     EventMylog("加载异常", ex.Message);
             }
         }
+        protected void ReloadFlies2(object obj)
+        {
+            try
+            {
+                foreach (CommandItem ci in CommandItemS2)
+                {
+                    foreach (P2Pclient Client in ci.Client)
+                    {
+                        Client.stop();
+                    }
+                }
+                CommandItemS2.Clear();
+                XmlDocument xml = new XmlDocument();
+                xml.Load("node.xml");
+                foreach (XmlNode xn in xml.FirstChild.ChildNodes)
+                {
+                    CommandItem ci = new CommandItem();
+                    ci.Ip = xn.Attributes["ip"].Value;
+                    ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
+                    ci.CommName = byte.Parse(xn.Attributes["command"].Value);
+                    ci.Commfun = xn.Attributes["Commfun"].Value;
+                    P2Pclient p2p = new P2Pclient(false);
+
+                    p2p.receiveServerEvent += P2p_receiveServerEvent1;
+                    p2p.timeoutevent += P2p_timeoutevent2;
+                    p2p.ErrorMge += P2p_ErrorMge;
+                    if (p2p.start(ci.Ip, ci.Port, false))
+                    {
+                        ci.Client.Add(p2p);
+                        CommandItemS2.Add(ci);
+                    }
+                    else
+                    {
+                        if (EventMylog != null)
+                            EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("加载异常", ex.Message);
+            }
+        }
+        protected void ReloadFliesdtu(object obj)
+        {
+            try
+            {
+               
+                XmlDocument xml = new XmlDocument();
+                xml.Load("dtulist.xml");
+                foreach (XmlNode xn in xml.FirstChild.ChildNodes)
+                {
+
+                    dtuclient dl = new dtuclient();
+                    String ip= xn.Attributes["ip"].Value;
+                    int Port = Convert.ToInt32(xn.Attributes["port"].Value);
+                    string Commfun= xn.Attributes["Commfun"].Value;
+                    DTUclient p2p = new DTUclient();
+
+                    p2p.receiveServerEvent += P2p_receiveServerEvent3; ;
+                    p2p.timeoutevent += P2p_timeoutevent1;
+                    p2p.ErrorMge += P2p_ErrorMge;
+                    if (p2p.start(ip, Port, false))
+                    {
+                        dl.Tcpdtu = p2p;
+                        dl.Token = ip + "|" + Port;
+                        p2p.Tokan= ip + "|" + Port;
+                        listdtu.Add(dl);
+                        foreach (CommandItem ci in CommandItemS2)
+                        {
+                            if(Commfun== ci.Commfun)
+                            foreach (P2Pclient Client in ci.Client)
+                            {
+
+                                Client.Tokan = dl.Token;
+                                Client.SendRoot<byte[]>(ci.CommName, ci.Commfun,new byte[0], 0);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (EventMylog != null)
+                            EventMylog("DTU客户端连接失败", "DTU客户端："+ ip + "|" + Port+ "连接失败。");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("加载异常", ex.Message);
+            }
+        }
+
+        private void P2p_receiveServerEvent3(string token, byte[] text)
+        {
+            foreach (CommandItem ci in CommandItemS2)
+            {
+                foreach (P2Pclient Client in ci.Client)
+                {
+                    
+                    Client.Tokan = token;
+                    Client.SendRoot<byte[]>(ci.CommName, ci.Commfun, text, 0);
+                }
+            }
+        }
+
+
+        private void P2p_receiveServerEvent1(byte command, string text)
+        {
+            try
+            {
+                _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(text);
+                try
+                {
+                    int count = listdtu.Count;
+                    dtuclient[] coobjs = new dtuclient[count];
+                    listdtu.CopyTo(0, coobjs, 0, count);
+                    foreach (dtuclient coob in coobjs)
+                    {
+                        if (coob != null)
+                            if (coob.Token == _0x01.Token)
+                            {
+                                coob.Tcpdtu.Send(_0x01.GetRoot<byte[]>());
+                                return;
+                            }
+                    }
+                }
+                catch (Exception ex) { EventMylog("转发", ex.Message); }
+            }
+            catch { }
+        }
+
+        private void P2p_timeoutevent1()
+        {
+            try
+            {
+                foreach (dtuclient dl in listdtu)
+                {
+
+                    if (!dl.Tcpdtu.Isline)
+                    {
+                        if (!dl.Tcpdtu.Restart(false))
+                        {
+                            P2p_timeoutevent1();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("节点重新连接--:", ex.Message);
+                P2p_timeoutevent1();
+            }
+        }
 
         private void P2p_ErrorMge(int type, string error)
         {
              
         }
-
+        private void P2p_timeoutevent2()
+        {
+            try
+            {
+                foreach (CommandItem ci in CommandItemS2)
+                {
+                    foreach (P2Pclient Client in ci.Client)
+                    {
+                        if (Client != null)
+                            if (!Client.Isline)
+                            {
+                                if (!Client.Restart(false))
+                                {
+                                    P2p_timeoutevent2();
+                                }
+                            }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("节点重新连接--:", ex.Message);
+                P2p_timeoutevent2();
+            }
+        }
         private void P2p_timeoutevent()
         {
             try
@@ -192,7 +378,39 @@ namespace TCPServer
             catch { }
         }
     }
+    public class dtuclient {
+        DTUclient tcpdtu;
 
+        public DTUclient Tcpdtu
+        {
+            get
+            {
+                return tcpdtu;
+            }
+
+            set
+            {
+                tcpdtu = value;
+            }
+        }
+
+        public string Token
+        {
+            get
+            {
+                return token;
+            }
+
+            set
+            {
+                token = value;
+            }
+        }
+
+        String token;
+
+
+    }
     public class CommandItem
     {
         byte commName;

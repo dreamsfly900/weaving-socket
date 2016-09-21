@@ -222,6 +222,12 @@ namespace client
             send(command, b.Getjson());
             return true;
         }
+
+        public void Send(byte[] b)
+        {
+            tcpc.Client.Send(b);
+        }
+
         public bool send(byte command, string text)
         {
             try

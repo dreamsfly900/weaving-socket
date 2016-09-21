@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTUclient.cs" />
     <Compile Include="P2Pclient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UDP.cs" />

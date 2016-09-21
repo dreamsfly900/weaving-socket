@@ -75,6 +75,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dtulist.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="node.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

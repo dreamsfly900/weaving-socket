@@ -34,5 +34,10 @@ namespace DTU网关程序
             Mylog ml = new Mylog(addMylog);
             textBox1.Invoke(ml, new object[] { txtLog, type + "--" + log });
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

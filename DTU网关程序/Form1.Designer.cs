@@ -83,7 +83,7 @@
             this.tabPage1.Controls.Add(this.txtLog);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(600, 341);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "基本信息";
@@ -114,8 +114,8 @@
             this.tabPage2.Controls.Add(this.listBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(600, 344);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(600, 341);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务节点节点状态";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -134,8 +134,8 @@
             this.tabPage3.Controls.Add(this.listBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage3.Size = new System.Drawing.Size(600, 344);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(600, 341);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "从网关节点状态";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -174,7 +174,7 @@
             // 启动WEB网关ToolStripMenuItem
             // 
             this.启动WEB网关ToolStripMenuItem.Name = "启动WEB网关ToolStripMenuItem";
-            this.启动WEB网关ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.启动WEB网关ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.启动WEB网关ToolStripMenuItem.Text = "启动DTU网关";
             this.启动WEB网关ToolStripMenuItem.Click += new System.EventHandler(this.启动WEB网关ToolStripMenuItem_Click);
             // 
@@ -183,7 +183,7 @@
             this.开放端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox1});
             this.开放端口ToolStripMenuItem.Name = "开放端口ToolStripMenuItem";
-            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.开放端口ToolStripMenuItem.Text = "开放端口";
             // 
             // toolStripTextBox1
@@ -197,7 +197,7 @@
             this.内部端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox2});
             this.内部端口ToolStripMenuItem.Name = "内部端口ToolStripMenuItem";
-            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.内部端口ToolStripMenuItem.Text = "内部端口";
             // 
             // toolStripTextBox2
@@ -211,7 +211,7 @@
             this.端口比例ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox3});
             this.端口比例ToolStripMenuItem.Name = "端口比例ToolStripMenuItem";
-            this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.端口比例ToolStripMenuItem.Text = "转发比例";
             // 
             // toolStripTextBox3
@@ -239,7 +239,7 @@
             this.tabPage4.Controls.Add(this.textBox1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(600, 341);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "基本信息";
@@ -270,8 +270,8 @@
             this.tabPage5.Controls.Add(this.listBox3);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage5.Size = new System.Drawing.Size(600, 344);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(600, 341);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "服务节点节点状态";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -290,8 +290,8 @@
             this.tabPage6.Controls.Add(this.listBox4);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage6.Size = new System.Drawing.Size(600, 344);
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(600, 341);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "从网关节点状态";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -313,9 +313,10 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.服务节点节点状态);
             this.Controls.Add(this.menuStrip1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "DTU网关程序";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.服务节点节点状态.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
