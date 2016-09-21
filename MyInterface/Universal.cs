@@ -271,7 +271,10 @@ namespace MyInterface
             Bm.init(data, soc);
             return true;
         }
-       
+        public abstract byte Getcommand();
+        public abstract bool Run(String data, System.Net.Sockets.Socket soc);
+        public abstract void TCPCommand_EventUpdataConnSoc(Socket soc);
+        public abstract void TCPCommand_EventDeleteConnSoc(Socket soc);
         public abstract void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message);
 
         public QueueTable GlobalQueueTable
@@ -316,11 +319,9 @@ namespace MyInterface
             return ols;
         }
     
-        public abstract byte Getcommand();
-      public abstract void TCPCommand_EventUpdataConnSoc(Socket soc);
-      public abstract void TCPCommand_EventDeleteConnSoc(Socket soc);
+    
        
-      public abstract bool Run(String data, System.Net.Sockets.Socket soc);
+     
         public bool SendParameter<T>(Socket soc, byte command, String Request, T Parameter, int Querycount,String Tokan)
         {
             _baseModel b = new _baseModel();
