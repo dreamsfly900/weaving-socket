@@ -119,5 +119,11 @@ namespace 统一登录服务
         {
             gw.ReLoad();
         }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.ExitThread();
+            Application.Exit();
+        }
     }
 }

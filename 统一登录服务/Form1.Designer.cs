@@ -73,23 +73,22 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 768);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 380);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1232, 36);
+            this.statusStrip1.Size = new System.Drawing.Size(616, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(110, 31);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(56, 17);
             this.toolStripStatusLabel1.Text = "连接状态";
             // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 31);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
             // menuStrip1
             // 
@@ -100,8 +99,7 @@
             this.从网关节点ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(12, 4, 0, 4);
-            this.menuStrip1.Size = new System.Drawing.Size(1232, 46);
+            this.menuStrip1.Size = new System.Drawing.Size(616, 25);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -116,34 +114,34 @@
             this.内部端口ToolStripMenuItem,
             this.端口比例ToolStripMenuItem});
             this.开始ToolStripMenuItem.Name = "开始ToolStripMenuItem";
-            this.开始ToolStripMenuItem.Size = new System.Drawing.Size(74, 38);
+            this.开始ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.开始ToolStripMenuItem.Text = "开始";
             // 
             // 启动ToolStripMenuItem
             // 
             this.启动ToolStripMenuItem.Name = "启动ToolStripMenuItem";
-            this.启动ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.启动ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.启动ToolStripMenuItem.Text = "启动普通网关";
             this.启动ToolStripMenuItem.Click += new System.EventHandler(this.启动ToolStripMenuItem_Click);
             // 
             // 重写加载ToolStripMenuItem
             // 
             this.重写加载ToolStripMenuItem.Name = "重写加载ToolStripMenuItem";
-            this.重写加载ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.重写加载ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.重写加载ToolStripMenuItem.Text = "重写加载节点";
             this.重写加载ToolStripMenuItem.Click += new System.EventHandler(this.重写加载ToolStripMenuItem_Click);
             // 
             // 启动WEB网关ToolStripMenuItem
             // 
             this.启动WEB网关ToolStripMenuItem.Name = "启动WEB网关ToolStripMenuItem";
-            this.启动WEB网关ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.启动WEB网关ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.启动WEB网关ToolStripMenuItem.Text = "启动WEB网关";
             this.启动WEB网关ToolStripMenuItem.Click += new System.EventHandler(this.启动WEB网关ToolStripMenuItem_Click);
             // 
             // 重写加载WEB节点ToolStripMenuItem
             // 
             this.重写加载WEB节点ToolStripMenuItem.Name = "重写加载WEB节点ToolStripMenuItem";
-            this.重写加载WEB节点ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.重写加载WEB节点ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.重写加载WEB节点ToolStripMenuItem.Text = "重写加载WEB节点";
             this.重写加载WEB节点ToolStripMenuItem.Click += new System.EventHandler(this.重写加载WEB节点ToolStripMenuItem_Click);
             // 
@@ -152,13 +150,13 @@
             this.开放端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox1});
             this.开放端口ToolStripMenuItem.Name = "开放端口ToolStripMenuItem";
-            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.开放端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.开放端口ToolStripMenuItem.Text = "开放端口";
             // 
             // toolStripTextBox1
             // 
             this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 38);
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
             this.toolStripTextBox1.Text = "11001";
             // 
             // 内部端口ToolStripMenuItem
@@ -166,13 +164,13 @@
             this.内部端口ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox2});
             this.内部端口ToolStripMenuItem.Name = "内部端口ToolStripMenuItem";
-            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.内部端口ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.内部端口ToolStripMenuItem.Text = "内部端口";
             // 
             // toolStripTextBox2
             // 
             this.toolStripTextBox2.Name = "toolStripTextBox2";
-            this.toolStripTextBox2.Size = new System.Drawing.Size(100, 38);
+            this.toolStripTextBox2.Size = new System.Drawing.Size(100, 23);
             this.toolStripTextBox2.Text = "9998";
             // 
             // 端口比例ToolStripMenuItem
@@ -180,13 +178,13 @@
             this.端口比例ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox3});
             this.端口比例ToolStripMenuItem.Name = "端口比例ToolStripMenuItem";
-            this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(309, 38);
+            this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.端口比例ToolStripMenuItem.Text = "转发比例";
             // 
             // toolStripTextBox3
             // 
             this.toolStripTextBox3.Name = "toolStripTextBox3";
-            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 38);
+            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 23);
             this.toolStripTextBox3.Text = "10";
             // 
             // 节点ToolStripMenuItem
@@ -195,19 +193,19 @@
             this.增加节点ToolStripMenuItem,
             this.删除节点ToolStripMenuItem});
             this.节点ToolStripMenuItem.Name = "节点ToolStripMenuItem";
-            this.节点ToolStripMenuItem.Size = new System.Drawing.Size(122, 38);
+            this.节点ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.节点ToolStripMenuItem.Text = "服务节点";
             // 
             // 增加节点ToolStripMenuItem
             // 
             this.增加节点ToolStripMenuItem.Name = "增加节点ToolStripMenuItem";
-            this.增加节点ToolStripMenuItem.Size = new System.Drawing.Size(209, 38);
+            this.增加节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.增加节点ToolStripMenuItem.Text = "增加节点";
             // 
             // 删除节点ToolStripMenuItem
             // 
             this.删除节点ToolStripMenuItem.Name = "删除节点ToolStripMenuItem";
-            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(209, 38);
+            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.删除节点ToolStripMenuItem.Text = "删除节点";
             // 
             // 从网关节点ToolStripMenuItem
@@ -216,19 +214,19 @@
             this.增加ToolStripMenuItem,
             this.删除ToolStripMenuItem});
             this.从网关节点ToolStripMenuItem.Name = "从网关节点ToolStripMenuItem";
-            this.从网关节点ToolStripMenuItem.Size = new System.Drawing.Size(146, 38);
+            this.从网关节点ToolStripMenuItem.Size = new System.Drawing.Size(80, 21);
             this.从网关节点ToolStripMenuItem.Text = "从网关节点";
             // 
             // 增加ToolStripMenuItem
             // 
             this.增加ToolStripMenuItem.Name = "增加ToolStripMenuItem";
-            this.增加ToolStripMenuItem.Size = new System.Drawing.Size(161, 38);
+            this.增加ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.增加ToolStripMenuItem.Text = "增加";
             // 
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(161, 38);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             // 
             // 服务节点节点状态
@@ -238,22 +236,20 @@
             this.服务节点节点状态.Controls.Add(this.tabPage3);
             this.服务节点节点状态.Dock = System.Windows.Forms.DockStyle.Fill;
             this.服务节点节点状态.HotTrack = true;
-            this.服务节点节点状态.Location = new System.Drawing.Point(0, 46);
-            this.服务节点节点状态.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.服务节点节点状态.Location = new System.Drawing.Point(0, 25);
             this.服务节点节点状态.Name = "服务节点节点状态";
             this.服务节点节点状态.SelectedIndex = 0;
-            this.服务节点节点状态.Size = new System.Drawing.Size(1232, 722);
+            this.服务节点节点状态.Size = new System.Drawing.Size(616, 355);
             this.服务节点节点状态.TabIndex = 2;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.txtLog);
-            this.tabPage1.Location = new System.Drawing.Point(8, 39);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPage1.Size = new System.Drawing.Size(1216, 675);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Size = new System.Drawing.Size(608, 329);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "基本信息";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -261,10 +257,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(8, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 24);
+            this.label1.Size = new System.Drawing.Size(41, 12);
             this.label1.TabIndex = 1;
             this.label1.Text = "日志：";
             // 
@@ -272,22 +267,20 @@
             // 
             this.txtLog.AcceptsReturn = true;
             this.txtLog.AcceptsTab = true;
-            this.txtLog.Location = new System.Drawing.Point(12, 54);
-            this.txtLog.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtLog.Location = new System.Drawing.Point(6, 27);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(1184, 588);
+            this.txtLog.Size = new System.Drawing.Size(594, 296);
             this.txtLog.TabIndex = 0;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.listBox1);
-            this.tabPage2.Location = new System.Drawing.Point(8, 39);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPage2.Size = new System.Drawing.Size(1216, 663);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Size = new System.Drawing.Size(608, 335);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务节点节点状态";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -295,21 +288,19 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 24;
-            this.listBox1.Location = new System.Drawing.Point(12, 100);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(6, 50);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(1188, 532);
+            this.listBox1.Size = new System.Drawing.Size(596, 268);
             this.listBox1.TabIndex = 0;
             // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.listBox2);
-            this.tabPage3.Location = new System.Drawing.Point(8, 39);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPage3.Size = new System.Drawing.Size(1216, 663);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Size = new System.Drawing.Size(608, 335);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "从网关节点状态";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -317,11 +308,10 @@
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.ItemHeight = 24;
-            this.listBox2.Location = new System.Drawing.Point(6, 90);
-            this.listBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listBox2.ItemHeight = 12;
+            this.listBox2.Location = new System.Drawing.Point(3, 45);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(1188, 532);
+            this.listBox2.Size = new System.Drawing.Size(596, 268);
             this.listBox2.TabIndex = 1;
             // 
             // timer1
@@ -331,19 +321,19 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1232, 804);
+            this.ClientSize = new System.Drawing.Size(616, 402);
             this.Controls.Add(this.服务节点节点状态);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "统一登录网关";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

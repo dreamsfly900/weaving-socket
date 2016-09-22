@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.服务节点节点状态 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
@@ -53,6 +54,7 @@
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.listBox4 = new System.Windows.Forms.ListBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.服务节点节点状态.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -273,7 +275,7 @@
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(600, 341);
             this.tabPage5.TabIndex = 1;
-            this.tabPage5.Text = "服务节点节点状态";
+            this.tabPage5.Text = "DTU节点状态";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // listBox3
@@ -305,6 +307,11 @@
             this.listBox4.Size = new System.Drawing.Size(596, 268);
             this.listBox4.TabIndex = 1;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -316,6 +323,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "DTU网关程序";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.服务节点节点状态.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -361,6 +369,7 @@
         private System.Windows.Forms.ListBox listBox3;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.ListBox listBox4;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

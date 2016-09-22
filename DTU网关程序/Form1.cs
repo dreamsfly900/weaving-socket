@@ -22,7 +22,10 @@ namespace DTU网关程序
         {
             dtuw.EventMylog += Dtuw_EventMylog;
             dtuw.Run(Convert.ToInt32(toolStripTextBox1.Text));
-            textBox1.Text += "启动端口："+ toolStripTextBox1.Text;
+            textBox1.Text += "DTU被动接收端口已打开：" + toolStripTextBox1.Text;
+            timer1.Start();
+
+
         }
         void addMylog(Control c, string log)
         {
@@ -38,6 +41,18 @@ namespace DTU网关程序
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            listBox3.Items.Clear();
+            listBox3.Items.Add("主动接收连启动量：" + dtuw.listdtu.Count);
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.ExitThread();
+            Application.Exit();
         }
     }
 }
