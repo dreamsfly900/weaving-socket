@@ -132,12 +132,12 @@ namespace TCPServer
                     if (p2p.start(ci.Ip, ci.Port, false))
                     {
                         ci.Client.Add(p2p);
-                        if (xn.Attributes["Commfun"].Value == "receive")
+                        if (xn.Attributes["type"].Value == "receive")
                         {
                             CommandItemS.Add(ci);
 
                         }
-                        else if (xn.Attributes["Commfun"].Value == "push")
+                        else if (xn.Attributes["type"].Value == "push")
                         {
                             CommandItemS2.Add(ci);
 

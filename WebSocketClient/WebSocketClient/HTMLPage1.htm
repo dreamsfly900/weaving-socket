@@ -16,7 +16,9 @@
         {
              socket = new UDCsocket({
                  ip: '127.0.0.1', port: 11001, conn: function () { alert("连接成功"); }
-               , recData: function (text) { alert('收到内容' + text); }
+               , recData: function (text) {
+                   $('#test').appendTo(text + '<br/>')//这个意思你们都懂了把
+               }
                , close: function () { alert("连接关闭"); }
                 , error: function (msg) { alert("连接错误" + msg); }
              });
@@ -24,8 +26,10 @@
         }
         function SendData()
         {
-            for (var i = 0; i < 15;i++)
-            socket.SendData(0x01, "Send_content", { a: 'b' }, { b: 'c' })
+          //  if (socket.takon != "") {
+               
+                    socket.SendData(0x23, "testaabb", { Str: 'aaaaa' })
+           // } else { alert("socket is null"); }
         }
     </script>
 </head>
@@ -39,5 +43,7 @@
     <button id='ToggleConnection' type="button" onclick='seestate();'>
         查看状态</button><br />
     <br />
+
+    <div id="test"></div>
 </body>
 </html>

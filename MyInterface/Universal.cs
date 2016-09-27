@@ -370,8 +370,13 @@ namespace MyInterface
           // tcpc.Close();
           return true;
       }
-
-        public void Runcommand(byte command, string data, Socket soc)
+        /// <summary>
+        /// 这个方法会被重写
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="data"></param>
+        /// <param name="soc"></param>
+        public virtual void Runcommand(byte command, string data, Socket soc)
         {
             
         }

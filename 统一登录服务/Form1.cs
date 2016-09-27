@@ -117,7 +117,7 @@ namespace 统一登录服务
 
         private void 重写加载WEB节点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gw.ReLoad();
+            gw.ReLoad(); 
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
