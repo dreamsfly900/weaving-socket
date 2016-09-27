@@ -17,6 +17,7 @@
              socket = new UDCsocket({
                  ip: '127.0.0.1', port: 11001, conn: function () { alert("连接成功"); }
                , recData: function (text) {
+                   alert(text);
                    $('#test').appendTo(text + '<br/>')//这个意思你们都懂了把
                }
                , close: function () { alert("连接关闭"); }
@@ -44,6 +45,6 @@
         查看状态</button><br />
     <br />
 
-    <div id="test"></div>
+    <div id="test" style="width:1024px"></div>
 </body>
 </html>

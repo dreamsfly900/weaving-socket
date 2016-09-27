@@ -39,6 +39,7 @@ namespace test
         {
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(senddata));
             t.Start();//开一个线程
+            DTUALL.content = "";
         }
         DTUDATA DTUALL = new DTUDATA();
         void senddata()

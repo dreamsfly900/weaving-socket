@@ -326,7 +326,7 @@ namespace MyInterface
         {
             _baseModel b = new _baseModel();
             b.Request = Request;
-            
+            b.Token = Tokan;
             b.SetParameter<T>(Parameter);
             b.Querycount = Querycount;
             send(soc,command, b.Getjson());
@@ -336,7 +336,7 @@ namespace MyInterface
         {
             _baseModel b = new _baseModel();
             b.Request = Request;
-           
+            b.Token = Tokan;
             b.SetRoot<T>(Root);
             b.Querycount = Querycount;
             send(soc,command, b.Getjson());
