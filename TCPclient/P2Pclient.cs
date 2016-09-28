@@ -209,8 +209,8 @@ namespace client
             b.Token = this.Tokan;
             b.SetParameter<T>(Parameter);
             b.Querycount = Querycount;
-            send(command, b.Getjson());
-            return true;
+
+            return send(command, b.Getjson());
         }
         public bool SendRoot<T>(byte command, String Request, T Root, int Querycount)
         {
@@ -219,8 +219,8 @@ namespace client
             b.Token = this.Tokan;
             b.SetRoot<T>(Root);
             b.Querycount = Querycount;
-            send(command, b.Getjson());
-            return true;
+
+            return send(command, b.Getjson());
         }
 
         public void Send(byte[] b)
@@ -390,6 +390,7 @@ namespace client
                 }
                 catch (Exception e)
                 {
+                    ListData.RemoveAt(0);
                     if (ErrorMge != null)
                         ErrorMge(3, "unup:" + e.Message);
                 }

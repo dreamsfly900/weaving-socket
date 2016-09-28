@@ -122,8 +122,8 @@ namespace P2P
 
                             try { netc.Soc.Close(); }
                             catch { }
-                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-                            EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                           // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
 
                             listconn.Remove(netc);
                         }
@@ -654,7 +654,7 @@ namespace P2P
                                 //t.Start(netc);
                                 System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
                                 //packageDataHandler pdh = new packageDataHandler(packageData);
-                               // pdh.BeginInvoke(netc, null, null);
+                                //pdh.BeginInvoke(netc, null, null);
                             }
                            // System.Threading.Thread.Sleep(1);
                         }

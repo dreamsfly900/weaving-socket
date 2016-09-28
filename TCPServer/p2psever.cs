@@ -431,10 +431,10 @@ namespace P2P
                             if (!netc.Ispage)
                             {
                                 netc.Ispage = true;
-                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                t.Start(netc);
-                                //Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
-                                //pdh.BeginInvoke(netc, null, null);
+                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
+                                //t.Start(netc);
+                                Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
+                                pdh.BeginInvoke(netc, null, null);
 
                             }
                         }

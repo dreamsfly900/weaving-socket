@@ -392,13 +392,13 @@ namespace cloud
           
             ConnObj cobj = new ConnObj();
             cobj.Soc = soc;
-            //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+            IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
             //cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
 
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")+new Random().Next(1000,9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")+ clientipe.Port;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
                 if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
                 {
                     ConnObjlist.Add(cobj);
