@@ -127,6 +127,18 @@ namespace test
             else if (temp[0] == "out")
             {
                 String Token = temp[1];//这个就是下线人员的Token了
+                Datauser[] listsoctemp = new Datauser[listsoc.Count];
+                listsoc.CopyTo(0, listsoctemp, 0, listsoctemp.Length);
+                //为什么写这两句，是因为多线程中，添加和删除集合的操作，都会对其他线程有影响，所以先
+                //拷贝一份副本
+                foreach (Datauser du in listsoctemp)
+                {
+                    if (Token == du.token)
+                    {
+                        listsoc.Remove(du);
+                        return;
+                    }
+                }
             }
         }
         public override bool Run(string data, Socket soc)
