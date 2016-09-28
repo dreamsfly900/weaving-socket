@@ -398,7 +398,7 @@ namespace cloud
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff");// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")+new Random().Next(1000,9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
                 if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
                 {
                     ConnObjlist.Add(cobj);
@@ -431,7 +431,10 @@ namespace cloud
                             }
                     }
                 }
-                catch { EventMylog("EventUpdataConnSoc---新建连接",""); }
+                catch (Exception e){
+
+                    EventMylog("EventUpdataConnSoc---新建连接","");
+                }
 
 
                
@@ -495,11 +498,11 @@ namespace cloud
                             {
                                 p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，请联系管理人员。");
                             }
-                            return;
+                           
                         }
                     }
                 }
-                p2psev.send(soc, 0xff, "你所请求的服务是不存在的。");
+                //p2psev.send(soc, 0xff, "你所请求的服务是不存在的。");
                 // }
                 //else
                 //{

@@ -38,6 +38,7 @@ namespace test
         public Class1()
         {
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(senddata));
+            t.IsBackground = true;
             t.Start();//开一个线程
             DTUALL.content = "";
         }
@@ -55,7 +56,8 @@ namespace test
                     //拷贝一份副本
                     foreach (Datauser soc in listsoctemp)
                     {
-                        SendRoot<DTUDATA>(soc.soc, 0x2, "getdata", DTUALL, 0, soc.token);//把接收到的数据发送给客户端
+                       bool b= SendRoot<DTUDATA>(soc.soc, 0x2, "getdata", DTUALL, 0, soc.token);//把接收到的数据发送给客户端
+                        if (!b) listsoc.Remove(soc);
                     }
 
                 } catch { }

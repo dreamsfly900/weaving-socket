@@ -411,13 +411,16 @@ namespace client
                         if (tempbtye[0] == 0x99)
                         {
                             timeout = DateTime.Now;
-                            if (bytesRead > 1)
+                            if (tempbtye.Length > 1)
                             {
                                 byte[] b = new byte[bytesRead - 1];
-                                byte[] t = tempbtye;
-                                Array.Copy(t, 1, b, 0, b.Length);
-                                tempbtye = b;
-                               // bytesRead = bytesRead - (1);
+                                try
+                                {
+                                   
+                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                }
+                                catch { }
+                                tempbtye = b;  
                                 goto _0x99;
                             }else
                              continue;

@@ -122,8 +122,8 @@ namespace P2P
 
                             try { netc.Soc.Close(); }
                             catch { }
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-                            //EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                            EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
 
                             listconn.Remove(netc);
                         }
@@ -965,40 +965,40 @@ namespace P2P
 
                 netc.State = 1;
                 if (EventUpdataConnSoc != null)
-                    EventUpdataConnSoc(netc.Soc);
-                    //EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
+                   EventUpdataConnSoc(netc.Soc);
+                   // EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
             }
             catch { }
         }
-        void setherd2(object obj)
-        {
-            try
-            {
-                Socket soc = obj as Socket;
-                while (true)
-                {
+        //void setherd2(object obj)
+        //{
+        //    try
+        //    {
+        //        Socket soc = obj as Socket;
+        //        while (true)
+        //        {
 
-                    if (soc.Available < 200)
-                        System.Threading.Thread.Sleep(10);
-                    else
-                    {
-                        byte[] Buffer;
-                        soc.Receive(Buffer = new byte[soc.Available]);
+        //            if (soc.Available < 200)
+        //                System.Threading.Thread.Sleep(10);
+        //            else
+        //            {
+        //                byte[] Buffer;
+        //                soc.Receive(Buffer = new byte[soc.Available]);
 
-                        //  System.Threading.Thread.Sleep(50);
-                        new sendheaddele(sendhead).BeginInvoke(soc, Buffer, null, null);
-                        if (EventUpdataConnSoc != null)
-                            EventUpdataConnSoc.BeginInvoke(soc, null, null);
-                        NETcollection netc = new NETcollection();
-                        netc.Soc = soc;
-                        netc.State = 1;
-                        listconn.Add(netc);
-                        return;
-                    }
-                }
-            }
-            catch { }
-        }
+        //                //  System.Threading.Thread.Sleep(50);
+        //                new sendheaddele(sendhead).BeginInvoke(soc, Buffer, null, null);
+        //                if (EventUpdataConnSoc != null)
+        //                    EventUpdataConnSoc.BeginInvoke(soc, null, null);
+        //                NETcollection netc = new NETcollection();
+        //                netc.Soc = soc;
+        //                netc.State = 1;
+        //                listconn.Add(netc);
+        //                return;
+        //            }
+        //        }
+        //    }
+        //    catch { }
+        //}
         List<NETcollection> connlist = new List<NETcollection>();
         void Accept(object ias)
         {
