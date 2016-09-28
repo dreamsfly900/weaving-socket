@@ -317,8 +317,13 @@ namespace client
                             if (bytesRead > 2 + a)
                             {
                                 String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                                int len = int.Parse(temp);
-
+                                int len = 0;
+                                try
+                                {
+                                     len = int.Parse(temp);
+                                }
+                                catch
+                                { }
                                 labered:
                                 if ((len + 2 + a) > tempbtye.Length)
                                 {
@@ -351,9 +356,9 @@ namespace client
                                             Tokan = temp.Split('|')[1];
                                         else
                                         {
-                                            if (receiveServerEvent != null)
-                                               // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                             System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            receiveServerEvent(str.command, str.date);
+                                             //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //receiveServerEvent(str.command, str.date);
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
@@ -363,9 +368,9 @@ namespace client
                                     {
                                         //
                                         if (receiveServerEvent != null)
-                                             //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        //receiveServerEvent(str.command, str.date);
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                        receiveServerEvent(str.command, str.date);
+                                        //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();
