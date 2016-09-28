@@ -88,7 +88,7 @@ namespace test
             {
                 DTUALL.content = ip + prot + "上线了。";
             }
-
+           // SendDtu(soc, new byte[] { 22, 22, 22, 22, }, ip, prot);
         }
         /// <summary>
         /// 现在我要写自己的逻辑处理内容了，我写简单一点，比如收到A，返回AB

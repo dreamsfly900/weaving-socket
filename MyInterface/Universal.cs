@@ -329,8 +329,8 @@ namespace MyInterface
             b.Token = Tokan;
             b.SetParameter<T>(Parameter);
             b.Querycount = Querycount;
-            send(soc,command, b.Getjson());
-            return true;
+
+            return send(soc, command, b.Getjson());
         }
         public bool SendRoot<T>(Socket soc, byte command, String Request, T Root, int Querycount, String Tokan)
         {
@@ -339,8 +339,8 @@ namespace MyInterface
             b.Token = Tokan;
             b.SetRoot<T>(Root);
             b.Querycount = Querycount;
-            send(soc,command, b.Getjson());
-            return true;
+
+            return send(soc, command, b.Getjson());
         }
         public bool SendDtu(Socket soc, byte[] Root, String ip,int port)
         {
@@ -349,8 +349,8 @@ namespace MyInterface
             b.Token = ip + "|" + port;
             b.SetRoot<byte[]>(Root);
             b.Querycount = 0;
-            send(soc, 0x00, b.Getjson());
-            return true;
+
+            return send(soc, 0x00, b.Getjson());
         }
         public bool send(Socket soc, byte command, string text)
       {
