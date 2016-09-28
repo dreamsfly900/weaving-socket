@@ -1012,7 +1012,7 @@ namespace P2P
                     //Socket handler = listener.EndAccept(ar);
                     //listener.BeginAccept(new AsyncCallback(Accept), listener);
                     // Create the state object.
-
+                   
                     NETcollection netc = new NETcollection();
                     netc.Soc = handler;
                     netc.State = 0;

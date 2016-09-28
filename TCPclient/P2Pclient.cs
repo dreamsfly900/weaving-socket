@@ -353,8 +353,8 @@ namespace client
                                         {
                                             if (receiveServerEvent != null)
                                                // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                            receiveServerEvent(str.command, str.date);
+                                             System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            //receiveServerEvent(str.command, str.date);
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                         }
@@ -364,8 +364,8 @@ namespace client
                                         //
                                         if (receiveServerEvent != null)
                                              //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        receiveServerEvent(str.command, str.date);
-                                        //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                        //receiveServerEvent(str.command, str.date);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();
