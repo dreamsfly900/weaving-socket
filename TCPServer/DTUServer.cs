@@ -72,7 +72,7 @@ namespace TCPServer
 
                         try
                         {
-                            byte[] b = new byte[0]  ;
+                            byte[] b = new byte[1]  ;
 
                             netc.Soc.Send(b);
 
