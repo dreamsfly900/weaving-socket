@@ -44,6 +44,8 @@
             this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.端口比例ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
+            this.最大承载人数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox4 = new System.Windows.Forms.ToolStripTextBox();
             this.节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.增加节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,8 +61,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.最大承载人数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBox4 = new System.Windows.Forms.ToolStripTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.服务节点节点状态.SuspendLayout();
@@ -188,7 +188,22 @@
             // 
             this.toolStripTextBox3.Name = "toolStripTextBox3";
             this.toolStripTextBox3.Size = new System.Drawing.Size(100, 23);
-            this.toolStripTextBox3.Text = "10";
+            this.toolStripTextBox3.Text = "30";
+            this.toolStripTextBox3.Click += new System.EventHandler(this.toolStripTextBox3_Click);
+            // 
+            // 最大承载人数ToolStripMenuItem
+            // 
+            this.最大承载人数ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox4});
+            this.最大承载人数ToolStripMenuItem.Name = "最大承载人数ToolStripMenuItem";
+            this.最大承载人数ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.最大承载人数ToolStripMenuItem.Text = "最大承载人数";
+            // 
+            // toolStripTextBox4
+            // 
+            this.toolStripTextBox4.Name = "toolStripTextBox4";
+            this.toolStripTextBox4.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox4.Text = "30000";
             // 
             // 节点ToolStripMenuItem
             // 
@@ -321,20 +336,6 @@
             // 
             this.timer1.Interval = 2000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // 最大承载人数ToolStripMenuItem
-            // 
-            this.最大承载人数ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripTextBox4});
-            this.最大承载人数ToolStripMenuItem.Name = "最大承载人数ToolStripMenuItem";
-            this.最大承载人数ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.最大承载人数ToolStripMenuItem.Text = "最大承载人数";
-            // 
-            // toolStripTextBox4
-            // 
-            this.toolStripTextBox4.Name = "toolStripTextBox4";
-            this.toolStripTextBox4.Size = new System.Drawing.Size(100, 23);
-            this.toolStripTextBox4.Text = "30000";
             // 
             // Form1
             // 

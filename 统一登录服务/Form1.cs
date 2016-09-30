@@ -113,5 +113,10 @@ namespace 统一登录服务
             Application.ExitThread();
             Application.Exit();
         }
+
+        private void toolStripTextBox3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
