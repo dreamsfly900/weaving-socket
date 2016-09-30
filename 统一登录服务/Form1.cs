@@ -28,19 +28,7 @@ namespace 统一登录服务
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    _baseModel bm = new _baseModel();
-            //    A aa = new A();
-            //    aa.a = "b";
-            //    bm.SetRoot<A>(aa);
-            // String str=   Newtonsoft.Json.JsonConvert.SerializeObject(bm);
-            //    string data = "{\"Request\":\"Send_content\",\"Root\":{\"a\":\"b\"},\"Parameter\":{\"b\":\"c\"},\"Token\":\"\",\"Querycount\":0,\"Number\":null}";
-            //    _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
-            //}
-            //catch (Exception ex)
-            //{
-            //}
+    
 
         }
         public delegate void Mylog(Control c, string log);
@@ -56,7 +44,7 @@ namespace 统一登录服务
         private void 启动ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             isweb = false;
-            gw = new GateWay(isweb);
+            gw = new GateWay(isweb,Convert.ToInt32(toolStripTextBox4.Text));
             gw.Proportion = Convert.ToInt32(toolStripTextBox3.Text);
             gw.EventMylog += Gw_EventMylog;
             if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text),int.Parse(toolStripTextBox2.Text)))
@@ -86,7 +74,7 @@ namespace 统一登录服务
                     {
                         listBox2.Items.Add("ip:" + ci.Ip + "端口：" + ci.Port + "-状态：" + ci.Client.Isline + "-在线人数:" + ci.Num);
                     }
-                    toolStripStatusLabel2.Text = "连接人数：" + gw.ConnObjlist.Count + "  ";
+                    toolStripStatusLabel2.Text = "连接人数：" + gw.getnum() + "  ";
                 }
             }
             catch { }
@@ -106,7 +94,7 @@ namespace 统一登录服务
         private void 启动WEB网关ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             isweb = true;
-           gw = new GateWay(isweb);
+           gw = new GateWay(isweb,Convert.ToInt32(toolStripTextBox4.Text));
             gw.EventMylog += Gw_EventMylog;
             if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text), int.Parse(toolStripTextBox2.Text)))
             {

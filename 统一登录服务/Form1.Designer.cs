@@ -59,6 +59,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.最大承载人数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox4 = new System.Windows.Forms.ToolStripTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.服务节点节点状态.SuspendLayout();
@@ -112,7 +114,8 @@
             this.重写加载WEB节点ToolStripMenuItem,
             this.开放端口ToolStripMenuItem,
             this.内部端口ToolStripMenuItem,
-            this.端口比例ToolStripMenuItem});
+            this.端口比例ToolStripMenuItem,
+            this.最大承载人数ToolStripMenuItem});
             this.开始ToolStripMenuItem.Name = "开始ToolStripMenuItem";
             this.开始ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.开始ToolStripMenuItem.Text = "开始";
@@ -248,7 +251,7 @@
             this.tabPage1.Controls.Add(this.txtLog);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(608, 329);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "基本信息";
@@ -279,8 +282,8 @@
             this.tabPage2.Controls.Add(this.listBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(608, 335);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(608, 329);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务节点节点状态";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -299,8 +302,8 @@
             this.tabPage3.Controls.Add(this.listBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage3.Size = new System.Drawing.Size(608, 335);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(608, 329);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "从网关节点状态";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -316,8 +319,22 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
+            this.timer1.Interval = 2000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // 最大承载人数ToolStripMenuItem
+            // 
+            this.最大承载人数ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox4});
+            this.最大承载人数ToolStripMenuItem.Name = "最大承载人数ToolStripMenuItem";
+            this.最大承载人数ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.最大承载人数ToolStripMenuItem.Text = "最大承载人数";
+            // 
+            // toolStripTextBox4
+            // 
+            this.toolStripTextBox4.Name = "toolStripTextBox4";
+            this.toolStripTextBox4.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox4.Text = "30000";
             // 
             // Form1
             // 
@@ -381,6 +398,8 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox2;
         private System.Windows.Forms.ToolStripMenuItem 端口比例ToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox3;
+        private System.Windows.Forms.ToolStripMenuItem 最大承载人数ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox4;
     }
 }
 

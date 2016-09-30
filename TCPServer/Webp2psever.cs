@@ -25,7 +25,8 @@ namespace P2P
         public event UpdataListSoc EventUpdataConnSoc;
        
         public event deleteListSoc EventDeleteConnSoc;
-       
+ 
+
         public Webp2psever()
         {
             string New_Handshake = "";
@@ -123,8 +124,8 @@ namespace P2P
                             try { netc.Soc.Close(); }
                             catch { }
                             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-                           // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
-
+                            // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                           
                             listconn.Remove(netc);
                         }
 

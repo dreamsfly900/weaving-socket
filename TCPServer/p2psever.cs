@@ -13,6 +13,7 @@ namespace P2P
     public delegate void NATthrough(byte command,String data, EndPoint ep);
     public delegate void UpdataListSoc(Socket soc);
     public delegate void deleteListSoc(Socket soc);
+    public delegate void deleteSoc(Socket soc,string token);
     public interface ITcpBasehelper
     {
         
@@ -28,7 +29,6 @@ namespace P2P
 
          event deleteListSoc EventDeleteConnSoc;
        
-
     }
     public class p2psever: ITcpBasehelper
     {
@@ -41,6 +41,7 @@ namespace P2P
         public static ManualResetEvent allDone = new ManualResetEvent(false); 
         public event UpdataListSoc EventUpdataConnSoc; 
         public event deleteListSoc EventDeleteConnSoc;
+   
         string loaclip;
         public p2psever(string _loaclip)
         {

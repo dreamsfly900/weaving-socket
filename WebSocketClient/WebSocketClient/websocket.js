@@ -7,6 +7,7 @@
             conn: null,
             recData: null,
             close: null,
+            jump:null,
             error: null
         }
     try {
@@ -14,7 +15,7 @@
         var settakon = this.settakon;
         var SOCKECT_ADDR = "ws://" + options.ip + ":" + options.port + "";
 
-
+        this.jump=options.jump;
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
 
@@ -51,6 +52,9 @@
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0)
                         settakon(text.split('|')[1]);
+                    if (text.indexOf("jump") >= 0)
+                        if (options.jump!=null)
+                        options.jump(text.split('|')[1]);
                 }
                 else
                     if (options.recData != null)
@@ -68,6 +72,7 @@
 
         };
         this.soc = ws;
+      
     } catch (ex) {
         alert(ex.message);
     }
@@ -113,6 +118,7 @@
 UDCsocket.prototype = {
     soc: null,
     takon: "",
+    jump:null,
     settakon: function (str) {
         //  alert(str);
 

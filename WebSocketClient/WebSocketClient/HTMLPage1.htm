@@ -21,6 +21,7 @@
                }
                , close: function () { alert("连接关闭"); }
                 , error: function (msg) { alert("连接错误" + msg); }
+                 , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器："+ip);}
              });
            
         }

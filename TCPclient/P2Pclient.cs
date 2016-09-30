@@ -19,6 +19,8 @@ namespace client
         TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
+        public delegate void jump(String text);
+        public event jump jumpServerEvent;
         public delegate void istimeout();
         public event istimeout timeoutevent;
         public delegate void errormessage(int type, string error);
@@ -354,10 +356,15 @@ namespace client
                                     {
                                         if (temp.IndexOf("token") >= 0)
                                             Tokan = temp.Split('|')[1];
+                                        else if (temp.IndexOf("jump") >= 0)
+                                        {
+                                            Tokan = "连接数量满";
+                                            jumpServerEvent(temp.Split('|')[1]);
+                                        }
                                         else
                                         {
                                             receiveServerEvent(str.command, str.date);
-                                             //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
                                             //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //receiveServerEvent(str.command, str.date);
                                             //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
