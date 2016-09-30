@@ -56,8 +56,14 @@ namespace test
                     //拷贝一份副本
                     foreach (Datauser soc in listsoctemp)
                     {
-                       bool b= SendRoot<DTUDATA>(soc.soc, 0x2, "getdata", DTUALL, 0, soc.token);//把接收到的数据发送给客户端
-                        if (!b) listsoc.Remove(soc);
+                        try
+                        {
+                            bool b = true;
+                            if (soc != null)
+                                 b = SendRoot<DTUDATA>(soc.soc, 0x2, "getdata", DTUALL, 0, soc.token);//把接收到的数据发送给客户端
+                            if (!b) listsoc.Remove(soc);
+                        }
+                        catch { }
                     }
 
                 } catch { }
