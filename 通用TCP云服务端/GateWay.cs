@@ -486,7 +486,7 @@ namespace cloud
                 }
 
 
-                newwayEvent.BeginInvoke(temp, null, null);
+                newwayEvent(temp);
 
                 
 

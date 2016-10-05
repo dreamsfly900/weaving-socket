@@ -80,7 +80,7 @@ namespace StandardModel
 
                                 RequestDataDtu rdh = new RequestDataDtu(md.rd2);
                                 byte[] b= Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>(_0x01.Root); 
-                                rdh.BeginInvoke(soc, b, _0x01.Token.Split('|')[0],Convert.ToInt32(_0x01.Token.Split('|')[1]), null, null);
+                                rdh(soc, b, _0x01.Token.Split('|')[0],Convert.ToInt32(_0x01.Token.Split('|')[1]));
                                 if (md.type == "once")
                                 {
                                     listmode.Remove(md);
@@ -91,7 +91,7 @@ namespace StandardModel
                                
                                 //md.rd(soc, _0x01);
                                 RequestData rdh = new RequestData(md.rd);
-                                rdh.BeginInvoke(soc, _0x01, null, null);
+                                rdh(soc, _0x01);
                                 if (md.type == "once")
                                 {
                                     listmode.Remove(md); 

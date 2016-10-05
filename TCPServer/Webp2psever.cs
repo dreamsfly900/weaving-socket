@@ -284,9 +284,12 @@ namespace P2P
                 //   System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback())
                 netc.State = 1;
                 //  System.Threading.Thread.Sleep(50);
-                new sendheaddele(sendhead).BeginInvoke(handler, tempbtye,null,null);
-                if (EventUpdataConnSoc != null)
-                    EventUpdataConnSoc.BeginInvoke(handler, null, null);
+                sendheaddele sh = new sendheaddele(sendhead);
+                IAsyncResult ia = sh.BeginInvoke(handler, tempbtye,null,null);
+                sh.EndInvoke(ia);
+                //if (EventUpdataConnSoc != null)
+                //    EventUpdataConnSoc.BeginInvoke(handler, null, null);
+                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(UpdataConnSoc), handler);
                 return;
                 //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
                 //t.Start(handler);
@@ -941,8 +944,8 @@ namespace P2P
                                 {
                                         netc.Soc.Receive(netc.Buffer = new byte[netc.Soc.Available]);
                                        // setherd(netc);
-                                     new receiveconndele(setherd).BeginInvoke(netc, null, null);
-                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
+                                     //new receiveconndele(setherd).BeginInvoke(netc, null, null);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
                                         connlist.Remove(netc);
                                         listconn.Add(netc);
                                     
