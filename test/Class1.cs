@@ -106,7 +106,7 @@ namespace test
         [InstallFun("forever")]
         public void testaabb(Socket soc, _baseModel _0x01)
         {
-          
+            
             _0x01.Parameter = "ok";
             _0x01.Root = "ok";
             send(soc, 0x01, _0x01.Getjson());
