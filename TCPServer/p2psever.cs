@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace P2P 
 {
@@ -295,11 +296,11 @@ namespace P2P
                                 me.Command = tempbtye[0];
                                 me.Data = temp;
                                 me.Soc = netc.Soc;
-
-                                //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-                                //receiveeventto(me);
                                 if (receiveevent != null)
-                                    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                //receiveeventto(me);
+                                //if (receiveevent != null)
+                                //    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
                                 //if (ListData.Count > 0) ListData.RemoveAt(i);
                                 netc.Ispage = false; return;
 
@@ -432,10 +433,11 @@ namespace P2P
                             if (!netc.Ispage)
                             {
                                 netc.Ispage = true;
+                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
                                 //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
                                 //t.Start(netc);
-                                Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
-                                pdh.BeginInvoke(netc, null, null);
+                                //Webp2psever.packageDataHandler pdh = new Webp2psever.packageDataHandler(packageData);
+                                //pdh.BeginInvoke(netc, endpackageData, null);
 
                             }
                         }
@@ -447,6 +449,11 @@ namespace P2P
                 
             }
         }
+        //void endpackageData(IAsyncResult ia)
+        //{
+        //    ia.AsyncState
+        //}
+        public int Partition=20000;
         void receive(object ias)
         {
             while (true)
@@ -455,22 +462,35 @@ namespace P2P
                 {
 
                     int c = listconn.Count;
-                    //int count = (c / 2000) + 1;
-                    //if (c > 0)
-                    //    for (int i = 0; i < count; i++)
-                    //    {
+                    int count = (c / Partition) + 1;
+                    getbufferdelegate[] iagbd = new getbufferdelegate[count];
+                    IAsyncResult[] ia = new IAsyncResult[count];
+                    
+                    if (c > 0)
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
 
-                    //        c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
-                    //        NETcollection[] netlist = new NETcollection[c];
-                    //        listconn.CopyTo(i * 2000, netlist, 0, c);
-                    //        new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000, null, null);
-                    //    }
-                    NETcollection[] netlist = new NETcollection[c];
-                    listconn.CopyTo(0, netlist, 0, c);
-                    getbuffer(netlist, 0, c);
+                            c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
+                            NETcollection[] netlist = new NETcollection[c];
+                            listconn.CopyTo(i * Partition, netlist, 0, c);
+
+                              iagbd[i] = new getbufferdelegate(getbuffer);
+                            ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
+
+
+                        }
+                        for (int i = 0; i < count; i++)
+                        {
+                            iagbd[i].EndInvoke(ia[i]);
+                        }
+                    }
+                    //NETcollection[] netlist = new NETcollection[c];
+                    //listconn.CopyTo(0, netlist, 0, c);
+                    //getbuffer(netlist, 0, c);
                 }
                 catch { }
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(1);
             }
         }
 

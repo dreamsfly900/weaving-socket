@@ -284,9 +284,12 @@ namespace P2P
                 //   System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback())
                 netc.State = 1;
                 //  System.Threading.Thread.Sleep(50);
-                new sendheaddele(sendhead).BeginInvoke(handler, tempbtye,null,null);
-                if (EventUpdataConnSoc != null)
-                    EventUpdataConnSoc.BeginInvoke(handler, null, null);
+                sendheaddele sh = new sendheaddele(sendhead);
+                IAsyncResult ia = sh.BeginInvoke(handler, tempbtye,null,null);
+                sh.EndInvoke(ia);
+                //if (EventUpdataConnSoc != null)
+                //    EventUpdataConnSoc.BeginInvoke(handler, null, null);
+                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(UpdataConnSoc), handler);
                 return;
                 //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
                 //t.Start(handler);
@@ -563,7 +566,8 @@ namespace P2P
             // tcpc.Close();
             return true;
         }
-        delegate void getbufferdelegate(NETcollection[] netlist, int index, int len);
+        public int Partition = 2;
+            delegate void getbufferdelegate(NETcollection[] netlist, int index, int len, int state, int num);
         void receive(object ias)
         {
             while (true)
@@ -571,20 +575,44 @@ namespace P2P
                 try
                 {
                     int c = listconn.Count;
-                    //int count = (c/2000)+1;
-                    //if(c>0)
-                    //for (int i = 0; i < count; i++)
-                    //{
+                    int count = (c / Partition) + 1;
+                    getbufferdelegate[] iagbd = new getbufferdelegate[count];
+                    IAsyncResult[] ia = new IAsyncResult[count];
 
-                    //        c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
-                    //        NETcollection[] netlist = new NETcollection[c];
-                    //        listconn.CopyTo(i*2000, netlist,0, c);
-                    //        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(gg), netlist);
-                    //   //new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000,null,null);
-                    //}
-                    NETcollection[] netlist = new NETcollection[c];
-                    listconn.CopyTo(0, netlist, 0, c);
-                    getbuffer(netlist, 0, c,1,30);
+                    if (c > 0)
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+
+                            c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
+                            NETcollection[] netlist = new NETcollection[c];
+                            listconn.CopyTo(i * Partition, netlist, 0, c);
+
+                            iagbd[i] = new getbufferdelegate(getbuffer);
+                            ia[i] = iagbd[i].BeginInvoke(netlist, 0, Partition,1,30, null, null);
+
+
+                        }
+                        for (int i = 0; i < count; i++)
+                        {
+                            iagbd[i].EndInvoke(ia[i]);
+                        }
+                    }
+                    //int c = listconn.Count;
+                    //    int count = (c / 2000) + 1;
+                    //    if (c > 0)
+                    //        for (int i = 0; i < count; i++)
+                    //        {
+
+                    //            c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
+                    //            NETcollection[] netlist = new NETcollection[c];
+                    //            listconn.CopyTo(i * 2000, netlist, 0, c);
+                    //            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(gg), netlist);
+                    //            //new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000,null,null);
+                    //        }
+                    //NETcollection[] netlist = new NETcollection[c];
+                    //listconn.CopyTo(0, netlist, 0, c);
+                    //getbuffer(netlist, 0, c,1,30);
                     System.Threading.Thread.Sleep(1);
                 }
                 catch (Exception ex)
@@ -941,8 +969,8 @@ namespace P2P
                                 {
                                         netc.Soc.Receive(netc.Buffer = new byte[netc.Soc.Available]);
                                        // setherd(netc);
-                                     new receiveconndele(setherd).BeginInvoke(netc, null, null);
-                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
+                                     //new receiveconndele(setherd).BeginInvoke(netc, null, null);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
                                         connlist.Remove(netc);
                                         listconn.Add(netc);
                                     
