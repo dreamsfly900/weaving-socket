@@ -566,7 +566,7 @@ namespace P2P
             // tcpc.Close();
             return true;
         }
-        public int Partition = 2;
+        public int Partition = 5000;
             delegate void getbufferdelegate(NETcollection[] netlist, int index, int len, int state, int num);
         void receive(object ias)
         {
