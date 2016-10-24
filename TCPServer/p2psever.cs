@@ -544,7 +544,7 @@ namespace P2P
                     //allDone.Reset();
 
                     ////开启异步监听socket
-                    ////    Console.WriteLine("Waiting for a connection");
+                    ////    //Console.WriteLine("Waiting for a connection");
                     //try
                     //{
                     //    listener.BeginAccept(

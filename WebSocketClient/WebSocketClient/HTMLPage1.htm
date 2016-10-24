@@ -7,9 +7,10 @@
     <script src="websocket.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
-
-           
-
+            //通过POST方法请求，个别浏览器有可能有问题(自行测试)
+            // httpposttoserver(1, "Send_content", "");
+            //通过Get方法jsonp请求，个别浏览器有可能有问题(自行测试)
+            httpgettoserver(1, "Send_content", "");
         });
         var socket;
         function conn()
@@ -24,6 +25,66 @@
                  , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器："+ip);}
              });
            
+        }
+
+        //使用http网关，使用此方法连接。
+        function httpposttoserver(command, Request, Root)
+        {
+            var test = new Object();
+            //test.command = 0x2;
+            test.Request = Request;//"Send_content";
+            if (Root!="")
+                test.Root = JSON.stringify(Root);
+            else
+                test.Root = "";
+            test.Parameter ="";
+            test.Token = "Token";
+            test.Querycount = 0;
+            test.Number = '';
+
+            $.ajax({
+                type: "post",
+                url: "http://127.0.0.1:8080/" + command,
+                dataType: "json",
+                data: JSON.stringify(test), 
+                success: function (data) {
+                    alert("success:" + JSON.stringify(data));
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error:" + errorThrown);
+                }
+            });
+        }
+        function httpgettoserver(command, Request, Root) {
+            var test = new Object();
+            //test.command = 0x2;
+            test.Request = Request;//"Send_content";
+            if (Root != "")
+                test.Root = JSON.stringify(Root);
+            else
+                test.Root = "";
+            test.Parameter = "";
+            test.Token = "Token";
+            test.Querycount = 0;
+            test.Number = '';
+
+            $.ajax({
+                type: "get",
+                url: "http://127.0.0.1:8080/" + command,
+                data: JSON.stringify(test),
+                dataType: "jsonp",
+                jsonp: 'jsoncallback',
+                success: function (data) {
+                    alert("success:" + JSON.stringify(data));
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error:" + errorThrown);
+                }
+            });
+        }
+        function jsoncallback(m )
+        {
+            alert("success:" + JSON.stringify(m));
         }
         function SendData()
         {

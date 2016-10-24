@@ -336,7 +336,7 @@ namespace P2P
                 string acceptKey = "";
                 foreach (string Line in rawClientHandshakeLines)
                 {
-                   // Console.WriteLine(Line);
+                   // //Console.WriteLine(Line);
                     if (Line.Contains("Sec-WebSocket-Key:"))
                     {
                         acceptKey = ComputeWebSocketHandshakeSecurityHash09(Line.Substring(Line.IndexOf(":") + 2));

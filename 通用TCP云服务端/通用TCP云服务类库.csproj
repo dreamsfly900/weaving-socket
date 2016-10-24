@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="DTUGateWay.cs" />
     <Compile Include="GateWay.cs" />
+    <Compile Include="MyHttpServer.cs" />
     <Compile Include="TCPcloud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -48,6 +48,7 @@ namespace client
         List<object> objlist = new List<object>();
         public void AddListenClass(object obj)
         {
+             
             GetAttributeInfo(obj.GetType(), obj);
             //xmhelper.AddListen()
             //objlist.Add(obj);
