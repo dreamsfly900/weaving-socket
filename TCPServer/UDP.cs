@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using UDTCommon;
 
 namespace P2P
 {
@@ -13,11 +14,13 @@ namespace P2P
        public delegate void myreceive(byte command, String data, NETcollectionUdp iep);
        public event myreceive receiveevent;
        List<NETcollectionUdp> listconn = new List<NETcollectionUdp>();
+        UDTCommon.UDTSocket udt;
        public void start(int port)
        {
            try
            {
-               listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                
+              // listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
                listener.Bind(localEndPoint);
@@ -29,63 +32,77 @@ namespace P2P
            catch (Exception e) { throw e; }
        }
 
-       //private void receives(object state)
-       //{
-       //    while (true)
-       //    {
-       //        try
-       //        {
-       //            NETcollectionUdp[] netclist = getUdpList();
-       //            foreach (NETcollectionUdp tempnetc in netclist)
-       //            {
-       //                IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
-       //                EndPoint remoteEndPoint = anyEndPoint;
-       //                if (tempnetc.Soc != null)
-       //                {
-       //                    byte[] data;
-       //                    if (tempnetc.Soc.Available > 1)
-       //                    {
-       //                        data = new byte[tempnetc.Soc.Available];
-       //                        int recv = tempnetc.Soc.Receive(data, 0, data.Length, SocketFlags.None);
-       //                        tempnetc.Soc.SendTo(data, tempnetc.Iep);
-       //                    }
-       //                }
-       //            }
-       //            System.Threading.Thread.Sleep(100);
-       //        }
-       //        catch (Exception e)
-       //        {
-       //            System.IO.StreamWriter sw = new System.IO.StreamWriter("send.txt", true);
-       //            sw.WriteLine(e.Message);
-       //            sw.Close();
-       //        }
-       //    }
-       //}
-
-       //public bool mapping(int port,NETcollectionUdp  netc)
-       //{
-       //    try
-       //       {   
-       //            NETcollectionUdp[] netclist = getUdpList();
-       //            foreach (NETcollectionUdp tempnetc in netclist)
-       //            {
-       //                if (tempnetc.Port == port)
-       //                {
-       //                    return false;
-       //                }
-       //            }
-       //        Socket listeners = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-       //        listeners.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-       //        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
-       //        listeners.Blocking = false;
-       //        listeners.Bind(localEndPoint);
-       //        netc.Soc= listeners;
-       //        return true;
-       //    }
-       //    catch  { return false; }
+        private UDTSocket CreateSocket(string ip = "0.0.0.0", int port = 0, bool rendezvous = false)
+        {
+            UDTSocket sock = new UDTSocket(AddressFamily.InterNetwork, SocketType.Stream);
+            int bufferSize = 64000;
+            sock.UDTSendBufferSize = sock.UDTReviceBufferSize = sock.UDPReviceBufferSize = sock.UDPSendBufferSize = bufferSize;
+            sock.WindowSize = 16;
+            sock.IsRendezvous = rendezvous;
+            sock.IsClosedLinger = false;
+            sock.IsReuseAddress = true;
+            sock.MSS = (int)1472;
+            sock.Bind("0.0.0.0", port);
             
-       //}
-       int minport = 33333;
+            return sock;
+        }
+        //private void receives(object state)
+        //{
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            NETcollectionUdp[] netclist = getUdpList();
+        //            foreach (NETcollectionUdp tempnetc in netclist)
+        //            {
+        //                IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        //                EndPoint remoteEndPoint = anyEndPoint;
+        //                if (tempnetc.Soc != null)
+        //                {
+        //                    byte[] data;
+        //                    if (tempnetc.Soc.Available > 1)
+        //                    {
+        //                        data = new byte[tempnetc.Soc.Available];
+        //                        int recv = tempnetc.Soc.Receive(data, 0, data.Length, SocketFlags.None);
+        //                        tempnetc.Soc.SendTo(data, tempnetc.Iep);
+        //                    }
+        //                }
+        //            }
+        //            System.Threading.Thread.Sleep(100);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            System.IO.StreamWriter sw = new System.IO.StreamWriter("send.txt", true);
+        //            sw.WriteLine(e.Message);
+        //            sw.Close();
+        //        }
+        //    }
+        //}
+
+        //public bool mapping(int port,NETcollectionUdp  netc)
+        //{
+        //    try
+        //       {   
+        //            NETcollectionUdp[] netclist = getUdpList();
+        //            foreach (NETcollectionUdp tempnetc in netclist)
+        //            {
+        //                if (tempnetc.Port == port)
+        //                {
+        //                    return false;
+        //                }
+        //            }
+        //        Socket listeners = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        //        listeners.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+        //        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
+        //        listeners.Blocking = false;
+        //        listeners.Bind(localEndPoint);
+        //        netc.Soc= listeners;
+        //        return true;
+        //    }
+        //    catch  { return false; }
+
+        //}
+        int minport = 33333;
        int max = 99999;
        private string loaclip;
 

@@ -16,10 +16,8 @@
  * ************************************************************************
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
-
+using System.IO;
 namespace DHVDCSDK
 {
     public class DHVDC
@@ -107,18 +105,18 @@ namespace DHVDCSDK
         public static int DHOpenStream(UInt32 hChannel, IntPtr pFileHeadBuf, UInt32 dwSize)
         {
             int returnValue = 0;            
-            System.//Console.WriteLine("dwSize:"+dwSize.ToString());
-            System.IO.FileStream fs= System.IO.File.Open(@"c:\Test.txt",System.IO.FileMode.OpenOrCreate);
-            char[] buffer = new char[256];
-            buffer = dwSize.ToString().ToCharArray();
-            byte[] buffer1 = new byte[256];
-            for (int i = 0; i < 6; i++)
-            {
-                buffer1[i] = (byte)buffer[i];
-            }
-                fs.Write(buffer1, 0, 256);        
-            fs.Close();
-            returnValue = DH_OpenStream(hChannel, pFileHeadBuf, dwSize);
+            //Console.WriteLine("dwSize:"+dwSize.ToString());
+            // FileStream fs = File.Open(@"c:\Test.txt",System.IO.FileMode.OpenOrCreate);
+            //char[] buffer = new char[256];
+            //buffer = dwSize.ToString().ToCharArray();
+            //byte[] buffer1 = new byte[256];
+            //for (int i = 0; i < 6; i++)
+            //{
+            //    buffer1[i] = (byte)buffer[i];
+            //}
+            //    fs.Write(buffer1, 0, 256);        
+            //fs.Close();
+            //returnValue = DH_OpenStream(hChannel, pFileHeadBuf, dwSize);
             return returnValue;
         }
 
