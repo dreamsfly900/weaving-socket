@@ -134,10 +134,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTTP网关", "HTTP网关\HTTP网关.csproj", "{B1729755-FE98-4906-8DDB-4A0CF2799096}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
+	
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AAA|Any CPU = AAA|Any CPU
 		AAA|ARM = AAA|ARM
