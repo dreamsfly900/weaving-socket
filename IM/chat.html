@@ -1,0 +1,165 @@
+﻿<html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>聊天室 Websocket(HTLM5)+sokect分布式开源架构</title>
+  <script type="text/javascript">
+  //WebSocket = null;
+  </script>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <!-- Include these three JS files: -->
+ <script src="websocket.js"></script>
+<script src="scripts/jquery-1.4.1.min.js"></script>
+  <script type="text/javascript">
+    
+    var ws, name, client_list={};
+    
+    var socket;
+    // 连接服务端
+    function connect() {
+        socket = new UDCsocket({
+            ip: '127.0.0.1', port: 11001, conn: onopen
+                , recData: onmessage
+                , close: function () { alert("连接关闭"); }
+                 , error: function (msg) { alert("连接错误" + msg); }
+                  , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器：" + ip); }
+        });
+    }
+     
+    // 连接建立时发送登录信息
+    function onopen(msg)
+    {
+        if (msg=='token')
+        socket.SendData(0x31, "login", name);
+       
+    }
+
+    // 服务端发来消息时
+    function onmessage(text)
+    {
+        
+        var data = eval("(" + text + ")");
+        switch (data['Request']) {
+            // 登录 更新用户列表
+            case 'login':
+                //{"type":"login","client_id":xxx,"client_name":"xxx","client_list":"[...]","time":"xxx"}
+                say(socket.takon, name, name + ' 加入了聊天室', "");
+                console.log(name + "登录成功");
+                
+               
+                flush_client_list();
+    
+                break;
+            case 'userlist':
+                
+                client_list = eval("(" + data['Root'] + ")");
+               
+                flush_client_list();
+                break;
+            // 发言
+            case 'say':
+               
+                var s = eval("(" + data['Root'] + ")");
+                
+                //{"type":"say","from_client_id":xxx,"to_client_id":"all/client_id","content":"xxx","time":"xxx"}
+                say(s['token'], s['name'], s['context'], s['time']);
+                break;
+            // 用户退出 更新用户列表
+            case 'logout':
+                data=eval("(" + data['Root'] + ")");
+                //{"type":"logout","client_id":xxx,"time":"xxx"}
+                say(data['token'], data['name'], data['name'] + ' 退出了', '当前时间');
+                for (var p in client_list) {
+                    if (client_list[p]['token']=data['token'])
+                        delete client_list[p];
+                }
+
+                flush_client_list();
+        }
+    }
+
+    // 输入姓名
+    function show_prompt(){  
+        name = prompt('输入你的名字：', '');
+        if(!name || name=='null'){  
+            name = '游客';
+        }
+        connect();
+    }  
+
+    // 提交对话
+    function onSubmit() {
+      var input = document.getElementById("textarea");
+      var to_client_id = $("#client_list option:selected").attr("value");
+      var to_client_name = $("#client_list option:selected").text();
+      var  saym=new Object();
+      saym.token='aaaaa';
+      saym.context = input.value.replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+      saym.name=name;
+       
+           
+      socket.SendData(0x31, "say", saym);
+     // ws.send('{"type":"say","to_client_id":"'+to_client_id+'","to_client_name":"'+to_client_name+'","content":"'+input.value.replace(/"/g, '\\"').replace(/\n/g,'\\n').replace(/\r/g, '\\r')+'"}');
+
+      input.value = "";
+      input.focus();
+    }
+
+    // 刷新用户列表框
+    function flush_client_list(){
+    	var userlist_window = $("#userlist");
+    	var client_list_slelect = $("#client_list");
+    	userlist_window.empty();
+    	client_list_slelect.empty();
+    	userlist_window.append('<h4>在线用户</h4><ul>');
+    	client_list_slelect.append('<option value="all" id="cli_all">所有人</option>');
+    	for (var p in client_list) {
+    	    
+    	    userlist_window.append('<li id="' + client_list[p]['token'] + '">' + client_list[p]['name'] + '</li>');
+    	    client_list_slelect.append('<option value="' + client_list[p]['token'] + '">' + client_list[p]['name'] + '</option>');
+        }
+    	$("#client_list").val(select_client_id);
+    	userlist_window.append('</ul>');
+    }
+
+    // 发言
+    function say(from_client_id, from_client_name, content, time){
+    	$("#dialog").append('<div class="speech_item"><img src="http://lorempixel.com/38/38/?'+from_client_id+'" class="user_icon" /> '+from_client_name+' <br> '+time+'<div style="clear:both;"></div><p class="triangle-isosceles top">'+content+'</p> </div>');
+    }
+
+    $(function(){
+    	select_client_id = 'all';
+	    $("#client_list").change(function(){
+	         select_client_id = $("#client_list option:selected").attr("value");
+	    });
+    });
+  </script>
+</head>
+<body  onload="show_prompt()">
+    <div class="container">
+	    <div class="row clearfix">
+	        <div class="col-md-1 column">
+	        </div>
+	        <div class="col-md-6 column">
+	           <div class="thumbnail">
+	               <div class="caption" id="dialog"></div>
+	           </div>
+	           <form  >
+	                <select style="margin-bottom:8px" id="client_list">
+                        <option value="all">所有人</option>
+                    </select>
+                    <textarea class="textarea thumbnail" id="textarea"></textarea>
+                    <div class="say-btn"><input type="button" onclick="onSubmit()" class="btn btn-default" value="发表" /></div>
+               </form>
+               
+               <p class="cp">Socket实时推送技术&nbsp;&nbsp;&nbsp;&nbsp;Powered by Dreamsfly900</p>
+	        </div>
+	        <div class="col-md-3 column">
+	           <div class="thumbnail">
+                   <div class="caption" id="userlist"></div>
+               </div>
+               &nbsp;</div>
+	    </div>
+    </div>
+    <script type="text/javascript">var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F7b1919221e89d2aa5711e4deb935debd' type='text/javascript'%3E%3C/script%3E"));</script>
+</body>
+</html>

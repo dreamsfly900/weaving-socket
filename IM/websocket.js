@@ -51,7 +51,7 @@
                 }
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0) {
-
+                       
                         settakon(text.split('|')[1]);
                         options.conn('token');
                     }
