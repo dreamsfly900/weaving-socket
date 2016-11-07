@@ -1,3 +1,8 @@
+ **新增：
+使用该架构制作的聊天室示例程序：
+[http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html)
+
+** 
 架构简述：
 通用数据通讯构建,设计基于TCP通信的交互框架。是编写物联网，消息队列，websocket应用，移动通信应用，IM等完美的选择。可规范先后台交互处理，可支持，B/C,C/S,手机移动标准化的通信方式
 。达到后台业务一次编写，前台展示全线支持的目的。还可根据网络及负载情况分布式部署网管与服务。先已支持win10 IOT 设备与架构的数据传输支持。
