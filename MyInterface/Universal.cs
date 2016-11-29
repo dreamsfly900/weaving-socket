@@ -410,6 +410,14 @@ namespace MyInterface
         {
             
         }
+        public virtual void Tokenout(string Token, Socket soc)
+        {
+
+        }
+        public virtual void Tokenin(string Token, Socket soc)
+        {
+
+        }
     }
     public class MySockets
     {

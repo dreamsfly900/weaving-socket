@@ -158,6 +158,7 @@ namespace cloud
             {
                 if (command == 0xff)
                 {
+                    exec2(command, data, soc);
                     string[] temp = data.Split('|');
                     if (temp[0] == "in")
                     {
@@ -167,7 +168,22 @@ namespace cloud
                         online ol = new online();
                         ol.Token = temp[1];
                         onlines.Add(ol);
-                        exec2(command, data, soc);
+                        foreach (CommandItem CI in listcomm)
+                        {
+
+                            try
+                            {
+                                CI.MyICommand.Tokenin(ol.Token, ol.Soc);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (EventMylog != null)
+                                    EventMylog("Tokenin", ex.Message);
+                            }
+
+                        }
+                        return;
+                        
                     }
                     else if (temp[0] == "out")
                     {
@@ -180,8 +196,23 @@ namespace cloud
                         {
                             if (ol.Token == temp[1])
                             {
+                                foreach (CommandItem CI in listcomm)
+                                {
+
+                                    try
+                                    {
+                                        CI.MyICommand.Tokenout(ol.Token, ol.Soc);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (EventMylog != null)
+                                            EventMylog("Tokenout", ex.Message);
+                                    }
+
+                                }
+                                
                                 onlines.Remove(ol);
-                                exec2(command, data, soc);
+                              
                                 return;
                             }
                         }
