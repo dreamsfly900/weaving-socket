@@ -43,6 +43,7 @@ namespace IMClass
         [InstallFun("forever")]
         public void login(Socket soc, _baseModel _0x01)
         {
+            online [] onlieuser= GetOnline();
             User[] listsoctemp = new User[listsoc.Count];
             listsoc.CopyTo(0, listsoctemp, 0, listsoctemp.Length);
             //为什么写这两句，是因为多线程中，添加和删除集合的操作，都会对其他线程有影响，所以先
@@ -88,6 +89,20 @@ namespace IMClass
                 try { SendRoot<say>(du.soc, 0x31, "say", s, 0, du.token);  } catch { }
             }
         }
+        /// <summary>
+        /// 新增重写的方法，连接离线后激活的方法
+        /// </summary>
+        /// <param name="Token"></param>
+        /// <param name="soc"></param>
+        public override void Tokenout(string Token, Socket soc)
+        { }
+        /// <summary>
+        /// 新增重写的方法，连接上线后激活的方法
+        /// </summary>
+        /// <param name="Token"></param>
+        /// <param name="soc"></param>
+        public override void Tokenin(string Token, Socket soc)
+        { }
         public override void Runcommand(byte command, string data, Socket soc)
         {
 
