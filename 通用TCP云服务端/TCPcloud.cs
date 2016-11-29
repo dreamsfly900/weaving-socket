@@ -162,27 +162,29 @@ namespace cloud
                     if (temp[0] == "in")
                     {
                         
-                        exec2(command, data, soc);
+                       
                         //加入onlinetoken
-                        //online ol = new online();
-                        //ol.Token = temp[1];
-                        //onlines.Add(ol);
+                        online ol = new online();
+                        ol.Token = temp[1];
+                        onlines.Add(ol);
+                        exec2(command, data, soc);
                     }
                     else if (temp[0] == "out")
                     {
-                        exec2(command, data, soc);
+                       
                         ////移出onlinetoken
-                        //int count = onlines.Count;
-                        //online[] ols = new online[count];
-                        //onlines.CopyTo(0,ols,0,count);
-                        //foreach (online ol in ols)
-                        //{
-                        //    if (ol.Token == temp[1])
-                        //    {
-                        //        onlines.Remove(ol);
-                        //        return;
-                        //    }
-                        //}
+                        int count = onlines.Count;
+                        online[] ols = new online[count];
+                        onlines.CopyTo(0, ols, 0, count);
+                        foreach (online ol in ols)
+                        {
+                            if (ol.Token == temp[1])
+                            {
+                                onlines.Remove(ol);
+                                exec2(command, data, soc);
+                                return;
+                            }
+                        }
                     }
                     return;
                 }else

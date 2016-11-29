@@ -1,4 +1,5 @@
-﻿using StandardModel;
+﻿using Newtonsoft.Json;
+using StandardModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -241,7 +242,10 @@ namespace MyInterface
                 token = value;
             }
         }
-
+        [JsonIgnore]
+        object obj;
+        string name;
+        [JsonIgnore]
         public Socket Soc
         {
             get
@@ -252,6 +256,32 @@ namespace MyInterface
             set
             {
                 soc = value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+            }
+        }
+        [JsonIgnore]
+        public object Obj
+        {
+            get
+            {
+                return obj;
+            }
+
+            set
+            {
+                obj = value;
             }
         }
 

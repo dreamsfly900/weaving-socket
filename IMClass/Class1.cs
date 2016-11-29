@@ -90,41 +90,6 @@ namespace IMClass
         }
         public override void Runcommand(byte command, string data, Socket soc)
         {
-            string[] temp = data.Split('|');
-            if (temp[0] == "in")//in是上线，out是下线
-            {
-              
-            }
-            else if (temp[0] == "out")
-            {
-                String Token = temp[1];//这个就是下线人员的Token了
-                User[] listsoctemp = new User[listsoc.Count];
-                listsoc.CopyTo(0, listsoctemp, 0, listsoctemp.Length);
-                //为什么写这两句，是因为多线程中，添加和删除集合的操作，都会对其他线程有影响，所以先
-                //拷贝一份副本
-                foreach (User du in listsoctemp)
-                {
-                    if (Token == du.token)
-                    {
-
-                        User[] listsoctemp2 = new User[listsoc.Count];
-                        listsoc.CopyTo(0, listsoctemp2, 0, listsoctemp2.Length);
-                        foreach (User u in listsoctemp2)
-                        {
-                            if(u.token!= Token)
-                            try
-                            {
-                                SendRoot<User>(u.soc, 0x31, "logout", du, 0, u.token);
-                            }
-                            catch { }
-                        }
-                        listsoc.Remove(du);
-                        return;
-                    }
-                   
-                }
-              
-            }
         }
         public override void TCPCommand_EventDeleteConnSoc(Socket soc)
         {
