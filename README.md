@@ -38,3 +38,31 @@ QQ交流群17375149 联系QQ：20573886
 6。 新增DTU网关，可实现传感器等DTU数值中转至服务器端处理逻辑。
 7。新增uwp socket 客户端示例，可支持wp系统与win10 iot底层设备数据直链服务器端。帮助您更简单的实现物联网云平台。
 8.新增HTTP协议网关，可使用ajax方式，获取与传输数据，兼容http简单熟悉的编码方式，又可得到socket的高效传输处理属性。
+
+架构版本修改特性：
+2016-11-29版本修改：
+新增方法可直接获取通过网关加入的上线设备的对象
+  online [] onlieuser= GetOnline();
+新增
+SetonlineByToken 方法，根据TOKEN 设置 name与OBJ属性；
+新增
+GetonlineByToken 方法，根据TOKEN 获取online对象
+新增重写的方法，Tokenout与Tokenin方法，
+1.上线设备后激活Tokenin方法，
+2. 设备下线后激活Tokenout方法。
+用法
+ public override void Tokenout(string Token, Socket soc)
+   { }
+
+public override void Tokenin(string Token, Socket soc)
+ { }
+
+2016年10月10日
+新增UWP程序，UWP通用程序客户端。可用于WIN10 IOT设备以及WP10手机等应用程序。
+
+2016年9月29日
+路由功能增强
+功能1，预设单个路由链接上限，默认30000人。当链接数量达到30000人时则，回发oxff内部指令，推荐其他关联路由地址与端口号。
+
+
+功能2.增加路由转发效率，使用固定连接数的寻址算法。增加转发效率
