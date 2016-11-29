@@ -348,10 +348,58 @@ namespace MyInterface
             catch { }
             return ols;
         }
-    
-    
-       
-     
+        /// <summary>
+        /// 根据TOKEN 获取online对象
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public online GetonlineByToken(String token)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    return o;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 根据TOKEN 设置 name与OBJ属性
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="name"></param>
+        /// <param name="obj"></param>
+        public void SetonlineByToken(String token,string name,object obj)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    o.Name = name;
+                    o.Obj = obj;
+                }
+            }
+        }
+        /// <summary>
+        /// 根据TOKEN 设置 OBJ属性
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="obj"></param>
+        public void SetonlineByToken(String token, object obj)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    o.Obj = obj;
+                }
+            }
+        }
+
         public bool SendParameter<T>(Socket soc, byte command, String Request, T Parameter, int Querycount,String Tokan)
         {
             _baseModel b = new _baseModel();
