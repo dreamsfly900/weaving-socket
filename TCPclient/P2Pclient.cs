@@ -34,7 +34,8 @@ namespace client
         public event P2Preceive P2PreceiveEvent;
         UDP udp;
         bool NATUDP = false;
-        String IP; int PORT;
+     public   String IP;
+       public int PORT;
         public bool Isline
         {
             get
