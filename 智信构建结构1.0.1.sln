@@ -143,6 +143,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UWP（IOT，wp,win10）客�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTTP网关", "HTTP网关\HTTP网关.csproj", "{B1729755-FE98-4906-8DDB-4A0CF2799096}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "（IOT）物联网示例", "（IOT）物联网示例", "{77D42F02-56BE-4458-987E-19230B193705}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AAA|Any CPU = AAA|Any CPU
