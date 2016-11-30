@@ -34,11 +34,11 @@ namespace UWPclient
             try
             {
 
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,() =>
-                {
+                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                  {
                     //to do
                     textBlock.Text += _0x01.Root;
-                }
+                  }
               );
 
 

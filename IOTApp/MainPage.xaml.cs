@@ -55,11 +55,15 @@ namespace IOTApp
         bool gg = true;
         void setvalue(object obj)
         {
-           if(gg)
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            { 
-                textBlock3.Text = "当前随机数值显示：" + new Random().Next(0, 100) + " / n/r";
-            });
+            if (gg)
+            {
+                int a = new Random().Next(0, 100);
+                p2pc.SendRoot<String>(0x03, "setvalue", a.ToString(), 0);
+                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    textBlock3.Text = "当前随机数值显示：" + a + " / n/r";
+                });
+            }
         }
         [InstallFun("forever")]//forever
         public void command(Socket soc, _baseModel _0x01)

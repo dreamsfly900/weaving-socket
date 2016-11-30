@@ -849,7 +849,6 @@ namespace cloud
                 id = value;
             }
         }
-
-        Socket tosoc;
+         
     }
 }
