@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>jQuery仪表盘指示器动画插件DEMO演示</title>
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+	<!-- Syntax coloration -->
+    <link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
+	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="websocket.js"></script>
+	<!--[if IE]>
+		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+	<![endif]-->
+    <style type="text/css">
+        .auto-style1 {
+            width: 460px;
+        }
+        body {TEXT-ALIGN: center;}
+    </style>
+    <script>
+        var socket;
+        // 连接服务端
+        function connect() {
+            socket = new UDCsocket({
+                ip: '122.114.53.233', port: 11001, conn: onopen
+                    , recData: onmessage
+                    , close: function () { alert("连接关闭"); }
+                     , error: function (msg) { alert("连接错误" + msg); }
+                      , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器：" + ip); }
+            });
+        }
+
+        // 连接建立时发送登录信息
+        function onopen(msg) {
+            if (msg == 'token') {
+               
+                socket.SendData(0x2, "login", "");
+            }
+
+        }
+        function onmessage(text) {
+           
+            var data = eval("(" + text + ")");
+            switch (data['Request']) {
+                // 登录 更新用户列表
+                case 'getvalue': 
+                    airspeed.setAirSpeed( 80 * Math.sin(parseInt(data['Root']) / 10));
+            }
+        }
+        $(function () {
+            connect();
+        });
+        function start()
+        {
+            socket.SendData(0x2, "command", "开始");
+        }
+        function sotp()
+        {
+            socket.SendData(0x2, "command", "停止");
+        }
+    </script>
+</head>
+<body>
+	<div class="htmleaf-container">
+		<!--<div class="htmleaf-content bgcolor-3">-->
+		<div class="container">
+			
+
+		    <!-- Second example -->
+		    <div class="examples">
+		        <div>
+		            <span id="airspeed"></span>
+		            
+		        </div>
+                <div style="margin-left: auto;margin-right: auto;"  >
+                    <input id="Button1" type="button" onclick="start()" value="设备运行" />   <input id="Button2" type="button" onclick="sotp()" value="设备停止" />
+		        </div>
+		    </div>
+		   
+		</div>
+		<div style="text-align:center;clear:both">
+		 
+		</div>
+	</div>
+	
+	<!-- Syntax color -->
+	<script src="_examples_data/prism/prism.js"></script>
+
+	<!-- Importing jQuery library -->
+
+	<!-- Importing the FlightIndicators library -->
+	<script src="js/jquery.flightindicators.js"></script>
+	<script type="text/javascript">
+	// First static example
+	var first_attitude = $.flightIndicator('#first_attitude', 'attitude', {size:550, roll:8, pitch:3, showBox : true});
+	// Dynamic examples
+	
+	var airspeed = $.flightIndicator('#airspeed', 'airspeed', {size:550,showBox: false});
+
+	// Update at 20Hz 
+	//setInterval(function() {
+	//    // Airspeed update
+	//    airspeed.setAirSpeed(80+80*Math.sin(increment/10));
+
+	  
+	//    increment++;
+	    
+	
+	//}, 50);
+	</script>
+</body>
+</html>

@@ -150,11 +150,11 @@ namespace MyInterface
 
         public object GetValueClonebyIndex(int index)
         {
-            return temps[index].Clone();
+            return temps[index];
         }
         public object GetValueClonebyKey(string key)
         {
-            return temps.Find(x => x.Key == key).Clone();
+            return temps.Find(x => x.Key == key);
         }
         public object this[string key]
         {

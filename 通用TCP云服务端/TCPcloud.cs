@@ -58,9 +58,10 @@ namespace cloud
                                 CommandItem ci = new CommandItem();
                                 object obj = ab.CreateInstance(t.FullName);
                                 TCPCommand Ic = obj as TCPCommand;
+                                Ic.SetGlobalQueueTable(qt);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
-                                Ic.SetGlobalQueueTable(qt);
+                               
                                 GetAttributeInfo(Ic, obj.GetType(), obj);
                                 listcomm.Add(ci);
                             }
@@ -167,6 +168,7 @@ namespace cloud
                         //加入onlinetoken
                         online ol = new online();
                         ol.Token = temp[1];
+                        ol.Soc = soc;
                         onlines.Add(ol);
                         foreach (CommandItem CI in listcomm)
                         {
