@@ -1,8 +1,9 @@
  **新增：
 使用该架构制作的聊天室示例程序：
-[http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html)
+[IM聊天室示例展示](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html)
 
 ** 
+[WIN10IOT树莓派（物联网）展示示例，如果数值不变动，说明我把树莓派关闭了](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/WebApplication1/)
  **
 
 ### 视频教程架构：
