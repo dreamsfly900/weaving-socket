@@ -5,7 +5,7 @@
 ** 
 [WIN10IOT树莓派（物联网）展示示例，如果数值不变动，说明我把树莓派关闭了](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/WebApplication1/)
  **
-
+[输入图片说明](http://git.oschina.net/uploads/images/2016/1201/135739_2baae981_598831.jpeg "IOT运行照片")
 ### 视频教程架构：
 ** 
 教程1
@@ -71,4 +71,4 @@ public override void Tokenin(string Token, Socket soc)
 功能1，预设单个路由链接上限，默认30000人。当链接数量达到30000人时则，回发oxff内部指令，推荐其他关联路由地址与端口号。
 
 
-功能2.增加路由转发效率，使用固定连接数的寻址算法。增加转发效率
+功能2.增加路由转发效率，使用固定连接数的寻址算法。增加转发效率!
