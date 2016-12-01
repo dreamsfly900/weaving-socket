@@ -281,8 +281,9 @@ namespace client
             Isline = false;
             tcpc.Dispose();
         }
+        bool reccomed = true;
         SocketAsyncEventArgs socketReceiveArgs = new SocketAsyncEventArgs();
-        public void Receive(object obj)
+        public async void Receive(object obj)
         {
             string received = "";
 
@@ -294,16 +295,24 @@ namespace client
 
                 try
                 {
-                    done.Reset();
-                    
-                   
-                  
-                if (tcpc.ReceiveAsync(socketReceiveArgs))
-                {
-                        done.WaitOne();
-                }
+                    if (reccomed) 
+                    {
 
-                    System.Threading.Tasks.Task.Delay(100);
+                        if (tcpc.ReceiveAsync(socketReceiveArgs))
+                        {
+                            reccomed = false;
+                        }
+                    }
+                    TimeSpan ts = DateTime.Now - timeout;
+                    if (ts.Seconds > mytimeout)
+                    {
+                        Isline = false;
+                        //stop();
+                        //isreceives = false;
+                        timeoutevent();
+                        //return;
+                    }
+                    await System.Threading.Tasks.Task.Delay(100);
                 }
                 catch (Exception e)
                 {
@@ -437,7 +446,7 @@ namespace client
                     if (ErrorMge != null)
                         ErrorMge(1, e.Message);
                 }
-                finally { done.Set(); }
+                finally { reccomed = true; }
                 }
 
              
