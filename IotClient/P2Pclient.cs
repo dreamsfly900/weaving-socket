@@ -139,7 +139,7 @@ namespace client
         {
             try
             {
-                
+                int ss = 0;
                 IP = ip;
                 PORT = port;
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -152,8 +152,8 @@ namespace client
                 {
                 if (e.SocketError != SocketError.Success)
                 {
-
-                    if (e.SocketError == SocketError.ConnectionAborted)
+                        ss = 999999;
+                        if (e.SocketError == SocketError.ConnectionAborted)
                     {
                         timeoutevent();
 
@@ -168,6 +168,7 @@ namespace client
                     }
                     else
                     {
+                            
                             if (ErrorMge != null)
                                 ErrorMge(0, "出错了"+ e.SocketError);
                         // Dispatcher.BeginInvoke(() => MessageBox.Show("出错了" + e.SocketError));
@@ -193,13 +194,13 @@ namespace client
                 });
                 
                 tcpc.ConnectAsync(socketEventArg);
-                int ss = 0;
+            
                 if (!takon) return true;
                 while (Tokan == null)
                 {
-                    System.Threading.Tasks.Task.Delay(10000);
-                    ss++;
-                    if (ss > 10)
+                    System.Threading.Tasks.Task.Delay(10000000);
+                   
+                    if (ss > 0)
                         return false;
                 }
                 return true;

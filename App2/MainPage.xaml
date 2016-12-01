@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="App2.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-615,0">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="510,48,0,0" TextWrapping="Wrap" Text="IOT通讯示例程序" VerticalAlignment="Top" Height="158" Width="978"  FontSize="72"/>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="33,222,0,0" TextWrapping="Wrap" Text="接收信号：" VerticalAlignment="Top" FontSize="36"/>
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="213,184,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="574" Width="636" FontSize="36"/>
+        <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="814,328,0,0" TextWrapping="Wrap" Text="当前随机数值显示：0" VerticalAlignment="Top" Height="164" Width="358" FontSize="36"/>
+       
+
+    </Grid>
+</Page>
