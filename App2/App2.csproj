@@ -127,7 +127,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Source\Repos\universal-Data-Communication-System-for-windows\IotClient\IotClientClass.csproj">
+    <ProjectReference Include="..\IotClient\IotClientClass.csproj">
       <Project>{73d7fe72-1170-4912-abd7-aa27eafd3e1d}</Project>
       <Name>IotClientClass</Name>
     </ProjectReference>

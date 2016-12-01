@@ -39,7 +39,7 @@ namespace App2
             {
 
                 p2pc.SendRoot<String>(0x03, "login","", 0);
-                dt.Interval = new TimeSpan(0, 0, 1);
+                dt.Interval = new TimeSpan(0, 0, 2);
                 dt.Tick += Dt_Tick;
                 dt.Start();
             }
