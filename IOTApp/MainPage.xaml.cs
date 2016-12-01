@@ -52,7 +52,7 @@ namespace IOTApp
                 p2pc.SendRoot<String>(0x03, "setvalue", a.ToString(), 0);
                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    textBlock3.Text = "当前随机数值显示：" + a + " / n/r";
+                    textBlock3.Text = "当前随机数值显示：" + a + "";
                 });
             }
         }
@@ -62,7 +62,7 @@ namespace IOTApp
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 //to do
-                textBlock2.Text += "收到指令--" + _0x01.Root+"/n/r";
+                textBlock2.Text += "收到指令--" + _0x01.Root+ "<LineBreak/> ";
             });
             if (_0x01.Root == "开始")
             {

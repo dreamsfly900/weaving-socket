@@ -139,6 +139,7 @@ namespace client
         {
             try
             {
+                
                 IP = ip;
                 PORT = port;
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -160,13 +161,15 @@ namespace client
                     }
                     else if (e.SocketError == SocketError.ConnectionRefused)
                     {
-                        ErrorMge(0, "服务器端未启动");
+                            if (ErrorMge!=null )
+                        ErrorMge(0, "服务器端未启动"+ e.SocketError);
 
                         //Dispatcher.BeginInvoke(() => MessageBox.Show("服务器端问启动" + e.SocketError));
                     }
                     else
                     {
-                        ErrorMge(0, "出错了");
+                            if (ErrorMge != null)
+                                ErrorMge(0, "出错了"+ e.SocketError);
                         // Dispatcher.BeginInvoke(() => MessageBox.Show("出错了" + e.SocketError));
                     }
 
@@ -188,13 +191,13 @@ namespace client
                     
 
                 });
-
+                
                 tcpc.ConnectAsync(socketEventArg);
                 int ss = 0;
                 if (!takon) return true;
                 while (Tokan == null)
                 {
-                    System.Threading.Tasks.Task.Delay(1000);
+                    System.Threading.Tasks.Task.Delay(10000);
                     ss++;
                     if (ss > 10)
                         return false;
@@ -247,6 +250,8 @@ namespace client
         {
 
         }
+     
+      
         public bool send(byte command, string text)
         {
             try
@@ -259,10 +264,11 @@ namespace client
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 SocketAsyncEventArgs saea = new SocketAsyncEventArgs();
-                saea.Completed += Saea_Completed;
-                saea.SetBuffer(b, 0, b.Length);
+                saea.SetBuffer(b, 0, b.Length); 
                 tcpc.SendAsync(saea);
+               
             }
+
             catch { return false; }
             // tcpc.Close();
             return true;
@@ -279,15 +285,18 @@ namespace client
         {
             string received = "";
 
+            socketReceiveArgs = new SocketAsyncEventArgs();
+            socketReceiveArgs.SetBuffer(new byte[5120], 0, 5120);
+            socketReceiveArgs.Completed += SocketReceiveArgs_Completed;
             while (isok)
             {
 
                 try
                 {
                     done.Reset();
-                    socketReceiveArgs = new SocketAsyncEventArgs();
-                    socketReceiveArgs.SetBuffer(new byte[5120], 0, 5120);
-                    socketReceiveArgs.Completed += SocketReceiveArgs_Completed;
+                    
+                   
+                  
                 if (tcpc.ReceiveAsync(socketReceiveArgs))
                 {
                         done.WaitOne();
