@@ -1,4 +1,6 @@
- **新增：
+  QQ交流群17375149
+
+**新增：
 使用该架构制作的聊天室示例程序：
 [IM聊天室示例展示](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html)
 
