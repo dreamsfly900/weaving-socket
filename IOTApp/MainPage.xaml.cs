@@ -29,29 +29,20 @@ namespace IOTApp
     {
         public MainPage()
         {
+          
+
+        
             this.InitializeComponent();
-        }
-
-        private void textBlock_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-        P2Pclient p2pc = new P2Pclient(false);
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
             p2pc.AddListenClass(this);
             p2pc.timeoutevent += P2pc_timeoutevent;
             p2pc.jumpServerEvent += P2pc_jumpServerEvent;
             p2pc.start("122.114.53.233", 11002, true);
-
             Timer t = new Timer(new TimerCallback(setvalue), null, 0, 1000);
-            
         }
+
+       
+        P2Pclient p2pc = new P2Pclient(false);
+       
         bool gg = true;
         void setvalue(object obj)
         {
