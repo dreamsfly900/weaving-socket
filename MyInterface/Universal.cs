@@ -1,4 +1,5 @@
-﻿using StandardModel;
+﻿using Newtonsoft.Json;
+using StandardModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -149,11 +150,11 @@ namespace MyInterface
 
         public object GetValueClonebyIndex(int index)
         {
-            return temps[index].Clone();
+            return temps[index];
         }
         public object GetValueClonebyKey(string key)
         {
-            return temps.Find(x => x.Key == key).Clone();
+            return temps.Find(x => x.Key == key);
         }
         public object this[string key]
         {
@@ -241,7 +242,10 @@ namespace MyInterface
                 token = value;
             }
         }
-
+        [JsonIgnore]
+        object obj;
+        string name;
+        [JsonIgnore]
         public Socket Soc
         {
             get
@@ -252,6 +256,32 @@ namespace MyInterface
             set
             {
                 soc = value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+            }
+        }
+        [JsonIgnore]
+        public object Obj
+        {
+            get
+            {
+                return obj;
+            }
+
+            set
+            {
+                obj = value;
             }
         }
 
@@ -318,10 +348,58 @@ namespace MyInterface
             catch { }
             return ols;
         }
-    
-    
-       
-     
+        /// <summary>
+        /// 根据TOKEN 获取online对象
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public online GetonlineByToken(String token)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    return o;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 根据TOKEN 设置 name与OBJ属性
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="name"></param>
+        /// <param name="obj"></param>
+        public void SetonlineByToken(String token,string name,object obj)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    o.Name = name;
+                    o.Obj = obj;
+                }
+            }
+        }
+        /// <summary>
+        /// 根据TOKEN 设置 OBJ属性
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="obj"></param>
+        public void SetonlineByToken(String token, object obj)
+        {
+            online[] ols = GetOnline();
+            foreach (online o in ols)
+            {
+                if (o.Token == token)
+                {
+                    o.Obj = obj;
+                }
+            }
+        }
+
         public bool SendParameter<T>(Socket soc, byte command, String Request, T Parameter, int Querycount,String Tokan)
         {
             _baseModel b = new _baseModel();
@@ -379,6 +457,14 @@ namespace MyInterface
         public virtual void Runcommand(byte command, string data, Socket soc)
         {
             
+        }
+        public virtual void Tokenout(string Token, Socket soc)
+        {
+
+        }
+        public virtual void Tokenin(string Token, Socket soc)
+        {
+
         }
     }
     public class MySockets

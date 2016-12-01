@@ -58,9 +58,10 @@ namespace cloud
                                 CommandItem ci = new CommandItem();
                                 object obj = ab.CreateInstance(t.FullName);
                                 TCPCommand Ic = obj as TCPCommand;
+                                Ic.SetGlobalQueueTable(qt);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
-                                Ic.SetGlobalQueueTable(qt);
+                               
                                 GetAttributeInfo(Ic, obj.GetType(), obj);
                                 listcomm.Add(ci);
                             }
@@ -158,31 +159,65 @@ namespace cloud
             {
                 if (command == 0xff)
                 {
+                    exec2(command, data, soc);
                     string[] temp = data.Split('|');
                     if (temp[0] == "in")
                     {
                         
-                        exec2(command, data, soc);
+                       
                         //加入onlinetoken
-                        //online ol = new online();
-                        //ol.Token = temp[1];
-                        //onlines.Add(ol);
+                        online ol = new online();
+                        ol.Token = temp[1];
+                        ol.Soc = soc;
+                        onlines.Add(ol);
+                        foreach (CommandItem CI in listcomm)
+                        {
+
+                            try
+                            {
+                                CI.MyICommand.Tokenin(ol.Token, ol.Soc);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (EventMylog != null)
+                                    EventMylog("Tokenin", ex.Message);
+                            }
+
+                        }
+                        return;
+                        
                     }
                     else if (temp[0] == "out")
                     {
-                        exec2(command, data, soc);
+                       
                         ////移出onlinetoken
-                        //int count = onlines.Count;
-                        //online[] ols = new online[count];
-                        //onlines.CopyTo(0,ols,0,count);
-                        //foreach (online ol in ols)
-                        //{
-                        //    if (ol.Token == temp[1])
-                        //    {
-                        //        onlines.Remove(ol);
-                        //        return;
-                        //    }
-                        //}
+                        int count = onlines.Count;
+                        online[] ols = new online[count];
+                        onlines.CopyTo(0, ols, 0, count);
+                        foreach (online ol in ols)
+                        {
+                            if (ol.Token == temp[1])
+                            {
+                                foreach (CommandItem CI in listcomm)
+                                {
+
+                                    try
+                                    {
+                                        CI.MyICommand.Tokenout(ol.Token, ol.Soc);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (EventMylog != null)
+                                            EventMylog("Tokenout", ex.Message);
+                                    }
+
+                                }
+                                
+                                onlines.Remove(ol);
+                              
+                                return;
+                            }
+                        }
                     }
                     return;
                 }else

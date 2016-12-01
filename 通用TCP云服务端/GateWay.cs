@@ -406,14 +406,26 @@ namespace cloud
                             tempnum.Add(i);
                             try
                             {
-                              
+                                List<String> listsercer = new List<string>();
+                                bool temp = true;
                                 int len = i / Proportion;
                                 foreach (CommandItem ci in CommandItemS)
                                 {
-                                   
-                                    ci.Client[len].send(0xff, "out|" + coob.Token);
-                                       
-                                   
+                                    temp = true;
+                                    foreach (string ser in listsercer)
+                                    {
+                                        if (ser == (ci.Client[len].IP + ci.Client[len].PORT))
+                                        {
+                                            temp = false;
+                                            goto lab881;
+                                        }
+                                    }
+                                    lab881:
+                                    if (temp)
+                                    {
+                                        listsercer.Add(ci.Client[len].IP + ci.Client[len].PORT);
+                                        ci.Client[len].send(0xff, "out|" + coob.Token);
+                                    } 
                                 }
                                 return;
                             }
@@ -479,10 +491,30 @@ namespace cloud
                     ConnObjlist[temp]=cobj;
 
                 }
+                List<String> listsercer = new List<string>();
+                bool tempb = true;
                 foreach (CommandItem ci in CommandItemS)
                 {
-                    if(ci.Client[ci.Client.Count - 1]!=null)
-                    ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
+                    tempb = true;
+                    foreach (string ser in listsercer)
+                    {
+                        if (ser == (ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT))
+                        {
+                            tempb = false;
+                            goto lab882;
+                        }
+                    }
+                    lab882:
+                    if (tempb)
+                    {
+
+                        if (ci.Client[ci.Client.Count - 1] != null)
+                        {
+                            listsercer.Add(ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT);
+                            ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
+                        }
+                    }
+                  
                 }
 
 
@@ -817,7 +849,6 @@ namespace cloud
                 id = value;
             }
         }
-
-        Socket tosoc;
+         
     }
 }

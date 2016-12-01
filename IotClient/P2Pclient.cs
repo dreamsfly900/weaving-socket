@@ -15,7 +15,8 @@ namespace client
     public class P2Pclient
     {
         _base_manage xmhelper = new _base_manage();
-
+        public delegate void jump(String text);
+        public event jump jumpServerEvent;
         System.Net.Sockets.Socket tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
@@ -380,6 +381,11 @@ namespace client
                             {
                                 if (temp.IndexOf("token") >= 0)
                                     Tokan = temp.Split('|')[1];
+                            }
+                            else if (temp.IndexOf("jump") >= 0)
+                            {
+                                Tokan = "连接数量满";
+                                jumpServerEvent(temp.Split('|')[1]);
                             }
                             else if (receiveServerEvent != null)
                                 receiveServerEvent(tempbtye[0], temp);

@@ -279,13 +279,13 @@ namespace client
 
             while (isok)
             {
-
+                socketReceiveArgs = new SocketAsyncEventArgs();
+                socketReceiveArgs.SetBuffer(new byte[5120], 0, 5120);
+                socketReceiveArgs.Completed += SocketReceiveArgs_Completed;
                 try
                 {
                     done.Reset();
-                    socketReceiveArgs = new SocketAsyncEventArgs();
-                    socketReceiveArgs.SetBuffer(new byte[5120], 0, 5120);
-                    socketReceiveArgs.Completed += SocketReceiveArgs_Completed;
+                 
                 if (tcpc.ReceiveAsync(socketReceiveArgs))
                 {
                         done.WaitOne();

@@ -50,8 +50,11 @@
                         alert('长度不足');
                 }
                 if (tempbtye[0] == 0xff) {
-                    if (text.indexOf("token") >= 0)
+                    if (text.indexOf("token") >= 0) {
+
                         settakon(text.split('|')[1]);
+                        options.conn('token');
+                    }
                     if (text.indexOf("jump") >= 0)
                         if (options.jump!=null)
                         options.jump(text.split('|')[1]);

@@ -286,7 +286,8 @@ namespace P2P
                             { if (ListData.Count > 0) ListData.RemoveAt(i); }
                             try
                             {
-                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                               
+                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                             }
                             catch
                             { }
