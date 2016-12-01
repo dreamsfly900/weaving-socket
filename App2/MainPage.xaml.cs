@@ -51,8 +51,8 @@ namespace App2
             {
                 if (gg)
                 {
-                    int a = new Random().Next(0, 100);
-                    p2pc.SendRoot<String>(0x03, "setvalue", a.ToString(), 0);
+                    int a = new Random().Next(0, 160);
+                    p2pc.SendRoot<int>(0x03, "setvalue", a, 0);
                     textBlock3.Text = "当前随机数值显示：" + a + " ";
 
                 }

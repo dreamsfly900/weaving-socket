@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh">
 <head>
 	<meta charset="UTF-8">
@@ -49,7 +49,7 @@
             switch (data['Request']) {
                 // 登录 更新用户列表
                 case 'getvalue': 
-                    airspeed.setAirSpeed( 80 * Math.sin(parseInt(data['Root']) / 10));
+                    airspeed.setAirSpeed( parseInt(data['Root']));
             }
         }
         $(function () {
