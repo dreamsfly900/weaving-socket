@@ -107,7 +107,7 @@ namespace DHVDCSDK
         public static int DHOpenStream(UInt32 hChannel, IntPtr pFileHeadBuf, UInt32 dwSize)
         {
             int returnValue = 0;            
-            System.//Console.WriteLine("dwSize:"+dwSize.ToString());
+            //Console.WriteLine("dwSize:"+dwSize.ToString());
             System.IO.FileStream fs= System.IO.File.Open(@"c:\Test.txt",System.IO.FileMode.OpenOrCreate);
             char[] buffer = new char[256];
             buffer = dwSize.ToString().ToCharArray();

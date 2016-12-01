@@ -49,8 +49,8 @@ namespace P2P_v
         {
 
             string str= Domain2Ip("haiyang0201.imwork.net");
-            String IP = "122.114.56.226";
-            int PORT = 9987;
+            String IP = "127.0.0.1";
+            int PORT = 16680;
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(IP), 16680);
             udp.receiveevent += Udp_receiveevent;
             udp.start(IP, PORT, 16680);

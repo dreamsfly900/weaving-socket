@@ -33,7 +33,7 @@ namespace UWPclient
             // Gw_EventMylog("", _0x01.Getjson());
             try
             {
-
+                
                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,() =>
                 {
                     //to do
