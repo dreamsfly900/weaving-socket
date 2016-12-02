@@ -144,6 +144,9 @@
     <Content Include="related\2.jpg" />
     <Content Include="Web.config" />
     <Content Include="websocket.js" />
+    <Content Include="_examples_data\prism\prism.css" />
+    <Content Include="_examples_data\prism\prism.js" />
+    <Content Include="_examples_data\style.css" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -163,9 +166,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="_examples_data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
