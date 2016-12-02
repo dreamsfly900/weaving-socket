@@ -133,6 +133,8 @@ namespace client
         }
         public bool Restart(bool takon)
         {
+            
+            tcpc.Dispose();
             return start(IP, PORT, takon);
         }
         public bool start(string ip, int port, bool takon)
@@ -446,7 +448,9 @@ namespace client
                     if (ErrorMge != null)
                         ErrorMge(1, e.Message);
                 }
-                finally { reccomed = true; }
+                finally {
+                    
+                    reccomed = true; }
                 }
 
              
