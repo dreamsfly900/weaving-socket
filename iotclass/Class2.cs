@@ -32,7 +32,11 @@ namespace iotclass
         [InstallFun("forever")]
         public void setvalue(Socket soc, _baseModel _0x01)
         {
-            this.GlobalQueueTable["iotvalue"] = _0x01.Root;
+            try
+            {
+                this.GlobalQueueTable["iotvalue"] = _0x01.Root;
+            }
+            catch { }
         }
         public override bool Run(string data, Socket soc)
         {

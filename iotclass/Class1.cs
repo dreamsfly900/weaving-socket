@@ -26,7 +26,9 @@ namespace iotclass
                 try {
                      value =int.Parse( this.GlobalQueueTable["iotvalue"].ToString());
                 }
-                catch { this.GlobalQueueTable.Add("iotvalue", "0"); }
+                catch {
+                    //this.GlobalQueueTable.Add("iotvalue", "0");
+                }
                 online [] ol=   this.GetOnline();
 
                     foreach (online o in ol)
@@ -50,10 +52,14 @@ namespace iotclass
 
             foreach (online o in ol)
             {
-                if (o != null && o.Name=="设备")
+                try
                 {
-                    SendRoot<string>(o.Soc, 0x02, "command", _0x01.Root, 0, o.Token);
+                    if (o != null && o.Name == "设备")
+                    {
+                        SendRoot<string>(o.Soc, 0x02, "command", _0x01.Root, 0, o.Token);
+                    }
                 }
+                catch { }
             }
         }
         [InstallFun("forever")]
