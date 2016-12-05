@@ -134,7 +134,7 @@ namespace client
         public bool Restart(bool takon)
         {
             
-            tcpc.Dispose();
+           
             return start(IP, PORT, takon);
         }
         public bool start(string ip, int port, bool takon)
@@ -308,11 +308,11 @@ namespace client
                     TimeSpan ts = DateTime.Now - timeout;
                     if (ts.Seconds > mytimeout)
                     {
-                        Isline = false;
-                        //stop();
+                         
+                        stop();
                         //isreceives = false;
                         timeoutevent();
-                        //return;
+                        return;
                     }
                     await System.Threading.Tasks.Task.Delay(100);
                 }
