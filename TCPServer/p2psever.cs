@@ -500,6 +500,8 @@ namespace P2P
         {
             for (int i = index; i < len; i++)
             {
+                if (i >= netlist.Length)
+                    return;
                 NETcollection netc = netlist[i];
                 try
                 {

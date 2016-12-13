@@ -277,32 +277,7 @@ namespace TCPServer
         {
              
         }
-        private void P2p_timeoutevent2()
-        {
-            try
-            {
-                foreach (CommandItem ci in CommandItemS2)
-                {
-                    foreach (P2Pclient Client in ci.Client)
-                    {
-                        if (Client != null)
-                            if (!Client.Isline)
-                            {
-                                if (!Client.Restart(false))
-                                {
-                                    P2p_timeoutevent2();
-                                }
-                            }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (EventMylog != null)
-                    EventMylog("节点重新连接--:", ex.Message);
-                P2p_timeoutevent2();
-            }
-        }
+      
         private void P2p_timeoutevent()
         {
             try
