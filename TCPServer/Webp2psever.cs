@@ -632,9 +632,10 @@ namespace P2P
             {
                 if (i >= netlist.Length)
                     return;
-                NETcollection netc= netlist[i];
+              
                 try
                 {
+                    NETcollection netc = netlist[i];
                     if (netc.Soc != null)
                     {
                         if (netc.Soc.Available > 0)
