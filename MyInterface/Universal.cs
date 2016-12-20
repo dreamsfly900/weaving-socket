@@ -458,11 +458,11 @@ namespace MyInterface
         {
             
         }
-        public virtual void Tokenout(string Token, Socket soc)
+        public virtual void Tokenout(online ol)
         {
 
         }
-        public virtual void Tokenin(string Token, Socket soc)
+        public virtual void Tokenin(online ol)
         {
 
         }

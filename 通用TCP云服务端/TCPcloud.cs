@@ -175,7 +175,7 @@ namespace cloud
 
                             try
                             {
-                                CI.MyICommand.Tokenin(ol.Token, ol.Soc);
+                                CI.MyICommand.Tokenin(ol);
                             }
                             catch (Exception ex)
                             {
@@ -203,7 +203,7 @@ namespace cloud
 
                                     try
                                     {
-                                        CI.MyICommand.Tokenout(ol.Token, ol.Soc);
+                                        CI.MyICommand.Tokenout(ol);
                                     }
                                     catch (Exception ex)
                                     {
