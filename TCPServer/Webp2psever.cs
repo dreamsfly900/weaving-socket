@@ -720,7 +720,7 @@ namespace P2P
                     {
                     WebSocketServer.DataFrameHeader dfh = null;
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
-                        if (bytesRead == 0) { netc.Ispage = false; ListData.RemoveAt(i); return; };
+                        if (bytesRead == 0) { if (ListData.Count > 0) ListData.RemoveAt(0); netc.Ispage = false;  return; };
                         byte[] tempbtyes = new byte[bytesRead];
                         Array.Copy(ListData[i], tempbtyes, tempbtyes.Length);
                         byte[] masks = new byte[4];
