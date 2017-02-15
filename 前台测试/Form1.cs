@@ -45,6 +45,7 @@ namespace 前台测试
      
         private void P2pc_timeoutevent()
         {
+            p2pc.Restart(true);
             p2pc.start("127.0.0.1", Convert.ToInt32(textBox1.Text),true);
         
         }
@@ -79,6 +80,7 @@ namespace 前台测试
                 //udp.send(0x9c, IPAddress.Any.ToString() + ":" + PORT, localEndPoint);
 
                 p2pc.timeoutevent += P2pc_timeoutevent;
+                p2pc.receiveServerEvent += P2pc_receiveServerEvent1;
                 p2pc.AddListenClass(this);
                 timer1.Start();
             }
@@ -86,7 +88,12 @@ namespace 前台测试
 
             { }
         }
-       
+
+        private void P2pc_receiveServerEvent1(byte command, string text)
+        {
+           
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
        
@@ -112,7 +119,10 @@ namespace 前台测试
 
         private void button3_Click(object sender, EventArgs e)
         {
-            p2pc.start("127.0.0.1", Convert.ToInt32(textBox1.Text),true);
+            string str = "201702150948007210";
+            str = str.Substring(17);
+            p2pc.start("122.114.53.233", Convert.ToInt32(11002),true);
+            p2pc.SendRoot<String>(0x04, "login", "99sw",0);
         }
 
         private void button4_Click(object sender, EventArgs e)

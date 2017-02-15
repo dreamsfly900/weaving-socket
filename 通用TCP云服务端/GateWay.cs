@@ -342,6 +342,8 @@ namespace cloud
                         if (Client != null)
                             if (!Client.Isline)
                             {
+                                if (EventMylog != null)
+                                    EventMylog("节点重新连接--:", Client.IP+":"+ Client.PORT);
                                 if (!Client.Restart(false))
                                 {
                                     V_timeoutevent();
@@ -429,7 +431,7 @@ namespace cloud
                                 }
                                 return;
                             }
-                            catch { }
+                            catch (Exception e){ EventMylog("移除用户", e.Message); }
                         }
                     i++;
                 }
@@ -437,7 +439,7 @@ namespace cloud
             catch (Exception ex)
             {
                 if (EventMylog != null)
-                    EventMylog("加载异常", ex.Message);
+                    EventMylog("移除用户", ex.Message);
             }
         }
       public  ConnObj[] ConnObjlist = new ConnObj[0];
@@ -566,8 +568,10 @@ namespace cloud
                      temp = Convert.ToInt32(_0x01.Token.Substring(17));
                     _0x01.Querycount = temp;
                 }
-                catch
+                catch(Exception e)
                 {
+                    if (EventMylog != null)
+                        EventMylog("p2psev_receiveevent", e.Message);
                     return;
                 }
                 //CommandItem[] comItems = new CommandItem[count];
@@ -581,10 +585,12 @@ namespace cloud
                          
                             int i = temp;
                             int len = i / Proportion;
-
-                            if (!ci.Client[len >= ci.Client.Count ? ci.Client.Count - 1 : len].send(command, data))
+                            int index = len >= ci.Client.Count ? ci.Client.Count - 1 : len;
+                            if (!ci.Client[index].Isline)
+                            { p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); }
+                            if (!ci.Client[index].send(command, data))
                             {
-                                p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，请联系管理人员。");
+                                p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。"+ ci.Client[index].Isline);
                             }
                            
                         }
@@ -593,7 +599,8 @@ namespace cloud
                
             }
             catch (Exception ex){
-
+                if (EventMylog != null)
+                    EventMylog("p2psev_receiveevent----", ex.Message);
             }
 
         }

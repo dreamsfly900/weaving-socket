@@ -452,10 +452,10 @@ namespace client
                         if (ts.Seconds > mytimeout)
                         {
                             Isline = false;
-                            //stop();
+                            stop();
                             //isreceives = false;
                             timeoutevent();
-                            //return;
+                            return;
                         }
                     }
                 }

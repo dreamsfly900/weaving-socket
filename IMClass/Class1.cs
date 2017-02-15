@@ -89,13 +89,7 @@ namespace IMClass
                 try { SendRoot<say>(du.soc, 0x31, "say", s, 0, du.token);  } catch { }
             }
         }
-        /// <summary>
-        /// 新增重写的方法，连接离线后激活的方法
-        /// </summary>
-        /// <param name="Token"></param>
-        /// <param name="soc"></param>
-        public override void Tokenout(string Token, Socket soc)
-        { }
+       
         /// <summary>
         /// 新增重写的方法，连接上线后激活的方法
         /// </summary>

@@ -68,7 +68,17 @@ namespace 统一登录服务
                     {
                         
                             listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + ci.Client.Count);
-                         
+                        int i = 0;
+                        foreach (P2Pclient p in ci.Client)
+                        {
+                           
+                            if (!p.Isline)
+                            {
+                                Mylog ml = new Mylog(addMylog);
+                                txtLog.Invoke(ml, new object[] { ci.CommName+"指令当前第" + i +"个，链接有异常断开"});
+                            }
+                            i++;
+                        }
                     }
                     foreach (WayItem ci in gw.WayItemS)
                     {
