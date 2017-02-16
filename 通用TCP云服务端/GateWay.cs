@@ -299,13 +299,17 @@ namespace cloud
         {
             try
             {
-                int len = (temp + (Proportion - 1)) % Proportion;
+                
+               
+               
+                    int len = (temp + (Proportion - 1)) % Proportion;
                 if (len == 0)
                 {
-
+                   
                     foreach (CommandItem ci in CommandItemS)
                     {
-
+                        if (ci.Client.Count>((temp+ Proportion) / Proportion))
+                            return;
                         P2Pclient p2p = new P2Pclient(false);
                         p2p.receiveServerEvent += (V_receiveServerEvent);
                         p2p.timeoutevent += (V_timeoutevent);
@@ -590,7 +594,8 @@ namespace cloud
                             { p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); }
                             if (!ci.Client[index].send(command, data))
                             {
-                                p2psev.send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。"+ ci.Client[index].Isline);
+                                p2psev.send(soc, 0xff, index+"你所请求的服务暂不能使用，发送错误。" + ci.Client[index].Isline);
+
                             }
                            
                         }

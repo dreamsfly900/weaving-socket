@@ -16,7 +16,7 @@ namespace client
     {
         _base_manage xmhelper = new _base_manage();
 
-        TcpClient tcpc;
+       public TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
         public delegate void jump(String text);
@@ -124,7 +124,10 @@ namespace client
                 udp = new UDP();
                 udp.receiveevent += udp_receiveevent;
             }
+           
         }
+
+       
 
         private void Xmhelper_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
         {
@@ -157,6 +160,7 @@ namespace client
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new TcpClient();
                 tcpc.ExclusiveAddressUse = false;
+                 
                 tcpc.Connect(ip, port);
                 Isline = true;
                 isok = true;
@@ -260,7 +264,16 @@ namespace client
                     }
                 }
             }
-            catch { return false; }
+            catch (Exception ee){
+                stop();
+                timeoutevent();
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter("senderror.txt"))
+                {
+                    sw.WriteLine(ee.Message);
+                }
+                    return false;
+
+            }
             // tcpc.Close();
             return true;
         }

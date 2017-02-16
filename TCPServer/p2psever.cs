@@ -144,7 +144,7 @@ namespace P2P
 
                  }
 
-                    GC.Collect();
+                   // GC.Collect();
              }
              catch { }
          }
