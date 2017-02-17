@@ -151,6 +151,7 @@ namespace client
         {
             return start(IP, PORT, takon);
         }
+       public string localprot;
         public bool start(string ip, int port, bool takon)
         {
             try
@@ -162,6 +163,7 @@ namespace client
                 tcpc.ExclusiveAddressUse = false;
                  
                 tcpc.Connect(ip, port);
+                localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
                 Isline = true;
                 isok = true;
                 if (NATUDP)
@@ -267,11 +269,9 @@ namespace client
             catch (Exception ee){
                 stop();
                 timeoutevent();
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter("senderror.txt"))
-                {
-                    sw.WriteLine(ee.Message);
-                }
-                    return false;
+                send(command, text);
+                ErrorMge(9, "send:" + ee.Message);
+                return false;
 
             }
             // tcpc.Close();
@@ -462,12 +462,14 @@ namespace client
                     else
                     {
                         TimeSpan ts = DateTime.Now - timeout;
-                        if (ts.Seconds > mytimeout)
+                        if (ts.TotalSeconds > mytimeout)
                         {
                             Isline = false;
                             stop();
                             //isreceives = false;
                             timeoutevent();
+                            if (ErrorMge != null)
+                                ErrorMge(2,"连接超时，未收到服务器指令");
                             return;
                         }
                     }

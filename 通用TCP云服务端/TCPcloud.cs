@@ -163,8 +163,8 @@ namespace cloud
                     string[] temp = data.Split('|');
                     if (temp[0] == "in")
                     {
-                        
-                       
+
+
                         //加入onlinetoken
                         online ol = new online();
                         ol.Token = temp[1];
@@ -185,11 +185,34 @@ namespace cloud
 
                         }
                         return;
+
+                    }
+                    else if (temp[0] == "Restart")
+                    {
+                        int count = onlines.Count;
+                        online[] ols = new online[count];
+                        onlines.CopyTo(0, ols, 0, count);
+                        string IPport = ((System.Net.IPEndPoint)soc.RemoteEndPoint).Address.ToString()+":"+temp[1];
                         
+                        foreach (online ol in ols)
+                        {
+                            try
+                            {
+                                if (ol.Soc != null)
+                                {
+                                    String IP = ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Port;
+                                    if (IP == IPport)
+                                    {
+                                        ol.Soc = soc;
+                                    }
+                                }
+                            }
+                            catch { }
+                        }
                     }
                     else if (temp[0] == "out")
                     {
-                       
+
                         ////移出onlinetoken
                         int count = onlines.Count;
                         online[] ols = new online[count];
@@ -212,9 +235,9 @@ namespace cloud
                                     }
 
                                 }
-                                
+
                                 onlines.Remove(ol);
-                              
+
                                 return;
                             }
                         }

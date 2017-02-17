@@ -346,11 +346,18 @@ namespace cloud
                         if (Client != null)
                             if (!Client.Isline)
                             {
+                                string port = Client.localprot;
                                 if (EventMylog != null)
                                     EventMylog("节点重新连接--:", Client.IP+":"+ Client.PORT);
                                 if (!Client.Restart(false))
                                 {
                                     V_timeoutevent();
+                                    Client.localprot = port;
+                                }
+                                else
+                                {
+                                    
+                                        Client.send(0xff, "Restart|"+ port);
                                 }
                             }
                     }
