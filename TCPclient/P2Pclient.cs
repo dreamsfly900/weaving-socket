@@ -267,6 +267,8 @@ namespace client
                 }
             }
             catch (Exception ee){
+
+                Isline = false;
                 stop();
                 timeoutevent();
                 send(command, text);
@@ -280,7 +282,7 @@ namespace client
 
         public void stop()
         {
-            isok = false;
+          //  isok = false;
             Isline = false;
             tcpc.Close();
         }
@@ -470,7 +472,7 @@ namespace client
                             timeoutevent();
                             if (ErrorMge != null)
                                 ErrorMge(2,"连接超时，未收到服务器指令");
-                            return;
+                            continue;
                         }
                     }
                 }

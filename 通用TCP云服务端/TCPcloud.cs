@@ -160,88 +160,92 @@ namespace cloud
                 if (command == 0xff)
                 {
                     exec2(command, data, soc);
-                    string[] temp = data.Split('|');
-                    if (temp[0] == "in")
+                    try
                     {
-
-
-                        //加入onlinetoken
-                        online ol = new online();
-                        ol.Token = temp[1];
-                        ol.Soc = soc;
-                        onlines.Add(ol);
-                        foreach (CommandItem CI in listcomm)
+                        string[] temp = data.Split('|');
+                        if (temp[0] == "in")
                         {
 
-                            try
-                            {
-                                CI.MyICommand.Tokenin(ol);
-                            }
-                            catch (Exception ex)
-                            {
-                                if (EventMylog != null)
-                                    EventMylog("Tokenin", ex.Message);
-                            }
 
-                        }
-                        return;
-
-                    }
-                    else if (temp[0] == "Restart")
-                    {
-                        int count = onlines.Count;
-                        online[] ols = new online[count];
-                        onlines.CopyTo(0, ols, 0, count);
-                        string IPport = ((System.Net.IPEndPoint)soc.RemoteEndPoint).Address.ToString()+":"+temp[1];
-                        
-                        foreach (online ol in ols)
-                        {
-                            try
+                            //加入onlinetoken
+                            online ol = new online();
+                            ol.Token = temp[1];
+                            ol.Soc = soc;
+                            onlines.Add(ol);
+                            foreach (CommandItem CI in listcomm)
                             {
-                                if (ol.Soc != null)
+
+                                try
                                 {
-                                    String IP = ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Port;
-                                    if (IP == IPport)
-                                    {
-                                        ol.Soc = soc;
-                                    }
+                                    CI.MyICommand.Tokenin(ol);
                                 }
-                            }
-                            catch { }
-                        }
-                    }
-                    else if (temp[0] == "out")
-                    {
-
-                        ////移出onlinetoken
-                        int count = onlines.Count;
-                        online[] ols = new online[count];
-                        onlines.CopyTo(0, ols, 0, count);
-                        foreach (online ol in ols)
-                        {
-                            if (ol.Token == temp[1])
-                            {
-                                foreach (CommandItem CI in listcomm)
+                                catch (Exception ex)
                                 {
-
-                                    try
-                                    {
-                                        CI.MyICommand.Tokenout(ol);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        if (EventMylog != null)
-                                            EventMylog("Tokenout", ex.Message);
-                                    }
-
+                                    if (EventMylog != null)
+                                        EventMylog("Tokenin", ex.Message);
                                 }
 
-                                onlines.Remove(ol);
+                            }
+                            return;
 
-                                return;
+                        }
+                        else if (temp[0] == "Restart")
+                        {
+                            int count = onlines.Count;
+                            online[] ols = new online[count];
+                            onlines.CopyTo(0, ols, 0, count);
+                            string IPport = ((System.Net.IPEndPoint)soc.RemoteEndPoint).Address.ToString() + ":" + temp[1];
+
+                            foreach (online ol in ols)
+                            {
+                                try
+                                {
+                                    if (ol.Soc != null)
+                                    {
+                                        String IP = ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Port;
+                                        if (IP == IPport)
+                                        {
+                                            ol.Soc = soc;
+                                        }
+                                    }
+                                }
+                                catch { }
+                            }
+                        }
+                        else if (temp[0] == "out")
+                        {
+
+                            ////移出onlinetoken
+                            int count = onlines.Count;
+                            online[] ols = new online[count];
+                            onlines.CopyTo(0, ols, 0, count);
+                            foreach (online ol in ols)
+                            {
+                                if (ol.Token == temp[1])
+                                {
+                                    foreach (CommandItem CI in listcomm)
+                                    {
+
+                                        try
+                                        {
+                                            CI.MyICommand.Tokenout(ol);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            if (EventMylog != null)
+                                                EventMylog("Tokenout", ex.Message);
+                                        }
+
+                                    }
+
+                                    onlines.Remove(ol);
+
+                                    return;
+                                }
                             }
                         }
                     }
+                    catch { }
                     return;
                 }else
                 exec(command, data, soc);

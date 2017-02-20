@@ -121,7 +121,7 @@ namespace 前台测试
         {
             string str = "201702150948007210";
             str = str.Substring(17);
-            p2pc.start("122.114.53.233", Convert.ToInt32(11002),true);
+            p2pc.start("127.0.0.1", Convert.ToInt32(11002),true);
             p2pc.SendRoot<String>(0x04, "login", "354071677066329", 0);
         }
 

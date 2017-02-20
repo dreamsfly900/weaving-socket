@@ -343,7 +343,7 @@ namespace cloud
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
-                        if (Client != null)
+                       // if (Client != null)
                             if (!Client.Isline)
                             {
                                 string port = Client.localprot;
@@ -358,6 +358,7 @@ namespace cloud
                                 {
                                     
                                         Client.send(0xff, "Restart|"+ port);
+                                    EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
                                 }
                             }
                     }
@@ -366,7 +367,7 @@ namespace cloud
             catch (Exception ex)
             {
                 if (EventMylog != null)
-                    EventMylog("节点重新连接--:", ex.Message);
+                    EventMylog("节点重新连接-233-:", ex.Message);
                 V_timeoutevent();
             }
         }
@@ -555,9 +556,15 @@ namespace cloud
                 {
                      _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
                 }
-                catch { return; }
+                catch {
+                    EventMylog("JSON解析错误：", ""+ data);
+
+                    return; }
                 if (_0x01.Token == null)
+                {
+                    EventMylog("Token是NULL：", "" + data);
                     return;
+                }
                 string key = "";
                 string ip = "";
                 //try
