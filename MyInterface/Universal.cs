@@ -399,7 +399,17 @@ namespace MyInterface
                 }
             }
         }
-
+        /// <summary>
+        /// 新增online
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="name"></param>
+        /// <param name="obj"></param>
+        public void Addonline(online o)
+        {
+            List<online> ol = GlobalQueueTable["onlinetoken"] as List<online>;
+            ol.Add(o);
+        }
         public bool SendParameter<T>(Socket soc, byte command, String Request, T Parameter, int Querycount,String Tokan)
         {
             _baseModel b = new _baseModel();

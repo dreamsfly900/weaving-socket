@@ -36,7 +36,21 @@ namespace TCPServer
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
         }
-       
+        int _port = 0;
+        string filename;
+        public bool Run(int port, String _filename)
+        {
+            filename = _filename;
+            _port = port;
+            ReloadFlies2(null);
+            DTUSer.EventDeleteConnSoc += DTUSer_EventDeleteConnSoc;
+            DTUSer.EventUpdataConnSoc += DTUSer_EventUpdataConnSoc;
+            DTUSer.receiveeventDtu += DTUSer_receiveeventDtu;
+
+            DTUSer.start(port);
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
+            return true;
+        }
         private void DTUSer_receiveeventDtu(byte[] data, System.Net.Sockets.Socket soc)
         {
             foreach (CommandItem ci in CommandItemS)
@@ -158,7 +172,74 @@ namespace TCPServer
                     EventMylog("加载异常", ex.Message);
             }
         }
-        
+
+        protected void ReloadFlies2(object obj)
+        {
+            try
+            {
+                foreach (CommandItem ci in CommandItemS2)
+                {
+                    foreach (P2Pclient Client in ci.Client)
+                    {
+                        Client.stop();
+                    }
+                }
+                CommandItemS2.Clear();
+                foreach (CommandItem ci in CommandItemS)
+                {
+                    foreach (P2Pclient Client in ci.Client)
+                    {
+                        Client.stop();
+                    }
+                }
+                CommandItemS.Clear();
+                XmlDocument xml = new XmlDocument();
+                xml.Load(System.AppDomain.CurrentDomain.BaseDirectory + "/" + filename);
+                foreach (XmlNode xn in xml.FirstChild.ChildNodes)
+                {
+
+                    CommandItem ci = new CommandItem();
+                    ci.Ip = xn.Attributes["ip"].Value;
+                    ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
+                    ci.CommName = byte.Parse(xn.Attributes["command"].Value);
+                    ci.Commfun = xn.Attributes["Commfun"].Value;
+                    P2Pclient p2p = new P2Pclient(false);
+
+                    p2p.receiveServerEvent += P2p_receiveServerEvent;
+                    p2p.timeoutevent += P2p_timeoutevent;
+                    p2p.ErrorMge += P2p_ErrorMge;
+                    if (p2p.start(ci.Ip, ci.Port, false))
+                    {
+                        ci.Client.Add(p2p);
+                        if (xn.Attributes["type"].Value == "receive")
+                        {
+                            CommandItemS.Add(ci);
+
+                        }
+                        else if (xn.Attributes["type"].Value == "push")
+                        {
+                            CommandItemS2.Add(ci);
+
+                        }
+                    }
+                    else
+                    {
+                        if (EventMylog != null)
+                            EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("加载异常", ex.Message);
+            }
+        }
+
+
+
         protected void ReloadFliesdtu(object obj)
         {
             try
