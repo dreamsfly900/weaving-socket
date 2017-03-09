@@ -388,6 +388,7 @@ namespace cloud
             }
             catch
             {
+                EventMylog("转发", temp+"获取编号失败。");
                 return;
             }
             try
@@ -410,13 +411,14 @@ namespace cloud
                 
                 //ThreadList<ConnObj> coobjs = ConnObjlist.Clone();
                 int i =0;
-                foreach (ConnObj coob in ConnObjlist)
+                for (i=0;i < ConnObjlist.Length;i++)
                 {
-                    
+                   
+                    ConnObj coob = ConnObjlist[i];
                     if (coob != null)
                         if (coob.Soc.Equals(soc))
                         {
-                            ConnObjlist[i] =null;
+                           // ConnObjlist[i] =null;
                             tempnum.Add(i);
                             try
                             {
@@ -445,7 +447,7 @@ namespace cloud
                             }
                             catch (Exception e){ EventMylog("移除用户", e.Message); }
                         }
-                    i++;
+                  
                 }
             }
             catch (Exception ex)
@@ -500,11 +502,14 @@ namespace cloud
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
                 cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")+ temp;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
                 cobj.Id = temp;
-                if (p2psev.send(soc, 0xff, "token|" + cobj.Token + ""))
+                cobj.Soc = soc;
+                ConnObjlist[temp] = cobj;
+                if (p2psev.send(ConnObjlist[temp].Soc, 0xff, "token|" + cobj.Token + ""))
                 {
-                    ConnObjlist[temp]=cobj;
+                   
 
                 }
+              
                 List<String> listsercer = new List<string>();
                 bool tempb = true;
                 foreach (CommandItem ci in CommandItemS)

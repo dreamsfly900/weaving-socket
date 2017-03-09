@@ -338,7 +338,9 @@ namespace client
                                 int len = 0;
                                 try
                                 {
-                                     len = int.Parse(temp);
+                                    len = int.Parse(temp);
+                                    if (len == 0)
+                                    { ListData.RemoveAt(0); continue; }
                                 }
                                 catch
                                 { }
@@ -350,7 +352,7 @@ namespace client
                                     Array.Copy(tempbtye, temps, temps.Length);
                                     tempbtye = new byte[temps.Length + ListData[i].Length];
                                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
-                                  
+
                                     goto labered;
                                 }
                                 else if (tempbtye.Length > (len + 2 + a))
@@ -359,9 +361,10 @@ namespace client
                                     Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     ListData[i] = temps;
 
-                                } else if (tempbtye.Length == (len + 2 + a)) 
-                                    { ListData.RemoveAt(i); }
-                               
+                                }
+                                else if (tempbtye.Length == (len + 2 + a))
+                                { ListData.RemoveAt(i); }
+
                                 temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 try
                                 {
@@ -387,12 +390,12 @@ namespace client
                                             //tt.Start(str);
                                         }
                                     }
-                                    else if (receiveServerEvent != null) 
+                                    else if (receiveServerEvent != null)
                                     {
                                         //
                                         if (receiveServerEvent != null)
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        receiveServerEvent(str.command, str.date);
+                                            receiveServerEvent(str.command, str.date);
                                         //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
@@ -406,6 +409,11 @@ namespace client
                                         ErrorMge(3, "unup:" + e.Message);
                                 }
                             }
+                        }
+                        else
+                        {
+                            if (tempbtye[0]==0)
+                            ListData.RemoveAt(0);
                         }
 
                     }
