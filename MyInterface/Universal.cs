@@ -358,6 +358,7 @@ namespace MyInterface
             online[] ols = GetOnline();
             foreach (online o in ols)
             {
+                if(o!=null)
                 if (o.Token == token)
                 {
                     return o;
@@ -376,6 +377,7 @@ namespace MyInterface
             online[] ols = GetOnline();
             foreach (online o in ols)
             {
+                if(o!=null)
                 if (o.Token == token)
                 {
                     o.Name = name;
@@ -393,6 +395,7 @@ namespace MyInterface
             online[] ols = GetOnline();
             foreach (online o in ols)
             {
+                if(o!=null)
                 if (o.Token == token)
                 {
                     o.Obj = obj;
