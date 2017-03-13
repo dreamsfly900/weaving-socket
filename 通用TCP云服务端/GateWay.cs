@@ -394,8 +394,14 @@ namespace cloud
             try
             {
                 if (ConnObjlist[temp] != null)
-                    p2psev.send(ConnObjlist[temp].Soc, command, text);
-                 
+                {
+                    if (!p2psev.send(ConnObjlist[temp].Soc, command, text))
+                    { EventMylog("转发", "ConnObjlist:" + temp + "发送失败：" + text); }
+                }
+                else
+                {
+                    EventMylog("转发", "ConnObjlist:" + temp + "是空的");
+                }
 
                 return;
 

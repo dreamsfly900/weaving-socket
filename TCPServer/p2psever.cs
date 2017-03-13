@@ -454,7 +454,47 @@ namespace P2P
         //{
         //    ia.AsyncState
         //}
-        public int Partition=20000;
+        //public int Partition=20000;
+        //void receive(object ias)
+        //{
+        //    while (true)
+        //    {
+        //        try
+        //        {
+
+        //            int c = listconn.Count;
+        //            int count = (c / Partition) + 1;
+        //            getbufferdelegate[] iagbd = new getbufferdelegate[count];
+        //            IAsyncResult[] ia = new IAsyncResult[count];
+
+        //            if (c > 0)
+        //            {
+        //                for (int i = 0; i < count; i++)
+        //                {
+
+        //                    c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
+        //                    NETcollection[] netlist = new NETcollection[c];
+        //                    listconn.CopyTo(i * Partition, netlist, 0, c);
+
+        //                      iagbd[i] = new getbufferdelegate(getbuffer);
+        //                    ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
+
+
+        //                }
+        //                for (int i = 0; i < count; i++)
+        //                {
+        //                    iagbd[i].EndInvoke(ia[i]);
+        //                }
+        //            }
+        //            //NETcollection[] netlist = new NETcollection[c];
+        //            //listconn.CopyTo(0, netlist, 0, c);
+        //            //getbuffer(netlist, 0, c);
+        //        }
+        //        catch { }
+        //        System.Threading.Thread.Sleep(1);
+        //    }
+        //}
+        public int Partition = 20000;
         void receive(object ias)
         {
             while (true)
@@ -466,7 +506,7 @@ namespace P2P
                     int count = (c / Partition) + 1;
                     getbufferdelegate[] iagbd = new getbufferdelegate[count];
                     IAsyncResult[] ia = new IAsyncResult[count];
-                    
+
                     if (c > 0)
                     {
                         for (int i = 0; i < count; i++)
@@ -475,16 +515,16 @@ namespace P2P
                             c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
                             NETcollection[] netlist = new NETcollection[c];
                             listconn.CopyTo(i * Partition, netlist, 0, c);
-
-                              iagbd[i] = new getbufferdelegate(getbuffer);
-                            ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
+                            getbuffer(netlist, 0, Partition);
+                            //  iagbd[i] = new getbufferdelegate(getbuffer);
+                            //ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
 
 
                         }
-                        for (int i = 0; i < count; i++)
-                        {
-                            iagbd[i].EndInvoke(ia[i]);
-                        }
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    iagbd[i].EndInvoke(ia[i]);
+                        //}
                     }
                     //NETcollection[] netlist = new NETcollection[c];
                     //listconn.CopyTo(0, netlist, 0, c);
