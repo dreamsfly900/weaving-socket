@@ -341,6 +341,7 @@ namespace cloud
             {
                 foreach (CommandItem ci in CommandItemS)
                 {
+                    int i = 0;
                     foreach (P2Pclient Client in ci.Client)
                     {
                        // if (Client != null)
@@ -356,11 +357,24 @@ namespace cloud
                                 }
                                 else
                                 {
-                                    
-                                        Client.send(0xff, "Restart|"+ port);
+                                    try
+                                    {
+                                        for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
+                                        {
+                                            try
+                                            {
+                                                ConnObjlist[j].Soc.Close();
+                                            }
+                                            catch { }
+                                             p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
+                                        }
+                                    }
+                                    catch(Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
+                                    //Client.send(0xff, "Restart|"+ port);
                                     EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
                                 }
                             }
+                        i++;
                     }
                 }
             }
