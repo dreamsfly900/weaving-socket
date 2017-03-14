@@ -357,19 +357,22 @@ namespace cloud
                                 }
                                 else
                                 {
-                                    try
+                                try
+                                {
+                                    for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
                                     {
-                                        for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
+                                        if (ConnObjlist[j] != null)
                                         {
                                             try
                                             {
                                                 ConnObjlist[j].Soc.Close();
                                             }
                                             catch { }
-                                             p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
+                                            p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
                                         }
                                     }
-                                    catch(Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
+                                }
+                                catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
                                     //Client.send(0xff, "Restart|"+ port);
                                     EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
                                 }
