@@ -368,7 +368,9 @@ namespace cloud
                                                 ConnObjlist[j].Soc.Close();
                                             }
                                             catch { }
-                                            p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
+                                            Client.send(0xff, "out|" + ConnObjlist[j].Token);
+                                            tempnum.Add(j);
+                                            ConnObjlist[j] = null;
                                         }
                                     }
                                 }
@@ -441,8 +443,10 @@ namespace cloud
                     if (coob != null)
                         if (coob.Soc.Equals(soc))
                         {
-                           // ConnObjlist[i] =null;
-                            tempnum.Add(i);
+                            // ConnObjlist[i] =null;
+                            int tempi = Convert.ToInt32(coob.Token.Substring(17));
+                            tempnum.Add(tempi);
+                          
                             try
                             {
                                 List<String> listsercer = new List<string>();
@@ -466,6 +470,7 @@ namespace cloud
                                         ci.Client[len].send(0xff, "out|" + coob.Token);
                                     } 
                                 }
+                                ConnObjlist[i] = null;
                                 return;
                             }
                             catch (Exception e){ EventMylog("移除用户", e.Message); }
