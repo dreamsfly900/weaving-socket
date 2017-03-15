@@ -368,9 +368,7 @@ namespace cloud
                                                 ConnObjlist[j].Soc.Close();
                                             }
                                             catch { }
-                                            Client.send(0xff, "out|" + ConnObjlist[j].Token);
-                                            tempnum.Add(j);
-                                            ConnObjlist[j] = null;
+                                            p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
                                         }
                                     }
                                 }
