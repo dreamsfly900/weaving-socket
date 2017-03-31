@@ -369,7 +369,7 @@ namespace cloud
                                                     ConnObjlist[j].Soc.Close();
                                                 }
                                                 catch { }
-                                                //p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
+                                                p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
                                             }
                                         }
                                     }
