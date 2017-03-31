@@ -119,12 +119,13 @@ namespace P2P
                          byte[] b = new byte[] { 0x99 };
                            
                          netc.Soc.Send(b);
-                            netc.Errornum = 0;
+
+                            netc.Errornum = 1;
                         }
                      catch
                         {
                             netc.Errornum += 1;
-                            if (netc.Errornum > 3)
+                            if (netc.Errornum >= 3)
                             {
                                 try
                                 {
@@ -134,6 +135,7 @@ namespace P2P
                                 }
                                 catch { }
                                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                                listconn.Remove(netc);
                             }
                             //try
                             //{
@@ -143,7 +145,7 @@ namespace P2P
                             //catch { }
 
 
-                            listconn.Remove(netc);
+                           
                      }
 
                  }
