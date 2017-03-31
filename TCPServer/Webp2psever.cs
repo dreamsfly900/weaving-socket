@@ -113,20 +113,24 @@ namespace P2P
 
 
                                 netc.Soc.Send(df.GetBytes());
+                                netc.Errornum = 0;
                             }
                            
                           
 
-                        }
+                        }   
                         catch
                         {
+                            netc.Errornum += 1;
+                            if (netc.Errornum > 3)
+                            {
+                                try { netc.Soc.Close(); }
+                                catch { }
+                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
+                                // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
 
-                            try { netc.Soc.Close(); }
-                            catch { }
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
-                            // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
-                           
-                            listconn.Remove(netc);
+                                listconn.Remove(netc);
+                            }
                         }
 
                     }
@@ -881,7 +885,9 @@ namespace P2P
 
             }
             catch(Exception ex)
-            { if (netc.Datalist.Count > 0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
+            {
+               
+                if (netc.Datalist.Count > 0) netc.Datalist.RemoveAt(0); netc.Ispage = false; return; }
              
         }
         public delegate void TestDelegate(string name);

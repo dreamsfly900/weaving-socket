@@ -357,25 +357,26 @@ namespace cloud
                                 }
                                 else
                                 {
-                                try
-                                {
-                                    for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
+                                    try
                                     {
-                                        if (ConnObjlist[j] != null)
+                                    EventMylog("节点重新连接-通知下线-:", Client.IP + ":" + Client.PORT);
+                                    for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
                                         {
-                                            try
+                                            if (ConnObjlist[j] != null)
                                             {
-                                                ConnObjlist[j].Soc.Close();
+                                                try
+                                                {
+                                                    ConnObjlist[j].Soc.Close();
+                                                }
+                                                catch { }
+                                                //p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
                                             }
-                                            catch { }
-                                            p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
                                         }
                                     }
-                                }
-                                catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
-                                    //Client.send(0xff, "Restart|"+ port);
-                                    EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
-                                }
+                                    catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
+                                        //Client.send(0xff, "Restart|"+ port);
+                                        EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
+                                    }
                             }
                         i++;
                     }
@@ -405,7 +406,7 @@ namespace cloud
             }
             catch
             {
-                EventMylog("转发", temp+"获取编号失败。");
+                 EventMylog("转发", temp+"获取编号失败。");
                 return;
             }
             try

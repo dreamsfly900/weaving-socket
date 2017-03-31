@@ -324,6 +324,7 @@ namespace client
                                 goto _0x99;
                             }
                             else {
+                              
                                 ListData.RemoveAt(i);
                                 continue;
                             } 
@@ -391,7 +392,7 @@ namespace client
                                         }
                                     }
                                     else if (receiveServerEvent != null)
-                                    {
+                                     {
                                         //
                                         if (receiveServerEvent != null)
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
@@ -400,7 +401,7 @@ namespace client
                                         //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                         //tt.Start(str);
                                         // receiveServerEvent();
-                                    }
+                                     }
                                     continue;
                                 }
                                 catch (Exception e)
@@ -421,7 +422,11 @@ namespace client
                 }
                 catch (Exception e)
                 {
-                    ListData.RemoveAt(0);
+                    try
+                    {
+                        ListData.RemoveAt(0);
+                    }
+                    catch { }
                     if (ErrorMge != null)
                         ErrorMge(3, "unup:" + e.Message);
                 }

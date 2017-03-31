@@ -117,20 +117,24 @@ namespace P2P
                         try
                      {
                          byte[] b = new byte[] { 0x99 };
-
+                           
                          netc.Soc.Send(b);
-                         
-                     }
+                            netc.Errornum = 0;
+                        }
                      catch
-                     {
-                          
-                            try {
-                                netc.Soc.Close();
+                        {
+                            netc.Errornum += 1;
+                            if (netc.Errornum > 3)
+                            {
+                                try
+                                {
+                                    netc.Soc.Close();
 
-                               
+
+                                }
+                                catch { }
+                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
                             }
-                         catch { }
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteConnSoc), netc.Soc);
                             //try
                             //{
                             //    if (EventDeleteConnSoc != null)
@@ -509,18 +513,21 @@ namespace P2P
 
                     if (c > 0)
                     {
-                        for (int i = 0; i < count; i++)
-                        {
+                        NETcollection[] netlist = new NETcollection[c];
+                        listconn.CopyTo(0, netlist, 0, c);
+                        getbuffer(netlist, 0, Partition);
+                        //for (int i = 0; i < count; i++)
+                        //{
 
-                            c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
-                            NETcollection[] netlist = new NETcollection[c];
-                            listconn.CopyTo(i * Partition, netlist, 0, c);
-                            getbuffer(netlist, 0, Partition);
-                            //  iagbd[i] = new getbufferdelegate(getbuffer);
-                            //ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
+                        //    c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
+                        //    NETcollection[] netlist = new NETcollection[c];
+                        //    listconn.CopyTo(0, netlist, 0, c);
+                        //    getbuffer(netlist, 0, Partition);
+                        //    //  iagbd[i] = new getbufferdelegate(getbuffer);
+                        //    //ia[i]= iagbd[i].BeginInvoke(netlist, 0, Partition, null, null);
 
 
-                        }
+                        //}
                         //for (int i = 0; i < count; i++)
                         //{
                         //    iagbd[i].EndInvoke(ia[i]);

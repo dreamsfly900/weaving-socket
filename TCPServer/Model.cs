@@ -15,6 +15,7 @@ namespace P2P
             get { return soc; }
             set { soc = value; }
         }
+        int errornum = 0;
         private int _BufferSize = 2048;
 
         public int BufferSize
@@ -70,6 +71,19 @@ namespace P2P
             set
             {
                 ispage = value;
+            }
+        }
+
+        public int Errornum
+        {
+            get
+            {
+                return errornum;
+            }
+
+            set
+            {
+                errornum = value;
             }
         }
 
