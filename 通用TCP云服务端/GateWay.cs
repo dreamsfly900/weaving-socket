@@ -413,8 +413,14 @@ namespace cloud
             {
                 if (ConnObjlist[temp] != null)
                 {
+                    int error = 0;
+                    lb1122:
                     if (!p2psev.send(ConnObjlist[temp].Soc, command, text))
-                    { EventMylog("转发", "ConnObjlist:" + temp + "发送失败：" + text); }
+                    {
+                        error += 1;
+                        EventMylog("转发"+ error, "ConnObjlist:" + temp + "发送失败：" + text);
+                        if (error<3) goto lb1122;
+                    }
                 }
                 else
                 {

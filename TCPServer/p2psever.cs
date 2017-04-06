@@ -106,26 +106,27 @@ namespace P2P
          {
              try
              {
-                 System.Threading.Thread.Sleep(8000);
+                
                  //  ArrayList al = new ArrayList();
                  // al.Clone()
                  NETcollection[] netlist = new NETcollection[listconn.Count];
                  listconn.CopyTo(netlist);
                  foreach (NETcollection netc in netlist)
                  {
-                        
+                        if (netc == null)
+                            continue;
                         try
                      {
                          byte[] b = new byte[] { 0x99 };
                            
                          netc.Soc.Send(b);
 
-                            netc.Errornum = 1;
+                            netc.Errornum = 0;
                         }
                      catch
                         {
                             netc.Errornum += 1;
-                            if (netc.Errornum >= 3)
+                            if (netc.Errornum > 3)
                             {
                                 try
                                 {
@@ -149,9 +150,9 @@ namespace P2P
                      }
 
                  }
-
-                   // GC.Collect();
-             }
+                    System.Threading.Thread.Sleep(8000);
+                    // GC.Collect();
+                }
              catch { }
          }
      }

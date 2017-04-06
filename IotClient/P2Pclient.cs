@@ -306,7 +306,7 @@ namespace client
                         }
                     }
                     TimeSpan ts = DateTime.Now - timeout;
-                    if (ts.Seconds > mytimeout)
+                    if (ts.TotalSeconds > mytimeout)
                     {
                          
                         stop();

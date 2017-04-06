@@ -97,7 +97,7 @@ namespace P2P
             {
                 try
                 {
-                    System.Threading.Thread.Sleep(8000);
+                  
                     //  ArrayList al = new ArrayList();
                     // al.Clone()
                     NETcollection[] netlist = new NETcollection[listconn.Count];
@@ -106,6 +106,8 @@ namespace P2P
                     {
                         try
                         {
+                            if (netc == null)
+                                continue;
                             if (netc.State != 0)
                             {
                                 DataFrame df = new DataFrame();
@@ -115,10 +117,10 @@ namespace P2P
                                 netc.Soc.Send(df.GetBytes());
                                 netc.Errornum = 0;
                             }
-                           
-                          
 
-                        }   
+
+
+                        }
                         catch
                         {
                             netc.Errornum += 1;
@@ -134,6 +136,8 @@ namespace P2P
                         }
 
                     }
+                    System.Threading.Thread.Sleep(8000);
+
                 }
                 catch { }
             }
@@ -603,20 +607,20 @@ namespace P2P
                     //    }
                     //}
                     int c = listconn.Count;
-                    int count = (c / 2000) + 1;
-                    if (c > 0)
-                        for (int i = 0; i < count; i++)
-                        {
+                    //int count = (c / 2000) + 1;
+                    //if (c > 0)
+                    //    for (int i = 0; i < count; i++)
+                    //    {
 
-                            c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
-                            NETcollection[] netlist2 = new NETcollection[c];
-                            listconn.CopyTo(i * 2000, netlist2, 0, c);
-                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(gg), netlist2);
-                            //new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000,null,null);
-                        }
-                    //NETcollection[] netlist = new NETcollection[c];
-                    //listconn.CopyTo(0, netlist, 0, c);
-                    //getbuffer(netlist, 0, c, 1, 30);
+                    //        c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
+                    //        NETcollection[] netlist2 = new NETcollection[c];
+                    //        listconn.CopyTo(i * 2000, netlist2, 0, c);
+                    //        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(gg), netlist2);
+                    //        //new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000,null,null);
+                    //    }
+                    NETcollection[] netlist = new NETcollection[c];
+                    listconn.CopyTo(0, netlist, 0, c);
+                    getbuffer(netlist, 0, c, 1, 30);
                     System.Threading.Thread.Sleep(1);
                 }
                 catch (Exception ex)
