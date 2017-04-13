@@ -16,7 +16,7 @@ namespace cloud
         XmlDocument xml = new XmlDocument();
         List<CommandItem> listcomm = new List<CommandItem>();
         QueueTable qt = new QueueTable();
-        public delegate void Mylog(string type,string log);
+        public delegate void Mylog(string type, string log);
         public event Mylog EventMylog;
         List<online> onlines = new List<online>();
         public bool Run(MyInterface.MyInterface myI)
@@ -32,14 +32,14 @@ namespace cloud
             p2psev.receiveevent += p2psev_receiveevent;
             p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
             p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
-         //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
+            //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
             p2psev.start(Convert.ToInt32(myI.Parameter[4]));//myI.Parameter[4]是端口号
             qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
             if (EventMylog != null)
-                EventMylog("连接","连接启动成功");
-               return true; 
+                EventMylog("连接", "连接启动成功");
+            return true;
         }
-       public void ReloadFlies()
+        public void ReloadFlies()
         {
             try
             {
@@ -61,7 +61,7 @@ namespace cloud
                                 Ic.SetGlobalQueueTable(qt);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
-                               
+
                                 GetAttributeInfo(Ic, obj.GetType(), obj);
                                 listcomm.Add(ci);
                             }
@@ -76,7 +76,7 @@ namespace cloud
                     EventMylog("加载异常", ex.Message);
             }
         }
-        public  void GetAttributeInfo(TCPCommand Ic,Type t,object obj)
+        public void GetAttributeInfo(TCPCommand Ic, Type t, object obj)
         {
 
             foreach (MethodInfo mi in t.GetMethods())
@@ -92,7 +92,7 @@ namespace cloud
                     if (myattribute.Dtu)
                     {
                         Delegate del = Delegate.CreateDelegate(typeof(RequestDataDtu), obj, mi, true);
-                        Ic.Bm.AddListen(mi.Name, del as RequestDataDtu, myattribute.Type,true);
+                        Ic.Bm.AddListen(mi.Name, del as RequestDataDtu, myattribute.Type, true);
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace cloud
                 int count = listcomm.Count;
                 CommandItem[] cilist = new CommandItem[count];
                 listcomm.CopyTo(0, cilist, 0, count);
-             foreach (CommandItem CI in cilist)
+                foreach (CommandItem CI in cilist)
                 {
                     try
                     {
@@ -147,6 +147,40 @@ namespace cloud
                             EventMylog("EventUpdataConnSoc", ex.Message);
                     }
                 }
+
+
+            }
+            catch { }
+            try
+            {
+                int count = onlines.Count;
+                online[] ols = new online[count];
+                onlines.CopyTo(0, ols, 0, count);
+                foreach (online ol in ols)
+                {
+                    if (ol.Soc == soc)
+                    {
+                        foreach (CommandItem CI in listcomm)
+                        {
+
+                            try
+                            {
+                                CI.MyICommand.Tokenout(ol);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (EventMylog != null)
+                                    EventMylog("Tokenout", ex.Message);
+                            }
+
+                        }
+
+                        onlines.Remove(ol);
+
+                        return;
+                    }
+                }
+
             }
             catch { }
 
