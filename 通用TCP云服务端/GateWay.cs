@@ -260,6 +260,7 @@ namespace cloud
                         if (ci.Client.Restart(false))
                         {
                             Client_timeoutevent();
+                            System.Threading.Thread.Sleep(5000);
                         }
                     }
                 }
@@ -267,7 +268,7 @@ namespace cloud
             catch (Exception ex)
             {
                 if (EventMylog != null)
-                    EventMylog("节点重新连接", ex.Message);
+                    EventMylog("way节点重新连接", ex.Message);
                 Client_timeoutevent();
             }
         }
@@ -397,7 +398,9 @@ namespace cloud
         /// <param name="text"></param>
         protected void V_receiveServerEvent(byte command, string text)
         {
-            _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(text);
+            try
+            {
+                _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(text);
             int temp = 0;
             try
             {
@@ -406,11 +409,10 @@ namespace cloud
             }
             catch
             {
-                 EventMylog("转发", temp+"获取编号失败。");
+                 EventMylog("转发", temp+"获取编号失败。"+ _0x01.Token);
                 return;
             }
-            try
-            {
+           
                 if (ConnObjlist[temp] != null)
                 {
                     int error = 0;

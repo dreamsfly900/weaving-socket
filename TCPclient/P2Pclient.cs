@@ -447,6 +447,7 @@ namespace client
                   
                     if (bytesRead > 0)
                     {
+                        timeout = DateTime.Now;
                         byte[] tempbtye = new byte[bytesRead];
                         tcpc.Client.Receive(tempbtye);
                         _0x99:
@@ -471,7 +472,7 @@ namespace client
                         //{
                             ListData.Add(tempbtye);
                        // }
-                        timeout = DateTime.Now;
+                      
                         
                     }
                     else

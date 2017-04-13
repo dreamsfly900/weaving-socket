@@ -115,6 +115,7 @@ namespace P2P
                  {
                         if (netc == null)
                             continue;
+                        System.Threading.Thread.Sleep(1);
                         try
                      {
                          byte[] b = new byte[] { 0x99 };
@@ -150,7 +151,7 @@ namespace P2P
                      }
 
                  }
-                    System.Threading.Thread.Sleep(8000);
+                    System.Threading.Thread.Sleep(5000);
                     // GC.Collect();
                 }
              catch { }
@@ -369,8 +370,8 @@ namespace P2P
                 }
                 catch
                 {
-                    netc.Soc.Close();
-                    listconn.Remove(netc);
+                    //netc.Soc.Close();
+                    //listconn.Remove(netc);
                 }
                 byte[] tempbtye = new byte[bytesRead];
 

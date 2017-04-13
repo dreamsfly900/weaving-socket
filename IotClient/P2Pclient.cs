@@ -200,7 +200,7 @@ namespace client
                 if (!takon) return true;
                 while (Tokan == null)
                 {
-                    System.Threading.Tasks.Task.Delay(10000000);
+                     System.Threading.Tasks.Task.Delay(10000000);
                    
                     if (ss > 0)
                         return false;
