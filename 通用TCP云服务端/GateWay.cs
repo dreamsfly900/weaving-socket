@@ -398,6 +398,7 @@ namespace cloud
         /// <param name="text"></param>
         protected void V_receiveServerEvent(byte command, string text)
         {
+           
             try
             {
                 _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(text);
@@ -432,7 +433,7 @@ namespace cloud
                 return;
 
             }
-            catch (Exception ex) { EventMylog("转发", ex.Message); }
+            catch (Exception ex) { EventMylog("转发", ex.Message+"112223333333333356464122313"+ text+"000000"); }
         }
 
         protected void p2psev_EventDeleteConnSoc(System.Net.Sockets.Socket soc)

@@ -300,16 +300,16 @@ namespace client
                 System.Threading.Thread.Sleep(10);
                 try
                 {
-                    int i = 0;
+                
                     int count = ListData.Count;
 
                     if (count > 0)
                     {
                         
-                        int bytesRead = ListData[i]!=null? ListData[i].Length:0;
+                        int bytesRead = ListData[0]!=null? ListData[0].Length:0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
-                        Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                        Array.Copy(ListData[0], tempbtye, tempbtye.Length);
                         _0x99:
                         if (tempbtye[0] == 0x99)
                         {
@@ -319,13 +319,13 @@ namespace client
                                 byte[] b = new byte[bytesRead - 1];
                                 byte[] t = tempbtye;
                                 Array.Copy(t, 1, b, 0, b.Length);
-                                ListData[i] = b;
+                                ListData[0] = b;
                                 tempbtye = b;
                                 goto _0x99;
                             }
                             else {
                               
-                                ListData.RemoveAt(i);
+                                ListData.RemoveAt(0);
                                 continue;
                             } 
                         }
@@ -346,27 +346,44 @@ namespace client
                                 catch
                                 { }
                                 labered:
-                                if ((len + 2 + a) > tempbtye.Length)
+                                try
                                 {
-                                    ListData.RemoveAt(i);
-                                    byte[] temps = new byte[tempbtye.Length];
-                                    Array.Copy(tempbtye, temps, temps.Length);
-                                    tempbtye = new byte[temps.Length + ListData[i].Length];
-                                    Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                                    if ((len + 2 + a) > tempbtye.Length)
+                                    { 
+                                            if (ListData.Count > 1)
+                                            {
+                                                ListData.RemoveAt(0);
+                                                
+                                              byte[] temps = new byte[ListData[0].Length];
+                                                Array.Copy(ListData[0], temps, temps.Length);
+                                                byte[] temps2 = new byte[tempbtye.Length + temps.Length];
+                                                Array.Copy(tempbtye,0, temps2,0, tempbtye.Length);
+                                                Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
+                                                ListData[0] = temps2; 
+                                            }
+                                            else
+                                            {
+                                                System.Threading.Thread.Sleep(20);
+                                            }
+                                        continue;
+                                    }
+                                    else if (tempbtye.Length > (len + 2 + a))
+                                    {
+                                        byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
+                                        Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                        ListData[0] = temps;
 
-                                    goto labered;
+                                    }
+                                    else if (tempbtye.Length == (len + 2 + a))
+                                    { ListData.RemoveAt(0); }
+                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 }
-                                else if (tempbtye.Length > (len + 2 + a))
+                                catch (Exception e)
                                 {
-                                    byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
-                                    ListData[i] = temps;
-
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message+ "2 + a"+ 2 + a+ "---len"+ len+ "--tempbtye"+ tempbtye.Length);
                                 }
-                                else if (tempbtye.Length == (len + 2 + a))
-                                { ListData.RemoveAt(i); }
-
-                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                
                                 try
                                 {
                                     temppake str = new temppake();
@@ -407,7 +424,7 @@ namespace client
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
-                                        ErrorMge(3, "unup:" + e.Message);
+                                        ErrorMge(3,e.StackTrace+ "unup122:" + e.Message);
                                 }
                             }
                         }
@@ -422,13 +439,14 @@ namespace client
                 }
                 catch (Exception e)
                 {
+                   
+                    if (ErrorMge != null)
+                        ErrorMge(3, "unup:" + e.Message+"---"+e.StackTrace);
                     try
                     {
                         ListData.RemoveAt(0);
                     }
                     catch { }
-                    if (ErrorMge != null)
-                        ErrorMge(3, "unup:" + e.Message);
                 }
             }
         }
