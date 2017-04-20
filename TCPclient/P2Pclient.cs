@@ -57,7 +57,7 @@ namespace client
         }
         public void DeleteListenClass(object obj)
         {
-            GetAttributeInfo(obj.GetType(), obj);
+            deleteAttributeInfo(obj.GetType(), obj);
             //xmhelper.AddListen()
             //objlist.Add(obj);
         }

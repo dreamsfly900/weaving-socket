@@ -260,7 +260,7 @@ namespace P2P
                             {
                                 try
                                 {
-                                    if (ListData.Count > 0)
+                                    if (ListData.Count > 1)
                                     {
                                         ListData.RemoveAt(i);
 
