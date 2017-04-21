@@ -32,7 +32,7 @@ namespace P2P
          event deleteListSoc EventDeleteConnSoc;
        
     }
-    public enum DataType { json, Dytes};
+    public enum DataType { json, bytes};
     public class p2psever: ITcpBasehelper
     {
         Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -64,7 +64,7 @@ namespace P2P
         {
             if (DT == DataType.json && receiveevent == null)
                 throw new Exception("没有注册receiveevent事件");
-            if (DT == DataType.Dytes && receiveeventbit == null)
+            if (DT == DataType.bytes && receiveeventbit == null)
                 throw new Exception("没有注册receiveeventbit事件");
 
             listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -340,7 +340,7 @@ namespace P2P
                                     //    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
                                     //if (ListData.Count > 0) ListData.RemoveAt(i);
                                 }
-                                else if (DT == DataType.Dytes)
+                                else if (DT == DataType.bytes)
                                 {
                                   //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                     byte[] bs = new byte[len - 2 + a];

@@ -18,8 +18,15 @@ namespace 前台测试
 
         private void button1_Click(object sender, EventArgs e)
         {
-        
+            //P2Pclient p2pc = new P2Pclient(DataType.Dytes);
+            //p2pc.receiveServerEventbit += P2pc_receiveServerEventbit;//注册二进制接收事件
         }
+
+        //private void P2pc_receiveServerEventbit(byte command, byte[] data)
+        //{
+        //     //纯bit流，二进制传输
+        //}
+
         P2Pclient p2pc = new P2Pclient(false);
         UDP udp = new UDP();
       

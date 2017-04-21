@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace client
 {
-    public enum DataType { json, Dytes };
+    public enum DataType { json, bytes };
     public class P2Pclient
     {
         DataType DT = DataType.json;
@@ -139,7 +139,7 @@ namespace client
         {
             if (DT == DataType.json && receiveServerEvent == null)
                 throw new Exception("没有注册receiveServerEvent事件");
-            if (DT == DataType.Dytes && receiveServerEventbit == null)
+            if (DT == DataType.bytes && receiveServerEventbit == null)
                 throw new Exception("没有注册receiveServerEventbit事件");
             mytimeout = _timeout;
             IP = ip;
@@ -436,7 +436,7 @@ namespace client
                                     ErrorMge(1, e.Message);
                             }
                         }
-                        else if (DT == DataType.Dytes)
+                        else if (DT == DataType.bytes)
                         {
                             // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                             byte[] bs = new byte[len - 2 + a];

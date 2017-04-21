@@ -12,7 +12,7 @@ using TCPclient;
 
 namespace client
 {
-    public enum DataType { json, Dytes };
+    public enum DataType { json, bytes };
     public class P2Pclient
     {
         _base_manage xmhelper = new _base_manage();
@@ -173,7 +173,7 @@ namespace client
             {
                 if (DT == DataType.json && receiveServerEvent == null)
                     throw new Exception("没有注册receiveServerEvent事件");
-                if (DT == DataType.Dytes && receiveServerEventbit == null)
+                if (DT == DataType.bytes && receiveServerEventbit == null)
                     throw new Exception("没有注册receiveServerEventbit事件");
                 IP = ip;
                 PORT = port;
@@ -483,7 +483,7 @@ namespace client
                                             // receiveServerEvent();
                                         }
                                     }
-                                    if (DT == DataType.Dytes)
+                                    if (DT == DataType.bytes)
                                     {
                                        // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                         byte[] bs = new byte[len - 2 + a];

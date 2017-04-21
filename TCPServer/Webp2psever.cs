@@ -44,7 +44,7 @@ namespace P2P
         {
             if (DT == DataType.json && receiveevent == null)
                 throw new Exception("没有注册receiveevent事件");
-            if (DT == DataType.Dytes && receiveeventbit == null)
+            if (DT == DataType.bytes && receiveeventbit == null)
                 throw new Exception("没有注册receiveeventbit事件");
             string New_Handshake = "";
             //Switching Protocols
@@ -913,7 +913,7 @@ namespace P2P
                                     //if (receiveevent != null)
                                     //    receiveevent(me.Command, me.Data, me.Soc);
                                 }
-                                else if (DT == DataType.Dytes)
+                                else if (DT == DataType.bytes)
                                 {
                                     byte[] bs = new byte[len - 2 + a];
                                     Array.Copy(tempbtye, bs, bs.Length);

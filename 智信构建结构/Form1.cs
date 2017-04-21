@@ -1,4 +1,5 @@
 ﻿using cloud;
+using P2P;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,8 @@ namespace 智信构建结构
         public Form1()
         {
             InitializeComponent();
+            
+            p2psever pserver=new p2psever(DataType.Dytes)
         }
 
         private void button1_Click(object sender, EventArgs e)
