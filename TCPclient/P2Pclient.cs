@@ -12,11 +12,12 @@ using TCPclient;
 
 namespace client
 {
+    public enum DataType { json, Dytes };
     public class P2Pclient
     {
         _base_manage xmhelper = new _base_manage();
-
-       public TcpClient tcpc;
+      
+        public TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
         public delegate void jump(String text);
@@ -24,6 +25,10 @@ namespace client
         public delegate void istimeout();
         public event istimeout timeoutevent;
         public delegate void errormessage(int type, string error);
+        DataType DT = DataType.json;
+        public event myreceivebit receiveServerEventbit;
+        public delegate void myreceivebit(byte command, byte[] data);
+
         public event errormessage ErrorMge;
         bool isok = false;
         bool isreceives = false;
@@ -116,6 +121,7 @@ namespace client
 
         public P2Pclient(bool _NATUDP)
         {
+          
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
             NATUDP = _NATUDP;
@@ -124,8 +130,17 @@ namespace client
                 udp = new UDP();
                 udp.receiveevent += udp_receiveevent;
             }
-           
+
         }
+        public P2Pclient(DataType _DT)
+        {
+            DT = _DT;
+            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
+        
+
+        }
+         
 
        
 
@@ -156,6 +171,10 @@ namespace client
         {
             try
             {
+                if (DT == DataType.json && receiveServerEvent == null)
+                    throw new Exception("没有注册receiveServerEvent事件");
+                if (DT == DataType.Dytes && receiveServerEventbit == null)
+                    throw new Exception("没有注册receiveServerEventbit事件");
                 IP = ip;
                 PORT = port;
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -279,14 +298,55 @@ namespace client
             // tcpc.Close();
             return true;
         }
+        public bool send(byte command, byte[] text)
+        {
 
+            try
+            {
+          
+                byte[] sendb = text;
+                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] b = new byte[2 + lens.Length + sendb.Length];
+                b[0] = command;
+                b[1] = (byte)lens.Length;
+                lens.CopyTo(b, 2);
+                sendb.CopyTo(b, 2 + lens.Length);
+                int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                if (count == 0)
+                {
+                    tcpc.Client.Send(b);
+                }
+                else
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                        byte[] temp = new byte[zz];
+
+                        Array.Copy(b, i * 40960, temp, 0, zz);
+                        tcpc.Client.Send(temp);
+                        System.Threading.Thread.Sleep(1);
+                    }
+                }
+            }
+            catch(Exception ee)
+            {
+                Isline = false;
+                stop();
+                timeoutevent();
+                send(command, text);
+                ErrorMge(9, "send:" + ee.Message);
+                return false; }
+            // tcpc.Close();
+            return true;
+        }
         public void stop()
         {
           //  isok = false;
             Isline = false;
             tcpc.Close();
         }
-        class temppake { public byte command; public string date; }
+        class temppake { public byte command; public string date; public byte [] datebit; }
         void rec(object obj)
         {
             temppake str = obj as temppake;
@@ -376,7 +436,7 @@ namespace client
                                     }
                                     else if (tempbtye.Length == (len + 2 + a))
                                     { ListData.RemoveAt(0); }
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                   
                                 }
                                 catch (Exception e)
                                 {
@@ -386,40 +446,56 @@ namespace client
                                 
                                 try
                                 {
-                                    temppake str = new temppake();
-                                    str.command = tempbtye[0];
-                                    str.date = temp;
-                                    if (tempbtye[0] == 0xff)
+                                    if (DT == DataType.json)
                                     {
-                                        if (temp.IndexOf("token") >= 0)
-                                            Tokan = temp.Split('|')[1];
-                                        else if (temp.IndexOf("jump") >= 0)
+                                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                        temppake str = new temppake();
+                                        str.command = tempbtye[0];
+                                        str.date = temp;
+                                        if (tempbtye[0] == 0xff)
                                         {
-                                            Tokan = "连接数量满";
-                                            jumpServerEvent(temp.Split('|')[1]);
+                                            if (temp.IndexOf("token") >= 0)
+                                                Tokan = temp.Split('|')[1];
+                                            else if (temp.IndexOf("jump") >= 0)
+                                            {
+                                                Tokan = "连接数量满";
+                                                jumpServerEvent(temp.Split('|')[1]);
+                                            }
+                                            else
+                                            {
+                                                receiveServerEvent(str.command, str.date);
+                                                //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                                //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                //receiveServerEvent(str.command, str.date);
+                                                //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+                                                //tt.Start(str);
+                                            }
                                         }
-                                        else
+                                        else if (receiveServerEvent != null)
                                         {
-                                            receiveServerEvent(str.command, str.date);
-                                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            //
+                                            if (receiveServerEvent != null)
+                                                // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                                receiveServerEvent(str.command, str.date);
                                             //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                            //receiveServerEvent(str.command, str.date);
-                                            //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+                                            //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
+                                            // receiveServerEvent();
                                         }
                                     }
-                                    else if (receiveServerEvent != null)
-                                     {
-                                        //
-                                        if (receiveServerEvent != null)
+                                    if (DT == DataType.Dytes)
+                                    {
+                                       // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                        byte[] bs = new byte[len - 2 + a];
+                                        Array.Copy(tempbtye, bs, bs.Length);
+                                        temppake str = new temppake();
+                                        str.command = tempbtye[0];
+                                        str.datebit = bs;
+                                        if (receiveServerEventbit != null)
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            receiveServerEvent(str.command, str.date);
-                                        //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                        //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
-                                        //tt.Start(str);
-                                        // receiveServerEvent();
-                                     }
-                                    continue;
+                                            receiveServerEventbit(str.command, str.datebit);
+                                    }
+                                        continue;
                                 }
                                 catch (Exception e)
                                 {

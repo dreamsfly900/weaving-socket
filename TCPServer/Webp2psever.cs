@@ -25,17 +25,16 @@ namespace P2P
         public event UpdataListSoc EventUpdataConnSoc;
        
         public event deleteListSoc EventDeleteConnSoc;
- 
-
+        public event myreceivebit receiveeventbit;
+        DataType DT = DataType.json;
+        public Webp2psever(DataType _DT)
+        {
+            DT = _DT;
+            
+        }
         public Webp2psever()
         {
-            string New_Handshake = "";
-            //Switching Protocols
-            New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
-            New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
-            New_Handshake += "Connection: Upgrade" + Environment.NewLine;
-            New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
-            New_Handshake += Environment.NewLine;
+           
             // udp = new UDP(_loaclip);
            
         }
@@ -43,6 +42,18 @@ namespace P2P
 
         public void start(int port)
         {
+            if (DT == DataType.json && receiveevent == null)
+                throw new Exception("没有注册receiveevent事件");
+            if (DT == DataType.Dytes && receiveeventbit == null)
+                throw new Exception("没有注册receiveeventbit事件");
+            string New_Handshake = "";
+            //Switching Protocols
+            New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
+            New_Handshake += "Upgrade: WebSocket" + Environment.NewLine;
+            New_Handshake += "Connection: Upgrade" + Environment.NewLine;
+            New_Handshake += "Sec-WebSocket-Accept: {0}" + Environment.NewLine;
+            New_Handshake += Environment.NewLine;
+
             Handshake = "HTTP/1.1 101 Web Socket Protocol Handshake" + Environment.NewLine;
             Handshake += "Upgrade: WebSocket" + Environment.NewLine;
             Handshake += "Connection: Upgrade" + Environment.NewLine;
@@ -254,13 +265,34 @@ namespace P2P
                 }
             }
 
-          
+            public byte[] Databit
+            {
+                get
+                {
+                    return databit;
+                }
+
+                set
+                {
+                    databit = value;
+                }
+            }
+
+            byte[] databit;
+
+
         }
         void receiveeventto(object obj)
         {
             modelevent me = (modelevent)obj;
             if (receiveevent != null)
                 receiveevent(me.Command, me.Data, me.Soc);
+        }
+        void receiveeventtobit(object obj)
+        {
+            modelevent me = (modelevent)obj;
+            if (receiveevent != null)
+                receiveeventbit(me.Command, me.Databit, me.Soc);
         }
         private void ReadCallback2(IAsyncResult ar)
         {
@@ -817,15 +849,20 @@ namespace P2P
                                         }
                                         else
                                             ListData.RemoveAt(i);
-                                   
-                                            temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    if (DT == DataType.json)
+                                    {
+                                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    }
                                        
                                 }
                                 else
                                 {
                                 
                                     len = tempbtye.Length - 2 - a;
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    if (DT == DataType.json)
+                                    {
+                                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    }
 
                                 if (bytesRead > tempbtye.Length + lens)
                                 {
@@ -860,19 +897,35 @@ namespace P2P
 
                             try
                                 {
-
+                                if (DT == DataType.json)
+                                {
                                     modelevent me = new modelevent();
                                     me.Command = tempbtye[0];
                                     me.Data = temp;
                                     me.Soc = netc.Soc;
                                     me.Masks = masks;
 
-                                //System.Threading.Thread t = new Thread(new ParameterizedThreadStart(receiveeventto));
-                                //t.Start(me);
-                                //receiveeventto(me);
-                                if (receiveevent != null)
-                                    receiveevent(me.Command, me.Data, me.Soc);
-                                netc.Ispage = false; return;
+                                    //System.Threading.Thread t = new Thread(new ParameterizedThreadStart(receiveeventto));
+                                    //t.Start(me);
+                                    //receiveeventto(me);
+                                    if (receiveevent != null)
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                    //if (receiveevent != null)
+                                    //    receiveevent(me.Command, me.Data, me.Soc);
+                                }
+                                else if (DT == DataType.Dytes)
+                                {
+                                    byte[] bs = new byte[len - 2 + a];
+                                    Array.Copy(tempbtye, bs, bs.Length);
+                                    modelevent me = new modelevent();
+                                    me.Command = tempbtye[0];
+                                    me.Data = "";
+                                    me.Databit = bs;
+                                    me.Soc = netc.Soc;
+                                    if (receiveevent != null)
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventtobit), me);
+                                }
+                                    netc.Ispage = false; return;
                                 }
                                 catch (Exception e)
                                 {

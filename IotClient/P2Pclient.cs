@@ -12,8 +12,12 @@ using System.Threading.Tasks;
 
 namespace client
 {
+    public enum DataType { json, Dytes };
     public class P2Pclient
     {
+        DataType DT = DataType.json;
+        public event myreceivebit receiveServerEventbit;
+        public delegate void myreceivebit(byte command, byte[] data);
         _base_manage xmhelper = new _base_manage();
         public delegate void jump(String text);
         public event jump jumpServerEvent;
@@ -100,7 +104,14 @@ namespace client
                 tokan = value;
             }
         }
+        public P2Pclient(DataType _DT)
+        {
+            DT = _DT;
+            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
 
+
+        }
         public P2Pclient(bool _NATUDP)
         {
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
@@ -126,6 +137,10 @@ namespace client
 
         public bool start(string ip, int port, int _timeout, bool takon)
         {
+            if (DT == DataType.json && receiveServerEvent == null)
+                throw new Exception("没有注册receiveServerEvent事件");
+            if (DT == DataType.Dytes && receiveServerEventbit == null)
+                throw new Exception("没有注册receiveServerEventbit事件");
             mytimeout = _timeout;
             IP = ip;
             PORT = port;
@@ -322,7 +337,7 @@ namespace client
 
             }
         }
-        ManualResetEvent done = new ManualResetEvent(false);
+      //  ManualResetEvent done = new ManualResetEvent(false);
         byte[] tempb = null;
         private void SocketReceiveArgs_Completed(object sender, SocketAsyncEventArgs receiveArgs)
         {
@@ -344,7 +359,7 @@ namespace client
                     if (bytesRead > 0)
                     {
                         byte[] tempbtye = new byte[bytesRead];
-
+                        timeout = DateTime.Now;
                         Array.Copy(receiveArgs.Buffer, tempbtye, tempbtye.Length);
                         // receiveArgs.Dispose();
                         if (tempb != null)
@@ -354,6 +369,7 @@ namespace client
                             Array.Copy(tempbtye, 0, tempbtyes, tempb.Length, tempbtye.Length);
                             tempbtye = tempbtyes;
                         }
+
                         labe881:
                         if (tempbtye[0] == 0x99)
                         {
@@ -368,7 +384,8 @@ namespace client
                                 goto labe881;
                             }
                             else
-                            { done.Set(); return; }
+                            { //done.Set(); 
+                                return; }
 
                             // continue;
                         }
@@ -394,29 +411,44 @@ namespace client
                         //int b = netc.Buffer[2 + a+1];
                         //temp = System.Text.ASCIIEncoding.ASCII.GetString(netc.Buffer, 2 + a + 1, b);
                         //len = int.Parse(temp);
-                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                        tempb = null;
-                        try
+                        if (DT == DataType.json)
                         {
-                            if (tempbtye[0] == 0xff)
+                            temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                            tempb = null;
+                            try
                             {
-                                if (temp.IndexOf("token") >= 0)
-                                    Tokan = temp.Split('|')[1];
+                                if (tempbtye[0] == 0xff)
+                                {
+                                    if (temp.IndexOf("token") >= 0)
+                                        Tokan = temp.Split('|')[1];
+                                }
+                                else if (temp.IndexOf("jump") >= 0)
+                                {
+                                    Tokan = "连接数量满";
+                                    jumpServerEvent(temp.Split('|')[1]);
+                                }
+                                else if (receiveServerEvent != null)
+                                    receiveServerEvent(tempbtye[0], temp);
                             }
-                            else if (temp.IndexOf("jump") >= 0)
+                            catch (Exception e)
                             {
-                                Tokan = "连接数量满";
-                                jumpServerEvent(temp.Split('|')[1]);
+                                if (ErrorMge != null)
+                                    ErrorMge(1, e.Message);
                             }
-                            else if (receiveServerEvent != null)
-                                receiveServerEvent(tempbtye[0], temp);
                         }
-                        catch (Exception e)
+                        else if (DT == DataType.Dytes)
                         {
-                            if (ErrorMge != null)
-                                ErrorMge(1, e.Message);
+                            // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                            byte[] bs = new byte[len - 2 + a];
+                            Array.Copy(tempbtye, bs, bs.Length);
+                            //temppake str = new temppake();
+                            //str.command = tempbtye[0];
+                            //str.datebit = bs;
+                            if (receiveServerEventbit != null)
+                                // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                receiveServerEventbit(tempbtye[0], bs);
                         }
-
+                        timeout = DateTime.Now;
                         if (bytesRead > (2 + a + len))
                         {
                             byte[] b = new byte[bytesRead - (2 + a + len)];
@@ -427,12 +459,12 @@ namespace client
                             bytesRead = bytesRead - (2 + a + len);
                             goto labe881;
                         }
-                        timeout = DateTime.Now;
+                       
                     }
                     else
                     {
                         TimeSpan ts = DateTime.Now - timeout;
-                        if (ts.Seconds > mytimeout)
+                        if (ts.TotalSeconds > mytimeout)
                         {
                             Isline = false;
                             //stop();

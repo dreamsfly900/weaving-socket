@@ -11,6 +11,7 @@ namespace P2P
 {
     public delegate void myreceive(byte command, String data, Socket soc);
     public delegate void myreceiveDtu(byte[] data, Socket soc);
+    public delegate void myreceivebit(byte command,byte[] data, Socket soc);
     public delegate void NATthrough(byte command,String data, EndPoint ep);
     public delegate void UpdataListSoc(Socket soc);
     public delegate void deleteListSoc(Socket soc);
@@ -31,18 +32,19 @@ namespace P2P
          event deleteListSoc EventDeleteConnSoc;
        
     }
+    public enum DataType { json, Dytes};
     public class p2psever: ITcpBasehelper
     {
         Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         UDP udp;
         List<NETcollection> listconn = new List<NETcollection>();
-    
+        DataType DT = DataType.json;
         public event myreceive receiveevent; 
         public event NATthrough NATthroughevent;
         public static ManualResetEvent allDone = new ManualResetEvent(false); 
         public event UpdataListSoc EventUpdataConnSoc; 
         public event deleteListSoc EventDeleteConnSoc;
-   
+        public event myreceivebit receiveeventbit;
         string loaclip;
         public p2psever(string _loaclip)
         {
@@ -53,8 +55,18 @@ namespace P2P
         {
             udp = new UDP("127.0.0.1");
         }
+        public p2psever(DataType _DT)
+        {
+            DT = _DT;
+            udp = new UDP("127.0.0.1");
+        }
         public   void start(int port)
         {
+            if (DT == DataType.json && receiveevent == null)
+                throw new Exception("没有注册receiveevent事件");
+            if (DT == DataType.Dytes && receiveeventbit == null)
+                throw new Exception("没有注册receiveeventbit事件");
+
             listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             listener.Bind(localEndPoint); 
@@ -211,12 +223,26 @@ namespace P2P
                 get { return data; }
                 set { data = value; }
             }
+            byte[] databit;
             Socket soc;
 
             public Socket Soc
             {
                 get { return soc; }
                 set { soc = value; }
+            }
+
+            public byte[] Databit
+            {
+                get
+                {
+                    return databit;
+                }
+
+                set
+                {
+                    databit = value;
+                }
             }
         }
         void receiveeventto(object obj)
@@ -225,7 +251,12 @@ namespace P2P
               if (receiveevent != null)
                   receiveevent(me.Command, me.Data, me.Soc);
         }
-
+        void receiveeventtobit(object obj)
+        {
+            modelevent me = (modelevent)obj;
+            if (receiveevent != null)
+                receiveeventbit(me.Command, me.Databit, me.Soc);
+        }
         private void packageData(object obj)
         {
 
@@ -294,23 +325,35 @@ namespace P2P
                             { if (ListData.Count > 0) ListData.RemoveAt(i); }
                             try
                             {
-                               
+                                if (DT == DataType.json)
+                                {
                                     temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                            }
-                            catch
-                            { }
-                            try
-                            {
-                                modelevent me = new modelevent();
-                                me.Command = tempbtye[0];
-                                me.Data = temp;
-                                me.Soc = netc.Soc;
-                                if (receiveevent != null)
-                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
-                                //receiveeventto(me);
-                                //if (receiveevent != null)
-                                //    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
-                                //if (ListData.Count > 0) ListData.RemoveAt(i);
+
+                                    modelevent me = new modelevent();
+                                    me.Command = tempbtye[0];
+                                    me.Data = temp;
+                                    me.Soc = netc.Soc;
+                                    if (receiveevent != null)
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
+                                    //receiveeventto(me);
+                                    //if (receiveevent != null)
+                                    //    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
+                                    //if (ListData.Count > 0) ListData.RemoveAt(i);
+                                }
+                                else if (DT == DataType.Dytes)
+                                {
+                                  //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    byte[] bs = new byte[len - 2 + a];
+                                    Array.Copy(tempbtye, bs, bs.Length);
+                                    modelevent me = new modelevent();
+                                    me.Command = tempbtye[0];
+                                    me.Data = "";
+                                    me.Databit = bs;
+                                    me.Soc = netc.Soc;
+                                    if (receiveevent != null)
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventtobit), me);
+
+                                }
                                 netc.Ispage = false; return;
 
                             }
@@ -420,6 +463,24 @@ namespace P2P
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
 
+                soc.Send(b);
+            }
+            catch { return false; }
+            // tcpc.Close();
+            return true;
+        }
+        public bool send(Socket soc, byte command, byte[] text)
+        {
+
+            try
+            {
+                byte[] sendb = text;
+                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] b = new byte[2 + lens.Length + sendb.Length];
+                b[0] = command;
+                b[1] = (byte)lens.Length;
+                lens.CopyTo(b, 2);
+                sendb.CopyTo(b, 2 + lens.Length); 
                 soc.Send(b);
             }
             catch { return false; }
