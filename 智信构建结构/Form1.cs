@@ -17,8 +17,14 @@ namespace 智信构建结构
         public Form1()
         {
             InitializeComponent();
-            
-            p2psever pserver=new p2psever(DataType.Dytes)
+
+         
+
+        }
+
+        private void Pserver_receiveeventbit(byte command, byte[] data, System.Net.Sockets.Socket soc)
+        {
+          
         }
 
         private void button1_Click(object sender, EventArgs e)
