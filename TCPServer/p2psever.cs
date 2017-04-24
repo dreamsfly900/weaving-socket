@@ -276,9 +276,9 @@ namespace P2P
                         netc.Ispage = false; return; }; 
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
-                    
-                   
-                    if (bytesRead > 2)
+
+
+                    if (bytesRead > 1)
                     {
                         int a = tempbtye[1];
                         if (bytesRead > 2 + a)
@@ -342,7 +342,7 @@ namespace P2P
                                 }
                                 else if (DT == DataType.bytes)
                                 {
-                                  //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                     byte[] bs = new byte[len - 2 + a];
                                     Array.Copy(tempbtye, bs, bs.Length);
                                     modelevent me = new modelevent();
@@ -377,6 +377,27 @@ namespace P2P
                             }
                             netc.Ispage = false; return;
                         }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if (ListData.Count > 1)
+                            {
+                                ListData.RemoveAt(i);
+
+                                byte[] temps = new byte[tempbtye.Length];
+                                Array.Copy(tempbtye, temps, temps.Length);
+                                byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                                Array.Copy(temps, tempbtyes, temps.Length);
+                                Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                ListData[i] = tempbtyes;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                        netc.Ispage = false; return;
                     }
 
                 }
