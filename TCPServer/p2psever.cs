@@ -344,14 +344,14 @@ namespace P2P
                                 else if (DT == DataType.bytes)
                                 {
                                     //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                    byte[] bs = new byte[len - 2 + a];
-                                    Array.Copy(tempbtye, bs, bs.Length);
+                                    byte[] bs = new byte[len - (2 + a)];
+                                    Array.Copy(tempbtye, (2 + a), bs,0, bs.Length);
                                     modelevent me = new modelevent();
                                     me.Command = tempbtye[0];
                                     me.Data = "";
                                     me.Databit = bs;
                                     me.Soc = netc.Soc;
-                                    if (receiveevent != null)
+                                    if (receiveeventbit != null)
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventtobit), me);
 
                                 }
