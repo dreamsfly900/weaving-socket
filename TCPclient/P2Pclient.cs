@@ -474,9 +474,8 @@ namespace client
                                         else if (receiveServerEvent != null)
                                         {
                                             //
-                                            if (receiveServerEvent != null)
-                                                // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                receiveServerEvent(str.command, str.date);
+                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                            receiveServerEvent?.Invoke(str.command, str.date);
                                             //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
@@ -491,9 +490,8 @@ namespace client
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
-                                        if (receiveServerEventbit != null)
-                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            receiveServerEventbit(str.command, str.datebit);
+                                        // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                        receiveServerEventbit?.Invoke(str.command, str.datebit);
                                     }
                                         continue;
                                 }

@@ -1127,6 +1127,27 @@ namespace P2P
             }
 
         }
+
+        public bool send(Socket soc, byte command, byte[] data)
+        {
+            try
+            {
+                byte[] sendb = data;
+                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] b = new byte[2 + lens.Length + sendb.Length];
+                b[0] = command;
+                b[1] = (byte)lens.Length;
+                lens.CopyTo(b, 2);
+                sendb.CopyTo(b, 2 + lens.Length);
+                DataFrame bp = new DataFrame();
+                bp.setByte(b);
+                soc.Send(bp.GetBytes());
+                //soc.Send(bp);
+            }
+            catch { return false; }
+            // tcpc.Close();
+            return true;
+        }
     }
  public class DataFrameHeader
 {
