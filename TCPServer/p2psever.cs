@@ -24,7 +24,7 @@ namespace P2P
         void xintiao(object obj);
         bool send(Socket soc, byte command, string text);
          event myreceive receiveevent;
-         
+         event myreceivebit receiveeventbit;
         event NATthrough NATthroughevent; 
 
          event UpdataListSoc EventUpdataConnSoc;
