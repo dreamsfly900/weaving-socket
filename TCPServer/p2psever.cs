@@ -278,7 +278,7 @@ namespace P2P
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
 
 
-                    if (bytesRead > 1)
+                    if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
                         if (bytesRead > 2 + a)
