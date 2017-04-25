@@ -25,6 +25,7 @@ namespace cloud
         // _0x01.SetRoot<byte[]> 给ROOT 对象赋值，这个是你传输的数据的内容。内容直接赋值这里就行了。
         byte[] Get_Byte(_baseModel bm);
         byte[] Get_ByteBystring(String  str);
+        bool socketvalidation(_baseModel bm);
     }
     public class GateWaybyte
     {
@@ -662,6 +663,7 @@ namespace cloud
                 if (cobj.Validation == false && command == 0xff)
                 {
                     //从这里写验证
+                    cobj.Validation = idp.socketvalidation(_0x01);
                     return;
                 }
                 else if (cobj.Validation == false && command != 0xff)
