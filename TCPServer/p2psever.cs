@@ -255,7 +255,7 @@ namespace P2P
         void receiveeventtobit(object obj)
         {
             modelevent me = (modelevent)obj;
-            if (receiveevent != null)
+            if (receiveeventbit != null)
                 receiveeventbit(me.Command, me.Databit, me.Soc);
         }
         private void packageData(object obj)
