@@ -63,7 +63,7 @@ namespace cloud
                                 CommandItem ci = new CommandItem();
                                 object obj = ab.CreateInstance(t.FullName);
                                 TCPCommand Ic = obj as TCPCommand;
-                                Ic.SetGlobalQueueTable(qt);
+                                Ic.SetGlobalQueueTable(qt, p2psev);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
 

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using P2P;
 using StandardModel;
 using System;
 using System.Collections.Generic;
@@ -328,10 +329,10 @@ namespace MyInterface
                 bm = value;
             }
         }
-
-        public void SetGlobalQueueTable(QueueTable qt)
+        ITcpBasehelper p2psev;
+        public void SetGlobalQueueTable(QueueTable qt, ITcpBasehelper _p2psev)
         {
-
+            p2psev = _p2psev;
             globalQueueTable = qt;
         }
         public online[] GetOnline()
@@ -444,23 +445,10 @@ namespace MyInterface
             return send(soc, 0x00, b.Getjson());
         }
         public bool send(Socket soc, byte command, string text)
-      {
+        {
 
-          try
-          {
-              byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-              byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
-              byte[] b = new byte[2 + lens.Length + sendb.Length];
-              b[0] = command;
-              b[1] = (byte)lens.Length;
-              lens.CopyTo(b, 2);
-              sendb.CopyTo(b, 2 + lens.Length); 
-              soc.Send(b); 
-          } 
-          catch { return false; }
-          // tcpc.Close();
-          return true;
-      }
+            return p2psev.send(soc, command, text);
+        }
         /// <summary>
         /// 这个方法会被重写
         /// </summary>
