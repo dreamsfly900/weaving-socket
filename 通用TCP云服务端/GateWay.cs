@@ -105,6 +105,7 @@ namespace cloud
                     foreach (P2Pclient Client in ci.Client)
                     {
                         Client.stop();
+                       //isok加到这里吧
                     }
                 }
                 CommandItemS.Clear();

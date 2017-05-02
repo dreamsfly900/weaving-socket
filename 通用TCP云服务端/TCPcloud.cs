@@ -12,7 +12,7 @@ namespace cloud
 {
     public class TCPcloud : Universal
     {
-        p2psever p2psev;
+        ITcpBasehelper p2psev;
         XmlDocument xml = new XmlDocument();
         List<CommandItem> listcomm = new List<CommandItem>();
         QueueTable qt = new QueueTable();
@@ -26,9 +26,14 @@ namespace cloud
 
 
             ReloadFlies();
-
-            p2psev = new p2psever(myI.Parameter[3]);
-
+            if (myI.Parameter[5] == "web")
+            {
+                p2psev = new Webp2psever();
+            }
+            else
+            {
+                p2psev = new p2psever(myI.Parameter[3]);
+            }
             p2psev.receiveevent += p2psev_receiveevent;
             p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
             p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
@@ -122,6 +127,37 @@ namespace cloud
                     {
                         if (EventMylog != null)
                             EventMylog("EventDeleteConnSoc", ex.Message);
+                    }
+                }
+            }
+            catch { }
+            try
+            {
+               int  count = onlines.Count;
+                online[] ols = new online[count];
+                onlines.CopyTo(0, ols, 0, count);
+                foreach (online ol in ols)
+                {
+                    if (ol.Soc.Equals(soc))
+                    {
+                        foreach (CommandItem CI in listcomm)
+                        {
+
+                            try
+                            {
+                                CI.MyICommand.Tokenout(ol);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (EventMylog != null)
+                                    EventMylog("Tokenout", ex.Message);
+                            }
+
+                        }
+
+                        onlines.Remove(ol);
+
+                        return;
                     }
                 }
             }
