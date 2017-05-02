@@ -37,8 +37,13 @@ namespace 智信构建结构
                 if (Regex.IsMatch(txt_IP.Text.Trim(), @"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$") && isPort && portNum >= 0 && portNum <= 65535)
                 {
                     String str = "|||"+txt_IP.Text+"|"+txt_port.Text;
+                    if (radioButton2.Checked)
+                    { str += "|web"; }
+                    else
+                    { str += "|"; }
                     MyInterface.MyInterface mif = new MyInterface.MyInterface();
                     mif.Parameter = str.Split('|');
+                   
                     TCPcloud t = new TCPcloud();
                     if (t.Run(mif))
                     {

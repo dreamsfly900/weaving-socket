@@ -34,6 +34,10 @@
             this.txt_IP = new System.Windows.Forms.TextBox();
             this.txt_port = new System.Windows.Forms.TextBox();
             this.lab_info = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -89,11 +93,44 @@
             this.lab_info.Size = new System.Drawing.Size(0, 12);
             this.lab_info.TabIndex = 6;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.radioButton2);
+            this.panel1.Controls.Add(this.radioButton1);
+            this.panel1.Location = new System.Drawing.Point(94, 117);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(210, 43);
+            this.panel1.TabIndex = 7;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(121, 13);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(77, 16);
+            this.radioButton2.TabIndex = 10;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "WebSocket";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(12, 13);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(77, 16);
+            this.radioButton1.TabIndex = 9;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "TCPSocket";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(432, 235);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.lab_info);
             this.Controls.Add(this.txt_port);
             this.Controls.Add(this.txt_IP);
@@ -103,6 +140,8 @@
             this.Name = "Form1";
             this.Text = "服务器端运行器";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,6 +155,9 @@
         private System.Windows.Forms.TextBox txt_IP;
         private System.Windows.Forms.TextBox txt_port;
         private System.Windows.Forms.Label lab_info;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }
 
