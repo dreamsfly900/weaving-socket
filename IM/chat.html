@@ -17,7 +17,7 @@
     // 连接服务端
     function connect() {
         socket = new UDCsocket({
-            ip: '122.114.53.233', port: 11001, conn: onopen
+            ip: '127.0.0.1', port: 8990, conn: onopen
                 , recData: onmessage
                 , close: function () { alert("连接关闭"); }
                  , error: function (msg) { alert("连接错误" + msg); }
@@ -28,8 +28,10 @@
     // 连接建立时发送登录信息
     function onopen(msg)
     {
-        if (msg=='token')
-        socket.SendData(0x31, "login", name);
+        if (msg == 'token') {
+            alert(msg+'已获得');
+            socket.SendData(0x31, "login", name);
+        }
        
     }
 

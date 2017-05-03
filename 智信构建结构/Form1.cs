@@ -26,7 +26,8 @@ namespace 智信构建结构
         {
           
         }
-
+        List<ServerPort> listsp = new List<ServerPort>();
+        TCPcloud t = new TCPcloud();
         private void button1_Click(object sender, EventArgs e)
         {
             if(txt_IP.Text!="" && txt_port.Text!="")
@@ -41,13 +42,18 @@ namespace 智信构建结构
                     { str += "|web"; }
                     else
                     { str += "|"; }
+                    if (checkBox1.Checked)
+                    { str += "|token"; }
+                    else
+                    { str += "|"; }
                     MyInterface.MyInterface mif = new MyInterface.MyInterface();
                     mif.Parameter = str.Split('|');
                    
-                    TCPcloud t = new TCPcloud();
+                  
                     if (t.Run(mif))
                     {
-                        lab_info.Text = "连接启动成功！";
+                        t.AddProt(listsp);
+                        lab_info.Text = "启动成功！";
                         //t.ReloadFlies();//重新加载插件
                     }
                 }else
@@ -66,6 +72,26 @@ namespace 智信构建结构
         private void Form1_Load(object sender, EventArgs e)
         {
             lab_info.Text = "";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ServerPort sp = new ServerPort();
+            sp.Port = Convert.ToInt32(txt_port.Text);
+            if (radioButton2.Checked)
+            {
+                sp.PortType = portType.web;
+                listBox1.Items.Add("WEB端口"+ sp.Port);
+            }
+            else
+            {
+                sp.PortType = portType.json;
+                listBox1.Items.Add("json端口" + sp.Port);
+            }
+
+           
+            listsp.Add(sp);
+           
         }
     }
 }

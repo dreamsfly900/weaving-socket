@@ -129,7 +129,7 @@ namespace 前台测试
             string str = "201703100926415325";
             str = str.Substring(17);
             str = System.Text.Encoding.UTF8.GetString(new byte[] { 0xB9, 0xE8, 0xB1, 0xA1, 0xE5, 0xBC, 0x95, 0xE7, 0xE7, 0xE5, 0x88, 0xB0, 0xE5, 0xAF, 0xB9, 0xE8, 0xB1, 0xB1, 0xBE, 0x8B, 0xE3, 0x80, 0x82, 0x5C });
-              p2pc.start("122.114.53.233", Convert.ToInt32(11002),true);
+              p2pc.start("127.0.0.1", Convert.ToInt32(8989),true);
            // p2pc.start("127.0.0.1", Convert.ToInt32(11002), true);
             p2pc.SendRoot<String>(0x04, "login", "xinyejinwantiaoyuan", 0);
         }

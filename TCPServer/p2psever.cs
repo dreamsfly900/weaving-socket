@@ -18,7 +18,7 @@ namespace P2P
     public delegate void deleteSoc(Socket soc,string token);
     public interface ITcpBasehelper
     {
-        
+        int Port { get; set; }
         void start(int port);
         int getNum();
         void xintiao(object obj);
@@ -47,6 +47,7 @@ namespace P2P
         public event deleteListSoc EventDeleteConnSoc;
         public event myreceivebit receiveeventbit;
         string loaclip;
+        public int Port{ get; set; }
         public p2psever(string _loaclip)
         {
             loaclip = _loaclip;
@@ -63,6 +64,7 @@ namespace P2P
         }
         public   void start(int port)
         {
+            Port = port;
             if (DT == DataType.json && receiveevent == null)
                 throw new Exception("没有注册receiveevent事件");
             if (DT == DataType.bytes && receiveeventbit == null)

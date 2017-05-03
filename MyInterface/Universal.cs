@@ -329,8 +329,8 @@ namespace MyInterface
                 bm = value;
             }
         }
-        ITcpBasehelper p2psev;
-        public void SetGlobalQueueTable(QueueTable qt, ITcpBasehelper _p2psev)
+        List<ITcpBasehelper> p2psev;
+        public void SetGlobalQueueTable(QueueTable qt, List<ITcpBasehelper> _p2psev)
         {
             p2psev = _p2psev;
             globalQueueTable = qt;
@@ -446,8 +446,12 @@ namespace MyInterface
         }
         public bool send(Socket soc, byte command, string text)
         {
-
-            return p2psev.send(soc, command, text);
+            foreach (ITcpBasehelper itp in p2psev)
+            {
+                if (itp.Port== ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                  return itp.send(soc, command, text);
+            }
+            return false;
         }
         /// <summary>
         /// 这个方法会被重写

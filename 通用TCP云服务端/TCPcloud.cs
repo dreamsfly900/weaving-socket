@@ -10,15 +10,24 @@ using System.Xml;
 
 namespace cloud
 {
+    public enum portType { web,json, bytes }
+    public class ServerPort
+    {
+       public portType PortType { get; set; }
+        public int Port { get; set; }
+    }
+
     public class TCPcloud : Universal
     {
-        ITcpBasehelper p2psev;
+        
         XmlDocument xml = new XmlDocument();
         List<CommandItem> listcomm = new List<CommandItem>();
         QueueTable qt = new QueueTable();
         public delegate void Mylog(string type, string log);
         public event Mylog EventMylog;
         List<online> onlines = new List<online>();
+        bool opentoken = false;
+        List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
         public bool Run(MyInterface.MyInterface myI)
         {
             // Mycommand comm = new Mycommand(, connectionString);
@@ -26,23 +35,46 @@ namespace cloud
 
 
             ReloadFlies();
-            if (myI.Parameter[5] == "web")
+
+            if (myI.Parameter[6] == "token")
             {
-                p2psev = new Webp2psever();
+                opentoken = true;
             }
             else
             {
-                p2psev = new p2psever(myI.Parameter[3]);
+                opentoken = false;
             }
-            p2psev.receiveevent += p2psev_receiveevent;
-            p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
-            p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
-            //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
-            p2psev.start(Convert.ToInt32(myI.Parameter[4]));//myI.Parameter[4]是端口号
+           
             qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
             if (EventMylog != null)
                 EventMylog("连接", "连接启动成功");
             return true;
+        }
+        public void AddProt(List<ServerPort> listServerPort)
+        {
+           
+            foreach (ServerPort sp in listServerPort)
+            {
+                ITcpBasehelper p2psev=null;
+                if (sp.PortType == portType.web)
+                {
+                    p2psev = new Webp2psever();
+                }
+                else if(sp.PortType == portType.json)
+                {
+                    p2psev = new p2psever("127.0.0.1");
+                }
+                else if (sp.PortType == portType.bytes)
+                {
+                    p2psev = new p2psever(DataType.bytes);
+                }
+                p2psev.receiveevent += p2psev_receiveevent;
+                p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
+                p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
+                //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
+                p2psev.start(Convert.ToInt32(sp.Port));//myI.Parameter[4]是端口号
+                p2psevlist.Add(p2psev);
+            }
         }
         public void ReloadFlies()
         {
@@ -63,7 +95,7 @@ namespace cloud
                                 CommandItem ci = new CommandItem();
                                 object obj = ab.CreateInstance(t.FullName);
                                 TCPCommand Ic = obj as TCPCommand;
-                                Ic.SetGlobalQueueTable(qt, p2psev);
+                                Ic.SetGlobalQueueTable(qt, p2psevlist);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
 
@@ -131,6 +163,7 @@ namespace cloud
                 }
             }
             catch { }
+          
             try
             {
                int  count = onlines.Count;
@@ -187,38 +220,70 @@ namespace cloud
 
             }
             catch { }
-            try
+            if (opentoken)
             {
-                int count = onlines.Count;
-                online[] ols = new online[count];
-                onlines.CopyTo(0, ols, 0, count);
-                foreach (online ol in ols)
+                String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000,9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                foreach (ITcpBasehelper itp in p2psevlist)
                 {
-                    if (ol.Soc == soc)
-                    {
-                        foreach (CommandItem CI in listcomm)
+                    if (itp.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                        if (itp.send(soc, 0xff, "token|" + Token + ""))
                         {
 
-                            try
+                            online ol = new online();
+                            ol.Token = Token;
+                            ol.Soc = soc;
+                            onlines.Add(ol);
+                            foreach (CommandItem CI in listcomm)
                             {
-                                CI.MyICommand.Tokenout(ol);
-                            }
-                            catch (Exception ex)
-                            {
-                                if (EventMylog != null)
-                                    EventMylog("Tokenout", ex.Message);
-                            }
 
+                                try
+                                {
+                                    CI.MyICommand.Tokenin(ol);
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (EventMylog != null)
+                                        EventMylog("Tokenin", ex.Message);
+                                }
+
+                            }
+                            return;
                         }
-
-                        onlines.Remove(ol);
-
-                        return;
-                    }
                 }
-
+               
             }
-            catch { }
+            //try
+            //{
+            //    int count = onlines.Count;
+            //    online[] ols = new online[count];
+            //    onlines.CopyTo(0, ols, 0, count);
+            //    foreach (online ol in ols)
+            //    {
+            //        if (ol.Soc == soc)
+            //        {
+            //            foreach (CommandItem CI in listcomm)
+            //            {
+
+            //                try
+            //                {
+            //                    CI.MyICommand.Tokenout(ol);
+            //                }
+            //                catch (Exception ex)
+            //                {
+            //                    if (EventMylog != null)
+            //                        EventMylog("Tokenout", ex.Message);
+            //                }
+
+            //            }
+
+            //            onlines.Remove(ol);
+
+            //            return;
+            //        }
+            //    }
+
+            //}
+            //catch { }
 
         }
  

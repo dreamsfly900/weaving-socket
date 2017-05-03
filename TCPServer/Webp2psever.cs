@@ -39,9 +39,10 @@ namespace P2P
            
         }
 
-
+        public int Port { get; set; }
         public void start(int port)
         {
+            Port = port;
             if (DT == DataType.json && receiveevent == null)
                 throw new Exception("没有注册receiveevent事件");
             if (DT == DataType.bytes && receiveeventbit == null)
