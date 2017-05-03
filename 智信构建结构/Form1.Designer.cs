@@ -62,7 +62,7 @@
             // 
             this.lab_info.AutoSize = true;
             this.lab_info.ForeColor = System.Drawing.Color.Red;
-            this.lab_info.Location = new System.Drawing.Point(133, 103);
+            this.lab_info.Location = new System.Drawing.Point(48, 63);
             this.lab_info.Name = "lab_info";
             this.lab_info.Size = new System.Drawing.Size(0, 12);
             this.lab_info.TabIndex = 6;
@@ -81,6 +81,7 @@
             // 
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.lab_info);
             this.groupBox1.Location = new System.Drawing.Point(22, 332);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(285, 85);
@@ -206,7 +207,6 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.lab_info);
             this.Name = "Form1";
             this.Text = "服务器端运行器";
             this.Load += new System.EventHandler(this.Form1_Load);

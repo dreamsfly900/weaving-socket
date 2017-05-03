@@ -90,13 +90,7 @@ namespace IMClass
             }
         }
        
-        /// <summary>
-        /// 新增重写的方法，连接上线后激活的方法
-        /// </summary>
-        /// <param name="Token"></param>
-        /// <param name="soc"></param>
-        public override void Tokenin(string Token, Socket soc)
-        { }
+         
         public override void Runcommand(byte command, string data, Socket soc)
         {
 
