@@ -154,6 +154,30 @@ namespace P2P
                 catch { }
             }
         }
+        public int ConvertToInt(byte[] list)
+        {
+            int ret = 0;
+            int i = 0;
+            foreach (byte item in list)
+            {
+                ret = ret + (item << i);
+                i = i + 8;
+            }
+            return ret;
+        }
+        public byte[] ConvertToByteList(int v)
+        {
+            List<byte> ret = new List<byte>();
+            int value = v;
+            while (value != 0)
+            {
+                ret.Add((byte)value);
+                value = value >> 8;
+            }
+            byte[] bb = new byte[ret.Count];
+            ret.CopyTo(bb);
+            return bb;
+        }
         private   byte[] AnalyticData(byte[] recBytes, int recByteLength,ref byte[] masks,ref int lens,ref int payload_len)
         {
             lens = 0;
@@ -808,14 +832,24 @@ namespace P2P
                         labe881:
                         if (tempbtye.Length > 0)
                         {
-                            #region MyRegion
+                        #region MyRegion
 
-
-                            int a = tempbtye[1];
+                        String temp = "";
+                        int a = tempbtye[1];
                             if (bytesRead > 2 + a)
                             {
-                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                               
                                 int len = 0;
+                            if (DT == DataType.bytes)
+                            {
+                                byte[] bb = new byte[a];
+                                Array.Copy(tempbtye, 2, bb, 0, a);
+
+                                len = ConvertToInt(bb);
+                            }
+                            else
+                            {
+                                 temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
                                 try
                                 {
                                     len = int.Parse(temp);
@@ -832,7 +866,9 @@ namespace P2P
                                     }
 
                                 }
-                            
+                            }
+
+                           
                                 if (tempbtye.Length == (len + 2 + a))
                                 {
                                     
@@ -1134,7 +1170,7 @@ namespace P2P
             try
             {
                 byte[] sendb = data;
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] lens = ConvertToByteList(sendb.Length); ;
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;

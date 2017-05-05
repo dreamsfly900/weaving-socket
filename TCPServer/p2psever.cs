@@ -260,6 +260,31 @@ namespace P2P
             if (receiveeventbit != null)
                 receiveeventbit(me.Command, me.Databit, me.Soc);
         }
+        public int ConvertToInt(byte[] list)
+        {
+            int ret = 0;
+            int i = 0;
+            foreach (byte item in list)
+            {
+                ret = ret + (item << i);
+                i = i + 8;
+            }
+            return ret;
+        }
+        public byte[] ConvertToByteList(int v)
+        {
+            List<byte> ret = new List<byte>();
+            int value = v;
+            while (value != 0)
+            {
+                ret.Add((byte)value);
+                value = value >> 8;
+            }
+            byte[] bb = new byte[ret.Count];
+            ret.CopyTo(bb);
+            return bb;
+        }
+
         private void packageData(object obj)
         {
 
@@ -286,11 +311,22 @@ namespace P2P
                         int a = tempbtye[1];
                         if (bytesRead > 2 + a)
                         {
-                            String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                            int len = int.Parse(temp);
 
+                           
+                            int len =0;
+                            if (DT == DataType.bytes)
+                            { byte[] bb = new byte[a];
+                                Array.Copy(tempbtye, 2, bb, 0, a);
 
-                            if ((len + 2 + a) > tempbtye.Length)
+                                len = ConvertToInt(bb);
+                            }
+                            else
+                            {
+                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                 len = int.Parse(temp);
+                            }
+
+                                if ((len + 2 + a) > tempbtye.Length)
                             {
                                 try
                                 {
@@ -330,7 +366,7 @@ namespace P2P
                             {
                                 if (DT == DataType.json)
                                 {
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                String     temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
 
                                     modelevent me = new modelevent();
                                     me.Command = tempbtye[0];
@@ -499,7 +535,7 @@ namespace P2P
             try
             {
                 byte[] sendb = text;
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] lens = ConvertToByteList(sendb.Length); 
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
