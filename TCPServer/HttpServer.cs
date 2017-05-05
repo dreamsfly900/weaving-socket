@@ -1,4 +1,5 @@
-﻿using System;
+﻿using P2P;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,7 @@ namespace TCPServer
 
      
         public class HttpProcessor
-        {
+    {
             public TcpClient socket;
             public HttpServer srv;
 
@@ -23,7 +24,7 @@ namespace TCPServer
             public String http_url;
             public String http_protocol_versionstring;
             public Hashtable httpHeaders = new Hashtable();
-
+        public String retrunData = "";
 
             private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -133,7 +134,9 @@ namespace TCPServer
             }
 
             private const int BUF_SIZE = 4096;
-            public void handlePOSTRequest()
+         
+
+        public void handlePOSTRequest()
             {
                 // this post data processing just reads everything into a memory stream.
                 // this is fine for smallish things, but for large stuff we should really
@@ -198,37 +201,156 @@ namespace TCPServer
                 outputStream.WriteLine("Connection: close");
                 outputStream.WriteLine("");
             }
+
+     
+    }
+
+    public  class HttpServer : ITcpBasehelper
+    {
+
+
+        TcpListener listener;
+        bool is_active = true;
+       protected List<HttpProcessor> listp = new List<HttpProcessor>();
+        public event myreceive receiveevent;
+        public event myreceivebit receiveeventbit;
+        public event NATthrough NATthroughevent;
+        public event UpdataListSoc EventUpdataConnSoc;
+        public event deleteListSoc EventDeleteConnSoc;
+
+        public int Port
+        { get; set; }
+
+        public HttpServer(int port)
+        {
+            Port = port;
+        }
+        public void start(int port)
+        {
+            Port = port;
+            Thread thread = new Thread(new ThreadStart(listen));
+            thread.Start();
+
         }
 
-        public abstract class HttpServer
+        public int getNum()
+        {
+            return 0;
+        }
+
+        public void xintiao(object obj)
         {
 
-            protected int port;
-            TcpListener listener;
-            bool is_active = true;
+        }
 
-            public HttpServer(int port)
+        public bool send(Socket soc, byte command, string text)
+        {
+            int i = listp.Count;
+            HttpProcessor[] hps = new HttpProcessor[i];
+            listp.CopyTo(hps);
+            foreach (HttpProcessor hp in hps)
             {
-                this.port = port;
+                if (hp.socket.Client == soc)
+                {
+                    hp.retrunData = text;
+                    return true;
+                }
             }
+            return false;
+        }
 
-            public void listen()
+        public bool send(Socket soc, byte command, byte[] data)
+        {
+            int i = listp.Count;
+            HttpProcessor[] hps = new HttpProcessor[i];
+            listp.CopyTo(hps);
+            foreach (HttpProcessor hp in hps)
             {
-                listener = new TcpListener(port);
-                listener.Start();
-                while (is_active)
+                if (hp.socket.Client == soc)
+                {
+                    hp.retrunData = Convert.ToBase64String(data);
+                    return true;
+                }
+            }
+            return false;
+        }
+        void listen()
+        {
+            listener = new TcpListener(Port);
+            listener.Start();
+            while (is_active)
+            {
+                try
                 {
                     TcpClient s = listener.AcceptTcpClient();
                     HttpProcessor processor = new HttpProcessor(s, this);
+                    listp.Add(processor);
                     Thread thread = new Thread(new ThreadStart(processor.process));
                     thread.Start();
+
                     Thread.Sleep(1);
                 }
+                catch { }
             }
-
-            public abstract void handleGETRequest(HttpProcessor p);
-            public abstract void handlePOSTRequest(HttpProcessor p, StreamReader inputData);
         }
+
+        public virtual void handleGETRequest(HttpProcessor p)
+        {
+            p.http_url = p.http_url.Substring(1);
+            string fun = p.http_url.Split('?')[1].Split('=')[0];
+            if (p.http_url == "")
+                return;
+            byte command = Convert.ToByte(p.http_url.Substring(0, 1), 16);
+            string data = p.http_url.Split('&')[1];
+            p.writeSuccess();
+            p.outputStream.WriteLine(fun + "(");
+            getdata(p, command, data);
+            p.outputStream.WriteLine(")");
+        }
+        public virtual void handlePOSTRequest(HttpProcessor p, StreamReader inputData)
+        {
+            p.http_url = p.http_url.Substring(1);
+            if (p.http_url == "")
+                return;
+            byte command = Convert.ToByte(p.http_url, 16);
+            string data = inputData.ReadToEnd();
+            p.writeSuccess();
+            getdata(p, command, data);
+        }
+
+        public bool getdata(HttpProcessor p, byte command, string data)
+        {
+             
+                      receiveevent?.Invoke(command, data, p.socket.Client);
+                      receiveeventbit?.Invoke(command,  Convert.FromBase64String(data), p.socket.Client);
+                        int count = 0;
+                        while (p.retrunData== "")
+                        {
+                            System.Threading.Thread.Sleep(200);
+                            if (count > 450)
+                            {
+                                p.outputStream.WriteLine("响应超时");
+                                return false;
+                            }
+                            count++;
+                        }
+                        p.outputStream.WriteLine(p.retrunData);
+               p.retrunData = "";
+
+            int i = listp.Count;
+            HttpProcessor[] hps = new HttpProcessor[i];
+            listp.CopyTo(hps);
+            foreach (HttpProcessor hp in hps)
+            {
+                if (hp == p)
+                {
+                    listp.Remove(p);
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 
       
 

@@ -7,10 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using TCPServer;
 
 namespace cloud
 {
-    public enum portType { web,json, bytes }
+    public enum portType { web,json, bytes,http }
     public class ServerPort
     {
        public portType PortType { get; set; }
@@ -27,12 +28,12 @@ namespace cloud
         public event Mylog EventMylog;
         List<online> onlines = new List<online>();
         bool opentoken = false;
-        List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
+     public    List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
         public bool Run(MyInterface.MyInterface myI)
         {
             // Mycommand comm = new Mycommand(, connectionString);
 
-
+          
 
             ReloadFlies();
 
@@ -67,6 +68,11 @@ namespace cloud
                 else if (sp.PortType == portType.bytes)
                 {
                     p2psev = new p2psever(DataType.bytes);
+                    p2psev.receiveeventbit += P2psev_receiveeventbit;
+                }
+                else if (sp.PortType == portType.http)
+                {
+                    p2psev = new HttpServer(sp.Port);
                 }
                 p2psev.receiveevent += p2psev_receiveevent;
                 p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
@@ -76,6 +82,12 @@ namespace cloud
                 p2psevlist.Add(p2psev);
             }
         }
+
+        private void P2psev_receiveeventbit(byte command, byte[] data, System.Net.Sockets.Socket soc)
+        {
+           //咱未实现
+        }
+
         public void ReloadFlies()
         {
             try
@@ -178,6 +190,7 @@ namespace cloud
 
                             try
                             {
+                                exec2(0xff, "out|" + ol.Token, ol.Soc);
                                 CI.MyICommand.Tokenout(ol);
                             }
                             catch (Exception ex)
@@ -238,6 +251,7 @@ namespace cloud
 
                                 try
                                 {
+                                    exec2(0xff, "in|" + ol.Token, ol.Soc);
                                     CI.MyICommand.Tokenin(ol);
                                 }
                                 catch (Exception ex)

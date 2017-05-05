@@ -135,6 +135,17 @@ namespace cloud
                 // _0x01.
             }
             p.outputStream.WriteLine("不能找到指定的服务");
+            int i = listp.Count;
+            HttpProcessor[] hps = new HttpProcessor[i];
+            listp.CopyTo(hps);
+            foreach (HttpProcessor hp in hps)
+            {
+                if (hp == p)
+                {
+                    listp.Remove(p);
+                    return true;
+                }
+            }
             return false;
         }
         public override void handlePOSTRequest(HttpProcessor p, StreamReader inputData)

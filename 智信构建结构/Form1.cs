@@ -30,7 +30,8 @@ namespace 智信构建结构
         TCPcloud t = new TCPcloud();
         private void button1_Click(object sender, EventArgs e)
         {
-            if(txt_IP.Text!="" && txt_port.Text!="")
+          
+            if (txt_IP.Text!="" && txt_port.Text!="")
             {
                 //验证IP地址和端口号的格式
                 int portNum;
@@ -81,7 +82,12 @@ namespace 智信构建结构
             if (radioButton2.Checked)
             {
                 sp.PortType = portType.web;
-                listBox1.Items.Add("WEB端口"+ sp.Port);
+                listBox1.Items.Add("WEB端口" + sp.Port);
+            }
+            else if (radioButton3.Checked)
+            {
+                sp.PortType = portType.http;
+                listBox1.Items.Add("HTTP端口" + sp.Port);
             }
             else
             {

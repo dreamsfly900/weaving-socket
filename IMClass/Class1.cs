@@ -89,8 +89,13 @@ namespace IMClass
                 try { SendRoot<say>(du.soc, 0x31, "say", s, 0, du.token);  } catch { }
             }
         }
-       
-         
+        [InstallFun("forever")]
+        public void Getnum(Socket soc, _baseModel _0x01)
+        {
+              SendRoot<String>(soc,0x31,"getnum", listsoc.Count.ToString(),0, _0x01.Token);
+        }
+
+
         public override void Runcommand(byte command, string data, Socket soc)
         {
 

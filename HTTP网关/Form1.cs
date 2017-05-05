@@ -30,8 +30,7 @@ namespace HTTP网关
           
             httpServer = new MyHttpServer(Convert.ToInt32(toolStripTextBox1.Text));
             httpServer.EventMylog += HttpServer_EventMylog;
-            Thread thread = new Thread(new ThreadStart(httpServer.listen));
-            thread.Start();
+            httpServer.start(Convert.ToInt32(toolStripTextBox1.Text));
             textBox1.Text = toolStripTextBox1.Text+"端口已启动，可以接收HTTP请求";
         }
         public delegate void Mylog(Control c, string log);
