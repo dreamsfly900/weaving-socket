@@ -235,7 +235,7 @@ namespace TCPServer
 
         public int getNum()
         {
-            return 0;
+            return listp.Count;
         }
 
         public void xintiao(object obj)
