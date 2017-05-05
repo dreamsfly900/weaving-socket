@@ -218,6 +218,30 @@ namespace client
                 return false;
             }
         }
+        public int ConvertToInt(byte[] list)
+        {
+            int ret = 0;
+            int i = 0;
+            foreach (byte item in list)
+            {
+                ret = ret + (item << i);
+                i = i + 8;
+            }
+            return ret;
+        }
+        public byte[] ConvertToByteList(int v)
+        {
+            List<byte> ret = new List<byte>();
+            int value = v;
+            while (value != 0)
+            {
+                ret.Add((byte)value);
+                value = value >> 8;
+            }
+            byte[] bb = new byte[ret.Count];
+            ret.CopyTo(bb);
+            return bb;
+        }
 
         void udp_receiveevent(byte command, string data, EndPoint iep)
         {
@@ -305,7 +329,7 @@ namespace client
             {
           
                 byte[] sendb = text;
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] lens = ConvertToByteList(sendb.Length);
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
@@ -395,16 +419,28 @@ namespace client
                             int a = tempbtye[1];
                             if (bytesRead > 2 + a)
                             {
-                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
                                 int len = 0;
-                                try
+                                if (DT == DataType.bytes)
                                 {
-                                    len = int.Parse(temp);
-                                    if (len == 0)
-                                    { ListData.RemoveAt(0); continue; }
+                                    byte[] bb = new byte[a];
+                                    Array.Copy(tempbtye, 2, bb, 0, a);
+
+                                    len = ConvertToInt(bb);
                                 }
-                                catch
-                                { }
+                                else
+                                {
+                                    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                     len = 0;
+                                    try
+                                    {
+                                        len = int.Parse(temp);
+                                        if (len == 0)
+                                        { ListData.RemoveAt(0); continue; }
+                                    }
+                                    catch
+                                    { }
+                                }
+                          
                                 labered:
                                 try
                                 {
@@ -448,7 +484,7 @@ namespace client
                                 {
                                     if (DT == DataType.json)
                                     {
-                                        temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                       string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.date = temp;
