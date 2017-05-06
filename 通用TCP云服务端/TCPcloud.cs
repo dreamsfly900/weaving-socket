@@ -190,7 +190,10 @@ namespace cloud
 
                             try
                             {
-                                exec2(0xff, "out|" + ol.Token, ol.Soc);
+                                if (opentoken)
+                                {
+                                    exec2(0xff, "out|" + ol.Token, ol.Soc);
+                                }
                                 CI.MyICommand.Tokenout(ol);
                             }
                             catch (Exception ex)
