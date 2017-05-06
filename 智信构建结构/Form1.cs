@@ -30,7 +30,7 @@ namespace 智信构建结构
         TCPcloud t = new TCPcloud();
         private void button1_Click(object sender, EventArgs e)
         {
-          
+            timer1.Stop();
             if (txt_IP.Text!="" && txt_port.Text!="")
             {
                 //验证IP地址和端口号的格式
@@ -57,6 +57,7 @@ namespace 智信构建结构
                     {
                         t.AddProt(listsp);
                         lab_info.Text = "启动成功！";
+                        timer1.Start();
                         //t.ReloadFlies();//重新加载插件
                     }
                 }else
@@ -102,6 +103,15 @@ namespace 智信构建结构
            
             listsp.Add(sp);
            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            listBox2.Items.Clear();
+            foreach (var item in t.p2psevlist)
+            {
+                listBox2.Items.Add("端口："+ item.Port+"  连接人数："+ item.getNum());
+            }
         }
     }
 }
