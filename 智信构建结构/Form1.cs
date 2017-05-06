@@ -43,10 +43,12 @@ namespace 智信构建结构
                     { str += "|web"; }
                     else
                     { str += "|"; }
-                    if (checkBox1.Checked)
-                    { str += "|token"; }
-                    else
-                    { str += "|"; }
+                    //if (checkBox1.Checked)
+                    //{ str += "|token"; }
+                    //else
+                    //{
+                        str += "|";
+                   // }
                     MyInterface.MyInterface mif = new MyInterface.MyInterface();
                     mif.Parameter = str.Split('|');
                    
@@ -78,7 +80,9 @@ namespace 智信构建结构
         private void button2_Click(object sender, EventArgs e)
         {
             ServerPort sp = new ServerPort();
-            sp.Port = Convert.ToInt32(txt_port.Text);
+            if (checkBox1.Checked)
+                sp.Istoken = true;
+                sp.Port = Convert.ToInt32(txt_port.Text);
             if (radioButton2.Checked)
             {
                 sp.PortType = portType.web;

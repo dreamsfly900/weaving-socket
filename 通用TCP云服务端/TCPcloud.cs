@@ -16,8 +16,19 @@ namespace cloud
     {
        public portType PortType { get; set; }
         public int Port { get; set; }
-    }
+        public bool Istoken {
+            get {  return istoken; }
+            set { istoken = value; }
+        }
 
+        bool istoken = false;
+         
+    }
+    public class TcpToken
+    {
+        public ITcpBasehelper p2psev;
+        public bool istoken;
+    }
     public class TCPcloud : Universal
     {
         
@@ -29,6 +40,7 @@ namespace cloud
         List<online> onlines = new List<online>();
         bool opentoken = false;
      public    List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
+          List<TcpToken> TcpTokenlist = new List<TcpToken>();
         public bool Run(MyInterface.MyInterface myI)
         {
             // Mycommand comm = new Mycommand(, connectionString);
@@ -37,14 +49,14 @@ namespace cloud
 
             ReloadFlies();
 
-            if (myI.Parameter[6] == "token")
-            {
-                opentoken = true;
-            }
-            else
-            {
-                opentoken = false;
-            }
+            //if (myI.Parameter[6] == "token")
+            //{
+            //    opentoken = true;
+            //}
+            //else
+            //{
+            //    opentoken = false;
+            //}
            
             qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
             if (EventMylog != null)
@@ -79,6 +91,10 @@ namespace cloud
                 p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
                 //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
                 p2psev.start(Convert.ToInt32(sp.Port));//myI.Parameter[4]是端口号
+                TcpToken tt = new TcpToken();
+                tt.p2psev = p2psev;
+                tt.istoken = sp.Istoken;
+                TcpTokenlist.Add(tt);
                 p2psevlist.Add(p2psev);
             }
         }
@@ -190,10 +206,7 @@ namespace cloud
 
                             try
                             {
-                                if (opentoken)
-                                {
-                                    exec2(0xff, "out|" + ol.Token, ol.Soc);
-                                }
+                                exec2(0xff, "out|" + ol.Token, ol.Soc); 
                                 CI.MyICommand.Tokenout(ol);
                             }
                             catch (Exception ex)
@@ -236,13 +249,15 @@ namespace cloud
 
             }
             catch { }
-            if (opentoken)
+            
+             
+            foreach (TcpToken itp in TcpTokenlist)
             {
-                String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000,9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-                foreach (ITcpBasehelper itp in p2psevlist)
+                if (itp.istoken)
                 {
-                    if (itp.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
-                        if (itp.send(soc, 0xff, "token|" + Token + ""))
+                    String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                    if (itp.p2psev.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                        if (itp.p2psev.send(soc, 0xff, "token|" + Token + ""))
                         {
 
                             online ol = new online();
@@ -267,8 +282,9 @@ namespace cloud
                             return;
                         }
                 }
-               
             }
+               
+            
             //try
             //{
             //    int count = onlines.Count;
