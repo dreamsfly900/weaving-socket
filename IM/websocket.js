@@ -19,9 +19,10 @@
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
 
-
+        var tempthis = this;
         ws.onopen = function (event) { options.conn(this.readyState); };
         var timeout;
+        
         ws.onmessage = function (evt) {
             try {
                 var bytesRead = evt.data.length;
@@ -60,8 +61,22 @@
                         options.jump(text.split('|')[1]);
                 }
                 else
-                    if (options.recData != null)
+                    if (options.recData != null) {
                         options.recData(text);
+                        var len = tempthis.listListen.length; 
+                        for (var i = 0; i < len; i++) {
+                            try {
+                                var data = eval("(" + text + ")");
+                            } catch (e) {
+                                alert('返回的内容错误：不是JSON格式');
+                            }
+                       
+                            if (tempthis.listListen[i].name==data['Request'])
+                                tempthis.listListen[i](tempbtye[0],data['Root'], data);
+                        }
+
+                       
+                    }
             } catch (e) { alert(e.message); }
             //   alert("接收到服务器发送的数据：\r\n" + text);
 
@@ -119,9 +134,16 @@
 
 }
 UDCsocket.prototype = {
+    listListen: new Array(),
     soc: null,
     takon: "",
-    jump:null,
+    jump: null,
+    AddListenmethod: function (fun) {
+        //  alert(str);
+
+        this.listListen.push(fun);
+
+    },
     settakon: function (str) {
         //  alert(str);
 

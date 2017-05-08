@@ -17,14 +17,18 @@
     // 连接服务端
     function connect() {
         socket = new UDCsocket({
-            ip: '127.0.0.1', port: 8990, conn: onopen
+            ip: '127.0.0.1', port: 11001, conn: onopen
                 , recData: onmessage
                 , close: function () { alert("连接关闭"); }
                  , error: function (msg) { alert("连接错误" + msg); }
                   , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器：" + ip); }
         });
+        socket.AddListenmethod(login);
     }
-     
+    function login(command,jsonRoot, jsondata) {
+        alert("服务端返回了登陆的内容。" + JSON.stringify(jsonRoot));
+       
+    }
     // 连接建立时发送登录信息
     function onopen(msg)
     {
