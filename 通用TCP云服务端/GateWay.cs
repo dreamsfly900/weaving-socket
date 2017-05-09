@@ -95,7 +95,7 @@ namespace cloud
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFlies));
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesway));
         }
-
+        
         protected void ReloadFlies(object obj)
         {
             try
@@ -111,26 +111,42 @@ namespace cloud
                 CommandItemS.Clear();
                 XmlDocument xml = new XmlDocument();
                 xml.Load("node.xml");
+                List<P2Pclient> listip = new List<P2Pclient>();
                 foreach (XmlNode xn in xml.FirstChild.ChildNodes)
                 {
                     CommandItem ci = new CommandItem();
                     ci.Ip = xn.Attributes["ip"].Value;
                     ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
-                    P2Pclient p2p=  new P2Pclient(false);
-
-                    p2p.receiveServerEvent +=( V_receiveServerEvent);
-                    p2p.timeoutevent +=( V_timeoutevent);
-                    p2p.ErrorMge +=( V_ErrorMge);
-                    if (p2p.start(ci.Ip, ci.Port, false))
+                    bool isnewlink = true;
+                    foreach (P2Pclient str in listip)
                     {
-                        ci.Client.Add(p2p);
-                        CommandItemS.Add(ci);
+                        if ((str.IP+"|"+str.PORT) == (ci.Ip + "|" + ci.Port))
+                        {
+                            ci.Client.Add(str);
+                            CommandItemS.Add(ci);
+                            isnewlink = false;
+                            break;
+                        }
                     }
-                    else
+                    if (isnewlink)
                     {
-                        if (EventMylog != null)
-                            EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
+                        P2Pclient p2p = new P2Pclient(false);
+
+                        p2p.receiveServerEvent += (V_receiveServerEvent);
+                        p2p.timeoutevent += (V_timeoutevent);
+                        p2p.ErrorMge += (V_ErrorMge);
+                        if (p2p.start(ci.Ip, ci.Port, false))
+                        {
+                            listip.Add(p2p);
+                            ci.Client.Add(p2p);
+                            CommandItemS.Add(ci);
+                        }
+                        else
+                        {
+                            if (EventMylog != null)
+                                EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
+                        }
                     }
                 }
             }
@@ -307,18 +323,33 @@ namespace cloud
                     int len = (temp + (Proportion - 1)) % Proportion;
                 if (len == 0)
                 {
-                   
+                    List<P2Pclient> listip = new List<P2Pclient>();
                     foreach (CommandItem ci in CommandItemS)
                     {
                         if (ci.Client.Count>((temp+ Proportion) / Proportion))
                             return;
-                        P2Pclient p2p = new P2Pclient(false);
-                        p2p.receiveServerEvent += (V_receiveServerEvent);
-                        p2p.timeoutevent += (V_timeoutevent);
-                        p2p.ErrorMge += (V_ErrorMge);
-                        if (p2p.start(ci.Ip, ci.Port, false))
+                        bool isnewlink = true;
+                        foreach (P2Pclient str in listip)
                         {
-                            ci.Client.Add(p2p);
+                            if ((str.IP + "|" + str.PORT) == (ci.Ip + "|" + ci.Port))
+                            {
+                                ci.Client.Add(str);
+                                CommandItemS.Add(ci);
+                                isnewlink = false;
+                                break;
+                            }
+                        }
+                        if (isnewlink)
+                        {
+                            P2Pclient p2p = new P2Pclient(false);
+                            p2p.receiveServerEvent += (V_receiveServerEvent);
+                            p2p.timeoutevent += (V_timeoutevent);
+                            p2p.ErrorMge += (V_ErrorMge);
+                            if (p2p.start(ci.Ip, ci.Port, false))
+                            {
+                                listip.Add(p2p);
+                                ci.Client.Add(p2p);
+                            }
                         }
 
                     }
