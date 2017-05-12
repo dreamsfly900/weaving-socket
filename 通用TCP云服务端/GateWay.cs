@@ -513,7 +513,7 @@ namespace cloud
                                 ConnObjlist[i] = null;
                                 return;
                             }
-                            catch (Exception e){ EventMylog("移除用户", e.Message); }
+                            catch (Exception e){ EventMylog("移除用户11111", e.Message); }
                         }
                   
                 }

@@ -11,24 +11,7 @@ using TCPServer;
 
 namespace cloud
 {
-    public enum portType { web,json, bytes,http }
-    public class ServerPort
-    {
-       public portType PortType { get; set; }
-        public int Port { get; set; }
-        public bool Istoken {
-            get {  return istoken; }
-            set { istoken = value; }
-        }
-
-        bool istoken = false;
-         
-    }
-    public class TcpToken
-    {
-        public ITcpBasehelper p2psev;
-        public bool istoken;
-    }
+   
     public class TCPcloud : Universal
     {
         
@@ -41,6 +24,7 @@ namespace cloud
         bool opentoken = false;
      public    List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
           List<TcpToken> TcpTokenlist = new List<TcpToken>();
+      
         public bool Run(MyInterface.MyInterface myI)
         {
             // Mycommand comm = new Mycommand(, connectionString);
@@ -69,6 +53,7 @@ namespace cloud
             foreach (ServerPort sp in listServerPort)
             {
                 ITcpBasehelper p2psev=null;
+                TcpToken tt = new TcpToken();
                 if (sp.PortType == portType.web)
                 {
                     p2psev = new Webp2psever();
@@ -80,7 +65,10 @@ namespace cloud
                 else if (sp.PortType == portType.bytes)
                 {
                     p2psev = new p2psever(DataType.bytes);
+                    if (sp.BytesDataparsing == null) { throw new Exception("BytesDataparsing对象不能是空，请完成对应接口的实现。"); }
+                    tt.BytesDataparsing = sp.BytesDataparsing;
                     p2psev.receiveeventbit += P2psev_receiveeventbit;
+
                 }
                 else if (sp.PortType == portType.http)
                 {
@@ -91,7 +79,8 @@ namespace cloud
                 p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
                 //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
                 p2psev.start(Convert.ToInt32(sp.Port));//myI.Parameter[4]是端口号
-                TcpToken tt = new TcpToken();
+             
+                tt.PortType = sp.PortType;
                 tt.p2psev = p2psev;
                 tt.istoken = sp.Istoken;
                 TcpTokenlist.Add(tt);
@@ -101,7 +90,45 @@ namespace cloud
 
         private void P2psev_receiveeventbit(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
-           //咱未实现
+            try
+            {
+                // JSON.parse<_baseModel>(data);// 
+                _baseModel _0x01 = null;
+                try
+                {
+                    foreach (TcpToken itp in TcpTokenlist)
+
+                    {
+                        if (itp.PortType == portType.bytes)
+                        {
+                            _0x01 = itp.BytesDataparsing.Get_baseModel(data);//二进制转_baseModel
+                            itp.BytesDataparsing.socketvalidation(_0x01);//验证_baseModel
+
+                            if (command == 0xff)
+                            {
+                                exec2(command, _0x01.Getjson(), soc);
+                            }
+                            else
+                            {
+                                exec(command, _0x01.Getjson(), soc);
+                            }
+                        }
+                    }
+
+
+                }
+                catch
+                {
+                    EventMylog("JSON解析错误：", "" + data);
+
+                    return;
+                }  
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("p2psev_receiveevent----", ex.Message);
+            }
         }
 
         public void ReloadFlies()
@@ -123,7 +150,7 @@ namespace cloud
                                 CommandItem ci = new CommandItem();
                                 object obj = ab.CreateInstance(t.FullName);
                                 TCPCommand Ic = obj as TCPCommand;
-                                Ic.SetGlobalQueueTable(qt, p2psevlist);
+                                Ic.SetGlobalQueueTable(qt, TcpTokenlist);
                                 ci.MyICommand = Ic;
                                 ci.CommName = Ic.Getcommand();
 
@@ -255,9 +282,20 @@ namespace cloud
             {
                 if (itp.istoken)
                 {
-                    String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                  
+                  
+
+                        String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+
                     if (itp.p2psev.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
-                        if (itp.p2psev.send(soc, 0xff, "token|" + Token + ""))
+                    {
+                        bool sendok = false;
+                        if (itp.PortType == portType.bytes) 
+                            sendok = itp.p2psev.send(soc, 0xff, itp.BytesDataparsing.Get_ByteBystring("token|" + Token + "")); 
+                        else
+                            sendok = itp.p2psev.send(soc, 0xff, "token|" + Token + "");
+                        
+                        if (sendok)
                         {
 
                             online ol = new online();
@@ -281,6 +319,8 @@ namespace cloud
                             }
                             return;
                         }
+                    }
+                    
                 }
             }
                
