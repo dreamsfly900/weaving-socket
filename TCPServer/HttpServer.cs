@@ -297,9 +297,10 @@ namespace TCPServer
         public virtual void handleGETRequest(HttpProcessor p)
         {
             p.http_url = p.http_url.Substring(1);
-            string fun = p.http_url.Split('?')[1].Split('=')[0];
+           // string fun = p.http_url.Split('?')[1].Split('=')[0];
             if (p.http_url == "")
                 return;
+            string fun = p.http_url.Split('?')[1].Split('=')[0];
             byte command = Convert.ToByte(p.http_url.Substring(0, 1), 16);
             string data = p.http_url.Split('&')[1];
             p.writeSuccess();
