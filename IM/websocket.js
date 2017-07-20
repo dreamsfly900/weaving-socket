@@ -77,7 +77,7 @@
 
                        
                     }
-            } catch (e) { alert(e.message); }
+            } catch (e) { alert(e.message+'324242342'); }
             //   alert("接收到服务器发送的数据：\r\n" + text);
 
 

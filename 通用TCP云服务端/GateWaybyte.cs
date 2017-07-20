@@ -538,11 +538,11 @@ namespace cloud
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + temp;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-                cobj.Id = temp;
-                cobj.Soc = soc;
-                ConnObjlist[temp] = cobj;
-                p2psev.send(soc, 0xff, idp.Get_ByteBystring("token|" + cobj.Token + ""));
+                //cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + temp;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                //cobj.Id = temp;
+                //cobj.Soc = soc;
+                //ConnObjlist[temp] = cobj;
+                //p2psev.send(soc, 0xff, idp.Get_ByteBystring("token|" + cobj.Token + ""));
 
                 //if (p2psev.send(ConnObjlist[temp].Soc, 0xff, "token|" + cobj.Token + ""))
                 //{

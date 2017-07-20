@@ -154,7 +154,7 @@ namespace cloud
             p.http_url = p.http_url.Substring(1);
             if (p.http_url == "")
                 return;
-            byte command = Convert.ToByte(p.http_url, 16);
+            byte command = Convert.ToByte(p.http_url);
             string data = inputData.ReadToEnd();
             p.writeSuccess();
             getdata(p, command, data);

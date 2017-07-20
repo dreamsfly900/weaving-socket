@@ -102,7 +102,7 @@ namespace cloud
                         if (itp.PortType == portType.bytes)
                         {
                             _0x01 = itp.BytesDataparsing.Get_baseModel(data);//二进制转_baseModel
-                            itp.BytesDataparsing.socketvalidation(_0x01);//验证_baseModel
+                           
 
                             if (command == 0xff)
                             {
@@ -110,6 +110,7 @@ namespace cloud
                             }
                             else
                             {
+                                if (itp.BytesDataparsing.socketvalidation(_0x01)) //验证_baseModel
                                 exec(command, _0x01.Getjson(), soc);
                             }
                         }
