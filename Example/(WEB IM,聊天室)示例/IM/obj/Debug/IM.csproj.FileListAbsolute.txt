@@ -1,0 +1,68 @@
+D:\Weaving-Socket\IM\bin\ApplicationInsights.config
+D:\Weaving-Socket\IM\bin\IM.dll.config
+D:\Weaving-Socket\IM\bin\IM.dll
+D:\Weaving-Socket\IM\bin\IM.pdb
+D:\Weaving-Socket\IM\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.DependencyCollector.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.Web.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.WindowsServer.dll
+D:\Weaving-Socket\IM\bin\Microsoft.ApplicationInsights.dll
+D:\Weaving-Socket\IM\bin\Microsoft.Diagnostics.Tracing.EventSource.dll
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.dll
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.Extensions.dll
+D:\Weaving-Socket\IM\bin\System.IO.dll
+D:\Weaving-Socket\IM\bin\System.Runtime.dll
+D:\Weaving-Socket\IM\bin\System.Threading.Tasks.dll
+D:\Weaving-Socket\IM\bin\Microsoft.AI.DependencyCollector.xml
+D:\Weaving-Socket\IM\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Weaving-Socket\IM\bin\Microsoft.AI.Web.xml
+D:\Weaving-Socket\IM\bin\Microsoft.AI.WindowsServer.xml
+D:\Weaving-Socket\IM\bin\Microsoft.ApplicationInsights.xml
+D:\Weaving-Socket\IM\bin\Microsoft.Diagnostics.Tracing.EventSource.xml
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.xml
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.Extensions.xml
+D:\Weaving-Socket\IM\bin\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\Weaving-Socket\IM\bin\System.IO.xml
+D:\Weaving-Socket\IM\bin\System.Runtime.xml
+D:\Weaving-Socket\IM\bin\System.Threading.Tasks.xml
+D:\Weaving-Socket\IM\obj\Debug\IM.csproj.App.config
+D:\Weaving-Socket\IM\obj\Debug\IM.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\IM\obj\Debug\IM.dll
+D:\Weaving-Socket\IM\obj\Debug\IM.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\ApplicationInsights.config
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\IM.dll.config
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\IM.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\IM.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.DependencyCollector.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.Web.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.WindowsServer.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.ApplicationInsights.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Diagnostics.Tracing.EventSource.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.Extensions.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.IO.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.Runtime.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.Threading.Tasks.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.DependencyCollector.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.Web.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.AI.WindowsServer.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.ApplicationInsights.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Diagnostics.Tracing.EventSource.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.Extensions.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.IO.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.Runtime.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\bin\System.Threading.Tasks.xml
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\obj\Debug\IM.csproj.App.config
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\obj\Debug\IM.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\obj\Debug\IM.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IM\obj\Debug\IM.pdb

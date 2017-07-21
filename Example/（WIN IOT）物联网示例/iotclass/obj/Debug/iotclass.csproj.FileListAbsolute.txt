@@ -1,0 +1,24 @@
+D:\Weaving-Socket\iotclass\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\iotclass\bin\Debug\UDTLibary.dll
+D:\Weaving-Socket\iotclass\bin\Debug\iotclass.dll
+D:\Weaving-Socket\iotclass\bin\Debug\iotclass.pdb
+D:\Weaving-Socket\iotclass\bin\Debug\MyInterface.dll
+D:\Weaving-Socket\iotclass\bin\Debug\Newtonsoft.Json.dll
+D:\Weaving-Socket\iotclass\bin\Debug\TCPServer.dll
+D:\Weaving-Socket\iotclass\bin\Debug\MyInterface.pdb
+D:\Weaving-Socket\iotclass\bin\Debug\TCPServer.pdb
+D:\Weaving-Socket\iotclass\obj\Debug\iotclass.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\iotclass\obj\Debug\iotclass.dll
+D:\Weaving-Socket\iotclass\obj\Debug\iotclass.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\UDTLibary.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\iotclass.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\iotclass.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\MyInterface.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\Newtonsoft.Json.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\TCPServer.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\MyInterface.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\TCPServer.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.pdb

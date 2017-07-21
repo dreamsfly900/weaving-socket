@@ -1,0 +1,3 @@
+﻿<root>
+ <dtu  ip="127.0.0.1" port="9999" Commfun="DTUtest" ></dtu>
+</root>

@@ -1,0 +1,23 @@
+D:\Weaving-Socket\IMClass\obj\Debug\IMClass.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\IMClass\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\IMClass\bin\Debug\UDTLibary.dll
+D:\Weaving-Socket\IMClass\bin\Debug\IMClass.dll
+D:\Weaving-Socket\IMClass\bin\Debug\IMClass.pdb
+D:\Weaving-Socket\IMClass\bin\Debug\MyInterface.dll
+D:\Weaving-Socket\IMClass\bin\Debug\Newtonsoft.Json.dll
+D:\Weaving-Socket\IMClass\bin\Debug\TCPServer.dll
+D:\Weaving-Socket\IMClass\bin\Debug\MyInterface.pdb
+D:\Weaving-Socket\IMClass\bin\Debug\TCPServer.pdb
+D:\Weaving-Socket\IMClass\obj\Debug\IMClass.dll
+D:\Weaving-Socket\IMClass\obj\Debug\IMClass.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\obj\Debug\IMClass.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\obj\Debug\IMClass.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\obj\Debug\IMClass.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\UDTLibary.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\IMClass.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\IMClass.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\MyInterface.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\TCPServer.dll
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\MyInterface.pdb
+D:\Weaving-Socket\Example\(WEB IM,聊天室)示例\IMClass\bin\Debug\TCPServer.pdb

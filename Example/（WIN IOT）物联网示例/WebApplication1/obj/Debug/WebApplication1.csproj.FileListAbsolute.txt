@@ -1,0 +1,68 @@
+D:\Weaving-Socket\WebApplication1\bin\ApplicationInsights.config
+D:\Weaving-Socket\WebApplication1\bin\WebApplication1.dll.config
+D:\Weaving-Socket\WebApplication1\bin\WebApplication1.dll
+D:\Weaving-Socket\WebApplication1\bin\WebApplication1.pdb
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.DependencyCollector.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.Web.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.WindowsServer.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.ApplicationInsights.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Diagnostics.Tracing.EventSource.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.dll
+D:\Weaving-Socket\WebApplication1\bin\System.IO.dll
+D:\Weaving-Socket\WebApplication1\bin\System.Runtime.dll
+D:\Weaving-Socket\WebApplication1\bin\System.Threading.Tasks.dll
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.DependencyCollector.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.Web.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.AI.WindowsServer.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.ApplicationInsights.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Diagnostics.Tracing.EventSource.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.xml
+D:\Weaving-Socket\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\Weaving-Socket\WebApplication1\bin\System.IO.xml
+D:\Weaving-Socket\WebApplication1\bin\System.Runtime.xml
+D:\Weaving-Socket\WebApplication1\bin\System.Threading.Tasks.xml
+D:\Weaving-Socket\WebApplication1\obj\Debug\WebApplication1.csproj.App.config
+D:\Weaving-Socket\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\WebApplication1\obj\Debug\WebApplication1.dll
+D:\Weaving-Socket\WebApplication1\obj\Debug\WebApplication1.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\ApplicationInsights.config
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\WebApplication1.dll.config
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\WebApplication1.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\WebApplication1.pdb
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.DependencyCollector.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.Web.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.WindowsServer.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.ApplicationInsights.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Diagnostics.Tracing.EventSource.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.IO.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.Runtime.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.Threading.Tasks.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.DependencyCollector.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.Web.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.AI.WindowsServer.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.ApplicationInsights.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Diagnostics.Tracing.EventSource.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.IO.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.Runtime.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\bin\System.Threading.Tasks.xml
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\obj\Debug\WebApplication1.csproj.App.config
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\obj\Debug\WebApplication1.dll
+D:\Weaving-Socket\Example\（WIN IOT）物联网示例\WebApplication1\obj\Debug\WebApplication1.pdb

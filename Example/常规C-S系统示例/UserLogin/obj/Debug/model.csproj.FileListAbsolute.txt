@@ -1,0 +1,9 @@
+D:\Weaving-Socket\UserLogin\bin\Debug\UserLogin.dll
+D:\Weaving-Socket\UserLogin\bin\Debug\UserLogin.pdb
+D:\Weaving-Socket\UserLogin\obj\Debug\UserLogin.dll
+D:\Weaving-Socket\UserLogin\obj\Debug\UserLogin.pdb
+D:\Weaving-Socket\Example\常规C-S系统示例\UserLogin\bin\Debug\UserLogin.dll
+D:\Weaving-Socket\Example\常规C-S系统示例\UserLogin\bin\Debug\UserLogin.pdb
+D:\Weaving-Socket\Example\常规C-S系统示例\UserLogin\obj\Debug\model.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\常规C-S系统示例\UserLogin\obj\Debug\UserLogin.dll
+D:\Weaving-Socket\Example\常规C-S系统示例\UserLogin\obj\Debug\UserLogin.pdb

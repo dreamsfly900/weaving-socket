@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<root>
-   <title Name="标识号" Index="0" ID="Id" Visiable="false"></title>
-  <title Name="用户名" Index="1" ID="username" Visiable="true"></title>
-  <title Name="密码" Index="2" ID="password" Visiable="false"></title>
-  <title Name="授权" Index="3" ID="sign" Visiable="false"></title>
-  <title Name="部门" Index="4" ID="area" Visiable="true"></title>
-  <title Name="删除" Index="5" ID="Oper" Visiable="true"></title>
-</root>
