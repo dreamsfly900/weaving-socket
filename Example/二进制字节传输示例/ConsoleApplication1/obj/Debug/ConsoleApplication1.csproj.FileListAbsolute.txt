@@ -1,0 +1,14 @@
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\UDTLibary.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\MyInterface.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\TCPclient.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Newtonsoft.Json.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\TCPServer.dll
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\MyInterface.pdb
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\TCPclient.pdb
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\TCPServer.pdb
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb

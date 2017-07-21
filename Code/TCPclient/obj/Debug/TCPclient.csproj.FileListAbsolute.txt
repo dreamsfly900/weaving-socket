@@ -1,5 +1,3 @@
-D:\Weaving-Socket\Code\TCPclient\bin\Debug\UDTCommon.dll
-D:\Weaving-Socket\Code\TCPclient\bin\Debug\UDTLibary.dll
 D:\Weaving-Socket\Code\TCPclient\bin\Debug\TCPclient.dll
 D:\Weaving-Socket\Code\TCPclient\bin\Debug\TCPclient.pdb
 D:\Weaving-Socket\Code\TCPclient\bin\Debug\MyInterface.dll
@@ -9,3 +7,5 @@ D:\Weaving-Socket\Code\TCPclient\bin\Debug\TCPServer.pdb
 D:\Weaving-Socket\Code\TCPclient\obj\Debug\TCPclient.csprojResolveAssemblyReference.cache
 D:\Weaving-Socket\Code\TCPclient\obj\Debug\TCPclient.dll
 D:\Weaving-Socket\Code\TCPclient\obj\Debug\TCPclient.pdb
+D:\Weaving-Socket\Code\TCPclient\bin\Debug\UDTCommon.dll
+D:\Weaving-Socket\Code\TCPclient\bin\Debug\UDTLibary.dll

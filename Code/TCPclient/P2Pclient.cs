@@ -136,6 +136,7 @@ namespace client
         {
             DT = _DT;
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            
             xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
         
 
