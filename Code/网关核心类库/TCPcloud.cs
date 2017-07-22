@@ -1,142 +1,125 @@
-﻿using MyInterface;
-using P2P;
-using StandardModel;
+﻿using WeaveBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Xml;
-using TCPServer;
-
+using SocketServer;
 namespace cloud
 {
-   
-    public class TCPcloud : Universal
+    public class WeaveTCPcloud : IWeaveUniversal
     {
-        
-        XmlDocument xml = new XmlDocument();
-        List<CommandItem> listcomm = new List<CommandItem>();
-        QueueTable qt = new QueueTable();
-        public delegate void Mylog(string type, string log);
-        public event Mylog EventMylog;
-        List<online> onlines = new List<online>();
-        bool opentoken = false;
-     public    List<ITcpBasehelper> p2psevlist = new List<ITcpBasehelper>();
-          List<TcpToken> TcpTokenlist = new List<TcpToken>();
-      
-        public bool Run(MyInterface.MyInterface myI)
+        public event WeaveLogDelegate WeaveLogEvent;
+        public XmlDocument xml
         {
-            // Mycommand comm = new Mycommand(, connectionString);
-
-          
-
+            get;set;
+        }
+        List<CmdWorkItem> CmdWorkItems
+        {
+            get;set;
+        }
+       public WeaveTable weaveTable
+        {
+            get;set;
+        }
+        public List<WeaveOnLine> weaveOnline
+        {
+            get; set;
+        }
+        public List<IWeaveTcpBase> P2ServerList
+        {
+            get;set;
+        }
+        public List<WeaveTcpToken> TcpTokenList
+        {
+            get;set;
+        }
+        public bool Run(WevaeSocketSession myI)
+        {
             ReloadFlies();
-
-            //if (myI.Parameter[6] == "token")
-            //{
-            //    opentoken = true;
-            //}
-            //else
-            //{
-            //    opentoken = false;
-            //}
-           
-            qt.Add("onlinetoken", onlines);//初始化一个队列，记录在线人员的token
-            if (EventMylog != null)
-                EventMylog("连接", "连接启动成功");
+            weaveTable.Add("onlinetoken", weaveOnline);//初始化一个队列，记录在线人员的token
+            if (WeaveLogEvent != null)
+                WeaveLogEvent("连接", "连接启动成功");
             return true;
         }
-        public void AddProt(List<ServerPort> listServerPort)
+        public void AddProt(List<WeaveServerPort> listServerPort)
         {
-           
-            foreach (ServerPort sp in listServerPort)
+            foreach (WeaveServerPort sp in listServerPort)
             {
-                ITcpBasehelper p2psev=null;
-                TcpToken tt = new TcpToken();
-                if (sp.PortType == portType.web)
+                IWeaveTcpBase p2psev = null;
+                WeaveTcpToken tt = new WeaveTcpToken();
+                if (sp.PortType == WeavePortTypeEnum.Web)
                 {
-                    p2psev = new Webp2psever();
+                    p2psev = new WeaveP2Server();
                 }
-                else if(sp.PortType == portType.json)
+                else if (sp.PortType == WeavePortTypeEnum.Json)
                 {
-                    p2psev = new p2psever("127.0.0.1");
+                    p2psev = new WeaveP2Server("127.0.0.1");
                 }
-                else if (sp.PortType == portType.bytes)
+                else if (sp.PortType == WeavePortTypeEnum.Bytes)
                 {
-                    p2psev = new p2psever(DataType.bytes);
+                    p2psev = new WeaveP2Server(WeaveDataTypeEnum.Bytes);
                     if (sp.BytesDataparsing == null) { throw new Exception("BytesDataparsing对象不能是空，请完成对应接口的实现。"); }
                     tt.BytesDataparsing = sp.BytesDataparsing;
-                    p2psev.receiveeventbit += P2psev_receiveeventbit;
-
+                    p2psev.weaveReceiveBitEvent += P2psev_receiveeventbit;
                 }
-                else if (sp.PortType == portType.http)
+                else if (sp.PortType == WeavePortTypeEnum.Http)
                 {
                     p2psev = new HttpServer(sp.Port);
                 }
-                p2psev.receiveevent += p2psev_receiveevent;
-                p2psev.EventUpdataConnSoc += p2psev_EventUpdataConnSoc;
-                p2psev.EventDeleteConnSoc += p2psev_EventDeleteConnSoc;
+                p2psev.waveReceiveEvent += P2ServerReceiveHander;
+                p2psev.weaveUpdateSocketListEvent += P2ServerUpdateSocketHander;
+                p2psev.weaveDeleteSocketListEvent += P2ServerDeleteSocketHander;
                 //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
-                p2psev.start(Convert.ToInt32(sp.Port));//myI.Parameter[4]是端口号
-             
+                p2psev.Start(Convert.ToInt32(sp.Port));//myI.Parameter[4]是端口号
                 tt.PortType = sp.PortType;
-                tt.p2psev = p2psev;
-                tt.istoken = sp.Istoken;
-                TcpTokenlist.Add(tt);
-                p2psevlist.Add(p2psev);
+                tt.P2Server = p2psev;
+                tt.IsToken = sp.IsToken;
+                TcpTokenList.Add(tt);
+                P2ServerList.Add(p2psev);
             }
         }
-
         private void P2psev_receiveeventbit(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
             try
             {
                 // JSON.parse<_baseModel>(data);// 
-                _baseModel _0x01 = null;
+                WeaveBase.WeaveSession _0x01 = null;
                 try
                 {
-                    foreach (TcpToken itp in TcpTokenlist)
-
+                    foreach (WeaveTcpToken itp in TcpTokenList)
                     {
-                        if (itp.PortType == portType.bytes)
+                        if (itp.PortType == WeavePortTypeEnum.Bytes)
                         {
-                            _0x01 = itp.BytesDataparsing.Get_baseModel(data);//二进制转_baseModel
-                           
-
+                            _0x01 = itp.BytesDataparsing.GetBaseModel(data);//二进制转_baseModel
                             if (command == 0xff)
                             {
-                                exec2(command, _0x01.Getjson(), soc);
+                                WeaveExcCmdNoCheckCmdName(command, _0x01.Getjson(), soc);
                             }
                             else
                             {
                                 if (itp.BytesDataparsing.socketvalidation(_0x01)) //验证_baseModel
-                                exec(command, _0x01.Getjson(), soc);
+                                    WeaveExcCmd(command, _0x01.Getjson(), soc);
                             }
                         }
                     }
-
-
                 }
                 catch
                 {
-                    EventMylog("JSON解析错误：", "" + data);
-
+                    WeaveLogEvent("JSON解析错误：", "" + data);
                     return;
-                }  
+                }
             }
             catch (Exception ex)
             {
-                if (EventMylog != null)
-                    EventMylog("p2psev_receiveevent----", ex.Message);
+                if (WeaveLogEvent != null)
+                    WeaveLogEvent("p2psev_receiveevent----", ex.Message);
             }
         }
-
         public void ReloadFlies()
         {
             try
             {
-                listcomm = new List<CommandItem>();
+                CmdWorkItems = new List<CmdWorkItem>();
                 String[] strfilelist = System.IO.Directory.GetFiles(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "command");
                 foreach (string file in strfilelist)
                 {
@@ -146,17 +129,16 @@ namespace cloud
                     {
                         try
                         {
-                            if (t.IsSubclassOf(typeof(TCPCommand)))
+                            if (t.IsSubclassOf(typeof(WeaveTCPCommand)))
                             {
-                                CommandItem ci = new CommandItem();
+                                CmdWorkItem ci = new CmdWorkItem();
                                 object obj = ab.CreateInstance(t.FullName);
-                                TCPCommand Ic = obj as TCPCommand;
-                                Ic.SetGlobalQueueTable(qt, TcpTokenlist);
-                                ci.MyICommand = Ic;
-                                ci.CommName = Ic.Getcommand();
-
+                                WeaveTCPCommand Ic = obj as WeaveTCPCommand;
+                                Ic.SetGlobalQueueTable(weaveTable, TcpTokenList);
+                                ci.WeaveTcpCmd = Ic;
+                                ci.CmdName = Ic.Getcommand();
                                 GetAttributeInfo(Ic, obj.GetType(), obj);
-                                listcomm.Add(ci);
+                                CmdWorkItems.Add(ci);
                             }
                         }
                         catch { }
@@ -165,256 +147,187 @@ namespace cloud
             }
             catch (Exception ex)
             {
-                if (EventMylog != null)
-                    EventMylog("加载异常", ex.Message);
+                if (WeaveLogEvent != null)
+                    WeaveLogEvent("加载异常", ex.Message);
             }
         }
-        public void GetAttributeInfo(TCPCommand Ic, Type t, object obj)
+        public void GetAttributeInfo(WeaveTCPCommand Ic, Type t, object obj)
         {
-
             foreach (MethodInfo mi in t.GetMethods())
             {
-
-                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                InstallFunAttribute myattribute = (InstallFunAttribute)Attribute.GetCustomAttribute(mi, typeof(InstallFunAttribute));
                 if (myattribute == null)
                 {
-
                 }
                 else
                 {
                     if (myattribute.Dtu)
                     {
-                        Delegate del = Delegate.CreateDelegate(typeof(RequestDataDtu), obj, mi, true);
-                        Ic.Bm.AddListen(mi.Name, del as RequestDataDtu, myattribute.Type, true);
+                        Delegate del = Delegate.CreateDelegate(typeof(WeaveRequestDataDtuDelegate), obj, mi, true);
+                        Ic.Bm.AddListen(mi.Name, del as WeaveRequestDataDtuDelegate, myattribute.Type, true);
                     }
                     else
                     {
-
-                        Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi, true);
-                        Ic.Bm.AddListen(mi.Name, del as RequestData, myattribute.Type);
+                        Delegate del = Delegate.CreateDelegate(typeof(WeaveRequestDataDelegate), obj, mi, true);
+                        Ic.Bm.AddListen(mi.Name, del as WeaveRequestDataDelegate, myattribute.Type);
                     }
-
-
                 }
             }
         }
-        void p2psev_EventDeleteConnSoc(System.Net.Sockets.Socket soc)
+        void P2ServerDeleteSocketHander(System.Net.Sockets.Socket soc)
         {
             try
             {
-                int count = listcomm.Count;
-                CommandItem[] cilist = new CommandItem[count];
-                listcomm.CopyTo(0, cilist, 0, count);
-                foreach (CommandItem CI in cilist)
+                int count = CmdWorkItems.Count;
+                CmdWorkItem[] cilist = new CmdWorkItem[count];
+                CmdWorkItems.CopyTo(0, cilist, 0, count);
+                foreach (CmdWorkItem CI in cilist)
                 {
                     try
                     {
-                        CI.MyICommand.TCPCommand_EventDeleteConnSoc(soc);
+                        CI.WeaveTcpCmd.WeaveDeleteSocketEvent(soc);
                     }
                     catch (Exception ex)
                     {
-                        if (EventMylog != null)
-                            EventMylog("EventDeleteConnSoc", ex.Message);
+                        if (WeaveLogEvent != null)
+                            WeaveLogEvent("EventDeleteConnSoc", ex.Message);
                     }
                 }
             }
             catch { }
-          
             try
             {
-               int  count = onlines.Count;
-                online[] ols = new online[count];
-                onlines.CopyTo(0, ols, 0, count);
-                foreach (online ol in ols)
+                int count = weaveOnline.Count;
+                WeaveOnLine[] ols = new WeaveOnLine[count];
+                weaveOnline.CopyTo(0, ols, 0, count);
+                foreach (WeaveOnLine ol in ols)
                 {
-                    if (ol.Soc.Equals(soc))
+                    if (ol.Socket.Equals(soc))
                     {
-                        foreach (CommandItem CI in listcomm)
+                        foreach (CmdWorkItem CI in CmdWorkItems)
                         {
-
                             try
                             {
-                                exec2(0xff, "out|" + ol.Token, ol.Soc); 
-                                CI.MyICommand.Tokenout(ol);
+                                WeaveExcCmdNoCheckCmdName(0xff, "out|" + ol.Token, ol.Socket);
+                                CI.WeaveTcpCmd.Tokenout(ol);
                             }
                             catch (Exception ex)
                             {
-                                if (EventMylog != null)
-                                    EventMylog("Tokenout", ex.Message);
+                                if (WeaveLogEvent != null)
+                                    WeaveLogEvent("Tokenout", ex.Message);
                             }
-
                         }
-
-                        onlines.Remove(ol);
-
+                        weaveOnline.Remove(ol);
                         return;
                     }
                 }
             }
             catch { }
         }
-
-        void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
+        void P2ServerUpdateSocketHander(System.Net.Sockets.Socket soc)
         {
             try
             {
-                int count = listcomm.Count;
-                CommandItem[] cilist = new CommandItem[count];
-                listcomm.CopyTo(0, cilist, 0, count);
-                foreach (CommandItem CI in cilist)
+                int count = CmdWorkItems.Count;
+                CmdWorkItem[] cilist = new CmdWorkItem[count];
+                CmdWorkItems.CopyTo(0, cilist, 0, count);
+                foreach (CmdWorkItem CI in cilist)
                 {
                     try
                     {
-                        CI.MyICommand.TCPCommand_EventUpdataConnSoc(soc);
+                        CI.WeaveTcpCmd.WeaveUpdateSocketEvent(soc);
                     }
                     catch (Exception ex)
                     {
-                        if (EventMylog != null)
-                            EventMylog("EventUpdataConnSoc", ex.Message);
+                        if (WeaveLogEvent != null)
+                            WeaveLogEvent("EventUpdataConnSoc", ex.Message);
                     }
                 }
-
-
             }
             catch { }
-            
-             
-            foreach (TcpToken itp in TcpTokenlist)
+            foreach (WeaveTcpToken token in TcpTokenList)
             {
-                if (itp.istoken)
+                if (token.IsToken)
                 {
-                  
-                  
-
-                        String Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-
-                    if (itp.p2psev.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                    string Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+                    if (token.P2Server.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
                     {
                         bool sendok = false;
-                        if (itp.PortType == portType.bytes) 
-                            sendok = itp.p2psev.send(soc, 0xff, itp.BytesDataparsing.Get_ByteBystring("token|" + Token + "")); 
+                        if (token.PortType == WeavePortTypeEnum.Bytes)
+                            sendok = token.P2Server.Send(soc, 0xff, token.BytesDataparsing.Get_ByteBystring("token|" + Token + ""));
                         else
-                            sendok = itp.p2psev.send(soc, 0xff, "token|" + Token + "");
-                        
+                            sendok = token.P2Server.Send(soc, 0xff, "token|" + Token + "");
                         if (sendok)
                         {
-
-                            online ol = new online();
+                            WeaveOnLine ol = new WeaveOnLine();
                             ol.Token = Token;
-                            ol.Soc = soc;
-                            onlines.Add(ol);
-                            foreach (CommandItem CI in listcomm)
+                            ol.Socket = soc;
+                            weaveOnline.Add(ol);
+                            foreach (CmdWorkItem cmdItem in CmdWorkItems)
                             {
-
                                 try
                                 {
-                                    exec2(0xff, "in|" + ol.Token, ol.Soc);
-                                    CI.MyICommand.Tokenin(ol);
+                                    WeaveExcCmdNoCheckCmdName(0xff, "in|" + ol.Token, ol.Socket);
+                                    cmdItem.WeaveTcpCmd.TokenIn(ol);
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (EventMylog != null)
-                                        EventMylog("Tokenin", ex.Message);
+                                    if (WeaveLogEvent != null)
+                                        WeaveLogEvent("Tokenin", ex.Message);
                                 }
-
                             }
                             return;
                         }
                     }
-                    
                 }
             }
-               
-            
-            //try
-            //{
-            //    int count = onlines.Count;
-            //    online[] ols = new online[count];
-            //    onlines.CopyTo(0, ols, 0, count);
-            //    foreach (online ol in ols)
-            //    {
-            //        if (ol.Soc == soc)
-            //        {
-            //            foreach (CommandItem CI in listcomm)
-            //            {
-
-            //                try
-            //                {
-            //                    CI.MyICommand.Tokenout(ol);
-            //                }
-            //                catch (Exception ex)
-            //                {
-            //                    if (EventMylog != null)
-            //                        EventMylog("Tokenout", ex.Message);
-            //                }
-
-            //            }
-
-            //            onlines.Remove(ol);
-
-            //            return;
-            //        }
-            //    }
-
-            //}
-            //catch { }
-
         }
- 
-        
-        void p2psev_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
+        void P2ServerReceiveHander(byte command, string data, System.Net.Sockets.Socket soc)
         {
             try
             {
                 if (command == 0xff)
                 {
-                    exec2(command, data, soc);
+                    WeaveExcCmdNoCheckCmdName(command, data, soc);
                     try
                     {
                         string[] temp = data.Split('|');
                         if (temp[0] == "in")
                         {
-
-
                             //加入onlinetoken
-                            online ol = new online();
+                            WeaveOnLine ol = new WeaveOnLine();
                             ol.Token = temp[1];
-                            ol.Soc = soc;
-                            onlines.Add(ol);
-                            foreach (CommandItem CI in listcomm)
+                            ol.Socket = soc;
+                            weaveOnline.Add(ol);
+                            foreach (CmdWorkItem CI in CmdWorkItems)
                             {
-
                                 try
                                 {
-                                    CI.MyICommand.Tokenin(ol);
+                                    CI.WeaveTcpCmd.TokenIn(ol);
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (EventMylog != null)
-                                        EventMylog("Tokenin", ex.Message);
+                                    WeaveLogEvent?.Invoke("Tokenin", ex.Message);
                                 }
-
                             }
                             return;
-
                         }
                         else if (temp[0] == "Restart")
                         {
-                            int count = onlines.Count;
-                            online[] ols = new online[count];
-                            onlines.CopyTo(0, ols, 0, count);
+                            int count = weaveOnline.Count;
+                            WeaveOnLine[] ols = new WeaveOnLine[count];
+                            weaveOnline.CopyTo(0, ols, 0, count);
                             string IPport = ((System.Net.IPEndPoint)soc.RemoteEndPoint).Address.ToString() + ":" + temp[1];
-
-                            foreach (online ol in ols)
+                            foreach (WeaveOnLine ol in ols)
                             {
                                 try
                                 {
-                                    if (ol.Soc != null)
+                                    if (ol.Socket != null)
                                     {
-                                        String IP = ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Soc.RemoteEndPoint).Port;
+                                        String IP = ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Port;
                                         if (IP == IPport)
                                         {
-                                            ol.Soc = soc;
+                                            ol.Socket = soc;
                                         }
                                     }
                                 }
@@ -423,32 +336,26 @@ namespace cloud
                         }
                         else if (temp[0] == "out")
                         {
-
                             ////移出onlinetoken
-                            int count = onlines.Count;
-                            online[] ols = new online[count];
-                            onlines.CopyTo(0, ols, 0, count);
-                            foreach (online ol in ols)
+                            int count = weaveOnline.Count;
+                            WeaveOnLine[] ols = new WeaveOnLine[count];
+                            weaveOnline.CopyTo(0, ols, 0, count);
+                            foreach (WeaveOnLine onlinesession in ols)
                             {
-                                if (ol.Token == temp[1])
+                                if (onlinesession.Token == temp[1])
                                 {
-                                    foreach (CommandItem CI in listcomm)
+                                    foreach (CmdWorkItem cmdItem in CmdWorkItems)
                                     {
-
                                         try
                                         {
-                                            CI.MyICommand.Tokenout(ol);
+                                            cmdItem.WeaveTcpCmd.Tokenout(onlinesession);
                                         }
                                         catch (Exception ex)
                                         {
-                                            if (EventMylog != null)
-                                                EventMylog("Tokenout", ex.Message);
+                                            WeaveLogEvent?.Invoke("Tokenout", ex.Message);
                                         }
-
                                     }
-
-                                    onlines.Remove(ol);
-
+                                    weaveOnline.Remove(onlinesession);
                                     return;
                                 }
                             }
@@ -456,74 +363,55 @@ namespace cloud
                     }
                     catch { }
                     return;
-                }else
-                exec(command, data, soc);
+                }
+                else
+                    WeaveExcCmd(command, data, soc);
             }
             catch { return; }
-          
             //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(exec));
         }
-        public void exec2(byte command, string data, System.Net.Sockets.Socket soc)
+        public void WeaveExcCmdNoCheckCmdName(byte command, string data, System.Net.Sockets.Socket soc)
         {
-            foreach (CommandItem CI in listcomm)
+            foreach (CmdWorkItem cmd in CmdWorkItems)
             {
-                 
-                    try
-                    {
-                  
-                        CI.MyICommand.Runcommand(command,data, soc);
-                   
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        if (EventMylog != null)
-                            EventMylog("receiveevent", ex.Message);
-                    }
-                
+                try
+                {
+                    cmd.WeaveTcpCmd.Runcommand(command, data, soc);
+                }
+                catch (Exception ex)
+                {
+                    WeaveLogEvent?.Invoke("receiveevent", ex.Message);
+                }
             }
         }
-        public void exec(byte command, string data, System.Net.Sockets.Socket soc)
+        public void WeaveExcCmd(byte command, string data, System.Net.Sockets.Socket soc)
         {
-            foreach (CommandItem CI in listcomm)
+            foreach (CmdWorkItem cmd in CmdWorkItems)
             {
-                if (CI.CommName == command)
+                if (cmd.CmdName == command)
                 {
                     try
                     {
-                        CI.MyICommand.Run(data, soc);
-                        CI.MyICommand.Runbase(data, soc); 
+                        cmd.WeaveTcpCmd.Run(data, soc);
+                        cmd.WeaveTcpCmd.RunBase(data, soc);
                     }
                     catch (Exception ex)
                     {
-                        if (EventMylog != null)
-                            EventMylog("receiveevent", ex.Message);
+                        WeaveLogEvent?.Invoke("receiveevent", ex.Message);
                     }
                 }
             }
         }
-        public class CommandItem
+        public class CmdWorkItem
         {
-            byte commName;
-
-            public byte CommName
+            public byte CmdName
             {
-                get { return commName; }
-                set { commName = value; }
+                get;set;
             }
-
-
-            TCPCommand _MyICommand;
-
-            public TCPCommand MyICommand
+            public WeaveTCPCommand WeaveTcpCmd
             {
-                get { return _MyICommand; }
-                set { _MyICommand = value; }
+                get;set;
             }
-
         }
     }
-
-
 }

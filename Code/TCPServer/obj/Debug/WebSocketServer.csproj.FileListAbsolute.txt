@@ -1,0 +1,9 @@
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\UDTCommon.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\UDTLibary.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.pdb
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\MyInterface.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\MyInterface.pdb
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\WebSocketServer.csprojResolveAssemblyReference.cache
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.pdb

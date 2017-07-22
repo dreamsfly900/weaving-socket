@@ -1,40 +1,29 @@
-﻿using P2P;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-
-namespace TCPServer
+using WeaveBase;
+namespace SocketServer
 {
-
-     
-        public class HttpProcessor
+    public class HttpProcessor
     {
             public TcpClient socket;
             public HttpServer srv;
-
             private Stream inputStream;
             public StreamWriter outputStream;
-
-            public String http_method;
-            public String http_url;
-            public String http_protocol_versionstring;
+            public string http_method;
+            public string http_url;
+            public string http_protocol_versionstring;
             public Hashtable httpHeaders = new Hashtable();
         public String retrunData = "";
-
             private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
-
             public HttpProcessor(TcpClient s, HttpServer srv)
             {
                 this.socket = s;
                 this.srv = srv;
             }
-
-
             private string streamReadLine(Stream inputStream)
             {
                 int next_char;
@@ -54,7 +43,6 @@ namespace TCPServer
                 // we can't use a StreamReader for input, because it buffers up extra data on us inside it's
                 // "processed" view of the world, and we want the data raw after the headers
                 inputStream = new BufferedStream(socket.GetStream());
-
                 // we probably shouldn't be using a streamwriter for all output from handlers either
                 outputStream = new StreamWriter(new BufferedStream(socket.GetStream()));
                 try
@@ -80,7 +68,6 @@ namespace TCPServer
                 inputStream = null; outputStream = null; // bs = null;            
                 socket.Close();
             }
-
             public void parseRequest()
             {
                 String request = streamReadLine(inputStream);
@@ -93,10 +80,8 @@ namespace TCPServer
                 http_method = tokens[0].ToUpper();
                 http_url = tokens[1];
                 http_protocol_versionstring = tokens[2];
-
                 //Console.WriteLine("starting: " + request);
             }
-
             public void readHeaders()
             {
                 //Console.WriteLine("readHeaders()");
@@ -108,7 +93,6 @@ namespace TCPServer
                         //Console.WriteLine("got headers");
                         return;
                     }
-
                     int separator = line.IndexOf(':');
                     if (separator == -1)
                     {
@@ -120,22 +104,17 @@ namespace TCPServer
                     {
                         pos++; // strip any spaces
                     }
-
                     string value = line.Substring(pos, line.Length - pos);
                     //Console.WriteLine("header: {0}:{1}", name, value);
                     httpHeaders[name] = value;
                 }
                      httpHeaders.Add("Access-Control-Allow-Origin", "*") ;
         }
-
             public void handleGETRequest()
             {
                 srv.handleGETRequest(this);
             }
-
             private const int BUF_SIZE = 4096;
-         
-
         public void handlePOSTRequest()
             {
                 // this post data processing just reads everything into a memory stream.
@@ -143,7 +122,6 @@ namespace TCPServer
                 // hand an input stream to the request processor. However, the input stream 
                 // we hand him needs to let him see the "end of the stream" at this content 
                 // length, because otherwise he won't know when he's seen it all! 
-
                 ////Console.WriteLine("get post data start");
                 int content_len = 0;
                 MemoryStream ms = new MemoryStream();
@@ -161,7 +139,6 @@ namespace TCPServer
                     while (to_read > 0)
                     {
                         //Console.WriteLine("starting Read, to_read={0}", to_read);
-
                         int numread = this.inputStream.Read(buf, 0, Math.Min(BUF_SIZE, to_read));
                         //Console.WriteLine("read finished, numread={0}", numread);
                         if (numread == 0)
@@ -182,72 +159,56 @@ namespace TCPServer
                 }
                 //Console.WriteLine("get post data end");
                 srv.handlePOSTRequest(this, new StreamReader(ms));
-
             }
-
             public void writeSuccess()
             {
                 outputStream.WriteLine("HTTP/1.0 200 OK");
                 outputStream.WriteLine("Content-Type: text/html");
-
                 outputStream.WriteLine("Access-Control-Allow-Origin:*");
                 outputStream.WriteLine("Connection: close");
                 outputStream.WriteLine("");
             }
-
             public void writeFailure()
             {
                 outputStream.WriteLine("HTTP/1.0 404 File not found");
                 outputStream.WriteLine("Connection: close");
                 outputStream.WriteLine("");
             }
-
-     
     }
-
-    public  class HttpServer : ITcpBasehelper
+    public  class HttpServer : IWeaveTcpBase
     {
-
-
         TcpListener listener;
         bool is_active = true;
-       protected List<HttpProcessor> listp = new List<HttpProcessor>();
-        public event myreceive receiveevent;
-        public event myreceivebit receiveeventbit;
+       protected List<HttpProcessor> httpProcessorList = new List<HttpProcessor>();
+        public event WaveReceiveEventEvent waveReceiveEvent;
+        public event WeaveReceiveBitEvent weaveReceiveBitEvent;
         public event NATthrough NATthroughevent;
-        public event UpdataListSoc EventUpdataConnSoc;
-        public event deleteListSoc EventDeleteConnSoc;
-
+        public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
+        public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
         public int Port
         { get; set; }
-
         public HttpServer(int port)
         {
             Port = port;
         }
-        public void start(int port)
+        public void Start(int port)
         {
             Port = port;
             Thread thread = new Thread(new ThreadStart(listen));
             thread.Start();
-
         }
-
-        public int getNum()
+        public int GetNetworkItemCount()
         {
-            return listp.Count;
+            return httpProcessorList.Count;
         }
-
-        public void xintiao(object obj)
+        public void KeepAliveHander(object obj)
         {
-
         }
-
-        public bool send(Socket soc, byte command, string text)
+        public bool Send(Socket soc, byte command, string text)
         {
-            int i = listp.Count;
+            int i = httpProcessorList.Count;
             HttpProcessor[] hps = new HttpProcessor[i];
-            listp.CopyTo(hps);
+            httpProcessorList.CopyTo(hps);
             foreach (HttpProcessor hp in hps)
             {
                 if (hp.socket.Client == soc)
@@ -258,12 +219,11 @@ namespace TCPServer
             }
             return false;
         }
-
-        public bool send(Socket soc, byte command, byte[] data)
+        public bool Send(Socket soc, byte command, byte[] data)
         {
-            int i = listp.Count;
+            int i = httpProcessorList.Count;
             HttpProcessor[] hps = new HttpProcessor[i];
-            listp.CopyTo(hps);
+            httpProcessorList.CopyTo(hps);
             foreach (HttpProcessor hp in hps)
             {
                 if (hp.socket.Client == soc)
@@ -284,16 +244,14 @@ namespace TCPServer
                 {
                     TcpClient s = listener.AcceptTcpClient();
                     HttpProcessor processor = new HttpProcessor(s, this);
-                    listp.Add(processor);
+                    httpProcessorList.Add(processor);
                     Thread thread = new Thread(new ThreadStart(processor.process));
                     thread.Start();
-
                     Thread.Sleep(1);
                 }
                 catch { }
             }
         }
-
         public virtual void handleGETRequest(HttpProcessor p)
         {
             p.http_url = p.http_url.Substring(1);
@@ -318,12 +276,10 @@ namespace TCPServer
             p.writeSuccess();
             getdata(p, command, data);
         }
-
-        public bool getdata(HttpProcessor p, byte command, string data)
+        public virtual bool getdata(HttpProcessor p, byte command, string data)
         {
-             
-                      receiveevent?.Invoke(command, data, p.socket.Client);
-                      receiveeventbit?.Invoke(command,  Convert.FromBase64String(data), p.socket.Client);
+                      waveReceiveEvent?.Invoke(command, data, p.socket.Client);
+                      weaveReceiveBitEvent?.Invoke(command,  Convert.FromBase64String(data), p.socket.Client);
                         int count = 0;
                         while (p.retrunData== "")
                         {
@@ -337,24 +293,20 @@ namespace TCPServer
                         }
                         p.outputStream.WriteLine(p.retrunData);
                p.retrunData = "";
-
-            int i = listp.Count;
+            int i = httpProcessorList.Count;
             HttpProcessor[] hps = new HttpProcessor[i];
-            listp.CopyTo(hps);
+            httpProcessorList.CopyTo(hps);
             foreach (HttpProcessor hp in hps)
             {
                 if (hp == p)
                 {
-                    listp.Remove(p);
+                    httpProcessorList.Remove(p);
                     return true;
                 }
             }
             return false;
         }
     }
-
-      
-
         //public class TestMain
         //{
         //    public static int Main(String[] args)
@@ -372,7 +324,5 @@ namespace TCPServer
         //        thread.Start();
         //        return 0;
         //    }
-
         //}
-     
 }

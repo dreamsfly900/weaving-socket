@@ -1,10 +1,6 @@
-﻿using MyInterface;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using StandardModel;
-
+using WeaveBase;
 namespace 智信构建结构
 {
     public class Bytepackage : IDataparsing
@@ -14,13 +10,12 @@ namespace 智信构建结构
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public _baseModel Get_baseModel(byte[] data)
+        public WeaveSession GetBaseModel(byte[] data)
         {
             //data 的内容为，协议中的内容段，不明白的查看 客户端协议的说明，内容段是自己定义的内容
-            _baseModel bm = new _baseModel();
+            WeaveBase.WeaveSession bm = new WeaveBase.WeaveSession();
             byte[] bs = new byte[2];
             Array.Copy(data, 0, bs, 0, bs.Length);
-
             int req= ConvertToInt(bs);
             if (req == 256)
             {
@@ -33,13 +28,12 @@ namespace 智信构建结构
             bm.Token = "这里不能是空的，如果没有，就自己随便加一个内容";
             return bm;
         }
-       
         /// <summary>
         /// 将基础类转为BYTE字节
         /// </summary>
         /// <param name="bm"></param>
         /// <returns></returns>
-        public byte[] Get_Byte(_baseModel bm)
+        public byte[] Get_Byte(WeaveBase.WeaveSession bm)
         {
             byte[] b = bm.GetRoot<byte[]>();
             byte[] data = new byte[2 + b.Length];
@@ -47,7 +41,6 @@ namespace 智信构建结构
             if (bm.Request == "getdata")
             {
               req=   ConvertToByteList(256);
-               
             }
             if (req.Length == 2)
             {
@@ -73,7 +66,6 @@ namespace 智信构建结构
             { 
                 //str.Split('|')[1]把token 转成byte自己，如果你不写，那返回的内容就是空的token。
             }
-              
                return new byte[0];
         }
         /// <summary>
@@ -81,7 +73,7 @@ namespace 智信构建结构
         /// </summary>
         /// <param name="bm"></param>
         /// <returns></returns>
-        public bool socketvalidation(_baseModel bm)
+        public bool socketvalidation(WeaveBase.WeaveSession bm)
         {
             //这个方法主要是鉴权，如果内容不正确，返回false将不会继续向下执行
             return true;

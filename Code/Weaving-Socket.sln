@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "ServerRunPool\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端", "服务端", "{AFDAF284-45F3-406D-A585-AE187827F28A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyInterface", "MyInterface\MyInterface.csproj", "{FED411E6-075E-4DE0-8284-8CBD0879B55D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaveCore", "MyInterface\WeaveCore.csproj", "{FED411E6-075E-4DE0-8284-8CBD0879B55D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通用TCP云服务类库", "网关核心类库\通用TCP云服务类库.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
 EndProject
@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "客户端示例", "客户�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "统一B-C转发负载网关程序", "JSON网关\统一B-C转发负载网关程序.csproj", "{53047F4F-9839-40A7-B10B-CCAF1A66EA37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPServer", "TCPServer\TCPServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketServer", "TCPServer\WebSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WP类库", "WP类库", "{CCFE7C31-52DC-4DAF-A983-3BDE348B4132}"
 EndProject

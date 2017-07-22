@@ -1,20 +1,13 @@
 ﻿using client;
-using MyInterface;
-using StandardModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-
 namespace TCPclient
 {
     public class DTUclient
     {
-
-
         TcpClient tcpc;
         public delegate void receive(string token, byte[] text);
         public event receive receiveServerEvent;
@@ -38,49 +31,39 @@ namespace TCPclient
             {
                 return isline;
             }
-
             set
             {
                 isline = value;
             }
         }
         List<object> objlist = new List<object>();
-
         public string Tokan
         {
             get
             {
                 return tokan;
             }
-
             set
             {
                 tokan = value;
             }
         }
-
         public List<byte[]> ListData
         {
             get
             {
                 return listtemp;
             }
-
             set
             {
                 listtemp = value;
             }
         }
-
-
-
-
         P2Pclient p2p = new P2Pclient(false);
         public DTUclient()
         {
             p2p.timeoutevent += P2p_timeoutevent;
         }
-
         private void P2p_timeoutevent()
         {
             if (!p2p.Isline)
@@ -89,39 +72,31 @@ namespace TCPclient
                 Restart(false);
             }
         }
-
         public bool start(string ip, int port, int _timeout, bool takon)
         {
             mytimeout = _timeout;
             IP = ip;
             PORT = port;
-
-
             return start(ip, port, takon);
         }
         public bool Restart(bool takon)
         {
-
-
             return start(IP, PORT, takon);
         }
         public bool start(string ip, int port, bool takon)
         {
             try
             {
-
                 IP = ip;
                 PORT = port;
                 if (!p2p.Isline)
                     p2p.start(IP, PORT, false);
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new TcpClient();
-
                 tcpc.ExclusiveAddressUse = false;
                 tcpc.Connect(ip, port);
                 Isline = true;
                 isok = true;
-
                 timeout = DateTime.Now;
                 if (!isreceives)
                 {
@@ -131,17 +106,14 @@ namespace TCPclient
                     System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart(unup));
                     t1.Start();
                 }
-
                 return true;
             }
             catch (Exception e)
             {
                 Isline = false;
-
                 return false;
             }
         }
-
         void udp_receiveevent(byte command, string data, EndPoint iep)
         {
             if (P2PreceiveEvent != null)
@@ -151,14 +123,11 @@ namespace TCPclient
         {
             return udp.send(command, text, ep);
         }
-
         private string tokan;
-
         public void Send(byte[] b)
         {
             tcpc.Client.Send(b);
         }
-
         public void stop()
         {
             isok = false;
@@ -171,7 +140,6 @@ namespace TCPclient
             temppake str = obj as temppake;
             receiveServerEvent(str.command, str.date);
         }
-
         void unup()
         {
             while (isok)
@@ -181,16 +149,12 @@ namespace TCPclient
                 {
                     int i = 0;
                     int count = ListData.Count;
-
                     if (count > 0)
                     {
-
                         int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
                         Array.Copy(ListData[i], tempbtye, tempbtye.Length);
-
-
                         try
                         {
                             ListData.RemoveAt(0);
@@ -198,7 +162,6 @@ namespace TCPclient
                             str.command = Tokan;
                             str.date = tempbtye;
                             receiveServerEvent(Tokan, str.date);
-
                             continue;
                         }
                         catch (Exception e)
@@ -206,10 +169,7 @@ namespace TCPclient
                             if (ErrorMge != null)
                                 ErrorMge(3, "unup:" + e.Message);
                         }
-
-
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -218,7 +178,6 @@ namespace TCPclient
                 }
             }
         }
-
         List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
@@ -227,23 +186,16 @@ namespace TCPclient
                 System.Threading.Thread.Sleep(150);
                 try
                 {
-
-
                     int bytesRead = tcpc.Client.Available;
-
                     if (bytesRead > 0)
                     {
                         byte[] tempbtye = new byte[bytesRead];
                         tcpc.Client.Receive(tempbtye);
-
                         //lock (this)
                         //{
                         ListData.Add(tempbtye);
-
                         timeout = DateTime.Now;
-
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -252,6 +204,5 @@ namespace TCPclient
                 }
             }
         }
-
     }
 }

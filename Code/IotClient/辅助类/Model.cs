@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-
-namespace StandardModel
+namespace WeaveBase
 {
     /// <summary>
     /// 0x01基类
     /// </summary>
     /// 
-    
-    public class _baseModel
+    public class BaseDataModel
     {
-
         byte[] type;
         String number;
         /// <summary>
@@ -29,7 +26,6 @@ namespace StandardModel
         /// 请求查询的表
         /// </summary>
         String request = "";
-
         public String Request
         {
             get { return request; }
@@ -39,7 +35,6 @@ namespace StandardModel
         /// 服务器查询结果
         /// </summary>
         String root = "";
-
         public String Root
         {
             get { return root; }
@@ -55,7 +50,6 @@ namespace StandardModel
             String str = Newtonsoft.Json.JsonConvert.SerializeObject(t);
             Root = str;
         }
-
         /// <summary>
         /// 获取查询结果
         /// </summary>
@@ -66,13 +60,10 @@ namespace StandardModel
             T t = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(Root);
             return t;
         }
-
         /// <summary>
         /// 检索条件
         /// </summary>
-
         String parameter = "";
-
         public String Parameter
         {
             get { return parameter; }
@@ -97,7 +88,6 @@ namespace StandardModel
            String str= Newtonsoft.Json.JsonConvert.SerializeObject(t);
             Parameter = str;
         }
-
         /// <summary>
         /// 获取查询参数
         /// </summary>
@@ -117,62 +107,50 @@ namespace StandardModel
             get { return querycount; }
             set { querycount = value; }
         }
-
         public string Number
         {
             get
             {
                 return number;
             }
-
             set
             {
                 number = value;
             }
         }
-
         public byte[] Type
         {
             get
             {
                 return type;
             }
-
             set
             {
                 type = value;
             }
         }
     }
-
-
     public class MenuModel
     {
         String id = "";
-
         public String Id
         {
             get { return id; }
             set { id = value; }
         }
         string name = "";
-
         public string Name
         {
             get { return name; }
             set { name = value; }
         }
         List<MenuModel> nodes = new List<MenuModel>();
-
         public List<MenuModel> Nodes
         {
             get { return nodes; }
             set { nodes = value; }
         }
-
         public string Menu_ID { get; set; }
         public string Menu_Name { get; set; }
     }
-
-
 }

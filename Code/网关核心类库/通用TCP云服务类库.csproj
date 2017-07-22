@@ -75,17 +75,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\MyInterface.csproj">
+    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
       <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
-      <Name>MyInterface</Name>
+      <Name>WeaveCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPclient\TCPclient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>TCPclient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPServer\TCPServer.csproj">
+    <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
       <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>TCPServer</Name>
+      <Name>WebSocketServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -75,9 +75,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCPServer\TCPServer.csproj">
+    <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
       <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>TCPServer</Name>
+      <Name>WebSocketServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
       <Project>{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}</Project>

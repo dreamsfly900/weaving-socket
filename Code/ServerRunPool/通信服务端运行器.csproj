@@ -117,13 +117,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\MyInterface.csproj">
+    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
       <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
-      <Name>MyInterface</Name>
+      <Name>WeaveCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPServer\TCPServer.csproj">
+    <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
       <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
-      <Name>TCPServer</Name>
+      <Name>WebSocketServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
       <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>

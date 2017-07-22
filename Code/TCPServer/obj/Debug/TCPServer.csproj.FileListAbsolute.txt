@@ -5,3 +5,9 @@ D:\Weaving-Socket\Code\TCPServer\bin\Debug\TCPServer.pdb
 D:\Weaving-Socket\Code\TCPServer\obj\Debug\TCPServer.dll
 D:\Weaving-Socket\Code\TCPServer\obj\Debug\TCPServer.pdb
 D:\Weaving-Socket\Code\TCPServer\obj\Debug\TCPServer.csprojResolveAssemblyReference.cache
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\UDTCommon.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\UDTLibary.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.pdb
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.dll
+C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.pdb

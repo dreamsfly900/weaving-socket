@@ -1,22 +1,17 @@
-﻿using MyInterface;
-using StandardModel;
+﻿using WeaveBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using TCPclient;
-
 namespace client
 {
     public enum DataType { json, bytes };
     public class P2Pclient
     {
-        _base_manage xmhelper = new _base_manage();
-      
+        WeaveBaseManager xmhelper = new WeaveBaseManager();
         public TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
@@ -28,7 +23,6 @@ namespace client
         DataType DT = DataType.json;
         public event myreceivebit receiveServerEventbit;
         public delegate void myreceivebit(byte command, byte[] data);
-
         public event errormessage ErrorMge;
         bool isok = false;
         bool isreceives = false;
@@ -47,7 +41,6 @@ namespace client
             {
                 return isline;
             }
-
             set
             {
                 isline = value;
@@ -70,7 +63,7 @@ namespace client
         {
             foreach (MethodInfo mi in t.GetMethods())
             {
-                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                InstallFunAttribute myattribute = (InstallFunAttribute)Attribute.GetCustomAttribute(mi, typeof(InstallFunAttribute));
                 if (myattribute == null)
                 { }
                 else
@@ -83,13 +76,13 @@ namespace client
         {
             foreach (MethodInfo mi in t.GetMethods())
             {
-                InstallFun myattribute = (InstallFun)Attribute.GetCustomAttribute(mi, typeof(InstallFun));
+                InstallFunAttribute myattribute = (InstallFunAttribute)Attribute.GetCustomAttribute(mi, typeof(InstallFunAttribute));
                 if (myattribute == null)
                 { }
                 else
                 {
-                    Delegate del = Delegate.CreateDelegate(typeof(RequestData), obj, mi, true);
-                    xmhelper.AddListen(mi.Name, del as RequestData, myattribute.Type);
+                    Delegate del = Delegate.CreateDelegate(typeof(WeaveRequestDataDelegate), obj, mi, true);
+                    xmhelper.AddListen(mi.Name, del as WeaveRequestDataDelegate, myattribute.Type);
                 }
             }
         }
@@ -99,63 +92,48 @@ namespace client
             {
                 return tokan;
             }
-
             set
             {
                 tokan = value;
             }
         }
-
         public List<byte[]> ListData
         {
             get
             {
                 return listtemp;
             }
-
             set
             {
                 listtemp = value;
             }
         }
-
         public P2Pclient(bool _NATUDP)
         {
-          
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
-            xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
+            xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
             NATUDP = _NATUDP;
             if (NATUDP)
             {
                 udp = new UDP();
                 udp.receiveevent += udp_receiveevent;
             }
-
         }
         public P2Pclient(DataType _DT)
         {
             DT = _DT;
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
-            
-            xmhelper.errorMessageEvent += Xmhelper_errorMessageEvent;
-        
-
+            xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
         }
-         
-
-       
-
-        private void Xmhelper_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
+        private void Xmhelper_errorMessageEvent(Socket soc, WeaveBase.WeaveSession _0x01, string message)
         {
             if (ErrorMge != null)
                 ErrorMge(0, message);
         }
-
         private void P2Pclient_receiveServerEvent(byte command, string text)
         {
-            xmhelper.init(text, null);
+            xmhelper.Init(text, null);
         }
-
         public bool start(string ip, int port, int _timeout, bool takon)
         {
             mytimeout = _timeout;
@@ -181,7 +159,6 @@ namespace client
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new TcpClient();
                 tcpc.ExclusiveAddressUse = false;
-                 
                 tcpc.Connect(ip, port);
                 localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
                 Isline = true;
@@ -243,7 +220,6 @@ namespace client
             ret.CopyTo(bb);
             return bb;
         }
-
         void udp_receiveevent(byte command, string data, EndPoint iep)
         {
             if (P2PreceiveEvent != null)
@@ -253,34 +229,29 @@ namespace client
         {
             return udp.send(command, text, ep);
         }
-
         private string tokan;
         public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
         {
-            _baseModel b = new _baseModel();
+            WeaveBase.WeaveSession b = new WeaveBase.WeaveSession();
             b.Request = Request;
             b.Token = this.Tokan;
             b.SetParameter<T>(Parameter);
             b.Querycount = Querycount;
-
             return send(command, b.Getjson());
         }
         public bool SendRoot<T>(byte command, String Request, T Root, int Querycount)
         {
-            _baseModel b = new _baseModel();
+            WeaveBase.WeaveSession b = new WeaveBase.WeaveSession();
             b.Request = Request;
             b.Token = this.Tokan;
             b.SetRoot<T>(Root);
             b.Querycount = Querycount;
-
             return send(command, b.Getjson());
         }
-
         public void Send(byte[] b)
         {
             tcpc.Client.Send(b);
         }
-
         public bool send(byte command, string text)
         {
             try
@@ -303,7 +274,6 @@ namespace client
                     {
                        int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
-               
                          Array.Copy(b, i * 40960, temp, 0, zz);
                         tcpc.Client.Send(temp);
                         System.Threading.Thread.Sleep(1);
@@ -311,24 +281,20 @@ namespace client
                 }
             }
             catch (Exception ee){
-
                 Isline = false;
                 stop();
                 timeoutevent();
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false;
-
             }
             // tcpc.Close();
             return true;
         }
         public bool send(byte command, byte[] text)
         {
-
             try
             {
-          
                 byte[] sendb = text;
                 byte[] lens = ConvertToByteList(sendb.Length);
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
@@ -347,7 +313,6 @@ namespace client
                     {
                         int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
-
                         Array.Copy(b, i * 40960, temp, 0, zz);
                         tcpc.Client.Send(temp);
                         System.Threading.Thread.Sleep(1);
@@ -377,7 +342,6 @@ namespace client
             temppake str = obj as temppake;
             receiveServerEvent(str.command, str.date);
         }
-
         void unup()
         {
             while (isok)
@@ -385,12 +349,9 @@ namespace client
                 System.Threading.Thread.Sleep(10);
                 try
                 {
-                
                     int count = ListData.Count;
-
                     if (count > 0)
                     {
-                        
                         int bytesRead = ListData[0]!=null? ListData[0].Length:0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
@@ -398,7 +359,6 @@ namespace client
                         _0x99:
                         if (tempbtye[0] == 0x99)
                         {
-                            
                             if (bytesRead > 1)
                             {
                                 byte[] b = new byte[bytesRead - 1];
@@ -409,7 +369,6 @@ namespace client
                                 goto _0x99;
                             }
                             else {
-                              
                                 ListData.RemoveAt(0);
                                 continue;
                             } 
@@ -425,7 +384,6 @@ namespace client
                                 {
                                     byte[] bb = new byte[a];
                                     Array.Copy(tempbtye, 2, bb, 0, a);
-
                                     len = ConvertToInt(bb);
                                 }
                                 else
@@ -441,7 +399,6 @@ namespace client
                                     catch
                                     { }
                                 }
-                          
                                 labered:
                                 try
                                 {
@@ -450,7 +407,6 @@ namespace client
                                             if (ListData.Count > 1)
                                             {
                                                 ListData.RemoveAt(0);
-                                                
                                               byte[] temps = new byte[ListData[0].Length];
                                                 Array.Copy(ListData[0], temps, temps.Length);
                                                 byte[] temps2 = new byte[tempbtye.Length + temps.Length];
@@ -469,18 +425,15 @@ namespace client
                                         byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
                                         Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                         ListData[0] = temps;
-
                                     }
                                     else if (tempbtye.Length == (len + 2 + a))
                                     { ListData.RemoveAt(0); }
-                                   
                                 }
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
                                         ErrorMge(3, e.StackTrace + "unup001:" + e.Message+ "2 + a"+ 2 + a+ "---len"+ len+ "--tempbtye"+ tempbtye.Length);
                                 }
-                                
                                 try
                                 {
                                     if (DT == DataType.json)
@@ -544,13 +497,10 @@ namespace client
                             if (tempbtye[0]==0)
                             ListData.RemoveAt(0);
                         }
-
                     }
-
                 }
                 catch (Exception e)
                 {
-                   
                     if (ErrorMge != null)
                         ErrorMge(3, "unup:" + e.Message+"---"+e.StackTrace);
                     try
@@ -561,7 +511,6 @@ namespace client
                 }
             }
         }
-
           List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
@@ -570,10 +519,7 @@ namespace client
                 System.Threading.Thread.Sleep(50);
                 try
                 {
-                 
-                
                     int bytesRead = tcpc.Client.Available;
-                  
                     if (bytesRead > 0)
                     {
                         timeout = DateTime.Now;
@@ -588,7 +534,6 @@ namespace client
                                 byte[] b = new byte[bytesRead - 1];
                                 try
                                 {
-                                   
                                     Array.Copy(tempbtye, 1, b, 0, b.Length);
                                 }
                                 catch { }
@@ -601,8 +546,6 @@ namespace client
                         //{
                             ListData.Add(tempbtye);
                        // }
-                      
-                        
                     }
                     else
                     {

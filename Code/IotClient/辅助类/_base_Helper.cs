@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-
-namespace StandardModel
+namespace WeaveBase
 {
-    public delegate void RequestData(Socket soc, _baseModel _0x01);
+    public delegate void RequestData(Socket soc, BaseDataModel _0x01);
     public class _base_manage
     {
         class modelData {
@@ -15,16 +14,11 @@ namespace StandardModel
             public RequestData rd;
         }
         List<modelData> listmode = new List<modelData>();
-     
         /// <summary>
         /// 请求数据集事件
         /// </summary>
         //public event RequestData  RequestDataEvent = null; 
-       
-
-
-        public delegate void errorMessage(Socket soc,_baseModel _0x01, string message);
-
+        public delegate void errorMessage(Socket soc,BaseDataModel _0x01, string message);
         public void AddListen(String Request, RequestData rd,String type)
         {
             modelData md = new modelData();
@@ -49,7 +43,7 @@ namespace StandardModel
         public event errorMessage errorMessageEvent = null;
         public void init(String data, Socket soc)
         {
-            _baseModel _0x01= Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
+            BaseDataModel _0x01= Newtonsoft.Json.JsonConvert.DeserializeObject<BaseDataModel>(data);
             string message = "";
             try
             {
@@ -75,14 +69,12 @@ namespace StandardModel
                                     //根据具体功能不同，代码不同
                                     //if (RequestDataEvent != null)
                                     //    RequestDataEvent(soc, _0x01,_0x01.Request); 
-                 
                 }
             }
             catch (Exception ex)
             {
                 _0x01.Parameter = ex.Message;
                 message = Newtonsoft.Json.JsonConvert.SerializeObject(_0x01);
-
                 errorMessageEvent(soc,_0x01, ex.Message);
             }
         }

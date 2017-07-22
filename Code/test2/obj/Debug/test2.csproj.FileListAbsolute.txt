@@ -32,3 +32,15 @@ D:\Weaving-Socket\Code\test2\obj\Debug\test2.Properties.Resources.resources
 D:\Weaving-Socket\Code\test2\obj\Debug\test2.csproj.GenerateResource.Cache
 D:\Weaving-Socket\Code\test2\obj\Debug\test2.exe
 D:\Weaving-Socket\Code\test2\obj\Debug\test2.pdb
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.csprojResolveAssemblyReference.cache
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.Form1.resources
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.Properties.Resources.resources
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.csproj.GenerateResource.Cache
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\test2.exe
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\test2.pdb
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\MyInterface.dll
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\TCPclient.dll
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\MyInterface.pdb
+C:\Users\apple\Source\WeaveSocket\Code\test2\bin\Debug\TCPclient.pdb
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.exe
+C:\Users\apple\Source\WeaveSocket\Code\test2\obj\Debug\test2.pdb

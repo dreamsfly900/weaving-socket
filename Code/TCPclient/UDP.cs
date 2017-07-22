@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
 namespace TCPclient
 {
     public class UDP
@@ -31,7 +30,6 @@ namespace TCPclient
             }
             catch (Exception e) { throw e; }
         }
-
         private void xintiao(object state)
         {
             while (true)
@@ -46,7 +44,6 @@ namespace TCPclient
         }
         public bool send(byte command, string text,EndPoint ep)
         {
-
             try
             {
                 byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
@@ -56,17 +53,14 @@ namespace TCPclient
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-
                 listener.SendTo(b, ep);
             }
             catch { return false; }
             // tcpc.Close();
             return true;
         }
-
         public bool send(byte[] b, EndPoint ep)
         {
-
             try
             { 
                 listener.SendTo(b, ep);
@@ -85,9 +79,7 @@ namespace TCPclient
             //}
             if (receiveevent != null)
                 receiveevent(me.Command, me.Data, me.Iep);
-
         }
-
         private void xintiao2(object state)
         {
             IPEndPoint me = (IPEndPoint)state;
@@ -104,21 +96,18 @@ namespace TCPclient
         class modelevent
         {
             byte command;
-
             public byte Command
             {
                 get { return command; }
                 set { command = value; }
             }
             string data;
-
             public string Data
             {
                 get { return data; }
                 set { data = value; }
             }
             EndPoint iep;
-
             public EndPoint Iep
             {
                 get { return iep; }
@@ -135,7 +124,6 @@ namespace TCPclient
                 {
                     IPEndPoint anyEndPoint = new IPEndPoint(IPAddress.Any, 0);
                     EndPoint remoteEndPoint = anyEndPoint;
-
                     byte[] data = new byte[1024];
                     int recv = listener.ReceiveFrom(data, 0, data.Length, SocketFlags.None, ref remoteEndPoint);
                     int bytesRead = data.Length;
@@ -169,7 +157,6 @@ namespace TCPclient
                     me.Command = tempbtye[0];
                     me.Data = temp;
                     me.Iep = remoteEndPoint;
-                    
                     System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveeventto), me);
                     timeout = DateTime.Now;
                     if (bytesRead > (2 + a + len))
@@ -177,14 +164,12 @@ namespace TCPclient
                         byte[] b = new byte[bytesRead - (2 + a + len)];
                         byte[] t = tempbtye;
                         Array.Copy(t, (2 + a + len), b, 0, b.Length);
-
                         tempbtye = b;
                         bytesRead = bytesRead - (2 + a + len);
                         goto labe881;
                     }
                 }
                 catch { } 
-                       
                 System.Threading.Thread.Sleep(100);
             }
         }

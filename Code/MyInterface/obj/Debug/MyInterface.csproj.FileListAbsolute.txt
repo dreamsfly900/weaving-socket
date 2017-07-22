@@ -17,3 +17,7 @@ D:\Weaving-Socket\Code\MyInterface\bin\Debug\TCPServer.pdb
 D:\Weaving-Socket\Code\MyInterface\obj\Debug\MyInterface.csprojResolveAssemblyReference.cache
 D:\Weaving-Socket\Code\MyInterface\obj\Debug\MyInterface.dll
 D:\Weaving-Socket\Code\MyInterface\obj\Debug\MyInterface.pdb
+C:\Users\apple\Source\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.dll
+C:\Users\apple\Source\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.pdb
+C:\Users\apple\Source\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.dll
+C:\Users\apple\Source\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.pdb

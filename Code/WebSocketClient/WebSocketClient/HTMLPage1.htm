@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
@@ -24,9 +23,7 @@
                 , error: function (msg) { alert("连接错误" + msg); }
                  , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器："+ip);}
              });
-           
         }
-
         //使用http网关，使用此方法连接。
         function httpposttoserver(command, Request, Root)
         {
@@ -41,7 +38,6 @@
             test.Token = "Token";
             test.Querycount = 0;
             test.Number = '';
-
             $.ajax({
                 type: "post",
                 url: "http://127.0.0.1:8080/" + command,
@@ -67,7 +63,6 @@
             test.Token = "Token";
             test.Querycount = 0;
             test.Number = '';
-
             $.ajax({
                 type: "get",
                 url: "http://127.0.0.1:8080/" + command,
@@ -89,7 +84,6 @@
         function SendData()
         {
           //  if (socket.takon != "") {
-               
                     socket.SendData(0x23, "testaabb", { Str: 'aaaaa' })
            // } else { alert("socket is null"); }
         }
@@ -105,7 +99,6 @@
     <button id='ToggleConnection' type="button" onclick='seestate();'>
         查看状态</button><br />
     <br />
-
     <div id="test" style="width:1024px"></div>
 </body>
 </html>

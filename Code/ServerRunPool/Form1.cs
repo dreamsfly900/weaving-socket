@@ -1,17 +1,10 @@
 ﻿using cloud;
-using MyInterface;
-using P2P;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
+using WeaveBase;
 namespace 智信构建结构
 {
     public partial class Form1 : Form
@@ -19,17 +12,12 @@ namespace 智信构建结构
         public Form1()
         {
             InitializeComponent();
-
-         
-
         }
-
         private void Pserver_receiveeventbit(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
-          
         }
-        List<ServerPort> listsp = new List<ServerPort>();
-        TCPcloud t = new TCPcloud();
+        List<WeaveServerPort> listsp = new List<WeaveServerPort>();
+        WeaveTCPcloud t = new WeaveTCPcloud();
         private void button1_Click(object sender, EventArgs e)
         {
             timer1.Stop();
@@ -51,10 +39,8 @@ namespace 智信构建结构
                     //{
                         str += "|";
                    // }
-                    MyInterface.MyInterface mif = new MyInterface.MyInterface();
+                    WevaeSocketSession mif = new WevaeSocketSession();
                     mif.Parameter = str.Split('|');
-                   
-                  
                     if (t.Run(mif))
                     {
                         t.AddProt(listsp);
@@ -66,41 +52,34 @@ namespace 智信构建结构
                 {
                     lab_info.Text = "请检查IP地址或端口号的格式！";
                 }
-
-               
             }else
             {
                 lab_info.Text = "IP地址和端口号不能为空！";
             }
-       
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             lab_info.Text = "";
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
-            ServerPort sp = new ServerPort();
-           
+            WeaveServerPort sp = new WeaveServerPort();
             if (checkBox1.Checked)
-                sp.Istoken = true;
+                sp.IsToken = true;
                 sp.Port = Convert.ToInt32(txt_port.Text);
             if (radioButton2.Checked)
             {
-                sp.PortType = portType.web;
+                sp.PortType = WeavePortTypeEnum.Web;
                 listBox1.Items.Add("WEB端口" + sp.Port);
             }
             else if (radioButton3.Checked)
             {
-                sp.PortType = portType.http;
+                sp.PortType = WeavePortTypeEnum.Http;
                 listBox1.Items.Add("HTTP端口" + sp.Port);
             }
             else if (radioButton4.Checked)
             {
-                sp.PortType = portType.bytes;
-
+                sp.PortType = WeavePortTypeEnum.Bytes;
                 Assembly [] abs = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (Assembly ab in abs)
                 {
@@ -121,24 +100,20 @@ namespace 智信构建结构
             }
             else  
             {
-                sp.PortType = portType.json;
+                sp.PortType = WeavePortTypeEnum.Json;
                 listBox1.Items.Add("json端口" + sp.Port);
             }
-           
-
             listsp.Add(sp);
             panel2.Visible = false;
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             listBox2.Items.Clear();
-            foreach (var item in t.p2psevlist)
+            foreach (var item in t.P2ServerList)
             {
-                listBox2.Items.Add("端口："+ item.Port+"  连接人数："+ item.getNum());
+                listBox2.Items.Add("端口："+ item.Port+"  连接人数："+ item.GetNetworkItemCount());
             }
         }
-
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
@@ -149,7 +124,6 @@ namespace 智信构建结构
             {
                 panel2.Visible = false;
             } 
-
         }
     }
 }

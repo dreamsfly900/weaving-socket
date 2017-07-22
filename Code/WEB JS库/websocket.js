@@ -14,15 +14,12 @@
         var ws;
         var settakon = this.settakon;
         var SOCKECT_ADDR = "ws://" + options.ip + ":" + options.port + "";
-
         this.jump = options.jump;
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
-
         var tempthis = this;
         ws.onopen = function (event) { options.conn(this.readyState); };
         var timeout;
-
         ws.onmessage = function (evt) {
             try {
                 var bytesRead = evt.data.length;
@@ -52,7 +49,6 @@
                 }
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0) {
-
                         settakon(text.split('|')[1]);
                         options.conn('token');
                     }
@@ -70,39 +66,26 @@
                             } catch (e) {
                                 alert('返回的内容错误：不是JSON格式');
                             }
-
                             if (tempthis.listListen[i].name == data['Request'])
                                 tempthis.listListen[i](tempbtye[0], data['Root'], data);
                         }
-
-
                     }
             } catch (e) { alert(e.message); }
             //   alert("接收到服务器发送的数据：\r\n" + text);
-
-
-
         };
         ws.onclose = function (event) { if (options.close != null) options.close(this.readyState); };
         ws.onerror = function (event) {
             if (options.error != null)
                 options.error(event.data);
-
         };
         this.soc = ws;
-
     } catch (ex) {
         alert(ex.message);
     }
-
-
-
     function Utf8ArrayToStr(array, i, len) {
         var out, c;
         var char2, char3;
-
         out = "";
-
         len = parseInt(i) + parseInt(len);
         while (i < len) {
             c = array[i++];
@@ -126,12 +109,8 @@
                     break;
             }
         }
-
         return out;
     }
-
-
-
 }
 UDCsocket.prototype = {
     listListen: new Array(),
@@ -140,18 +119,13 @@ UDCsocket.prototype = {
     jump: null,
     AddListenmethod: function (fun) {
         //  alert(str);
-
         this.listListen.push(fun);
-
     },
     settakon: function (str) {
         //  alert(str);
-
         this.takon = str;
-
     },
     SendData: function (command, Request, Root, Parameter) {
-
         try {
             if (takon == "") {
                 alert("takon不存在！");
@@ -165,7 +139,6 @@ UDCsocket.prototype = {
             test.Querycount = 0;
             test.Number = null;
             // alert(JSON.stringify(test));
-
             var sendb = (JSON.stringify(test)).getBytes();
             var lens = (sendb.length + '').getBytes();
             //不清楚getBytes 是不是utf8格式
@@ -183,15 +156,12 @@ UDCsocket.prototype = {
             }
             var b = new Int8Array(bytes);
             //sendb.CopyTo(b, 2 + lens.Length);
-
             this.soc.send(b);
         } catch (ex) {
             alert("SendData" + ex.message);
         }
     }
-
 }
-
 String.prototype.getBytes = function () {
     //var bytes = [];
     //for (var i = 0; i < this.length; i++) {
@@ -201,7 +171,6 @@ String.prototype.getBytes = function () {
     //        bytes.push((charCode << (j * 8)) & 0xFF);
     //    }
     //}
-
     //return bytes;
     var str = this;
     var byteArray = [];

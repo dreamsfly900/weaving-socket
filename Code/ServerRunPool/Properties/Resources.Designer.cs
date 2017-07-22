@@ -7,11 +7,8 @@
 //     重新生成代码，这些更改将丢失。
 // </auto-generated>
 //------------------------------------------------------------------------------
-
 namespace 智信构建结构.Properties
 {
-
-
     /// <summary>
     ///   一个强类型的资源类，用于查找本地化的字符串等。
     /// </summary>
@@ -24,16 +21,12 @@ namespace 智信构建结构.Properties
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources
     {
-
         private static global::System.Resources.ResourceManager resourceMan;
-
         private static global::System.Globalization.CultureInfo resourceCulture;
-
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources()
         {
         }
-
         /// <summary>
         ///   返回此类使用的、缓存的 ResourceManager 实例。
         /// </summary>
@@ -50,7 +43,6 @@ namespace 智信构建结构.Properties
                 return resourceMan;
             }
         }
-
         /// <summary>
         ///   为所有资源查找重写当前线程的 CurrentUICulture 属性，
         ///   方法是使用此强类型资源类。

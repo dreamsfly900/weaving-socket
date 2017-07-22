@@ -65,9 +65,9 @@
     <Compile Include="UDP.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\MyInterface.csproj">
+    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
       <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
-      <Name>MyInterface</Name>
+      <Name>WeaveCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

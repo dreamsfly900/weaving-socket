@@ -1,5 +1,5 @@
 ﻿using client;
-using StandardModel;
+using WeaveBase;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using TCPServer;
-
+using SocketServer;
 namespace cloud
 {
     public class MyHttpServer : HttpServer
@@ -18,19 +18,19 @@ namespace cloud
         {
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFlies));
         }
-        public List<CommandItem> CommandItemS = new List<CommandItem>();
+        public List<CommandItem> CommandItems = new List<CommandItem>();
         protected void ReloadFlies(object obj)
         {
             try
             {
-                foreach (CommandItem ci in CommandItemS)
+                foreach (CommandItem ci in CommandItems)
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
                         Client.stop();
                     }
                 }
-                CommandItemS.Clear();
+                CommandItems.Clear();
                 XmlDocument xml = new XmlDocument();
                 xml.Load("node.xml");
                 foreach (XmlNode xn in xml.FirstChild.ChildNodes)
@@ -39,21 +39,7 @@ namespace cloud
                     ci.Ip = xn.Attributes["ip"].Value;
                     ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
-                    //P2Pclient p2p = new P2Pclient(false);
-
-                    //p2p.receiveServerEvent += (V_receiveServerEvent);
-                    //p2p.timeoutevent += (V_timeoutevent);
-                    //p2p.ErrorMge += (V_ErrorMge);
-                    //if (p2p.start(ci.Ip, ci.Port, false))
-                    //{
-                    //    ci.Client.Add(p2p);
-                        CommandItemS.Add(ci);
-                    //}
-                    //else
-                    //{
-                    //    if (EventMylog != null)
-                    //        EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
-                    //}
+                    CommandItems.Add(ci);
                 }
             }
             catch (Exception ex)
@@ -62,22 +48,16 @@ namespace cloud
                     EventMylog("加载异常", ex.Message);
             }
         }
-
         private void V_ErrorMge(int type, string error)
         {
             EventMylog("加载异常", error);
         }
-
         private void V_timeoutevent()
         {
-            
         }
-
         private void V_receiveServerEvent(byte command, string text)
         {
-            
         }
-
         public override void handleGETRequest(HttpProcessor p)
         {
             //Console.WriteLine("request: {0}", p.http_url);
@@ -92,20 +72,17 @@ namespace cloud
             getdata(p, command, data);
             p.outputStream.WriteLine(")");
         }
-        public bool getdata(HttpProcessor p,byte command,string data)
+        public override  bool getdata(HttpProcessor p,byte command,string data)
         {
             string returnstr = "";
-            foreach (CommandItem ci in CommandItemS)
+            foreach (CommandItem ci in CommandItems)
             {
                 if (ci.CommName == command)
                 {
                     P2Pclient p2p = new P2Pclient(false);
-
                     p2p.receiveServerEvent += new P2Pclient.receive((c, text) => {
-
                         returnstr = text;
                     });
-
                     //p2p.timeoutevent += (V_timeoutevent);
                     p2p.ErrorMge += (V_ErrorMge);
                     if (p2p.start(ci.Ip, ci.Port, false))
@@ -135,14 +112,14 @@ namespace cloud
                 // _0x01.
             }
             p.outputStream.WriteLine("不能找到指定的服务");
-            int i = listp.Count;
+            int i = httpProcessorList.Count;
             HttpProcessor[] hps = new HttpProcessor[i];
-            listp.CopyTo(hps);
+            httpProcessorList.CopyTo(hps);
             foreach (HttpProcessor hp in hps)
             {
                 if (hp == p)
                 {
-                    listp.Remove(p);
+                    httpProcessorList.Remove(p);
                     return true;
                 }
             }
@@ -159,13 +136,9 @@ namespace cloud
             p.writeSuccess();
             getdata(p, command, data);
             //  _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
-
-
             //p.outputStream.WriteLine("<html><body><h1>test server</h1>");
             //p.outputStream.WriteLine("<a href=/test>return</a><p>");
             //p.outputStream.WriteLine("{0}", data);
-
-
         }
     }
 }
