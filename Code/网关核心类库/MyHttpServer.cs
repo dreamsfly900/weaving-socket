@@ -23,13 +23,7 @@ namespace cloud
         {
             try
             {
-                foreach (CommandItem ci in CommandItems)
-                {
-                    foreach (P2Pclient Client in ci.Client)
-                    {
-                        Client.stop();
-                    }
-                }
+                
                 CommandItems.Clear();
                 XmlDocument xml = new XmlDocument();
                 xml.Load("node.xml");

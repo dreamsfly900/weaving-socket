@@ -16,3 +16,10 @@ C:\Users\apple\Source\WeaveSocket\Code\TCPclient\bin\Debug\MyInterface.dll
 C:\Users\apple\Source\WeaveSocket\Code\TCPclient\bin\Debug\MyInterface.pdb
 C:\Users\apple\Source\WeaveSocket\Code\TCPclient\obj\Debug\TCPclient.dll
 C:\Users\apple\Source\WeaveSocket\Code\TCPclient\obj\Debug\TCPclient.pdb
+D:\WeaveSocket\Code\TCPclient\bin\Debug\TCPclient.dll
+D:\WeaveSocket\Code\TCPclient\bin\Debug\TCPclient.pdb
+D:\WeaveSocket\Code\TCPclient\bin\Debug\MyInterface.dll
+D:\WeaveSocket\Code\TCPclient\bin\Debug\MyInterface.pdb
+D:\WeaveSocket\Code\TCPclient\obj\Debug\TCPclient.csprojResolveAssemblyReference.cache
+D:\WeaveSocket\Code\TCPclient\obj\Debug\TCPclient.dll
+D:\WeaveSocket\Code\TCPclient\obj\Debug\TCPclient.pdb

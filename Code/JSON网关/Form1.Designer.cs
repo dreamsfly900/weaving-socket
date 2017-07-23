@@ -40,7 +40,6 @@
             this.内部端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.端口比例ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
             this.最大承载人数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBox4 = new System.Windows.Forms.ToolStripTextBox();
             this.节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +57,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.服务节点节点状态.SuspendLayout();
@@ -100,7 +100,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(11, 4, 0, 4);
-            this.menuStrip1.Size = new System.Drawing.Size(1129, 41);
+            this.menuStrip1.Size = new System.Drawing.Size(1129, 40);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -181,14 +181,7 @@
             this.toolStripTextBox3});
             this.端口比例ToolStripMenuItem.Name = "端口比例ToolStripMenuItem";
             this.端口比例ToolStripMenuItem.Size = new System.Drawing.Size(274, 34);
-            this.端口比例ToolStripMenuItem.Text = "转发比例";
-            // 
-            // toolStripTextBox3
-            // 
-            this.toolStripTextBox3.Name = "toolStripTextBox3";
-            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 34);
-            this.toolStripTextBox3.Text = "30";
-            this.toolStripTextBox3.Click += new System.EventHandler(this.toolStripTextBox3_Click);
+            this.端口比例ToolStripMenuItem.Text = "通道数量";
             // 
             // 最大承载人数ToolStripMenuItem
             // 
@@ -253,11 +246,11 @@
             this.服务节点节点状态.Controls.Add(this.tabPage3);
             this.服务节点节点状态.Dock = System.Windows.Forms.DockStyle.Fill;
             this.服务节点节点状态.HotTrack = true;
-            this.服务节点节点状态.Location = new System.Drawing.Point(0, 41);
+            this.服务节点节点状态.Location = new System.Drawing.Point(0, 40);
             this.服务节点节点状态.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.服务节点节点状态.Name = "服务节点节点状态";
             this.服务节点节点状态.SelectedIndex = 0;
-            this.服务节点节点状态.Size = new System.Drawing.Size(1129, 630);
+            this.服务节点节点状态.Size = new System.Drawing.Size(1129, 631);
             this.服务节点节点状态.TabIndex = 2;
             // 
             // tabPage1
@@ -268,7 +261,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.tabPage1.Size = new System.Drawing.Size(1121, 595);
+            this.tabPage1.Size = new System.Drawing.Size(1121, 596);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "基本信息";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -302,7 +295,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.tabPage2.Size = new System.Drawing.Size(1121, 586);
+            this.tabPage2.Size = new System.Drawing.Size(1121, 595);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务节点节点状态";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -324,7 +317,7 @@
             this.tabPage3.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.tabPage3.Size = new System.Drawing.Size(1121, 586);
+            this.tabPage3.Size = new System.Drawing.Size(1121, 595);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "从网关节点状态";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -343,6 +336,18 @@
             // 
             this.timer1.Interval = 2000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // toolStripTextBox3
+            // 
+            this.toolStripTextBox3.Items.AddRange(new object[] {
+            "10",
+            "100",
+            "1000",
+            "10000"});
+            this.toolStripTextBox3.Name = "toolStripTextBox3";
+            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 36);
+            this.toolStripTextBox3.Text = "10";
+            this.toolStripTextBox3.Click += new System.EventHandler(this.toolStripTextBox3_Click);
             // 
             // Form1
             // 
@@ -372,6 +377,7 @@
             this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         #endregion
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -403,9 +409,9 @@
         private System.Windows.Forms.ToolStripMenuItem 内部端口ToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox2;
         private System.Windows.Forms.ToolStripMenuItem 端口比例ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripTextBox toolStripTextBox3;
         private System.Windows.Forms.ToolStripMenuItem 最大承载人数ToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox4;
+        private System.Windows.Forms.ToolStripComboBox toolStripTextBox3;
     }
 }
 

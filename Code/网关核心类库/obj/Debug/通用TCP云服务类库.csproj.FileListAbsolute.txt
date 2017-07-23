@@ -38,3 +38,16 @@ C:\Users\apple\Source\WeaveSocket\Code\网关核心类库\bin\Debug\TCPclient.pd
 C:\Users\apple\Source\WeaveSocket\Code\网关核心类库\bin\Debug\TCPServer.pdb
 C:\Users\apple\Source\WeaveSocket\Code\网关核心类库\obj\Debug\TCPCloud.dll
 C:\Users\apple\Source\WeaveSocket\Code\网关核心类库\obj\Debug\TCPCloud.pdb
+D:\WeaveSocket\Code\网关核心类库\obj\Debug\通用TCP云服务类库.csprojResolveAssemblyReference.cache
+D:\WeaveSocket\Code\网关核心类库\obj\Debug\TCPCloud.dll
+D:\WeaveSocket\Code\网关核心类库\obj\Debug\TCPCloud.pdb
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\UDTCommon.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\UDTLibary.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPCloud.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPCloud.pdb
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\MyInterface.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPclient.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPServer.dll
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\MyInterface.pdb
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPclient.pdb
+D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPServer.pdb

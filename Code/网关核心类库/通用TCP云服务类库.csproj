@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTUGateWay.cs" />
+    <Compile Include="GateHelper.cs" />
     <Compile Include="GateWay.cs" />
     <Compile Include="GateWaybyte.cs" />
     <Compile Include="MyHttpServer.cs" />

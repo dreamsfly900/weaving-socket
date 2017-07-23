@@ -25,11 +25,12 @@ namespace cloud
         protected WeaveP2Server p2psev2;
         int max = 5000;
         int counttemp = 0;
-        List<int> tempnum = new List<int>();
+    
+        private WeavePipelineTypeEnum pipeline = WeavePipelineTypeEnum.ten;
         #region 初始化
         public GateWay(bool IsWeb)
         {
-            ConnObjlist = new ConnObj[max];
+           
             if (IsWeb)
                 p2psev = new WeaveWebServer();
             else
@@ -37,9 +38,10 @@ namespace cloud
         }
         public GateWay(bool IsWeb, int _max)
         {
-            newwayEvent += GateWay_newwayEvent;
+            
             max = _max;
-            ConnObjlist = new ConnObj[max];
+          
+
             if (IsWeb)
                 p2psev = new WeaveWebServer();
             else
@@ -80,55 +82,57 @@ namespace cloud
         protected void ReloadFlies(object obj)
         {
             try
-            {
-                foreach (CommandItem ci in CommandItemS)
-                {
-                    foreach (P2Pclient Client in ci.Client)
-                    {
-                        Client.stop();
-                       //isok加到这里吧
-                    }
-                }
+            { 
                 CommandItemS.Clear();
                 XmlDocument xml = new XmlDocument();
                 xml.Load("node.xml");
-                List<P2Pclient> listip = new List<P2Pclient>();
+                List<String> iplist = new List<string>();
                 foreach (XmlNode xn in xml.FirstChild.ChildNodes)
                 {
+                    bool isok = true;
                     CommandItem ci = new CommandItem();
                     ci.Ip = xn.Attributes["ip"].Value;
                     ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
-                    bool isnewlink = true;
-                    foreach (P2Pclient str in listip)
+                    CommandItemS.Add(ci);
+                    foreach (string s in iplist)
+                        if (s == ci.Ip + ":" + ci.Port)
+                            isok = false;
+                    if (isok)
+                        iplist.Add(ci.Ip + ":" + ci.Port);
+                }
+                int countpipeline = iplist.Count * (int)pipeline;
+                if (countpipeline > 60000)
+                {
+                    if (EventMylog != null)
+                        EventMylog("设置异常", "你所开启的通道不能超过6万，计算方法，不同的（IP+PORT）总数*通道数量。开启当前设置需要：" + countpipeline + "本地连接，此链接不被系统支持。");
+                    return;
+                }
+                foreach (string s in iplist)
+                {
+                    P2Pclient[,,,] client = new P2Pclient[10, 10, 10, 10];
+                    for (int i = (int)pipeline; i > 1; i--)
                     {
-                        if ((str.IP+"|"+str.PORT) == (ci.Ip + "|" + ci.Port))
-                        {
-                            ci.Client.Add(str);
-                            CommandItemS.Add(ci);
-                            isnewlink = false;
-                            break;
-                        }
+                        String im = (i - 1).ToString(),temp="";
+                        for (int j = 0; j < 4 - im.Length; j++)
+                            temp += "0";
+                              im = temp+im;
+                        System.Threading.Thread.Sleep(100);
+                          P2Pclient ct = newp2p(s.Split(':')[0], Convert.ToInt32(s.Split(':')[1]));
+                        //P2Pclient ct = new P2Pclient(false);
+                      
+                            client[int.Parse(im.Substring(0, 1)), int.Parse(im.Substring(1, 1)), int.Parse(im.Substring(2, 1)), int.Parse(im.Substring(3, 1))] = ct;
+                       
                     }
-                    if (isnewlink)
+                   
+                    client[0,0,0,0]= newp2p(s.Split(':')[0], Convert.ToInt32(s.Split(':')[1]));
+                    foreach (CommandItem ci in CommandItemS)
                     {
-                        P2Pclient p2p = new P2Pclient(false);
-                        p2p.receiveServerEvent += (V_receiveServerEvent);
-                        p2p.timeoutevent += (V_timeoutevent);
-                        p2p.ErrorMge += (V_ErrorMge);
-                        if (p2p.start(ci.Ip, ci.Port, false))
-                        {
-                            listip.Add(p2p);
-                            ci.Client.Add(p2p);
-                            CommandItemS.Add(ci);
-                        }
-                        else
-                        {
-                            if (EventMylog != null)
-                                EventMylog("节点连接失败", "命令：" + ci.CommName + ":节点连接失败，抛弃此节点");
-                        }
+                        if (s == ci.Ip + ":" + ci.Port)
+                            ci.Client = client;
                     }
                 }
+                EventMylog("加载成功", "已完成通道加载。");
             }
             catch (Exception ex)
             {
@@ -136,6 +140,50 @@ namespace cloud
                     EventMylog("加载异常", ex.Message);
             }
         }
+        P2Pclient newp2p(String Ip,int Port)
+        {
+            P2Pclient p2p = new P2Pclient(false);
+            p2p.receiveServerEvent += (V_receiveServerEvent);
+            p2p.timeoutobjevent += P2p_timeoutobjevent;
+            p2p.ErrorMge += (V_ErrorMge);
+            if (p2p.start(Ip, Port, false))
+            {
+                return p2p;
+            }
+            else
+            {
+                if (EventMylog != null)
+                    EventMylog("节点连接失败", "命令：" + Ip+":"+Port + ":节点连接失败，抛弃此节点");
+            }
+            return null;
+        }
+        private void P2p_timeoutobjevent(P2Pclient p2pobj)
+        {
+            P2Pclient Client = p2pobj;
+            if (!Client.Isline)
+            {
+                string port = Client.localprot;
+                if (EventMylog != null)
+                    EventMylog("节点重新连接--:", Client.IP + ":" + Client.PORT);
+                if (!Client.Restart(false))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    P2p_timeoutobjevent(p2pobj);
+                   
+                }
+                else
+                {
+                    try
+                    {
+                        EventMylog("节点重新连接-通知下线-:", Client.IP + ":" + Client.PORT); 
+                    }
+                    catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
+                    //Client.send(0xff, "Restart|"+ port);
+                    EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
+                }
+            }
+        }
+
         protected void ReloadFliesway(object obj)
         {
             try
@@ -155,7 +203,8 @@ namespace cloud
                     ci.Token = (xn.Attributes["token"].Value);
                     ci.Client = new P2Pclient(false);
                     ci.Client.receiveServerEvent += Client_receiveServerEvent;
-                    ci.Client.timeoutevent += Client_timeoutevent;
+                    ci.Client.timeoutobjevent += Client_timeoutobjevent;
+                    
                     ci.Client.ErrorMge += Client_ErrorMge;
                     if (ci.Client.start(ci.Ip, ci.Port, false))
                     {
@@ -177,6 +226,27 @@ namespace cloud
             {
                 if (EventMylog != null)
                     EventMylog("加载异常", ex.Message);
+            }
+        }
+
+        private void Client_timeoutobjevent(P2Pclient p2pobj)
+        {
+            try
+            {
+              
+                        if (p2pobj.Restart(false))
+                        {
+                            Client_timeoutobjevent(p2pobj);
+                            System.Threading.Thread.Sleep(5000);
+                        }
+                  
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("way节点重新连接", ex.Message);
+                Client_timeoutobjevent(p2pobj);
+                System.Threading.Thread.Sleep(5000);
             }
         }
         #endregion
@@ -203,7 +273,7 @@ namespace cloud
         }
         public int getnum()
         {
-            return counttemp - tempnum.Count;
+            return counttemp;
         }
         protected void Client_ErrorMge(int type, string error)
         {
@@ -237,29 +307,7 @@ namespace cloud
         protected void P2psev2_EventDeleteConnSoc(Socket soc)
         {
         }
-        protected void Client_timeoutevent()
-        {
-            try
-            {
-                foreach (WayItem ci in WayItemS)
-                {
-                    if (!ci.Client.Isline)
-                    {
-                        if (ci.Client.Restart(false))
-                        {
-                            Client_timeoutevent();
-                            System.Threading.Thread.Sleep(5000);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (EventMylog != null)
-                    EventMylog("way节点重新连接", ex.Message);
-                Client_timeoutevent();
-            }
-        }
+        
         protected void Client_receiveServerEvent(byte command, string text)
         {
             try
@@ -281,111 +329,9 @@ namespace cloud
         }
         #endregion
         #region 客户端连接与消息转发
-        private void GateWay_newwayEvent(int temp)
-        {
-            try
-            {
-                    int len = (temp + (Proportion - 1)) % Proportion;
-                if (len == 0)
-                {
-                    List<P2Pclient> listip = new List<P2Pclient>();
-                    foreach (CommandItem ci in CommandItemS)
-                    {
-                        if (ci.Client.Count>((temp+ Proportion) / Proportion))
-                            return;
-                        bool isnewlink = true;
-                        foreach (P2Pclient str in listip)
-                        {
-                            if ((str.IP + "|" + str.PORT) == (ci.Ip + "|" + ci.Port))
-                            {
-                                ci.Client.Add(str);
-                                CommandItemS.Add(ci);
-                                isnewlink = false;
-                                break;
-                            }
-                        }
-                        if (isnewlink)
-                        {
-                            P2Pclient p2p = new P2Pclient(false);
-                            p2p.receiveServerEvent += (V_receiveServerEvent);
-                            p2p.timeoutevent += (V_timeoutevent);
-                            p2p.ErrorMge += (V_ErrorMge);
-                            if (p2p.start(ci.Ip, ci.Port, false))
-                            {
-                                listip.Add(p2p);
-                                ci.Client.Add(p2p);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                EventMylog("EventUpdataConnSoc---新建连接", "");
-            }
-        }
+        
         /// <summary>
-        /// 这里写断线后操作
-        /// </summary>
-        protected void V_timeoutevent()
-        {
-            //int count = CommandItemS.Count;
-            //CommandItem[] comItems = new CommandItem[count];
-            //CommandItemS.CopyTo(0, comItems, 0, count);
-            try
-            {
-                foreach (CommandItem ci in CommandItemS)
-                {
-                    int i = 0;
-                    foreach (P2Pclient Client in ci.Client)
-                    {
-                       // if (Client != null)
-                            if (!Client.Isline)
-                            {
-                                string port = Client.localprot;
-                                if (EventMylog != null)
-                                    EventMylog("节点重新连接--:", Client.IP+":"+ Client.PORT);
-                                if (!Client.Restart(false))
-                                {
-                                    V_timeoutevent();
-                                    Client.localprot = port;
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                    EventMylog("节点重新连接-通知下线-:", Client.IP + ":" + Client.PORT);
-                                    for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
-                                        {
-                                            if (ConnObjlist[j] != null)
-                                            {
-                                                try
-                                                {
-                                                    ConnObjlist[j].Soc.Close();
-                                                }
-                                                catch { }
-                                               // p2psev_EventDeleteConnSoc(ConnObjlist[j].Soc);
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
-                                        //Client.send(0xff, "Restart|"+ port);
-                                        EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
-                                    }
-                            }
-                        i++;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (EventMylog != null)
-                    EventMylog("节点重新连接-233-:", ex.Message);
-                V_timeoutevent();
-            }
-        }
-        /// <summary>
-        /// 这里写接收到内容后，转发
+        /// 这里写接收到服务器发送的消息转发给客户端
         /// </summary>
         /// <param name="command"></param>
         /// <param name="text"></param>
@@ -395,24 +341,28 @@ namespace cloud
             {
                 WeaveSession _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(text);
             int temp = 0;
+                String ip = "";
+                int port = 0;
             try
             {
-                temp = Convert.ToInt32(_0x01.Token.Substring(17));
-                _0x01.Querycount = temp;
+                   ip = _0x01.Token.Split(':')[0];
+                    port= Convert.ToInt32( _0x01.Token.Split(':')[1]);
+                    _0x01.Querycount = temp;
             }
             catch
             {
-                 EventMylog("转发", temp+"获取编号失败。"+ _0x01.Token);
+                 EventMylog("转发", "获取编号失败。"+ _0x01.Token);
                 return;
             }
-                if (ConnObjlist[temp] != null)
+              ConnObj cobj=  GateHelper.GetConnItemlist(ConnItemlist, ip, port, Pipeline);
+                if (cobj != null)
                 {
                     int error = 0;
                     lb1122:
-                    if (!p2psev.Send(ConnObjlist[temp].Soc, command, text))
+                    if (!p2psev.Send(cobj.Soc, command, text))
                     {
                         error += 1;
-                        EventMylog("转发"+ error, "ConnObjlist:" + temp + "发送失败：" + text);
+                        EventMylog("转发"+ error, "ConnObjlist:发送失败：" + text);
                         if (error<3) goto lb1122;
                     }
                 }
@@ -428,99 +378,56 @@ namespace cloud
         {
             try
             {
-                //ThreadList<ConnObj> coobjs = ConnObjlist.Clone();
-                int i =0;
-                for (i=0;i < ConnObjlist.Length;i++)
-                {
-                    ConnObj coob = ConnObjlist[i];
-                    if (coob != null)
-                        if (coob.Soc.Equals(soc))
-                        {
-                            // ConnObjlist[i] =null;
-                            int tempi = Convert.ToInt32(coob.Token.Substring(17));
-                            tempnum.Add(tempi);
-                            try
-                            {
-                                List<String> listsercer = new List<string>();
-                                bool temp = true;
-                                int len = i / Proportion;
-                                foreach (CommandItem ci in CommandItemS)
-                                {
-                                    temp = true;
-                                    foreach (string ser in listsercer)
-                                    {
-                                        if (ser == (ci.Client[len].IP + ci.Client[len].PORT))
-                                        {
-                                            temp = false;
-                                            goto lab881;
-                                        }
-                                    }
-                                    lab881:
-                                    if (temp)
-                                    {
-                                        listsercer.Add(ci.Client[len].IP + ci.Client[len].PORT);
-                                        ci.Client[len].send(0xff, "out|" + coob.Token);
-                                    } 
-                                }
-                                ConnObjlist[i] = null;
-                                return;
-                            }
-                            catch (Exception e){ EventMylog("移除用户11111", e.Message); }
-                        }
-                }
+              
+                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
+                counttemp--;
             }
             catch (Exception ex)
             {
                 if (EventMylog != null)
                     EventMylog("移除用户", ex.Message);
             }
-        }
-      public  ConnObj[] ConnObjlist = new ConnObj[0];
-        //ThreadSafeDictionary<string, ConnObj> ConnObjlist = new ThreadSafeDictionary<string, ConnObj>();
+        } 
+        public clientItem[,,,] ConnItemlist = new clientItem[10, 10, 10, 10];
+       
         protected void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
         {
             ConnObj cobj = new ConnObj();
             cobj.Soc = soc;
             IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-            //cobj.Token = EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-            int temp = 0;
-            lock (tempnum)
+       
+             
+            counttemp++;
+             //这里通过IP和PORT获取对象
+
+            cobj.Token = clientipe.Address.ToString()+":"+ clientipe.Port;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
+             
+            cobj.Soc = soc;
+
+
+            if (counttemp > max)
             {
-                if ((counttemp < max && tempnum.Count > 0) || (counttemp >= max && tempnum.Count > 0))
+                int mincount = int.MaxValue;
+                string tempip = "";
+                foreach (WayItem ci in WayItemS)
                 {
-                    temp = tempnum[0];
-                    tempnum.RemoveAt(0);
-                } else if (counttemp < max && tempnum.Count <= 0)
-                {
-                    temp= counttemp;
-                    counttemp++;
-                }
-            }
-            if (counttemp >= max && tempnum.Count == 0)
-                {
-                    int mincount = int.MaxValue;
-                    string tempip = "";
-                    foreach (WayItem ci in WayItemS)
+                    if (ci.Num < mincount)
                     {
-                        if (ci.Num < mincount)
-                        {
-                            mincount = ci.Num;
+                        mincount = ci.Num;
                         tempip = ci.Ip + ":" + ci.Port;
-                         }
                     }
-                    p2psev.Send(soc, 0xff, "jump|" + tempip + "");
-                    soc.Close();
-                    return;
                 }
+                p2psev.Send(soc, 0xff, "jump|" + tempip + "");
+                soc.Close();
+                return;
+            }
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                cobj.Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")+ temp;// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-                cobj.Id = temp;
-                cobj.Soc = soc;
-                ConnObjlist[temp] = cobj;
-                if (p2psev.Send(ConnObjlist[temp].Soc, 0xff, "token|" + cobj.Token + ""))
+               
+                if (p2psev.Send(soc, 0xff, "token|" + cobj.Token + ""))
                 {
+                    GateHelper.SetConnItemlist(ConnItemlist, cobj, Pipeline);
                 }
                 List<String> listsercer = new List<string>();
                 bool tempb = true;
@@ -529,7 +436,7 @@ namespace cloud
                     tempb = true;
                     foreach (string ser in listsercer)
                     {
-                        if (ser == (ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT))
+                        if (ser == (ci.Ip + ci.Port))
                         {
                             tempb = false;
                             goto lab882;
@@ -538,23 +445,29 @@ namespace cloud
                     lab882:
                     if (tempb)
                     {
-                        if (ci.Client[ci.Client.Count - 1] != null)
+                        if (ci.Client[0,0,0,0] != null)
                         {
-                            listsercer.Add(ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT);
-                            ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
+                               listsercer.Add(ci.Ip + ci.Port);
+                               ci.Client[0,0,0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length-1,1))].send(0xff, "in|" + cobj.Token);
                         }
                     }
                 }
-                newwayEvent(temp);
+              
             }
             catch (Exception ex)
             {
                 if (EventMylog != null)
                     EventMylog("EventUpdataConnSoc", ex.Message);
             }
-        }
-         event newway newwayEvent;
+        } 
         delegate void newway(int temp);
+
+        /// <summary>
+        /// 收到客户端发来的消息，并转发到服务端中心
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="data"></param>
+        /// <param name="soc"></param>
         protected void p2psev_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
         {
             try
@@ -573,23 +486,17 @@ namespace cloud
                     EventMylog("Token是NULL：", "" + data);
                     return;
                 }
-                //string key = "";
-                //string ip = "";
-                //try
-                //{
-                //    key = DecryptDES(_0x01.Token, "lllssscc");
-                //     ip = key.Split('|')[0];
-                //}
-                //catch { return; }
+                
                 IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                //if (clientipe.Address.ToString() == ip)
-                //{
+                
                 int count = CommandItemS.Count;
-                int temp = 0;
+              
                 try
                 {
-                     temp = Convert.ToInt32(_0x01.Token.Substring(17));
-                    _0x01.Querycount = temp;
+                    // temp = _0x01.Token.Split(':');
+                    //if (temp.Length < 2)
+                    //    return;
+                    
                 }
                 catch(Exception e)
                 {
@@ -597,22 +504,24 @@ namespace cloud
                         EventMylog("p2psev_receiveevent", e.Message);
                     return;
                 }
-                //CommandItem[] comItems = new CommandItem[count];
-                //CommandItemS.CopyTo(0, comItems, 0, count);
+                
                 foreach (CommandItem ci in CommandItemS)
                 {
                     if (ci != null)
                     {
                         if (ci.CommName == command)
                         {
-                            int i = temp;
-                            int len = i / Proportion;
-                            int index = len >= ci.Client.Count ? ci.Client.Count - 1 : len;
-                            if (!ci.Client[index].Isline)
-                            { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); }
-                            if (!ci.Client[index].send(command, data))
+                            P2Pclient[,,,] client = ci.Client;
+                            P2Pclient p2ptemp= GateHelper.GetP2Pclient(client, soc, Pipeline);
+                            if (p2ptemp != null)
                             {
-                                p2psev.Send(soc, 0xff, index+"你所请求的服务暂不能使用，发送错误。" + ci.Client[index].Isline);
+                                if (!p2ptemp.Isline)
+                                { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！");return; }
+                                if (!p2ptemp.send(command, data))
+                                {
+                                    p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。" );
+                                }
+
                             }
                         }
                     }
@@ -636,227 +545,10 @@ namespace cloud
                 proportion = value;
             }
         }
-        /// <summary>
-        /// DES加密字符串
-        /// </summary>
-        /// <param name="encryptString">待加密的字符串</param>
-        /// <param name="encryptKey">加密密钥,要求为8位</param>
-        /// <returns>加密成功返回加密后的字符串，失败返回源串</returns>
-        public string EncryptDES(string encryptString, string encryptKey)
-        {
-            try
-            {
-                byte[] rgbKey = Encoding.UTF8.GetBytes(encryptKey.Substring(0, 8));
-                byte[] rgbIV = Keys;
-                byte[] inputByteArray = Encoding.UTF8.GetBytes(encryptString);
-                DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
-                MemoryStream mStream = new MemoryStream();
-                CryptoStream cStream = new CryptoStream(mStream, dCSP.CreateEncryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
-                cStream.Write(inputByteArray, 0, inputByteArray.Length);
-                cStream.FlushFinalBlock();
-                return Convert.ToBase64String(mStream.ToArray());
-            }
-            catch
-            {
-                return encryptString;
-            }
-        }
-        /// <summary>
-        /// DES解密字符串
-        /// </summary>
-        /// <param name="decryptString">待解密的字符串</param>
-        /// <param name="decryptKey">解密密钥,要求为8位,和加密密钥相同</param>
-        /// <returns>解密成功返回解密后的字符串，失败返源串</returns>
-        public string DecryptDES(string decryptString, string decryptKey)
-        {
-            try
-            {
-                byte[] rgbKey = Encoding.UTF8.GetBytes(decryptKey.Substring(0, 8));
-                byte[] rgbIV = Keys;
-                byte[] inputByteArray = Convert.FromBase64String(decryptString);
-                DESCryptoServiceProvider DCSP = new DESCryptoServiceProvider();
-                MemoryStream mStream = new MemoryStream();
-                CryptoStream cStream = new CryptoStream(mStream, DCSP.CreateDecryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
-                cStream.Write(inputByteArray, 0, inputByteArray.Length);
-                cStream.FlushFinalBlock();
-                return Encoding.UTF8.GetString(mStream.ToArray());
-            }
-            catch
-            {
-                return decryptString;
-            }
-        }
+
+        public WeavePipelineTypeEnum Pipeline { get => pipeline; set => pipeline = value; }
+
+        
     }
-    public class CommandItem
-    {
-        byte commName;
-        public byte CommName
-        {
-            get { return commName; }
-            set { commName = value; }
-        }
-        public string Ip
-        {
-            get
-            {
-                return ip;
-            }
-            set
-            {
-                ip = value;
-            }
-        }
-        public int Port
-        {
-            get
-            {
-                return port;
-            }
-            set
-            {
-                port = value;
-            }
-        }
-        public List<P2Pclient> Client
-        {
-            get
-            {
-                return client;
-            }
-            set
-            {
-                client = value;
-            }
-        }
-        String ip = "";
-        int port;
-         List<P2Pclient> client=new List<P2Pclient>();
-    }
-    public class WayItem
-    {
-        string _Token;
-        int num;
-        public string Ip
-        {
-            get
-            {
-                return ip;
-            }
-            set
-            {
-                ip = value;
-            }
-        }
-        public int Port
-        {
-            get
-            {
-                return port;
-            }
-            set
-            {
-                port = value;
-            }
-        }
-        public P2Pclient Client
-        {
-            get
-            {
-                return client;
-            }
-            set
-            {
-                client = value;
-            }
-        }
-        public int Num
-        {
-            get
-            {
-                return num;
-            }
-            set
-            {
-                num = value;
-            }
-        }
-        public string Token
-        {
-            get
-            {
-                return _Token;
-            }
-            set
-            {
-                _Token = value;
-            }
-        }
-        String ip = "";
-        int port;
-        P2Pclient client;
-    }
-    [Serializable]
-    public class ConnObj
-    {
-        bool _Validation = false;
-        int id = 0;
-        byte[] makes;
-        public byte[] Makes
-        {
-            get
-            {
-                return makes;
-            }
-            set
-            {
-                makes = value;
-            }
-        }
-        string _Token;
-        Socket soc;
-        public Socket Soc
-        {
-            get
-            {
-                return soc;
-            }
-            set
-            {
-                soc = value;
-            }
-        }
-        public string Token
-        {
-            get
-            {
-                return _Token;
-            }
-            set
-            {
-                _Token = value;
-            }
-        }
-        public int Id
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                id = value;
-            }
-        }
-        public bool Validation
-        {
-            get
-            {
-                return _Validation;
-            }
-            set
-            {
-                _Validation = value;
-            }
-        }
-    }
+    
 }

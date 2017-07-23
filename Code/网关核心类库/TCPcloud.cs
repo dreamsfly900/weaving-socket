@@ -13,26 +13,32 @@ namespace cloud
         {
             get;set;
         }
+        List<CmdWorkItem> _CmdWorkItems = new List<CmdWorkItem>();
         List<CmdWorkItem> CmdWorkItems
         {
-            get;set;
+            get => this._CmdWorkItems; set => this._CmdWorkItems = value;
         }
-       public WeaveTable weaveTable
+        WeaveTable _weaveTable = new WeaveTable();
+       public WeaveTable weaveTable 
         {
-            get;set;
+            get => this._weaveTable; set => this._weaveTable = value;
         }
+        List<WeaveOnLine> _weaveOnline = new List<WeaveOnLine>();
         public List<WeaveOnLine> weaveOnline
         {
-            get; set;
+            get => this._weaveOnline; set => this._weaveOnline = value;
         }
+        List<IWeaveTcpBase> _P2ServerList = new List<IWeaveTcpBase>();
         public List<IWeaveTcpBase> P2ServerList
         {
-            get;set;
+            get => this._P2ServerList; set => this._P2ServerList = value;
         }
+        List<WeaveTcpToken> _TcpTokenList = new List<WeaveTcpToken>();
         public List<WeaveTcpToken> TcpTokenList
         {
-            get;set;
+            get => this._TcpTokenList; set => this._TcpTokenList = value;
         }
+    
         public bool Run(WevaeSocketSession myI)
         {
             ReloadFlies();

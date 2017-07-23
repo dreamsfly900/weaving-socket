@@ -22,6 +22,7 @@ namespace cloud
         int max = 5000;
         int counttemp = 0;
         List<int> tempnum = new List<int>();
+         private WeavePipelineTypeEnum pipeline = WeavePipelineTypeEnum.ten;
         #region 初始化
         public GateWaybyte()
         {
@@ -73,13 +74,7 @@ namespace cloud
         {
             try
             {
-                foreach (CommandItem ci in CommandItemS)
-                {
-                    foreach (P2Pclient Client in ci.Client)
-                    {
-                        Client.stop();
-                    }
-                }
+              
                 CommandItemS.Clear();
                 XmlDocument xml = new XmlDocument();
                 xml.Load("node.xml");
@@ -95,7 +90,7 @@ namespace cloud
                     p2p.ErrorMge += (V_ErrorMge);
                     if (p2p.start(ci.Ip, ci.Port, false))
                     {
-                        ci.Client.Add(p2p);
+                      //  ci.Client.Add(p2p);
                         CommandItemS.Add(ci);
                     }
                     else
@@ -265,7 +260,7 @@ namespace cloud
                 {
                     foreach (CommandItem ci in CommandItemS)
                     {
-                        if (ci.Client.Count > ((temp + Proportion) / Proportion))
+                     //   if (ci.Client.Count > ((temp + Proportion) / Proportion))
                             return;
                         P2Pclient p2p = new P2Pclient(false);
                         p2p.receiveServerEvent += (V_receiveServerEvent);
@@ -273,7 +268,7 @@ namespace cloud
                         p2p.ErrorMge += (V_ErrorMge);
                         if (p2p.start(ci.Ip, ci.Port, false))
                         {
-                            ci.Client.Add(p2p);
+                         //   ci.Client.Add(p2p);
                         }
                     }
                 }
@@ -296,24 +291,24 @@ namespace cloud
                 foreach (CommandItem ci in CommandItemS)
                 {
                     int i = 0;
-                    foreach (P2Pclient Client in ci.Client)
+                  //  foreach (P2Pclient Client in ci.Client)
                     {
                         // if (Client != null)
-                        if (!Client.Isline)
+                       // if (!Client.Isline)
                         {
-                            string port = Client.localprot;
+                          //  string port = Client.localprot;
                             if (EventMylog != null)
-                                EventMylog("节点重新连接--:", Client.IP + ":" + Client.PORT);
-                            if (!Client.Restart(false))
+                              //  EventMylog("节点重新连接--:", Client.IP + ":" + Client.PORT);
+                          //  if (!Client.Restart(false))
                             {
                                 V_timeoutevent();
-                                Client.localprot = port;
+                         //       Client.localprot = port;
                             }
                             else
                             {
                                 try
                                 {
-                                    EventMylog("节点重新连接-通知下线-:", Client.IP + ":" + Client.PORT);
+                                 //   EventMylog("节点重新连接-通知下线-:", Client.IP + ":" + Client.PORT);
                                     for (int j = (i * Proportion); j < (i * Proportion) + Proportion; j++)
                                     {
                                         if (ConnObjlist[j] != null)
@@ -329,7 +324,7 @@ namespace cloud
                                 }
                                 catch (Exception ee) { EventMylog("节点重新连接-Restart-:", ee.Message); }
                                 //Client.send(0xff, "Restart|"+ port);
-                                EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
+                              //  EventMylog("节点重新连接-Restart-:", Client.IP + ":" + Client.PORT);
                             }
                         }
                         i++;
@@ -408,7 +403,7 @@ namespace cloud
                                     temp = true;
                                     foreach (string ser in listsercer)
                                     {
-                                        if (ser == (ci.Client[len].IP + ci.Client[len].PORT))
+                                       // if (ser == (ci.Client[len].IP + ci.Client[len].PORT))
                                         {
                                             temp = false;
                                             goto lab881;
@@ -417,8 +412,8 @@ namespace cloud
                                     lab881:
                                     if (temp)
                                     {
-                                        listsercer.Add(ci.Client[len].IP + ci.Client[len].PORT);
-                                        ci.Client[len].send(0xff, "out|" + coob.Token);
+                                      //  listsercer.Add(ci.Client[len].IP + ci.Client[len].PORT);
+                                       // ci.Client[len].send(0xff, "out|" + coob.Token);
                                     }
                                 }
                                 ConnObjlist[i] = null;
@@ -491,7 +486,7 @@ namespace cloud
                     tempb = true;
                     foreach (string ser in listsercer)
                     {
-                        if (ser == (ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT))
+                       // if (ser == (ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT))
                         {
                             tempb = false;
                             goto lab882;
@@ -500,10 +495,10 @@ namespace cloud
                     lab882:
                     if (tempb)
                     {
-                        if (ci.Client[ci.Client.Count - 1] != null)
+                        //if (ci.Client[ci.Client.Count - 1] != null)
                         {
-                            listsercer.Add(ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT);
-                            ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
+                        //    listsercer.Add(ci.Client[ci.Client.Count - 1].IP + ci.Client[ci.Client.Count - 1].PORT);
+                        //    ci.Client[ci.Client.Count - 1].send(0xff, "in|" + cobj.Token);
                         }
                     }
                 }
@@ -589,12 +584,12 @@ namespace cloud
                         {
                             int i = temp;
                             int len = i / Proportion;
-                            int index = len >= ci.Client.Count ? ci.Client.Count - 1 : len;
-                            if (!ci.Client[index].Isline)
+                            //int index = len >= ci.Client.Count ? ci.Client.Count - 1 : len;
+                           // if (!ci.Client[index].Isline)
                             { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); }
-                            if (!ci.Client[index].send(command, data))
+                           // if (!ci.Client[index].send(command, data))
                             {
-                                p2psev.Send(soc, 0xff, index + "你所请求的服务暂不能使用，发送错误。" + ci.Client[index].Isline);
+                          //      p2psev.Send(soc, 0xff, index + "你所请求的服务暂不能使用，发送错误。" + ci.Client[index].Isline);
                             }
                         }
                     }
@@ -619,5 +614,7 @@ namespace cloud
                 proportion = value;
             }
         }
+
+        public WeavePipelineTypeEnum Pipeline { get => pipeline; set => pipeline = value; }
     }
 }

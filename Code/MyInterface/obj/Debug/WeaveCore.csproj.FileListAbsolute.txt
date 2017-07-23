@@ -2,3 +2,8 @@ C:\Users\apple\Source\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.dll
 C:\Users\apple\Source\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.pdb
 C:\Users\apple\Source\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.dll
 C:\Users\apple\Source\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.pdb
+D:\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.dll
+D:\WeaveSocket\Code\MyInterface\bin\Debug\MyInterface.pdb
+D:\WeaveSocket\Code\MyInterface\obj\Debug\WeaveCore.csprojResolveAssemblyReference.cache
+D:\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.dll
+D:\WeaveSocket\Code\MyInterface\obj\Debug\MyInterface.pdb

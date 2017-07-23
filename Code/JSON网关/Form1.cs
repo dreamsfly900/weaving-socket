@@ -42,6 +42,7 @@ namespace 统一登录服务
             isweb = false;
             gw = new GateWay(isweb,Convert.ToInt32(toolStripTextBox4.Text));
             gw.Proportion = Convert.ToInt32(toolStripTextBox3.Text);
+            gw.Pipeline = (WeavePipelineTypeEnum)Enum.Parse( typeof(WeavePipelineTypeEnum), toolStripTextBox3.Text);
             gw.EventMylog += Gw_EventMylog;
             if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text),int.Parse(toolStripTextBox2.Text)))
             {
@@ -58,16 +59,16 @@ namespace 统一登录服务
                {
                     foreach (CommandItem ci in gw.CommandItemS)
                     {
-                            listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + ci.Client.Count);
+                      //      listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + ci.Client.Count);
                         int i = 0;
-                        foreach (P2Pclient p in ci.Client)
+                       // foreach (P2Pclient p in ci.Client)
                         {
                             try
                             {
-                                listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + p.tcpc.Connected);
+                              //  listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + p.tcpc.Connected);
                             }
                             catch { }
-                            if (!p.Isline)
+                         //   if (!p.Isline)
                             {
                                 Mylog ml = new Mylog(addMylog);
                                 txtLog.Invoke(ml, new object[] { ci.CommName+"指令当前第" + i +"个，链接有异常断开"});

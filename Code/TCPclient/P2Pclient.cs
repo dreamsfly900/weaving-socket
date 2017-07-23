@@ -18,7 +18,9 @@ namespace client
         public delegate void jump(String text);
         public event jump jumpServerEvent;
         public delegate void istimeout();
+        public delegate void istimeoutobj(P2Pclient p2pobj);
         public event istimeout timeoutevent;
+        public event istimeoutobj timeoutobjevent;
         public delegate void errormessage(int type, string error);
         DataType DT = DataType.json;
         public event myreceivebit receiveServerEventbit;
@@ -283,7 +285,10 @@ namespace client
             catch (Exception ee){
                 Isline = false;
                 stop();
+                if(timeoutevent!=null)
                 timeoutevent();
+                if (timeoutobjevent == null)
+                    timeoutobjevent(this);
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false;
@@ -323,7 +328,10 @@ namespace client
             {
                 Isline = false;
                 stop();
-                timeoutevent();
+                if (timeoutevent != null)
+                    timeoutevent();
+                if (timeoutobjevent == null)
+                    timeoutobjevent(this);
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false; }
@@ -555,7 +563,10 @@ namespace client
                             Isline = false;
                             stop();
                             //isreceives = false;
-                            timeoutevent();
+                            if (timeoutevent != null)
+                                timeoutevent();
+                            if (timeoutobjevent == null)
+                                timeoutobjevent(this);
                             if (ErrorMge != null)
                                 ErrorMge(2,"连接超时，未收到服务器指令");
                             continue;
