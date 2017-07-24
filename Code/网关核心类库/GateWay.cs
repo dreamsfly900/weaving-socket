@@ -189,16 +189,19 @@ namespace cloud
         private void P2p_timeoutobjevent(P2Pclient p2pobj)
         {
             P2Pclient Client = p2pobj;
+            lab1100:
             if (!Client.Isline)
             {
+              
                 string port = Client.localprot;
                 if (EventMylog != null)
                     EventMylog("节点重新连接--:", Client.IP + ":" + Client.PORT);
                 if (!Client.Restart(false))
                 {
                     System.Threading.Thread.Sleep(1000);
-                    P2p_timeoutobjevent(p2pobj);
-                   
+                    goto lab1100;
+
+
                 }
                 else
                 {
