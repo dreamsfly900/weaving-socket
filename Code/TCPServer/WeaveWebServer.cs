@@ -93,6 +93,7 @@ namespace SocketServer
                                 df.setByte(new byte[] { 0x99 });
                                 workItem.SocketSession.Send(df.GetBytes());
                                 workItem.ErrorNum = 0;
+                                 
                             }
                         }
                         catch
@@ -100,9 +101,9 @@ namespace SocketServer
                             workItem.ErrorNum += 1;
                             if (workItem.ErrorNum > 3)
                             {
-                                try { workItem.SocketSession.Close(); }
-                                catch { }
                                 ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListHander), workItem.SocketSession);
+                              
+                              
                                 // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
                                 weaveWorkItemsList.Remove(workItem);
                             }
@@ -193,6 +194,8 @@ namespace SocketServer
         private void DeleteSocketListHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
+            try { (state as Socket).Close(); }
+            catch { }
         }
         private void UpdateSocketListHander(object state)
         {

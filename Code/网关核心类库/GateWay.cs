@@ -346,7 +346,14 @@ namespace cloud
         {
             try
             {
-                WeaveSession _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(text);
+                if (text == "")
+                    return;
+                WeaveSession _0x01 = null;
+                try
+                {
+                     _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(text);
+                }
+                catch { return; }
             int temp = 0;
                 String ip = "";
                 int port = 0;
@@ -386,8 +393,34 @@ namespace cloud
             try
             {
               
-                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
                 counttemp--;
+                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
+                List<String> listsercer = new List<string>();
+                bool tempb = true;
+                foreach (CommandItem ci in CommandItemS)
+                {
+                    tempb = true;
+                    foreach (string ser in listsercer)
+                    {
+                        if (ser == (ci.Ip + ci.Port))
+                        {
+                            tempb = false;
+                            goto lab882;
+                        }
+                    }
+                    lab882:
+                    if (tempb)
+                    {
+                        if (ci.Client[0, 0, 0, 0] != null)
+                        {
+                            listsercer.Add(ci.Ip + ci.Port);
+                          String  tempip = ci.Ip + ":" + ci.Port;
+                            ci.Client[0, 0, 0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1, 1))].send(0xff, "out|" + tempip);
+                        }
+                    }
+                }
+
             }
             catch (Exception ex)
             {

@@ -56,32 +56,27 @@ namespace 统一登录服务
             listBox2.Items.Clear();
             try
             {
-               {
+               
                     foreach (CommandItem ci in gw.CommandItemS)
                     {
-                      //      listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + ci.Client.Count);
+                           
                         int i = 0;
-                       // foreach (P2Pclient p in ci.Client)
-                        {
+                         
                             try
                             {
-                              //  listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-路由节点数量：" + p.tcpc.Connected);
+                                listBox1.Items.Add("指令状态：" + ci.CommName + ":" + "ip:" + ci.Ip + "-");
                             }
                             catch { }
-                         //   if (!p.Isline)
-                            {
-                                Mylog ml = new Mylog(addMylog);
-                                txtLog.Invoke(ml, new object[] { ci.CommName+"指令当前第" + i +"个，链接有异常断开"});
-                            }
+                          
                             i++;
-                        }
+                        
                     }
                     foreach (WayItem ci in gw.WayItemS)
                     {
                         listBox2.Items.Add("ip:" + ci.Ip + "端口：" + ci.Port + "-状态：" + ci.Client.Isline + "-在线人数:" + ci.Num);
                     }
                     toolStripStatusLabel2.Text = "连接人数：" + gw.getnum() + "  ";
-                }
+                
             }
             catch { }
         }

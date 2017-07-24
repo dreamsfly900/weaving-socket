@@ -84,12 +84,9 @@ namespace WeaveBase
                             workItem.ErrorNum += 1;
                             if (workItem.ErrorNum > 3)
                             {
-                                try
-                                {
-                                    workItem.SocketSession.Close();
-                                }
-                                catch { }
                                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+                               
+                              
                                 weaveNetworkItems.Remove(workItem);
                             }
                         }
@@ -103,6 +100,8 @@ namespace WeaveBase
         private void DeleteSocketListEventHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
+            try { (state as Socket).Close(); }
+            catch { }
         }
         private void UpdateSocketListEventHander(object state)
         {
