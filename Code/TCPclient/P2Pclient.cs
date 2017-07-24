@@ -287,7 +287,7 @@ namespace client
                 stop();
                 if(timeoutevent!=null)
                 timeoutevent();
-                if (timeoutobjevent == null)
+                if (timeoutobjevent != null)
                     timeoutobjevent(this);
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
