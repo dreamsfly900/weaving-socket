@@ -1,3 +1,4 @@
 ﻿<root>
-<node command="1" ip="127.0.0.1" port="8989"></node> 
+<node command="1" ip="127.0.0.1" port="8989" type="json"></node>
+<node command="1" ip="127.0.0.1" port="8989" type="byte"></node>
 </root>

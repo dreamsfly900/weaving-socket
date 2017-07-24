@@ -51,7 +51,7 @@ namespace cloud
             else if (Wpte == WeavePortTypeEnum.Json)
                 p2psev = new WeaveP2Server();
             else if (Wpte == WeavePortTypeEnum.Bytes)
-                p2psev = new WeaveP2Server();
+                p2psev = new WeaveP2Server(WeaveDataTypeEnum.Bytes);
 
         }
         #endregion
@@ -59,7 +59,10 @@ namespace cloud
         {
             // Mycommand comm = new Mycommand(, connectionString);
             ReLoad();
+            if(Wptype== WeavePortTypeEnum.Json)
             p2psev.waveReceiveEvent += p2psev_receiveevent;
+            if (Wptype == WeavePortTypeEnum.Bytes)
+                p2psev.weaveReceiveBitEvent += P2psev_weaveReceiveBitEvent;
             p2psev.weaveUpdateSocketListEvent += p2psev_EventUpdataConnSoc;
             p2psev.weaveDeleteSocketListEvent += p2psev_EventDeleteConnSoc;
             //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
@@ -74,6 +77,9 @@ namespace cloud
                 EventMylog("连接", "连接启动成功");
             return true;
         }
+
+       
+
         string token = "";
         protected void V_ErrorMge(int type, string error)
         {
@@ -96,17 +102,24 @@ namespace cloud
                 List<String> iplist = new List<string>();
                 foreach (XmlNode xn in xml.FirstChild.ChildNodes)
                 {
-                    bool isok = true;
-                    CommandItem ci = new CommandItem();
-                    ci.Ip = xn.Attributes["ip"].Value;
-                    ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
-                    ci.CommName = byte.Parse(xn.Attributes["command"].Value);
-                    CommandItemS.Add(ci);
-                    foreach (string s in iplist)
-                        if (s == ci.Ip + ":" + ci.Port)
-                            isok = false;
-                    if (isok)
-                        iplist.Add(ci.Ip + ":" + ci.Port);
+                    string type = "json";
+                    if (Wptype == WeavePortTypeEnum.Bytes)
+                    { type = "byte"; }
+
+                    if (type == xn.Attributes["type"].Value)
+                    {
+                        bool isok = true;
+                        CommandItem ci = new CommandItem();
+                        ci.Ip = xn.Attributes["ip"].Value;
+                        ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
+                        ci.CommName = byte.Parse(xn.Attributes["command"].Value);
+                        CommandItemS.Add(ci);
+                        foreach (string s in iplist)
+                            if (s == ci.Ip + ":" + ci.Port)
+                                isok = false;
+                        if (isok)
+                            iplist.Add(ci.Ip + ":" + ci.Port);
+                    }
                 }
                 int countpipeline = iplist.Count * (int)pipeline;
                 if (countpipeline > 60000)
@@ -150,6 +163,9 @@ namespace cloud
         P2Pclient newp2p(String Ip,int Port)
         {
             P2Pclient p2p = new P2Pclient(false);
+            if (Wptype == WeavePortTypeEnum.Bytes)
+                p2p.receiveServerEventbit += P2p_receiveServerEventbit;
+                else
             p2p.receiveServerEvent += (V_receiveServerEvent);
             p2p.timeoutobjevent += P2p_timeoutobjevent;
             p2p.ErrorMge += (V_ErrorMge);
@@ -164,6 +180,9 @@ namespace cloud
             }
             return null;
         }
+
+       
+
         private void P2p_timeoutobjevent(P2Pclient p2pobj)
         {
             P2Pclient Client = p2pobj;
@@ -388,6 +407,36 @@ namespace cloud
             }
             catch (Exception ex) { EventMylog("转发", ex.Message+"112223333333333356464122313"+ text+"000000"); }
         }
+
+
+        private void P2p_receiveServerEventbit(byte command, byte[] data)
+        {
+
+            try {
+                if (data.Length < 6)
+                    return;
+                byte[] b = new byte[6];
+                data.CopyTo(b, data.Length - b.Length);
+                ConnObj cobj = GateHelper.GetConnItemlistByindex(ConnItemlist, b, Pipeline);
+                if (cobj != null)
+                {
+                    int error = 0;
+                    lb1122:
+                    if (!p2psev.Send(cobj.Soc, command, data))
+                    {
+                        error += 1;
+                        EventMylog("转发" + error, "ConnObjlist:发送失败：byte" );
+                        if (error < 3) goto lb1122;
+                    }
+                }
+                else
+                {
+                    EventMylog("转发", "ConnObjlist:byte是空的");
+                }
+                return;
+            } catch { }
+
+        }
         protected void p2psev_EventDeleteConnSoc(System.Net.Sockets.Socket soc)
         {
             try
@@ -457,18 +506,21 @@ namespace cloud
                         tempip = ci.Ip + ":" + ci.Port;
                     }
                 }
-                p2psev.Send(soc, 0xff, "jump|" + tempip + "");
+                if (Wptype == WeavePortTypeEnum.Bytes)
+                    p2psev.Send(soc, 0xff, UTF8Encoding.UTF8.GetBytes("jump|" + tempip + ""));
+                else
+                    p2psev.Send(soc, 0xff, "jump|" + tempip + "");
                 soc.Close();
                 return;
             }
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-               
-                if (p2psev.Send(soc, 0xff, "token|" + cobj.Token + ""))
-                {
-                    GateHelper.SetConnItemlist(ConnItemlist, cobj, Pipeline);
-                }
+                if (Wptype == WeavePortTypeEnum.Json)
+                    p2psev.Send(soc, 0xff, "token|" + cobj.Token + "");
+                
+                 GateHelper.SetConnItemlist(ConnItemlist, cobj, Pipeline);
+                
                 List<String> listsercer = new List<string>();
                 bool tempb = true;
                 foreach (CommandItem ci in CommandItemS)
@@ -500,8 +552,70 @@ namespace cloud
                     EventMylog("EventUpdataConnSoc", ex.Message);
             }
         } 
-        delegate void newway(int temp);
+       
+        /// <summary>
+        /// 收到客户端发来的Byte消息，并转发到服务端中心
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="data"></param>
+        /// <param name="soc"></param>
+        private void P2psev_weaveReceiveBitEvent(byte command, byte[] data, Socket soc)
+        {
+            try
+            {
+                // JSON.parse<_baseModel>(data);// 
+               
 
+                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+
+                int count = CommandItemS.Count;
+
+                try
+                {
+                    // temp = _0x01.Token.Split(':');
+                    //if (temp.Length < 2)
+                    //    return;
+                    //_0x01.Token = clientipe.Address.ToString() + ":" + clientipe.Port;
+                }
+                catch (Exception e)
+                {
+                    if (EventMylog != null)
+                        EventMylog("p2psev_receiveevent", e.Message);
+                    return;
+                }
+
+                foreach (CommandItem ci in CommandItemS)
+                {
+                    if (ci != null)
+                    {
+                        if (ci.CommName == command)
+                        {
+                            P2Pclient[,,,] client = ci.Client;
+                            P2Pclient p2ptemp = GateHelper.GetP2Pclient(client, soc, Pipeline);
+                           byte [] b= GateHelper.GetP2PclientIndex(client, soc, Pipeline);
+                            if (p2ptemp != null)
+                            {
+                                if (!p2ptemp.Isline)
+                                { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); return; }
+                                byte[] tempdata = new byte[data.Length + b.Length];
+                                Array.Copy(data,0, tempdata,0, data.Length);
+                                Array.Copy(b,0, tempdata, data.Length-1, b.Length);
+                                if (!p2ptemp.send(command, tempdata))
+                                {
+                                    p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。");
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (EventMylog != null)
+                    EventMylog("p2psev_receiveevent----", ex.Message);
+            }
+        }
         /// <summary>
         /// 收到客户端发来的消息，并转发到服务端中心
         /// </summary>

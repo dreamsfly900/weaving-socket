@@ -110,5 +110,18 @@ namespace 统一登录服务
         private void toolStripTextBox3_Click(object sender, EventArgs e)
         {
         }
+
+        private void 启动byte网关ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            gw = new GateWay(WeavePortTypeEnum.Bytes, Convert.ToInt32(toolStripTextBox4.Text));
+            gw.Proportion = Convert.ToInt32(toolStripTextBox3.Text);
+            gw.Pipeline = (WeavePipelineTypeEnum)Enum.Parse(typeof(WeavePipelineTypeEnum), toolStripTextBox3.Text);
+            gw.EventMylog += Gw_EventMylog;
+            if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text), int.Parse(toolStripTextBox2.Text)))
+            {
+                toolStripStatusLabel1.Text = "服务启动成功，端口" + (toolStripTextBox1.Text) + "。";
+                timer1.Start();
+            }
+        }
     }
 }
