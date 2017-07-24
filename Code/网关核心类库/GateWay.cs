@@ -59,10 +59,13 @@ namespace cloud
         {
             // Mycommand comm = new Mycommand(, connectionString);
             ReLoad();
-            if(Wptype== WeavePortTypeEnum.Json)
-            p2psev.waveReceiveEvent += p2psev_receiveevent;
+            
+           
             if (Wptype == WeavePortTypeEnum.Bytes)
                 p2psev.weaveReceiveBitEvent += P2psev_weaveReceiveBitEvent;
+            else
+                p2psev.waveReceiveEvent += p2psev_receiveevent;
+
             p2psev.weaveUpdateSocketListEvent += p2psev_EventUpdataConnSoc;
             p2psev.weaveDeleteSocketListEvent += p2psev_EventDeleteConnSoc;
             //   p2psev.NATthroughevent += tcp_NATthroughevent;//p2p事件，不需要使用
