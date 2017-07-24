@@ -135,7 +135,12 @@ UDCsocket.prototype = {
             test.Request = Request;
             test.Root = JSON.stringify(Root);
             test.Parameter = JSON.stringify(Parameter);
-            test.Token = takon;
+           
+            try{
+                test.Token = takon;
+            }catch(e){
+                test.Token = "";
+            }
             test.Querycount = 0;
             test.Number = null;
             // alert(JSON.stringify(test));

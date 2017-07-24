@@ -7,15 +7,19 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
             //通过POST方法请求，个别浏览器有可能有问题(自行测试)
-            httpposttoserver(31, "Getnum", "");
+            //httpposttoserver(31, "Getnum", "");
             //通过Get方法jsonp请求，个别浏览器有可能有问题(自行测试)
             //httpgettoserver(1, "Send_content", "");
+            conn();
         });
         var socket;
         function conn()
         {
              socket = new UDCsocket({
-                 ip: '127.0.0.1', port: 11001, conn: function () { alert("连接成功"); }
+                 ip: '127.0.0.1', port: 11001, conn: function () {
+                     alert("连接成功");
+                     socket.SendData(1, "login", "123123ssdfsdf", "");
+                 }
                , recData: function (text) { 
                    $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
                }
@@ -23,6 +27,7 @@
                 , error: function (msg) { alert("连接错误" + msg); }
                  , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器："+ip);}
              });
+           
         }
         //使用http网关，使用此方法连接。
         function httpposttoserver(command, Request, Root)

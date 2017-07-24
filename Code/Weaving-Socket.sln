@@ -86,7 +86,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "核心库", "核心库", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB JS库", "WEB JS库", "{6C7E3149-7F97-4B41-992B-0B25CBD4FCF3}"
 	ProjectSection(SolutionItems) = preProject
-		WEB JS库\websocket.js = WEB JS库\websocket.js
+		WebSocketClient\WebSocketClient\websocket.js = WebSocketClient\WebSocketClient\websocket.js
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testclass", "Testclass\Testclass.csproj", "{BBF179E7-4413-4B9E-A569-02F8B25326BF}"

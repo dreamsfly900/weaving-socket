@@ -519,7 +519,7 @@ namespace cloud
             try
             {
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                if (Wptype == WeavePortTypeEnum.Json)
+                if (Wptype != WeavePortTypeEnum.Bytes)
                     p2psev.Send(soc, 0xff, "token|" + cobj.Token + "");
                 
                  GateHelper.SetConnItemlist(ConnItemlist, cobj, Pipeline);
