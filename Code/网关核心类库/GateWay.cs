@@ -25,27 +25,34 @@ namespace cloud
         protected WeaveP2Server p2psev2;
         int max = 5000;
         int counttemp = 0;
-    
+        WeavePortTypeEnum Wptype = WeavePortTypeEnum.Json;
         private WeavePipelineTypeEnum pipeline = WeavePipelineTypeEnum.ten;
         #region 初始化
-        public GateWay(bool IsWeb)
+        public GateWay(WeavePortTypeEnum Wpte)
         {
-           
-            if (IsWeb)
-                p2psev = new WeaveWebServer();
-            else
-                p2psev = new WeaveP2Server();
+            Wptype = Wpte;
+            init(Wpte);
         }
-        public GateWay(bool IsWeb, int _max)
+        public GateWay(WeavePortTypeEnum Wpte, int _max)
         {
             
             max = _max;
-          
+            Wptype = Wpte;
+            init(Wpte);
 
-            if (IsWeb)
+
+
+        }
+        public clientItem[,,,] ConnItemlist = new clientItem[10, 10, 10, 10];
+        void init(WeavePortTypeEnum Wpte)
+        {
+            if (Wpte == WeavePortTypeEnum.Web)
                 p2psev = new WeaveWebServer();
-            else
+            else if (Wpte == WeavePortTypeEnum.Json)
                 p2psev = new WeaveP2Server();
+            else if (Wpte == WeavePortTypeEnum.Bytes)
+                p2psev = new WeaveP2Server();
+
         }
         #endregion
         public bool Run(string loaclIP, int port, int port2)
@@ -388,7 +395,7 @@ namespace cloud
                     EventMylog("移除用户", ex.Message);
             }
         } 
-        public clientItem[,,,] ConnItemlist = new clientItem[10, 10, 10, 10];
+      
        
         protected void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
         {
@@ -496,7 +503,7 @@ namespace cloud
                     // temp = _0x01.Token.Split(':');
                     //if (temp.Length < 2)
                     //    return;
-                    
+                    _0x01.Token = clientipe.Address.ToString() + ":" + clientipe.Port;
                 }
                 catch(Exception e)
                 {
@@ -546,7 +553,7 @@ namespace cloud
             }
         }
 
-        public WeavePipelineTypeEnum Pipeline { get => pipeline; set => pipeline = value; }
+        public WeavePipelineTypeEnum Pipeline { get {  return pipeline; } set { pipeline = value; } }
 
         
     }

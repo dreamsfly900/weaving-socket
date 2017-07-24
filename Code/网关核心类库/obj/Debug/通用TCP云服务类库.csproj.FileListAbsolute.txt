@@ -51,3 +51,16 @@ D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPServer.dll
 D:\WeaveSocket\Code\网关核心类库\bin\Debug\MyInterface.pdb
 D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPclient.pdb
 D:\WeaveSocket\Code\网关核心类库\bin\Debug\TCPServer.pdb
+D:\WeavingSocket\Code\网关核心类库\obj\Debug\通用TCP云服务类库.csprojResolveAssemblyReference.cache
+D:\WeavingSocket\Code\网关核心类库\obj\Debug\TCPCloud.dll
+D:\WeavingSocket\Code\网关核心类库\obj\Debug\TCPCloud.pdb
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\UDTCommon.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\UDTLibary.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPCloud.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPCloud.pdb
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\MyInterface.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPclient.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPServer.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\MyInterface.pdb
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPclient.pdb
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPServer.pdb

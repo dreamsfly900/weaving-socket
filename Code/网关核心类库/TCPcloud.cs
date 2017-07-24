@@ -13,32 +13,82 @@ namespace cloud
         {
             get;set;
         }
-        List<CmdWorkItem> _CmdWorkItems = new List<CmdWorkItem>();
-        List<CmdWorkItem> CmdWorkItems
+
+        public List<CmdWorkItem> CmdWorkItems
         {
-            get => this._CmdWorkItems; set => this._CmdWorkItems = value;
+            get
+            {
+                return _CmdWorkItems;
+            }
+
+            set
+            {
+                _CmdWorkItems = value;
+            }
         }
-        WeaveTable _weaveTable = new WeaveTable();
-       public WeaveTable weaveTable 
+
+        public WeaveTable weaveTable
         {
-            get => this._weaveTable; set => this._weaveTable = value;
+            get
+            {
+                return _weaveTable;
+            }
+
+            set
+            {
+                _weaveTable = value;
+            }
         }
-        List<WeaveOnLine> _weaveOnline = new List<WeaveOnLine>();
+
         public List<WeaveOnLine> weaveOnline
         {
-            get => this._weaveOnline; set => this._weaveOnline = value;
+            get
+            {
+                return _weaveOnline;
+            }
+
+            set
+            {
+                _weaveOnline = value;
+            }
         }
-        List<IWeaveTcpBase> _P2ServerList = new List<IWeaveTcpBase>();
+
         public List<IWeaveTcpBase> P2ServerList
         {
-            get => this._P2ServerList; set => this._P2ServerList = value;
+            get
+            {
+                return _P2ServerList;
+            }
+
+            set
+            {
+                _P2ServerList = value;
+            }
         }
-        List<WeaveTcpToken> _TcpTokenList = new List<WeaveTcpToken>();
+
         public List<WeaveTcpToken> TcpTokenList
         {
-            get => this._TcpTokenList; set => this._TcpTokenList = value;
+            get
+            {
+                return _TcpTokenList;
+            }
+
+            set
+            {
+                _TcpTokenList = value;
+            }
         }
-    
+
+        List<CmdWorkItem> _CmdWorkItems = new List<CmdWorkItem>();
+        
+        WeaveTable _weaveTable = new WeaveTable();
+     
+        List<WeaveOnLine> _weaveOnline = new List<WeaveOnLine>();
+        
+        List<IWeaveTcpBase> _P2ServerList = new List<IWeaveTcpBase>();
+       
+        List<WeaveTcpToken> _TcpTokenList = new List<WeaveTcpToken>();
+       
         public bool Run(WevaeSocketSession myI)
         {
             ReloadFlies();
@@ -125,7 +175,7 @@ namespace cloud
         {
             try
             {
-                CmdWorkItems = new List<CmdWorkItem>();
+               
                 String[] strfilelist = System.IO.Directory.GetFiles(AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "command");
                 foreach (string file in strfilelist)
                 {
@@ -147,7 +197,8 @@ namespace cloud
                                 CmdWorkItems.Add(ci);
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        { }
                     }
                 }
             }

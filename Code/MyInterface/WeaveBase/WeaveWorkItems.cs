@@ -24,10 +24,8 @@ namespace WeaveBase
         {
             get; set;
         }
-        public List<byte[]> DataList
-        {
-            get; set;
-        }
+        List<byte[]> _DataList = new List<byte[]>();
+        
         public bool IsPage
         {
             get; set;
@@ -35,6 +33,19 @@ namespace WeaveBase
         public int ErrorNum
         {
             get; set;
+        }
+
+        public List<byte[]> DataList
+        {
+            get
+            {
+                return _DataList;
+            }
+
+            set
+            {
+                _DataList = value;
+            }
         }
     }
     public class WeaveUdpWorkItems

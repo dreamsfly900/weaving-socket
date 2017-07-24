@@ -135,6 +135,8 @@ namespace cloud
             {
                string t= clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1);
                 connb.Id = Convert.ToInt32(t);
+                if (ConnItemlist[0, 0, 0, Convert.ToInt32(t)] == null)
+                    ConnItemlist[0, 0, 0, Convert.ToInt32(t)] = new clientItem();
                   ConnItemlist[0, 0, 0, Convert.ToInt32(t)].setconn(connb);
                
             }
@@ -142,6 +144,8 @@ namespace cloud
             {
                 string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
                 connb.Id = Convert.ToInt32(t);
+                if (ConnItemlist[0, 0, Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] == null)
+                    ConnItemlist[0, 0, Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] = new clientItem();
                 ConnItemlist[0, 0, Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1,1))].setconn(connb);
             }
             else if (pipeline == WeavePipelineTypeEnum.thousand)
@@ -149,6 +153,8 @@ namespace cloud
                 string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
                 string m = clientipe.Address.ToString().Substring(clientipe.Address.ToString().Length - 1);
                 connb.Id = Convert.ToInt32(m+t);
+                if (ConnItemlist[0, Convert.ToInt32(m), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] == null)
+                    ConnItemlist[0, Convert.ToInt32(m), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] = new clientItem();
                 ConnItemlist[0, Convert.ToInt32(m), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].setconn(connb);
             }
             else if (pipeline == WeavePipelineTypeEnum.ten_thousand)
@@ -159,6 +165,8 @@ namespace cloud
                 if (m.Length < 2)
                     m = "0" + m;
                 connb.Id = Convert.ToInt32(m + t);
+                if (ConnItemlist[Convert.ToInt32(m.Substring(0, 1)), Convert.ToInt32(m.Substring(1, 1)), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] == null)
+                    ConnItemlist[Convert.ToInt32(m.Substring(0, 1)), Convert.ToInt32(m.Substring(1, 1)), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))] = new clientItem();
                 ConnItemlist[Convert.ToInt32(m.Substring(0, 1)), Convert.ToInt32(m.Substring(1,1)), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].setconn(connb);
             }
 
@@ -200,7 +208,7 @@ namespace cloud
         }
 
         P2Pclient[,,,] client = new P2Pclient[10, 10, 10, 10];
-        public P2Pclient[,,,] Client { get => client; set => client = value; }
+        public P2Pclient[,,,] Client { get { return client; } set { client = value; } }
         String ip = "";
         int port;
      
@@ -267,7 +275,7 @@ namespace cloud
             }
             return null;
         }
-        public ConnObj[] Connlist { get => _Connlist; set => _Connlist = value; } 
+        public ConnObj[] Connlist { get { return  _Connlist; } set { _Connlist = value; } } 
         ConnObj[] _Connlist = new ConnObj[0];
     }
     public class WayItem

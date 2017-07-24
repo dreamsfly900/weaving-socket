@@ -19,7 +19,7 @@ namespace test2
             p2pc.AddListenClass(this);//这是表示  [InstallFun("forever")]的方法，在哪个类中
         }
         [InstallFunAttribute("forever")]//客户端也支持像服务端那样写，刚才看懂返回的内容也是testaabb，所以客户端也要把方法命名testaabb
-        public void getnum(System.Net.Sockets.Socket soc, WeaveBase.WeaveSession _0x01)
+        public void login(System.Net.Sockets.Socket soc, WeaveBase.WeaveSession _0x01)
         {
             MessageBox.Show(_0x01.GetRoot<int>().ToString());
             //  Gw_EventMylog("",_0x01.Getjson());
@@ -38,7 +38,7 @@ namespace test2
         {
             //在加个发送
             p2pc.Tokan = "随便写一个";
-            p2pc.SendRoot<int>(0x01, "getnum", 0,0);
+            p2pc.SendRoot<int>(0x01, "login", 99987,0);
             //这样就可以了，我们试试
         }
     }

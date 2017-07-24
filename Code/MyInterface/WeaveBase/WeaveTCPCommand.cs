@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Sockets;
+using WeaveBase;
+
 namespace WeaveBase
 {
     public abstract class WeaveTCPCommand
     {
         #region 基础定义
+        
         public List<WeaveTcpToken> WeaveTcpTokenList
         {
             get; set;
         }
+     
         public WeaveTable GlobalQueueTable
         {
             get;
             private set;
         }
+       
         public WeaveBaseManager Bm
         {
             get; set;
@@ -22,6 +28,8 @@ namespace WeaveBase
         #endregion
         public WeaveTCPCommand()
         {
+            WeaveTcpTokenList = new List<WeaveTcpToken>();
+            Bm = new WeaveBaseManager();
             Bm.WeaveErrorMessageEvent += WeaveBaseErrorMessageEvent;
         }
         public bool RunBase(String data, Socket socket)
