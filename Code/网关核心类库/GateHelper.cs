@@ -232,7 +232,8 @@ namespace cloud
                 ConnObj[] temp = new ConnObj[Connlist.Length + 1];
 
                 Array.Copy(Connlist, temp, temp.Length - 1);
-                temp[temp.Length-1] = cb; 
+                temp[temp.Length-1] = cb;
+                Connlist = temp;
             }
         }
         public void removeconn(Socket soc)

@@ -524,7 +524,7 @@ namespace cloud
                             {
                                 if (!p2ptemp.Isline)
                                 { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！");return; }
-                                if (!p2ptemp.send(command, data))
+                                if (!p2ptemp.send(command, _0x01.Getjson()))
                                 {
                                     p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。" );
                                 }
