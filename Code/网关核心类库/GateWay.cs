@@ -488,6 +488,7 @@ namespace cloud
         protected void p2psev_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
         {
             ConnObj cobj = new ConnObj();
+            try {
             cobj.Soc = soc;
             IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
        
@@ -519,8 +520,7 @@ namespace cloud
                 soc.Close();
                 return;
             }
-            try
-            {
+           
                 //IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
                 if (Wptype != WeavePortTypeEnum.Bytes)
                     p2psev.Send(soc, 0xff, "token|" + cobj.Token + "");

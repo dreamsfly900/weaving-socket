@@ -269,6 +269,12 @@ namespace client
                 if (count == 0)
                 {
                     tcpc.Client.Send(b);
+                    //System.IO.StreamWriter sw = new System.IO.StreamWriter("test.txt");
+                    //foreach (byte bb in b)
+                    //{
+                    //    sw.Write(bb.ToString("X")+" ");
+                    //}
+                    //sw.Close();
                 }
                 else
                 {

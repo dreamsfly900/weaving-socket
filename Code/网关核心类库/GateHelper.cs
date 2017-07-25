@@ -207,34 +207,35 @@ namespace cloud
         /// <param name="pipeline"></param>
         public static void removeConnItemlist(clientItem[,,,] ConnItemlist,Socket soc, WeavePipelineTypeEnum pipeline)
         {
-            IPEndPoint clientipe =  (IPEndPoint)soc.RemoteEndPoint;
-
-            if (pipeline == WeavePipelineTypeEnum.ten)
-            {
-                string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1);
-                 ConnItemlist[0, 0, 0, Convert.ToInt32(t)].removeconn(soc);
-            }
-            else if (pipeline == WeavePipelineTypeEnum.hundred)
-            {
-                string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
-                 ConnItemlist[0, 0, Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
-            }
-            else if (pipeline == WeavePipelineTypeEnum.thousand)
-            {
-                string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
-                string m = clientipe.Address.ToString().Substring(clientipe.Address.ToString().Length - 1);
-                 ConnItemlist[0, Convert.ToInt32(m), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
-            }
-            else if (pipeline == WeavePipelineTypeEnum.ten_thousand)
-            {
-                string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
-                string m = clientipe.Address.ToString().Split('.')[3];
-                if (m.Length < 2)
-                    m = "0" + m;
-                 ConnItemlist[Convert.ToInt32(m.Substring(0, 1)), Convert.ToInt32(m.Substring(1, 1)), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
-            }
           
+                IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
 
+                if (pipeline == WeavePipelineTypeEnum.ten)
+                {
+                    string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1);
+                    ConnItemlist[0, 0, 0, Convert.ToInt32(t)].removeconn(soc);
+                }
+                else if (pipeline == WeavePipelineTypeEnum.hundred)
+                {
+                    string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
+                    ConnItemlist[0, 0, Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
+                }
+                else if (pipeline == WeavePipelineTypeEnum.thousand)
+                {
+                    string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
+                    string m = clientipe.Address.ToString().Substring(clientipe.Address.ToString().Length - 1);
+                    ConnItemlist[0, Convert.ToInt32(m), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
+                }
+                else if (pipeline == WeavePipelineTypeEnum.ten_thousand)
+                {
+                    string t = clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 2);
+                    string m = clientipe.Address.ToString().Split('.')[3];
+                    if (m.Length < 2)
+                        m = "0" + m;
+                    ConnItemlist[Convert.ToInt32(m.Substring(0, 1)), Convert.ToInt32(m.Substring(1, 1)), Convert.ToInt32(t.Substring(0, 1)), Convert.ToInt32(t.Substring(1, 1))].removeconn(soc);
+                }
+
+       
         }
         /// <summary>
         /// 将对象存入数组对象中
@@ -334,36 +335,28 @@ namespace cloud
         int count = 0;
         public void setconn(ConnObj cb)
         {
-            for (int i = 0; i < Connlist.Length; i++)
-            {
-                if (Connlist[i]==null)
-                {
-                    Connlist[i] = cb;
-                    return;
-                }
-            }
-            lock (Connlist)
-            {
-                ConnObj[] temp = new ConnObj[Connlist.Length + 1];
-
-                Array.Copy(Connlist, temp, temp.Length - 1);
-                temp[temp.Length-1] = cb;
-                Connlist = temp;
-            }
+            _Connlist.Add(cb);
         }
         public void removeconn(Socket soc)
         {
-            for (int i=0;i< Connlist.Length;i++)
+            ConnObj[] cobs = new ConnObj[Connlist.Count];
+            Connlist.CopyTo(0,cobs,0, cobs.Length);
+
+            for (int i=0;i< count; i++)
             {
-                if(Connlist[i]!=null)
-                if (Connlist[i].Soc.Equals(soc))
+                if(cobs[i]!=null)
+                if (cobs[i].Soc.Equals(soc))
                     {
                         try
                         {
-                            Connlist[i].Soc.Dispose();
+                            cobs[i].Soc.Dispose();
                         }
                         catch { }
-                    Connlist[i] = null;
+                        try
+                        {
+                            Connlist.Remove(cobs[i]);
+                        }
+                        catch { }
                     return;
                 }
             }
@@ -371,7 +364,10 @@ namespace cloud
         
        public ConnObj getconn(String ip, int port)
         {
-            foreach (ConnObj cb in Connlist)
+            ConnObj[] cobs = new ConnObj[Connlist.Count];
+            Connlist.CopyTo(0, cobs, 0, cobs.Length);
+
+            foreach (ConnObj cb in cobs)
             {
                 if (cb != null)
                 {
@@ -384,15 +380,30 @@ namespace cloud
         }
         public ConnObj getconn(Socket soc)
         {
-            foreach (ConnObj cb in Connlist)
+            ConnObj[] cobs = new ConnObj[Connlist.Count];
+            Connlist.CopyTo(0, cobs, 0, cobs.Length);
+            foreach (ConnObj cb in cobs)
             {
                 if(cb.Soc.Equals(soc))
                 return cb;
             }
             return null;
         }
-        public ConnObj[] Connlist { get { return  _Connlist; } set { _Connlist = value; } } 
-        ConnObj[] _Connlist = new ConnObj[0];
+      
+        List<ConnObj> _Connlist = new List<ConnObj>();
+
+        public List<ConnObj> Connlist
+        {
+            get
+            {
+                return _Connlist;
+            }
+
+            set
+            {
+                _Connlist = value;
+            }
+        }
     }
     public class WayItem
     {
