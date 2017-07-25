@@ -336,7 +336,7 @@ namespace client
                 stop();
                 if (timeoutevent != null)
                     timeoutevent();
-                if (timeoutobjevent == null)
+                if (timeoutobjevent != null)
                     timeoutobjevent(this);
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
@@ -536,46 +536,62 @@ namespace client
                     int bytesRead = tcpc.Client.Available;
                     if (bytesRead > 0)
                     {
-                        timeout = DateTime.Now;
                         byte[] tempbtye = new byte[bytesRead];
-                        tcpc.Client.Receive(tempbtye);
-                        _0x99:
-                        if (tempbtye[0] == 0x99)
+                        try
                         {
                             timeout = DateTime.Now;
-                            if (tempbtye.Length > 1)
+
+                            tcpc.Client.Receive(tempbtye);
+                            _0x99:
+                            if (tempbtye[0] == 0x99)
                             {
-                                byte[] b = new byte[bytesRead - 1];
-                                try
+                                timeout = DateTime.Now;
+                                if (tempbtye.Length > 1)
                                 {
-                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                    byte[] b = new byte[bytesRead - 1];
+                                    try
+                                    {
+                                        Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                    }
+                                    catch { }
+                                    tempbtye = b;
+                                    goto _0x99;
                                 }
-                                catch { }
-                                tempbtye = b;  
-                                goto _0x99;
-                            }else
-                             continue;
+                                else
+                                    continue;
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            ErrorMge(22, ee.Message);
                         }
                         //lock (this)
                         //{
-                            ListData.Add(tempbtye);
+                        ListData.Add(tempbtye);
                        // }
                     }
                     else
                     {
-                        TimeSpan ts = DateTime.Now - timeout;
-                        if (ts.TotalSeconds > mytimeout)
+                        try
                         {
-                            Isline = false;
-                            stop();
-                            //isreceives = false;
-                            if (timeoutevent != null)
-                                timeoutevent();
-                            if (timeoutobjevent == null)
-                                timeoutobjevent(this);
-                            if (ErrorMge != null)
-                                ErrorMge(2,"连接超时，未收到服务器指令");
-                            continue;
+                            TimeSpan ts = DateTime.Now - timeout;
+                            if (ts.TotalSeconds > mytimeout)
+                            {
+                                Isline = false;
+                                stop();
+                                //isreceives = false;
+                                if (timeoutevent != null)
+                                    timeoutevent();
+                                if (timeoutobjevent != null)
+                                    timeoutobjevent(this);
+                                if (ErrorMge != null)
+                                    ErrorMge(2, "连接超时，未收到服务器指令");
+                                continue;
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            ErrorMge(21, ee.Message);
                         }
                     }
                 }

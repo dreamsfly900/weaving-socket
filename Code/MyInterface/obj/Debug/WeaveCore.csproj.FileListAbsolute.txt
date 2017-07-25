@@ -11,4 +11,3 @@ D:\WeavingSocket\Code\MyInterface\bin\Debug\MyInterface.dll
 D:\WeavingSocket\Code\MyInterface\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Code\MyInterface\obj\Debug\MyInterface.dll
 D:\WeavingSocket\Code\MyInterface\obj\Debug\MyInterface.pdb
-D:\WeavingSocket\Code\MyInterface\obj\Debug\WeaveCore.csprojResolveAssemblyReference.cache
