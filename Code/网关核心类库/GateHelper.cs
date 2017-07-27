@@ -371,9 +371,16 @@ namespace cloud
             {
                 if (cb != null)
                 {
-                    IPEndPoint clientipe = (IPEndPoint)cb.Soc.RemoteEndPoint;
-                    if ((clientipe.Address.ToString()+":"+ clientipe.Port)== (ip+":"+port))
-                        return cb;
+                    try
+                    {
+                        if (cb.Soc.RemoteEndPoint != null)
+                        {
+                            IPEndPoint clientipe = (IPEndPoint)cb.Soc.RemoteEndPoint;
+                            if ((clientipe.Address.ToString() + ":" + clientipe.Port) == (ip + ":" + port))
+                                return cb;
+                        }
+                    }
+                    catch { }
                 }
             }
             return null;
@@ -384,8 +391,13 @@ namespace cloud
             Connlist.CopyTo(0, cobs, 0, cobs.Length);
             foreach (ConnObj cb in cobs)
             {
-                if(cb.Soc.Equals(soc))
-                return cb;
+                try
+                {
+                    if(cb!=null)
+                    if (cb.Soc.Equals(soc))
+                        return cb;
+                }
+                catch { }
             }
             return null;
         }
