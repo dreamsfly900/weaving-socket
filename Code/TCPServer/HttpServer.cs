@@ -38,7 +38,7 @@ namespace SocketServer
                 }
                 return data;
             }
-            public void process()
+            public void process(object p)
             {
                 // we can't use a StreamReader for input, because it buffers up extra data on us inside it's
                 // "processed" view of the world, and we want the data raw after the headers
@@ -196,6 +196,8 @@ namespace SocketServer
             Port = port;
             Thread thread = new Thread(new ThreadStart(listen));
             thread.Start();
+            Thread thread2 = new Thread(new ThreadStart(process));
+            thread2.Start();
         }
         public int GetNetworkItemCount()
         {
@@ -203,6 +205,17 @@ namespace SocketServer
         }
         public void KeepAliveHander(object obj)
         {
+        }
+        void process()
+        {
+            int i = httpProcessorList.Count;
+            HttpProcessor[] hps = new HttpProcessor[i];
+            httpProcessorList.CopyTo(hps);
+            foreach (HttpProcessor hp in hps)
+            {
+                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+            }
+            Thread.Sleep(1);
         }
         public bool Send(Socket soc, byte command, string text)
         {
@@ -245,11 +258,11 @@ namespace SocketServer
                     TcpClient s = listener.AcceptTcpClient();
                     HttpProcessor processor = new HttpProcessor(s, this);
                     httpProcessorList.Add(processor);
-                    Thread thread = new Thread(new ThreadStart(processor.process));
-                    thread.Start();
+                    
                     Thread.Sleep(1);
                 }
-                catch { }
+                catch
+                { }
             }
         }
         public virtual void handleGETRequest(HttpProcessor p)
@@ -265,6 +278,7 @@ namespace SocketServer
             p.outputStream.WriteLine(fun + "(");
             getdata(p, command, data);
             p.outputStream.WriteLine(")");
+            httpProcessorList.Remove(p);
         }
         public virtual void handlePOSTRequest(HttpProcessor p, StreamReader inputData)
         {
@@ -275,6 +289,7 @@ namespace SocketServer
             string data = inputData.ReadToEnd();
             p.writeSuccess();
             getdata(p, command, data);
+            httpProcessorList.Remove(p);
         }
         public virtual bool getdata(HttpProcessor p, byte command, string data)
         {
@@ -293,18 +308,8 @@ namespace SocketServer
                         }
                         p.outputStream.WriteLine(p.retrunData);
                p.retrunData = "";
-            int i = httpProcessorList.Count;
-            HttpProcessor[] hps = new HttpProcessor[i];
-            httpProcessorList.CopyTo(hps);
-            foreach (HttpProcessor hp in hps)
-            {
-                if (hp == p)
-                {
-                    httpProcessorList.Remove(p);
-                    return true;
-                }
-            }
-            return false;
+           
+            return true;
         }
     }
         //public class TestMain
