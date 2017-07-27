@@ -213,7 +213,11 @@ namespace SocketServer
             httpProcessorList.CopyTo(hps);
             foreach (HttpProcessor hp in hps)
             {
-                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                try
+                {
+                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                }
+                catch { }
             }
             Thread.Sleep(1);
         }
