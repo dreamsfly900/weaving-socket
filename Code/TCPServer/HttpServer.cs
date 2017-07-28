@@ -207,19 +207,21 @@ namespace SocketServer
         {
         }
         void process()
-        {
-            int i = httpProcessorList.Count;
-            HttpProcessor[] hps = new HttpProcessor[i];
-            httpProcessorList.CopyTo(hps);
-            foreach (HttpProcessor hp in hps)
+        {while (true)
             {
-                try
+                int i = httpProcessorList.Count;
+                HttpProcessor[] hps = new HttpProcessor[i];
+                httpProcessorList.CopyTo(hps);
+                foreach (HttpProcessor hp in hps)
                 {
-                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                    try
+                    {
+                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                    }
+                    catch { }
                 }
-                catch { }
+                Thread.Sleep(1);
             }
-            Thread.Sleep(1);
         }
         public bool Send(Socket soc, byte command, string text)
         {
