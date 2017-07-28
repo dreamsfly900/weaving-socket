@@ -217,6 +217,7 @@ namespace SocketServer
                     try
                     {
                         System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                        httpProcessorList.Remove(hp);
                     }
                     catch { }
                 }
@@ -284,7 +285,7 @@ namespace SocketServer
             p.outputStream.WriteLine(fun + "(");
             getdata(p, command, data);
             p.outputStream.WriteLine(")");
-            httpProcessorList.Remove(p);
+            
         }
         public virtual void handlePOSTRequest(HttpProcessor p, StreamReader inputData)
         {
@@ -295,7 +296,7 @@ namespace SocketServer
             string data = inputData.ReadToEnd();
             p.writeSuccess();
             getdata(p, command, data);
-            httpProcessorList.Remove(p);
+          
         }
         public virtual bool getdata(HttpProcessor p, byte command, string data)
         {
