@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="WeaveBase\WeaveEvent.cs" />
     <Compile Include="WeaveBase\WeaveWorkItems.cs" />
-    <Compile Include="WeaveP2Server.cs" />
+    <Compile Include="WeaveBaseServer.cs" />
     <Compile Include="WaveInterface\IWeaveTcpBase.cs" />
     <Compile Include="WaveInterface\IDataparsing.cs" />
     <Compile Include="InstallFunAttribute.cs" />

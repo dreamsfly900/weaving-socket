@@ -80,7 +80,7 @@ namespace 智信构建结构
             else if (radioButton4.Checked)
             {
                 sp.PortType = WeavePortTypeEnum.Bytes;
-                Assembly [] abs = AppDomain.CurrentDomain.GetAssemblies();
+                Assembly[] abs = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (Assembly ab in abs)
                 {
                     Type[] types = ab.GetExportedTypes();
@@ -88,7 +88,7 @@ namespace 智信构建结构
                     {
                         try
                         {
-                            if (t.FullName== textBox1.Text)
+                            if (t.FullName == textBox1.Text)
                             {
                                 sp.BytesDataparsing = ab.CreateInstance(textBox1.Text) as IDataparsing;
                             }
@@ -98,7 +98,34 @@ namespace 智信构建结构
                     }
                 }
             }
-            else  
+            else if (radioButton5.Checked)
+            {
+                sp.PortType = WeavePortTypeEnum.udpBytes;
+                Assembly[] abs = AppDomain.CurrentDomain.GetAssemblies();
+                foreach (Assembly ab in abs)
+                {
+                    Type[] types = ab.GetExportedTypes();
+                    foreach (Type t in types)
+                    {
+                        try
+                        {
+                            if (t.FullName == textBox1.Text)
+                            {
+                                sp.BytesDataparsing = ab.CreateInstance(textBox1.Text) as IDataparsing;
+                            }
+                        }
+                        catch (Exception ex)
+                        { throw ex; }
+                    }
+                }
+                listBox1.Items.Add("udpBytes端口" + sp.Port);
+            }
+            else if (radioButton6.Checked)
+            {
+                sp.PortType = WeavePortTypeEnum.jsonudp;
+                listBox1.Items.Add("jsonudp端口" + sp.Port);
+            }
+            else
             {
                 sp.PortType = WeavePortTypeEnum.Json;
                 listBox1.Items.Add("json端口" + sp.Port);

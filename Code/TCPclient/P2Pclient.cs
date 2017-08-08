@@ -33,7 +33,7 @@ namespace client
         int mytimeout = 90;
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
-        UDP udp;
+      
         bool NATUDP = false;
      public   String IP;
        public int PORT;
@@ -115,11 +115,7 @@ namespace client
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
             NATUDP = _NATUDP;
-            if (NATUDP)
-            {
-                udp = new UDP();
-                udp.receiveevent += udp_receiveevent;
-            }
+            
         }
         public P2Pclient(DataType _DT)
         {
@@ -165,11 +161,7 @@ namespace client
                 localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
                 Isline = true;
                 isok = true;
-                if (NATUDP)
-                {
-                    udp.start(ip, new Random().Next(10000, 60000), port);
-                    udp.send(0x9c, IPAddress.None.ToString() + ":" + port, localEndPoint);
-                }
+               
                 timeout = DateTime.Now;
                 if (!isreceives)
                 {
@@ -227,10 +219,7 @@ namespace client
             if (P2PreceiveEvent != null)
                 P2PreceiveEvent(command, data, iep);
         }
-        public bool p2psend(byte command, string text, IPEndPoint ep)
-        {
-            return udp.send(command, text, ep);
-        }
+        
         private string tokan;
         public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
         {

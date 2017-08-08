@@ -9,5 +9,6 @@
             get; set;
         }
         public IDataparsing BytesDataparsing { get; set; }
+       public WeavePortTypeEnum WPTE { get; set; }
     }
 }

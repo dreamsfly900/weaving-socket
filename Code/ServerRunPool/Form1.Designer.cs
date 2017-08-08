@@ -31,7 +31,11 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
@@ -45,14 +49,12 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -77,7 +79,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(91, 226);
+            this.checkBox1.Location = new System.Drawing.Point(91, 251);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(138, 16);
             this.checkBox1.TabIndex = 8;
@@ -112,16 +114,57 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "新增监听端口";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Location = new System.Drawing.Point(58, 103);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(200, 100);
+            this.panel2.TabIndex = 16;
+            this.panel2.Visible = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(3, 51);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(191, 21);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "智信构建结构.Bytepackage";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(25, 15);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(125, 12);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "接口的命名空间与类名";
+            // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.radioButton6);
+            this.panel1.Controls.Add(this.radioButton5);
             this.panel1.Controls.Add(this.radioButton4);
             this.panel1.Controls.Add(this.radioButton3);
             this.panel1.Controls.Add(this.radioButton2);
             this.panel1.Controls.Add(this.radioButton1);
             this.panel1.Location = new System.Drawing.Point(10, 20);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(300, 45);
+            this.panel1.Size = new System.Drawing.Size(300, 66);
             this.panel1.TabIndex = 14;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(214, 14);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(83, 16);
+            this.radioButton4.TabIndex = 12;
+            this.radioButton4.TabStop = true;
+            this.radioButton4.Text = "BYTESocket";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
             // 
             // radioButton3
             // 
@@ -159,7 +202,7 @@
             // 
             // txt_port
             // 
-            this.txt_port.Location = new System.Drawing.Point(84, 184);
+            this.txt_port.Location = new System.Drawing.Point(84, 209);
             this.txt_port.Name = "txt_port";
             this.txt_port.Size = new System.Drawing.Size(168, 21);
             this.txt_port.TabIndex = 13;
@@ -168,7 +211,7 @@
             // lab_IP
             // 
             this.lab_IP.AutoSize = true;
-            this.lab_IP.Location = new System.Drawing.Point(1, 85);
+            this.lab_IP.Location = new System.Drawing.Point(1, 110);
             this.lab_IP.Name = "lab_IP";
             this.lab_IP.Size = new System.Drawing.Size(95, 12);
             this.lab_IP.TabIndex = 10;
@@ -177,7 +220,7 @@
             // lab_port
             // 
             this.lab_port.AutoSize = true;
-            this.lab_port.Location = new System.Drawing.Point(1, 153);
+            this.lab_port.Location = new System.Drawing.Point(1, 178);
             this.lab_port.Name = "lab_port";
             this.lab_port.Size = new System.Drawing.Size(95, 12);
             this.lab_port.TabIndex = 11;
@@ -185,7 +228,7 @@
             // 
             // txt_IP
             // 
-            this.txt_IP.Location = new System.Drawing.Point(84, 118);
+            this.txt_IP.Location = new System.Drawing.Point(84, 143);
             this.txt_IP.Name = "txt_IP";
             this.txt_IP.Size = new System.Drawing.Size(168, 21);
             this.txt_IP.TabIndex = 12;
@@ -193,7 +236,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(58, 263);
+            this.button2.Location = new System.Drawing.Point(73, 270);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(135, 23);
             this.button2.TabIndex = 15;
@@ -242,44 +285,27 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // radioButton4
+            // radioButton5
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(214, 14);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(83, 16);
-            this.radioButton4.TabIndex = 12;
-            this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "BYTESocket";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(3, 47);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(65, 16);
+            this.radioButton5.TabIndex = 13;
+            this.radioButton5.TabStop = true;
+            this.radioButton5.Text = "BYTEUDP";
+            this.radioButton5.UseVisualStyleBackColor = true;
             // 
-            // panel2
+            // radioButton6
             // 
-            this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Location = new System.Drawing.Point(58, 78);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 100);
-            this.panel2.TabIndex = 16;
-            this.panel2.Visible = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(25, 15);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(125, 12);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "接口的命名空间与类名";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(3, 51);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(191, 21);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "智信构建结构.Bytepackage";
+            this.radioButton6.AutoSize = true;
+            this.radioButton6.Location = new System.Drawing.Point(92, 47);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.Size = new System.Drawing.Size(65, 16);
+            this.radioButton6.TabIndex = 14;
+            this.radioButton6.TabStop = true;
+            this.radioButton6.Text = "JsonUdp";
+            this.radioButton6.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -299,12 +325,13 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         #endregion
         private System.Windows.Forms.Button button1;
@@ -330,6 +357,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.RadioButton radioButton6;
+        private System.Windows.Forms.RadioButton radioButton5;
     }
 }
 

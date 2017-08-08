@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 namespace WeaveBase
@@ -11,6 +12,7 @@ namespace WeaveBase
         {
             get; set;
         }
+        public EndPoint UDPEndPoint { get; set; }
         [DefaultValue(2048)]
         public int BufferSize
         {

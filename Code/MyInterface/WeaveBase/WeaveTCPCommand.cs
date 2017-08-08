@@ -176,7 +176,14 @@ namespace WeaveBase
         {
             foreach (WeaveTcpToken itp in WeaveTcpTokenList)
             {
-                if (itp.P2Server.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+
+                if (itp.WPTE == WeavePortTypeEnum.jsonudp)
+                {
+                     itp.P2Server.Send(soc, command, text);
+                    continue;
+
+                }
+                else if (itp.P2Server.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
                 {
                     return itp.P2Server.Send(soc, command, text);
                 }

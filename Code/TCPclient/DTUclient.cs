@@ -22,7 +22,7 @@ namespace TCPclient
         int mytimeout = 90;
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
-        UDP udp;
+     
         bool NATUDP = false;
         String IP; int PORT;
         public bool Isline
@@ -119,10 +119,7 @@ namespace TCPclient
             if (P2PreceiveEvent != null)
                 P2PreceiveEvent(command, data, iep);
         }
-        public bool p2psend(byte command, string text, IPEndPoint ep)
-        {
-            return udp.send(command, text, ep);
-        }
+       
         private string tokan;
         public void Send(byte[] b)
         {
