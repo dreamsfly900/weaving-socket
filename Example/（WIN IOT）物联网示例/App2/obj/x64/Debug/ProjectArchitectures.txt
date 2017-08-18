@@ -1,0 +1,2 @@
+D:\WeavingSocket\Code\IotClient\IotClientClass.csproj;x64
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\App2.csproj;x64

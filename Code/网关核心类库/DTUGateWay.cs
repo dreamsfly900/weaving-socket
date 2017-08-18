@@ -3,15 +3,14 @@ using cloud;
 using WeaveBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Xml;
 using TCPclient;
 using SocketServer;
+
 namespace TCPServer
 {
-  public  class DTUGateWay
+    public  class DTUGateWay
     {
         DTUServer DTUSer;
         public int V_ErrorMge { get; private set; }

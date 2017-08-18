@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using StandardModel;
-using MyInterface;
 using UserLogin;
+using WeaveBase;
 
 namespace _0x01_manage
 {
-    public class Class1 : MyInterface.TCPCommand
+    public class Class1 : WeaveTCPCommand
     {
-        public override void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
-        {
-            //这里是错误日志事件
-        }
+     
 
 
         [InstallFun("forever")]//这是一个接收的方法，注册到了通讯类中
-        public void login(Socket soc, _baseModel _0x01)
+        public void login(Socket soc, WeaveSession _0x01)
         {
             //在这里你可以用
             users u = _0x01.GetRoot<users>();
@@ -28,7 +22,7 @@ namespace _0x01_manage
 
         }
         [InstallFun("forever")]//这是一个接收的方法，注册到了通讯类中
-        public void getdata(Socket soc, _baseModel _0x01)
+        public void getdata(Socket soc, WeaveSession _0x01)
         {
             //这里可以验证_0x01.Token是否是登录过的。
 
@@ -59,14 +53,21 @@ namespace _0x01_manage
             return true;
         }
 
-        public override void TCPCommand_EventDeleteConnSoc(Socket soc)
+    
+
+        public override void WeaveUpdateSocketEvent(Socket soc)
         {
-             
+         
         }
 
-        public override void TCPCommand_EventUpdataConnSoc(Socket soc)
+        public override void WeaveDeleteSocketEvent(Socket soc)
         {
-            
+           
+        }
+
+        public override void WeaveBaseErrorMessageEvent(Socket soc, WeaveSession _0x01, string message)
+        {
+           
         }
     }
 }

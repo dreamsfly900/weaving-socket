@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
-      <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
+      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
       <Name>WeaveCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPclient\TCPclient.csproj">
@@ -84,7 +84,7 @@
       <Name>TCPclient</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
+      <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
       <Name>WebSocketServer</Name>
     </ProjectReference>
   </ItemGroup>

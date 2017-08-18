@@ -1,22 +1,10 @@
 ﻿using client;
-using MyInterface;
-using StandardModel;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using WeaveBase;
+using WeaveSokect;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -65,7 +53,7 @@ namespace App2
         bool gg = true;
        
         [InstallFun("forever")]//forever
-        public void command(Socket soc, _baseModel _0x01)
+        public void command(Socket soc, BaseDataModel _0x01)
         {
             try
             {

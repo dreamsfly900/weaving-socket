@@ -66,12 +66,6 @@
     <Compile Include="辅助类\Model.cs" />
     <Compile Include="辅助类\_base_Helper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TCPServer\TCPServer.csproj">
-      <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
-      <Name>TCPServer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

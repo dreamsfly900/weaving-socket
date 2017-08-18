@@ -11,3 +11,13 @@ C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.dll
 C:\Users\apple\Source\WeaveSocket\Code\TCPServer\bin\Debug\TCPServer.pdb
 C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.dll
 C:\Users\apple\Source\WeaveSocket\Code\TCPServer\obj\Debug\TCPServer.pdb
+D:\WeavingSocket\Code\TCPServer\bin\Debug\UDTCommon.dll
+D:\WeavingSocket\Code\TCPServer\bin\Debug\UDTLibary.dll
+D:\WeavingSocket\Code\TCPServer\bin\Debug\TCPServer.dll
+D:\WeavingSocket\Code\TCPServer\bin\Debug\TCPServer.pdb
+D:\WeavingSocket\Code\TCPServer\obj\Debug\TCPServer.csprojResolveAssemblyReference.cache
+D:\WeavingSocket\Code\TCPServer\obj\Debug\TCPServer.dll
+D:\WeavingSocket\Code\TCPServer\obj\Debug\TCPServer.pdb
+D:\WeavingSocket\Code\TCPServer\bin\Debug\MyInterface.dll
+D:\WeavingSocket\Code\TCPServer\bin\Debug\Newtonsoft.Json.dll
+D:\WeavingSocket\Code\TCPServer\bin\Debug\MyInterface.pdb

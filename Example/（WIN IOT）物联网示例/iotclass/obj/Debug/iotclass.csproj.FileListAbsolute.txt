@@ -22,3 +22,11 @@ D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\TCPSer
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.csprojResolveAssemblyReference.cache
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.dll
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.pdb
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.csprojResolveAssemblyReference.cache
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.dll
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\obj\Debug\iotclass.pdb
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\iotclass.dll
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\iotclass.pdb
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\MyInterface.dll
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\Newtonsoft.Json.dll
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\iotclass\bin\Debug\MyInterface.pdb

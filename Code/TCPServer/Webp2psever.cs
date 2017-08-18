@@ -1,13 +1,11 @@
-﻿using System;
+﻿using SocketServer;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using WebSocketServer;
 
 namespace P2P
 {
@@ -783,7 +781,7 @@ namespace P2P
                 
                     if (netc.Datalist.Count > 0)
                     {
-                    WebSocketServer.DataFrameHeader dfh = null;
+                    DataFrameHeader dfh = null;
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                         if (bytesRead == 0) { if (ListData.Count > 0) ListData.RemoveAt(0); netc.Ispage = false;  return; };
                         byte[] tempbtyes = new byte[bytesRead];
@@ -988,7 +986,7 @@ namespace P2P
 
         String combine(string temp,byte[] tempbtyes,List<byte[]> ListData)
         {
-            WebSocketServer.DataFrameHeader dfh = null;
+             DataFrameHeader dfh = null;
            
           //  Array.Copy(ListData[0], tempbtyes, tempbtyes.Length);
             byte[] masks = new byte[4];

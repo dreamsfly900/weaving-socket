@@ -128,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Code\IotClient\IotClientClass.csproj">
-      <Project>{73d7fe72-1170-4912-abd7-aa27eafd3e1d}</Project>
+      <Project>{73D7FE72-1170-4912-ABD7-AA27EAFD3E1D}</Project>
       <Name>IotClientClass</Name>
     </ProjectReference>
   </ItemGroup>

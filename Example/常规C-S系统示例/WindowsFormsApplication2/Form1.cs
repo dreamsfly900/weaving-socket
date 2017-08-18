@@ -1,16 +1,10 @@
 ﻿using client;
-using MyInterface;
-using StandardModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Windows.Forms;
 using UserLogin;
+using WeaveBase;
 
 namespace WindowsFormsApplication2
 {
@@ -37,7 +31,7 @@ namespace WindowsFormsApplication2
             client.start("127.0.0.1", 8989, true);
         }
         [InstallFun("forever")]//这是一个接收的方法，注册到了通讯类中
-        public void Islogin(Socket soc, _baseModel _0x01)
+        public void Islogin(Socket soc, WeaveSession _0x01)
         {
             if (_0x01.GetRoot<bool>())
             {
@@ -49,7 +43,7 @@ namespace WindowsFormsApplication2
             }
         }
         [InstallFun("forever")]//这是一个接收的方法，注册到了通讯类中
-        public void getdata(Socket soc, _baseModel _0x01)
+        public void getdata(Socket soc, WeaveSession _0x01)
         {
             List<ViewData> listViewData = _0x01.GetRoot<List<ViewData>>();
             listView1.Invoke(new Action(delegate (){

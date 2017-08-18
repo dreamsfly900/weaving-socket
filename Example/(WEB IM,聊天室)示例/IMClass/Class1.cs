@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using StandardModel;
-using MyInterface;
+
 using Newtonsoft.Json;
+using WeaveBase;
 
 namespace IMClass
 {
@@ -24,13 +24,9 @@ namespace IMClass
         public DateTime time;
         public string name;
     }
-    public class im : MyInterface.TCPCommand
+    public class im : WeaveTCPCommand
     {
-        public override void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
-        {
-             
-        }
-
+        
         public override byte Getcommand()
         {
             return 0x31;
@@ -41,9 +37,9 @@ namespace IMClass
             return true;
         }
         [InstallFun("forever")]
-        public void login(Socket soc, _baseModel _0x01)
+        public void login(Socket soc, WeaveSession _0x01)
         {
-            online [] onlieuser= GetOnline();
+            WeaveOnLine[] onlieuser= GetOnline();
             User[] listsoctemp = new User[listsoc.Count];
             listsoc.CopyTo(0, listsoctemp, 0, listsoctemp.Length);
             //为什么写这两句，是因为多线程中，添加和删除集合的操作，都会对其他线程有影响，所以先
@@ -74,7 +70,7 @@ namespace IMClass
          
         }
         [InstallFun("forever")]
-        public void say(Socket soc, _baseModel _0x01)
+        public void say(Socket soc, WeaveSession _0x01)
         {
 
             User[] listsoctemp = new User[listsoc.Count];
@@ -90,7 +86,7 @@ namespace IMClass
             }
         }
         [InstallFun("forever")]
-        public void Getnum(Socket soc, _baseModel _0x01)
+        public void Getnum(Socket soc, WeaveSession _0x01)
         {
               SendRoot<String>(soc,0x31,"getnum", listsoc.Count.ToString(),0, _0x01.Token);
         }
@@ -135,14 +131,21 @@ namespace IMClass
 
             }
         }
-        public override void TCPCommand_EventDeleteConnSoc(Socket soc)
+      
+
+        public override void WeaveUpdateSocketEvent(Socket soc)
+        {
+           
+        }
+
+        public override void WeaveDeleteSocketEvent(Socket soc)
         {
             
         }
 
-        public override void TCPCommand_EventUpdataConnSoc(Socket soc)
+        public override void WeaveBaseErrorMessageEvent(Socket soc, WeaveSession _0x01, string message)
         {
-             
+           
         }
     }
 }

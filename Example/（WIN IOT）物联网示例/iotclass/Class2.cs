@@ -1,36 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using StandardModel;
-using MyInterface;
+using WeaveBase;
 
 namespace iotclass
 {
-    public class iotclass : MyInterface.TCPCommand
+    public class iotclass : WeaveTCPCommand
     {
         public iotclass()
         {
             
         }
-        public override void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
-        {
-          
-        }
+       
       
         public override byte Getcommand()
         {
             return 0x03;
         }
         [InstallFun("forever")]
-        public void login(Socket soc, _baseModel _0x01)
+        public void login(Socket soc, WeaveSession _0x01)
         {
-            online ol = GetonlineByToken(_0x01.Token);
+            WeaveOnLine ol = GetOnLineByToken(_0x01.Token);
             ol.Name = "设备";
         }
         [InstallFun("forever")]
-        public void setvalue(Socket soc, _baseModel _0x01)
+        public void setvalue(Socket soc, WeaveSession _0x01)
         {
             try
             {
@@ -43,14 +36,21 @@ namespace iotclass
             return true;
         }
 
-        public override void TCPCommand_EventDeleteConnSoc(Socket soc)
+         
+
+        public override void WeaveUpdateSocketEvent(Socket soc)
         {
-           
+         
         }
 
-        public override void TCPCommand_EventUpdataConnSoc(Socket soc)
+        public override void WeaveDeleteSocketEvent(Socket soc)
         {
-            
+       
+        }
+
+        public override void WeaveBaseErrorMessageEvent(Socket soc, WeaveSession _0x01, string message)
+        {
+          
         }
     }
 }

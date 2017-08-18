@@ -47,9 +47,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Code\MyInterface\MyInterface.csproj">
-      <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
-      <Name>MyInterface</Name>
+    <ProjectReference Include="..\..\..\Code\MyInterface\WeaveCore.csproj">
+      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
+      <Name>WeaveCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

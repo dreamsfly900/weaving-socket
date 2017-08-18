@@ -217,3 +217,16 @@ D:\Weaving-Socket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\Multip
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\resources.en-us.resfiles
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\resources.en-us.resfiles.intermediate
 D:\Weaving-Socket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\ProjectArchitectures.txt
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App2.csprojResolveAssemblyReference.cache
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App.g.i.cs
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App.g.cs
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\MainPage.g.i.cs
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\MainPage.g.cs
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\XamlTypeInfo.g.cs
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App.xaml
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\MainPage.xaml
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App.xbf
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\MainPage.xbf
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\XamlSaveStateFile.xml
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App2.exe
+D:\WeavingSocket\Example\（WIN IOT）物联网示例\App2\obj\x86\Debug\App2.pdb

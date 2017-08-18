@@ -1,0 +1,16 @@
+D:\WeavingSocket\Code\IotClient\bin\x64\Debug\IotClient.dll
+D:\WeavingSocket\Code\IotClient\bin\x64\Debug\IotClient.pdb
+D:\WeavingSocket\Code\IotClient\bin\x64\Debug\IotClient.pri
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\IotClient.dll
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\IotClient.pdb
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\priconfig.xml
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\priconfig.xml.intermediate
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\layout.resfiles
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\layout.resfiles.intermediate
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\resources.resfiles
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\resources.resfiles.intermediate
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\pri.resfiles
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\pri.resfiles.intermediate
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\qualifiers.txt
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\qualifiers.txt.intermediate
+D:\WeavingSocket\Code\IotClient\obj\x64\Debug\MultipleQualifiersPerDimensionFound.txt

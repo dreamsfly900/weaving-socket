@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using StandardModel;
-using MyInterface;
+
+using WeaveBase;
 
 namespace iotclass
 {
-    public class webclass : MyInterface.TCPCommand
+    public class webclass : WeaveTCPCommand
     {
 
         public webclass()
@@ -29,15 +29,15 @@ namespace iotclass
                 catch {
                     //this.GlobalQueueTable.Add("iotvalue", "0");
                 }
-                online [] ol=   this.GetOnline();
+                WeaveOnLine[] ol=   this.GetOnline();
 
-                    foreach (online o in ol)
+                    foreach (WeaveOnLine o in ol)
                     {
                         try
                         {
                             if (o != null && o.Name == "客户")
                             {
-                                SendRoot<int>(o.Soc, 0x02, "getvalue", value, 0, o.Token);
+                            SendRoot<int>(o.Socket, 0x02, "getvalue", value, 0, o.Token);
                             }
                         }
                         catch { }
@@ -46,33 +46,30 @@ namespace iotclass
             }
         }
         [InstallFun("forever")]
-        public void command(Socket soc, _baseModel _0x01)
+        public void command(Socket soc, WeaveSession _0x01)
         {
-            online[] ol = this.GetOnline();
+            WeaveOnLine [] ol = this.GetOnline();
 
-            foreach (online o in ol)
+            foreach (WeaveOnLine o in ol)
             {
                 try
                 {
                     if (o != null && o.Name == "设备")
                     {
-                        SendRoot<string>(o.Soc, 0x02, "command", _0x01.Root, 0, o.Token);
+                        SendRoot<string>(o.Socket, 0x02, "command", _0x01.Root, 0, o.Token);
                     }
                 }
                 catch { }
             }
         }
         [InstallFun("forever")]
-        public void login(Socket soc, _baseModel _0x01)
+        public void login(Socket soc, WeaveSession _0x01)
         {
-             online ol= GetonlineByToken(_0x01.Token);
+            WeaveOnLine ol = GetOnLineByToken(_0x01.Token);
              ol.Name = "客户";
 
         }
-        public override void Bm_errorMessageEvent(Socket soc, _baseModel _0x01, string message)
-        {
-           //这里是错误日志
-        }
+        
 
         public override byte Getcommand()
         {
@@ -89,14 +86,21 @@ namespace iotclass
             return true;
         }
 
-        public override void TCPCommand_EventDeleteConnSoc(Socket soc)
-        {
-          
-        }
+        
 
-        public override void TCPCommand_EventUpdataConnSoc(Socket soc)
+        public override void WeaveUpdateSocketEvent(Socket soc)
         {
            
+        }
+
+        public override void WeaveDeleteSocketEvent(Socket soc)
+        {
+         
+        }
+
+        public override void WeaveBaseErrorMessageEvent(Socket soc, WeaveSession _0x01, string message)
+        {
+
         }
     }
 }

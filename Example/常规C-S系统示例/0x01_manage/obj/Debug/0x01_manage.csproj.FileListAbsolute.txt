@@ -26,3 +26,13 @@ D:\Weaving-Socket\Example\常规C-S系统示例\0x01_manage\bin\Debug\TCPServer.
 D:\Weaving-Socket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.csprojResolveAssemblyReference.cache
 D:\Weaving-Socket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.dll
 D:\Weaving-Socket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.pdb
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.csprojResolveAssemblyReference.cache
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.dll
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\obj\Debug\0x01_manage.pdb
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\0x01_manage.dll
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\0x01_manage.pdb
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\MyInterface.dll
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\UserLogin.dll
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\Newtonsoft.Json.dll
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\MyInterface.pdb
+D:\WeavingSocket\Example\常规C-S系统示例\0x01_manage\bin\Debug\UserLogin.pdb
