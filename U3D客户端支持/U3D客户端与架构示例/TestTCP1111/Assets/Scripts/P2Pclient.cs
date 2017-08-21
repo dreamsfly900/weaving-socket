@@ -376,7 +376,7 @@ namespace client
         }
         public void stop()
         {
-          //  isok = false;
+            isok = false;
             Isline = false;
             tcpc.Close();
         }
