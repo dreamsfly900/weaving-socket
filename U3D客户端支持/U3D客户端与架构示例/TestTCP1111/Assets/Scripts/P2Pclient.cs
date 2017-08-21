@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -361,7 +361,8 @@ namespace client
                 try
                 {
                     temppake str = mytemppakeList[0];
-                    receiveServerEvent(str.command, str.date);
+                      xmhelper.Init(str.date, null);
+                    //receiveServerEvent(str.command, str.date);
                 }
                 catch {
                 }
