@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using UnityEngine;
 using WeaveBase;
 
 namespace client
@@ -34,7 +35,7 @@ namespace client
         int mytimeout = 90;
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
-       
+        List<temppake> mytemppakeList = new List<temppake>();
         bool NATUDP = false;
      public   String IP;
        public int PORT;
@@ -49,7 +50,7 @@ namespace client
                 isline = value;
             }
         }
-        List<object> objlist = new List<object>();
+        //List<object> objlist = new List<object>();
         public void AddListenClass(object obj)
         {
             GetAttributeInfo(obj.GetType(), obj);
@@ -150,35 +151,42 @@ namespace client
             try
             {
                 if (DT == DataType.json && receiveServerEvent == null)
-                    throw new Exception("没有注册receiveServerEvent事件");
+                    Debug.Log("没有注册receiveServerEvent事件");
                 if (DT == DataType.bytes && receiveServerEventbit == null)
-                    throw new Exception("没有注册receiveServerEventbit事件");
+                    Debug.Log("没有注册receiveServerEventbit事件");
                 IP = ip;
                 PORT = port;
                
-                tcpc = new TcpClient();
-              //  tcpc.ExclusiveAddressUse = false;
-                tcpc.Connect(ip, port);
+                tcpc = new TcpClient(ip,port);
+                //  tcpc.ExclusiveAddressUse = false;
                 try
                 {
-                    IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-                    localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
+                    tcpc.Connect(ip, port);
                 }
-                catch
-                {
-                    if (ErrorMge != null)
-                        ErrorMge(1, "不能获得本地出发端口");
+                catch {
+                    return false;
                 }
+
+                //try
+                //{
+                //  //  IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                //  //  localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
+                //}
+                //catch
+                //{
+                //    if (ErrorMge != null)
+                //        ErrorMge(1, "不能获得本地出发端口");
+                //}
                 Isline = true;
                 isok = true;
-               
+
                 timeout = DateTime.Now;
                 if (!isreceives)
                 {
                     isreceives = true;
-                    System.Threading.Thread t=new System.Threading.Thread(new ParameterizedThreadStart(receives));
+                    System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(receives));
                     t.Start();
-                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
+                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart(unup));
                     t1.Start();
                 }
                 int ss = 0;
@@ -343,6 +351,28 @@ namespace client
             // tcpc.Close();
             return true;
         }
+        /// <summary>
+        /// 通过主线程执行方法避免跨线程UI问题
+        /// </summary>
+        public void OnTick()
+        {
+            if (mytemppakeList.Count > 0)
+            {
+                try
+                {
+                    temppake str = mytemppakeList[0];
+                    receiveServerEvent(str.command, str.date);
+                }
+                catch {
+                }
+                try
+                {
+                    mytemppakeList.RemoveAt(0);
+                }
+                catch { }
+            }
+            Debug.Log("队列中没有排队的方法需要执行。");
+        }
         public void stop()
         {
           //  isok = false;
@@ -353,7 +383,8 @@ namespace client
         void rec(object obj)
         {
             temppake str = obj as temppake;
-            receiveServerEvent(str.command, str.date);
+            mytemppakeList.Add(str);
+           // receiveServerEvent(str.command, str.date);
         }
         void unup()
         {
@@ -386,7 +417,7 @@ namespace client
                                 continue;
                             } 
                         }
-                        labe881:
+
                         if (bytesRead > 2)
                         {
                             int a = tempbtye[1];
@@ -412,7 +443,7 @@ namespace client
                                     catch
                                     { }
                                 }
-                                labered:
+
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)

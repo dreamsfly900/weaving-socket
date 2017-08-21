@@ -16,13 +16,16 @@ public class test
 public class Test : MonoBehaviour {
     public static P2Pclient pcp2;
     void Awake() {
+         Debug.Log("开始OK");
         pcp2 = new P2Pclient(false);
         pcp2.receiveServerEvent += Pcp2_receiveServerEvent;
         pcp2.timeoutevent += Pcp2_timeoutevent;
         pcp2.ErrorMge += Pcp2_ErrorMge;
         pcp2.AddListenClass(new test());
+        Debug.Log("初始化OK");
         bool bb=pcp2.start("127.0.0.1", 8989, false);
-        Debug.Log(bb.ToString());
+        Debug.Log("链接OK");
+       
         try
         {
             pcp2.SendRoot<int>(0x02, "login", 11111, 0);
@@ -58,6 +61,9 @@ public class Test : MonoBehaviour {
        // Debug.Log(text);
     }
     void Update () {
-		
-	}
+
+        if(pcp2!=null)
+        pcp2.OnTick();
+
+    }
 }
