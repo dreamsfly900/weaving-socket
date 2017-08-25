@@ -105,7 +105,7 @@ namespace cloud
                 WeaveTcpToken tt = new WeaveTcpToken();
                 if (sp.PortType == WeavePortTypeEnum.Web)
                 {
-                    p2psev = new WeaveP2Server();
+                    p2psev = new WeaveWebServer();
                 }
                 else if (sp.PortType == WeavePortTypeEnum.Json)
                 {

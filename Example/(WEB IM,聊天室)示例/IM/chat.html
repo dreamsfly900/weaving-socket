@@ -34,6 +34,7 @@
     // 连接建立时发送登录信息
     function onopen(msg)
     {
+        alert( '已获得');
         if (msg == 'token') {
             alert(msg+'已获得');
             socket.SendData(0x31, "login", name);

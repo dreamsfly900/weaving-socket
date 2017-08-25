@@ -30,3 +30,4 @@ D:\WeavingSocket\Code\TCPclient\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Code\TCPclient\obj\Debug\TCPclient.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Code\TCPclient\obj\Debug\TCPclient.dll
 D:\WeavingSocket\Code\TCPclient\obj\Debug\TCPclient.pdb
+D:\WeavingSocket\Code\TCPclient\bin\Debug\Newtonsoft.Json.dll
