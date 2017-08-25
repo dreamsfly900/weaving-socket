@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -37,8 +36,8 @@ namespace client
         public event P2Preceive P2PreceiveEvent;
         List<temppake> mytemppakeList = new List<temppake>();
         bool NATUDP = false;
-     public   String IP;
-       public int PORT;
+        public String IP;
+        public int PORT;
         public bool Isline
         {
             get
@@ -51,17 +50,22 @@ namespace client
             }
         }
         //List<object> objlist = new List<object>();
+
         public void AddListenClass(object obj)
         {
             GetAttributeInfo(obj.GetType(), obj);
             //xmhelper.AddListen()
+
             //objlist.Add(obj);
+
         }
         public void DeleteListenClass(object obj)
         {
             deleteAttributeInfo(obj.GetType(), obj);
             //xmhelper.AddListen()
+
             //objlist.Add(obj);
+
         }
         public void deleteAttributeInfo(Type t, object obj)
         {
@@ -114,15 +118,15 @@ namespace client
         }
         public P2Pclient(bool _NATUDP)
         {
-            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+           // this.receiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
             NATUDP = _NATUDP;
-            
+
         }
         public P2Pclient(DataType _DT)
         {
             DT = _DT;
-            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+         //   this.receiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
         }
         private void Xmhelper_errorMessageEvent(Socket soc, WeaveBase.WeaveSession _0x01, string message)
@@ -145,7 +149,7 @@ namespace client
         {
             return start(IP, PORT, takon);
         }
-       public string localprot;
+        public string localprot;
         public bool start(string ip, int port, bool takon)
         {
             try
@@ -156,27 +160,39 @@ namespace client
                     Debug.Log("没有注册receiveServerEventbit事件");
                 IP = ip;
                 PORT = port;
-               
-                tcpc = new TcpClient(ip,port);
+
+                tcpc = new TcpClient(ip, port);
                 //  tcpc.ExclusiveAddressUse = false;
+
                 try
                 {
                     tcpc.Connect(ip, port);
                 }
-                catch {
+                catch
+                {
                     return false;
                 }
 
                 //try
+
                 //{
+
                 //  //  IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+
                 //  //  localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
+
                 //}
+
                 //catch
+
                 //{
+
                 //    if (ErrorMge != null)
+
                 //        ErrorMge(1, "不能获得本地出发端口");
+
                 //}
+
                 Isline = true;
                 isok = true;
 
@@ -237,7 +253,7 @@ namespace client
             if (P2PreceiveEvent != null)
                 P2PreceiveEvent(command, data, iep);
         }
-       
+
         private string tokan;
         public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
         {
@@ -272,34 +288,41 @@ namespace client
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                int count =(b.Length<=40960? b.Length/40960: (b.Length/40960)+1);
+                int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
                 if (count == 0)
                 {
                     tcpc.Client.Send(b);
                     //System.IO.StreamWriter sw = new System.IO.StreamWriter("test.txt");
+
                     //foreach (byte bb in b)
+
                     //{
+
                     //    sw.Write(bb.ToString("X")+" ");
+
                     //}
+
                     //sw.Close();
+
                 }
                 else
                 {
                     for (int i = 0; i < count; i++)
                     {
-                       int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
-                         Array.Copy(b, i * 40960, temp, 0, zz);
+                        Array.Copy(b, i * 40960, temp, 0, zz);
                         tcpc.Client.Send(temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
             }
-            catch (Exception ee){
+            catch (Exception ee)
+            {
                 Isline = false;
                 stop();
-                if(timeoutevent!=null)
-                timeoutevent();
+                if (timeoutevent != null)
+                    timeoutevent();
                 if (timeoutobjevent != null)
                     timeoutobjevent(this);
                 send(command, text);
@@ -307,6 +330,7 @@ namespace client
                 return false;
             }
             // tcpc.Close();
+
             return true;
         }
         public bool send(byte command, byte[] text)
@@ -337,7 +361,7 @@ namespace client
                     }
                 }
             }
-            catch(Exception ee)
+            catch (Exception ee)
             {
                 Isline = false;
                 stop();
@@ -347,13 +371,18 @@ namespace client
                     timeoutobjevent(this);
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
-                return false; }
+                return false;
+            }
             // tcpc.Close();
+
             return true;
         }
         /// <summary>
+
         /// 通过主线程执行方法避免跨线程UI问题
+
         /// </summary>
+
         public void OnTick()
         {
             if (mytemppakeList.Count > 0)
@@ -361,9 +390,12 @@ namespace client
                 try
                 {
                     temppake str = mytemppakeList[0];
-                    receiveServerEvent(str.command, str.date);
+                    xmhelper.Init(str.date, null);
+                    //receiveServerEvent(str.command, str.date);
+
                 }
-                catch {
+                catch
+                {
                 }
                 try
                 {
@@ -375,16 +407,19 @@ namespace client
         }
         public void stop()
         {
-          //  isok = false;
+              isok = false;
+
             Isline = false;
             tcpc.Close();
         }
-        class temppake { public byte command; public string date; public byte [] datebit; }
+        class temppake { public byte command; public string date; public byte[] datebit; }
         void rec(object obj)
         {
             temppake str = obj as temppake;
             mytemppakeList.Add(str);
-           // receiveServerEvent(str.command, str.date);
+            if(receiveServerEvent!=null)
+             receiveServerEvent(str.command, str.date);
+
         }
         void unup()
         {
@@ -396,7 +431,7 @@ namespace client
                     int count = ListData.Count;
                     if (count > 0)
                     {
-                        int bytesRead = ListData[0]!=null? ListData[0].Length:0;
+                        int bytesRead = ListData[0] != null ? ListData[0].Length : 0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
                         Array.Copy(ListData[0], tempbtye, tempbtye.Length);
@@ -412,10 +447,11 @@ namespace client
                                 tempbtye = b;
                                 goto _0x99;
                             }
-                            else {
+                            else
+                            {
                                 ListData.RemoveAt(0);
                                 continue;
-                            } 
+                            }
                         }
 
                         if (bytesRead > 2)
@@ -433,7 +469,7 @@ namespace client
                                 else
                                 {
                                     String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                                     len = 0;
+                                    len = 0;
                                     try
                                     {
                                         len = int.Parse(temp);
@@ -447,21 +483,21 @@ namespace client
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
-                                    { 
-                                            if (ListData.Count > 1)
-                                            {
-                                                ListData.RemoveAt(0);
-                                              byte[] temps = new byte[ListData[0].Length];
-                                                Array.Copy(ListData[0], temps, temps.Length);
-                                                byte[] temps2 = new byte[tempbtye.Length + temps.Length];
-                                                Array.Copy(tempbtye,0, temps2,0, tempbtye.Length);
-                                                Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
-                                                ListData[0] = temps2; 
-                                            }
-                                            else
-                                            {
-                                                System.Threading.Thread.Sleep(20);
-                                            }
+                                    {
+                                        if (ListData.Count > 1)
+                                        {
+                                            ListData.RemoveAt(0);
+                                            byte[] temps = new byte[ListData[0].Length];
+                                            Array.Copy(ListData[0], temps, temps.Length);
+                                            byte[] temps2 = new byte[tempbtye.Length + temps.Length];
+                                            Array.Copy(tempbtye, 0, temps2, 0, tempbtye.Length);
+                                            Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
+                                            ListData[0] = temps2;
+                                        }
+                                        else
+                                        {
+                                            System.Threading.Thread.Sleep(20);
+                                        }
                                         continue;
                                     }
                                     else if (tempbtye.Length > (len + 2 + a))
@@ -476,13 +512,13 @@ namespace client
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
-                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message+ "2 + a"+ 2 + a+ "---len"+ len+ "--tempbtye"+ tempbtye.Length);
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
                                 }
                                 try
                                 {
                                     if (DT == DataType.json)
                                     {
-                                       string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                        string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.date = temp;
@@ -497,56 +533,69 @@ namespace client
                                             }
                                             else
                                             {
-                                                receiveServerEvent(str.command, str.date);
+                                                rec(str);
                                                 //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+
                                                 //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+
                                                 //receiveServerEvent(str.command, str.date);
+
                                                 //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+
                                                 //tt.Start(str);
+
                                             }
                                         }
                                         else if (receiveServerEvent != null)
                                         {
                                             //
-                                             receiveServerEvent(str.command, str.date);
-                                          //  receiveServerEvent?.Invoke(str.command, str.date);
+
+                                            rec(str);
+                                            //  receiveServerEvent?.Invoke(str.command, str.date);
+
                                             //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
+
                                             //tt.Start(str);
+
                                             // receiveServerEvent();
+
                                         }
                                     }
                                     if (DT == DataType.bytes)
                                     {
-                                       // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                        // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
                                         byte[] bs = new byte[len - 2 + a];
                                         Array.Copy(tempbtye, bs, bs.Length);
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
-                                         receiveServerEvent(str.command, str.date);
+                                        rec(str);
                                         //receiveServerEventbit?.Invoke(str.command, str.datebit);
+
                                     }
-                                        continue;
+                                    continue;
                                 }
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
-                                        ErrorMge(3,e.StackTrace+ "unup122:" + e.Message);
+                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
                                 }
                             }
                         }
                         else
                         {
-                            if (tempbtye[0]==0)
-                            ListData.RemoveAt(0);
+                            if (tempbtye[0] == 0)
+                                ListData.RemoveAt(0);
                         }
                     }
                 }
                 catch (Exception e)
                 {
                     if (ErrorMge != null)
-                        ErrorMge(3, "unup:" + e.Message+"---"+e.StackTrace);
+                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
                     try
                     {
                         ListData.RemoveAt(0);
@@ -555,7 +604,7 @@ namespace client
                 }
             }
         }
-          List<Byte[]> listtemp = new List<Byte[]>();
+        List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
             while (isok)
@@ -596,9 +645,12 @@ namespace client
                             ErrorMge(22, ee.Message);
                         }
                         //lock (this)
+
                         //{
+
                         ListData.Add(tempbtye);
-                       // }
+                        // }
+
                     }
                     else
                     {
@@ -610,6 +662,7 @@ namespace client
                                 Isline = false;
                                 stop();
                                 //isreceives = false;
+
                                 if (timeoutevent != null)
                                     timeoutevent();
                                 if (timeoutobjevent != null)
