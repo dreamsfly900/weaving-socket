@@ -104,3 +104,4 @@ D:\WeavingSocket\Code\JSON网关\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Code\JSON网关\bin\Debug\TCPclient.pdb
 D:\WeavingSocket\Code\JSON网关\bin\Debug\TCPServer.pdb
 D:\WeavingSocket\Code\JSON网关\bin\Debug\TCPCloud.pdb
+D:\WeavingSocket\Code\JSON网关\bin\Debug\统一登录服务.exe.CodeAnalysisLog.xml

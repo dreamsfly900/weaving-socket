@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "客户端示例", "客户�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "统一B-C转发负载网关程序", "JSON网关\统一B-C转发负载网关程序.csproj", "{53047F4F-9839-40A7-B10B-CCAF1A66EA37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketServer", "TCPServer\WebSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeavingSocketServer", "TCPServer\WeavingSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WP类库", "WP类库", "{CCFE7C31-52DC-4DAF-A983-3BDE348B4132}"
 EndProject

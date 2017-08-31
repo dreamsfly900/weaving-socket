@@ -57,3 +57,4 @@ D:\WeavingSocket\Code\test2\obj\Debug\test2.Properties.Resources.resources
 D:\WeavingSocket\Code\test2\obj\Debug\test2.csproj.GenerateResource.Cache
 D:\WeavingSocket\Code\test2\obj\Debug\test2.exe
 D:\WeavingSocket\Code\test2\obj\Debug\test2.pdb
+D:\WeavingSocket\Code\test2\bin\Debug\test2.exe.CodeAnalysisLog.xml

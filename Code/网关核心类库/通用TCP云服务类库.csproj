@@ -83,9 +83,9 @@
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>TCPclient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
+    <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
       <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
-      <Name>WebSocketServer</Name>
+      <Name>WeavingSocketServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

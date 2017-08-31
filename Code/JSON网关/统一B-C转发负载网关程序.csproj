@@ -143,9 +143,9 @@
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>TCPclient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPServer\WebSocketServer.csproj">
+    <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
       <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>WebSocketServer</Name>
+      <Name>WeavingSocketServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
       <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>

@@ -6,3 +6,4 @@ D:\WeavingSocket\Code\Testclass\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.dll
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.pdb
+D:\WeavingSocket\Code\Testclass\bin\Debug\Testclass.dll.CodeAnalysisLog.xml
