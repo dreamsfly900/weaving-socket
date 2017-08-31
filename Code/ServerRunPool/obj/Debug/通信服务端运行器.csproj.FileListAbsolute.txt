@@ -87,11 +87,9 @@ D:\WeavingSocket\Code\ServerRunPool\bin\Debug\智信构建结构.exe
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\智信构建结构.pdb
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\MyInterface.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPCloud.dll
-D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPServer.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\Newtonsoft.Json.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPclient.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\MyInterface.pdb
-D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPServer.pdb
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPCloud.pdb
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\TCPclient.pdb
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csprojResolveAssemblyReference.cache
@@ -102,3 +100,5 @@ D:\WeavingSocket\Code\ServerRunPool\obj\Debug\智信构建结构.exe
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\智信构建结构.pdb
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTCommon.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTLibary.dll
+D:\WeavingSocket\Code\ServerRunPool\bin\Debug\WeavingSocketServer.dll
+D:\WeavingSocket\Code\ServerRunPool\bin\Debug\WeavingSocketServer.pdb
