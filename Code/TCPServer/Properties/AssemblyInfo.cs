@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("WeavingSocket的服务端类库包")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("QQ:20573886")]
-[assembly: AssemblyProduct("WebSocketServer")]
+[assembly: AssemblyProduct("WeavingSocketServer")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
