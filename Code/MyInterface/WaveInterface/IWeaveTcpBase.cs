@@ -10,12 +10,12 @@ namespace WeaveBase
         int Port { get; set; }
         void Start(int port);
         int GetNetworkItemCount();
-        void KeepAliveHander(object obj);
+      
         bool Send(Socket soc, byte command, string text);
         bool Send(Socket soc, byte command, byte[] data);
         event WaveReceiveEventEvent waveReceiveEvent;
         event WeaveReceiveBitEvent weaveReceiveBitEvent;
-        event NATthrough NATthroughevent;
+       
         event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
     }

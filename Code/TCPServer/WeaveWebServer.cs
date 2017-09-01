@@ -14,7 +14,7 @@ namespace SocketServer
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public List<WeaveNetWorkItems> weaveWorkItemsList = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
-        public event NATthrough NATthroughevent;
+     
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
@@ -652,7 +652,7 @@ namespace SocketServer
                     {
                         netc.IsPage = false; return;
                     }
-                    labe881:
+                  
                     if (tempbtye.Length > 0)
                     {
                         #region MyRegion

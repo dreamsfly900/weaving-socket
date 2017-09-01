@@ -182,7 +182,7 @@ namespace SocketServer
        protected List<HttpProcessor> httpProcessorList = new List<HttpProcessor>();
         public event WaveReceiveEventEvent waveReceiveEvent;
         public event WeaveReceiveBitEvent weaveReceiveBitEvent;
-        public event NATthrough NATthroughevent;
+      
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
         public int Port

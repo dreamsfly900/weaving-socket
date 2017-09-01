@@ -11,17 +11,17 @@ using WeaveBase;
 
 namespace WeaveBase
 {
-    public class WeaveUDPServer : IWeaveTcpBase
+    public class WeaveUDPServer 
     {
         WeaveDataTypeEnum weaveDataType = WeaveDataTypeEnum.Json;
         String loaclip = "127.0.0.1";
            Socket socketLisener = null;
         List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
-        public event WaveReceiveEventEvent waveReceiveEvent;
-        public event WeaveReceiveBitEvent weaveReceiveBitEvent;
-        public event NATthrough NATthroughevent;
-        public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
-        public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
+        public event WaveReceivedupEvent waveReceiveEvent;
+        public event WeaveReceiveBitdupEvent weaveReceiveBitEvent;
+       
+        public event WeaveUpdateudpListEvent weaveUpdateSocketListEvent;
+        public event WeaveDeleteudpListEvent weaveDeleteSocketListEvent;
 
         public int Port
         {
@@ -92,24 +92,24 @@ namespace WeaveBase
                 System.Threading.Thread.Sleep(1);
             }
         }
-        private static readonly ConditionalWeakTable<Socket, StrongBox<EndPoint>> _extensionField_f=new ConditionalWeakTable<Socket, StrongBox<EndPoint>>();
-          EndPoint get_f(Socket obj)
-        {
-            StrongBox<EndPoint> box;
-            if (!_extensionField_f.TryGetValue(obj, out box))
-                return default(EndPoint);
-            return box.Value;
-        }
-          void set_f(Socket obj, EndPoint value)
-        {
-            StrongBox<EndPoint> box = _extensionField_f.GetOrCreateValue(obj);
-            box.Value = value;
-        }
-         void Remove(Socket obj)
-        {
-            _extensionField_f.Remove(obj);
+        //private static readonly ConditionalWeakTable<Socket, StrongBox<EndPoint>> _extensionField_f=new ConditionalWeakTable<Socket, StrongBox<EndPoint>>();
+        //  EndPoint get_f(Socket obj)
+        //{
+        //    StrongBox<EndPoint> box;
+        //    if (!_extensionField_f.TryGetValue(obj, out box))
+        //        return default(EndPoint);
+        //    return box.Value;
+        //}
+        //  void set_f(Socket obj, EndPoint value)
+        //{
+        //    StrongBox<EndPoint> box = _extensionField_f.GetOrCreateValue(obj);
+        //    box.Value = value;
+        //}
+        // void Remove(Socket obj)
+        //{
+        //    _extensionField_f.Remove(obj);
            
-        }
+        //}
         private void ReadCallback(IAsyncResult ar)
         {
             
@@ -120,7 +120,7 @@ namespace WeaveBase
             WeaveNetWorkItems workItem = (WeaveNetWorkItems)ar.AsyncState;
            
             // Socket handler = workItem.SocketSession;
-            workItem.UDPEndPoint = ep;
+            workItem.Ep = ep;
             try
             {
                
@@ -129,21 +129,31 @@ namespace WeaveBase
                 if (bytesRead > 0)
                 {
                     Array.Copy(workItem.Buffer, 0, tempbtye, 0, bytesRead);
-                    var query = weaveNetworkItems.Where(p => p.UDPEndPoint.Equals(ep));
+                    var query = weaveNetworkItems.Where(p => p.Ep.Equals(ep));
                     foreach (WeaveNetWorkItems wnw in query)
                     {
+                        if (tempbtye.Length == 1 && tempbtye[0] == 0x99)
+                        {
+                            wnw.Lasttime = DateTime.Now;
+                            return;
+                        }
                         wnw.DataList.Add(tempbtye);
                         return;
                     }
                     ;
 
-                    Socket soc = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-                   
-                       
-                    set_f(soc, ep);
+                    // Socket soc = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
+
+
+                    //  set_f(soc, ep);
                     //EndPoint ee = get_f(soc);
                     //System.Windows.Forms.MessageBox.Show(ee.ToString());
-                    workItem.SocketSession = soc;
+                    if (weaveUpdateSocketListEvent != null)
+                    {
+                        weaveUpdateSocketListEvent(ep);
+                    }
+                    workItem.Lasttime = DateTime.Now;
+                    workItem.Ep = ep;
                     workItem.DataList.Add(tempbtye);
                     weaveNetworkItems.Add(workItem);
                     return;
@@ -203,6 +213,7 @@ namespace WeaveBase
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
                     if (bytesRead > 2)
                     {
+                        netc.Lasttime = DateTime.Now;
                         int a = tempbtye[1];
                         if (bytesRead > 2 + a)
                         {
@@ -260,7 +271,7 @@ namespace WeaveBase
                                     WeaveEvent me = new WeaveEvent();
                                     me.Command = tempbtye[0];
                                     me.Data = temp;
-                                    me.Soc = netc.SocketSession;
+                                    me.Ep = netc.Ep;
                                     if (waveReceiveEvent != null)
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
                                     //receiveeventto(me);
@@ -277,7 +288,7 @@ namespace WeaveBase
                                     me.Command = tempbtye[0];
                                     me.Data = "";
                                     me.Databit = bs;
-                                    me.Soc = netc.SocketSession;
+                                    me.Ep = netc.Ep;
                                     if (weaveReceiveBitEvent != null)
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
                                 }
@@ -338,12 +349,12 @@ namespace WeaveBase
         void ReceiveEventHander(object obj)
         {
             WeaveEvent me = (WeaveEvent)obj;
-            waveReceiveEvent?.Invoke(me.Command, me.Data, me.Soc);
+            waveReceiveEvent(me.Command, me.Data, me.Ep);
         }
         void ReceiveBitEventHander(object obj)
         {
             WeaveEvent me = (WeaveEvent)obj;
-            weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
+            weaveReceiveBitEvent(me.Command, me.Databit, me.Ep);
         }
 
         public int GetNetworkItemCount()
@@ -370,21 +381,21 @@ namespace WeaveBase
                         Thread.Sleep(1);
                         try
                         {
-                           EndPoint ep= get_f(workItem.SocketSession);
+                            EndPoint ep = workItem.Ep;
                             byte[] b = new byte[] { 0x99 };
                             socketLisener.SendTo(b, ep);
-                            workItem.ErrorNum = 0;
+                            if ((DateTime.Now - workItem.Lasttime).TotalSeconds > 90)
+                            { 
+                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.Ep);
+
+                                //  Remove(workItem.SocketSession);
+                                weaveNetworkItems.Remove(workItem);
+                            }
                         }
                         catch
                         {
                             workItem.ErrorNum += 1;
-                            if (workItem.ErrorNum > 3)
-                            {
-                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
-
-                                Remove(workItem.SocketSession);
-                                weaveNetworkItems.Remove(workItem);
-                            }
+                          
                         }
                     }
                     Thread.Sleep(5000);
@@ -396,35 +407,17 @@ namespace WeaveBase
 
         private void DeleteSocketListEventHander(object state)
         {
-            weaveDeleteSocketListEvent?.Invoke(state as Socket);
-            try { (state as Socket).Close(); }
-            catch { }
+            weaveDeleteSocketListEvent?.Invoke(state as EndPoint);
+            
         }
 
-        public bool send(int index, byte command, string text)
+        
+        public bool Send(EndPoint ep, byte command, string text)
         {
             try
             {
-                Socket socket = weaveNetworkItems[index].SocketSession;
-                byte[] sendb = Encoding.UTF8.GetBytes(text);
-                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
                
-                socket.Send(b);
-            }
-            catch { return false; }
-            // tcpc.Close();
-            return true;
-        }
-        public bool Send(Socket socket, byte command, string text)
-        {
-            try
-            {
-                EndPoint ee = get_f(socket);
+                EndPoint ee = ep;
 
                 if (ee == null)
                     return false;
@@ -464,11 +457,11 @@ namespace WeaveBase
             return true;
         }
 
-        public bool Send(Socket socket, byte command, byte[] text)
+        public bool Send(EndPoint ep, byte command, byte[] text)
         {
             try
             {
-                EndPoint ee = get_f(socket);
+                EndPoint ee = ep;
                 if (ee == null)
                     return false;
                 int slen = 40960;

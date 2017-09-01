@@ -18,7 +18,7 @@ namespace WeaveBase
         protected Socket socketLisener = null;
         List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
-        public event NATthrough NATthroughevent;
+   
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
@@ -62,7 +62,7 @@ namespace WeaveBase
         {
             return weaveNetworkItems.Count;
         }
-        public void KeepAliveHander(object obj)
+         void KeepAliveHander(object obj)
         {
             while (true)
             {

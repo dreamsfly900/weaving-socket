@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
 namespace WeaveBase
 {
     public  class WeaveEvent
@@ -45,5 +46,6 @@ namespace WeaveBase
                 }
             }
             byte[] databit;
-        }
+        public EndPoint Ep { get; set; }
+    }
 }

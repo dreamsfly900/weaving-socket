@@ -12,7 +12,7 @@ namespace WeaveBase
         {
             get; set;
         }
-        public EndPoint UDPEndPoint { get; set; }
+     
         [DefaultValue(2048)]
         public int BufferSize
         {
@@ -49,6 +49,9 @@ namespace WeaveBase
                 _DataList = value;
             }
         }
+
+        public EndPoint Ep { get; set; }
+        public DateTime Lasttime { get; set; }
     }
     public class WeaveUdpWorkItems
     {
@@ -56,7 +59,7 @@ namespace WeaveBase
         {
             get;set;
         }
-        System.Net.IPEndPoint iep;
+     
         public System.Net.IPEndPoint Iep
         {
             get;set;

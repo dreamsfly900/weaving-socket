@@ -118,15 +118,15 @@ namespace cloud
                     tt.BytesDataparsing = sp.BytesDataparsing;
                     p2psev.weaveReceiveBitEvent += P2psev_receiveeventbit;
                 }
-                else if (sp.PortType == WeavePortTypeEnum.jsonudp)
-                {
-                    p2psev = new WeaveUDPServer(WeaveDataTypeEnum.Json);
+                //else if (sp.PortType == WeavePortTypeEnum.jsonudp)
+                //{
+                //    p2psev = new WeaveUDPServer(WeaveDataTypeEnum.Json);
                      
-                }
-                else if (sp.PortType == WeavePortTypeEnum.Json)
-                {
-                    p2psev = new WeaveUDPServer("127.0.0.1");
-                }
+                //}
+                //else if (sp.PortType == WeavePortTypeEnum.Json)
+                //{
+                //    p2psev = new WeaveUDPServer("127.0.0.1");
+                //}
                 else if (sp.PortType == WeavePortTypeEnum.Http)
                 {
                     p2psev = new HttpServer(sp.Port);

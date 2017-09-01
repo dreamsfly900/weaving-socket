@@ -37,7 +37,7 @@ namespace TCPclient
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
         
-        bool NATUDP = false;
+   
         public String IP;
         public int PORT;
         public bool Isline
@@ -132,7 +132,11 @@ namespace TCPclient
         }
         private void P2Pclient_receiveServerEvent(byte command, string text)
         {
-            xmhelper.Init(text, null);
+            try
+            {
+                xmhelper.Init(text, null);
+            }
+            catch { }
         }
         public bool start(string ip, int port, int _timeout, bool takon)
         {
@@ -159,8 +163,7 @@ namespace TCPclient
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new UdpClient();
                 tcpc.ExclusiveAddressUse = false;
-               // tcpc.Connect(ip, port);
-               // localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
+               
                 Isline = true;
                 isok = true; 
                 timeout = DateTime.Now;
@@ -171,6 +174,8 @@ namespace TCPclient
                     t.Start();
                     System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart(unup));
                     t1.Start();
+                    System.Threading.Thread t2 = new System.Threading.Thread(new ThreadStart(KeepAliveHander));
+                    t2.Start();
                 }
                 int ss = 0;
                 if (!takon) return true;
@@ -189,6 +194,21 @@ namespace TCPclient
                 if (ErrorMge != null)
                     ErrorMge(1, e.Message);
                 return false;
+            }
+        }
+
+        public void KeepAliveHander()
+        {
+            while (true)
+            {
+                System.Threading.Thread.Sleep(8000);
+                try
+                {
+                    IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
+                    EndPoint ep = (EndPoint)server;
+                    tcpc.Client.SendTo(new byte[] { 0x99 }, ep);
+                }
+                catch { }
             }
         }
         public int ConvertToInt(byte[] list)
@@ -374,25 +394,25 @@ namespace TCPclient
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
                         Array.Copy(ListData[0], tempbtye, tempbtye.Length);
-                        _0x99:
-                        if (tempbtye[0] == 0x99)
-                        {
-                            if (bytesRead > 1)
-                            {
-                                byte[] b = new byte[bytesRead - 1];
-                                byte[] t = tempbtye;
-                                Array.Copy(t, 1, b, 0, b.Length);
-                                ListData[0] = b;
-                                tempbtye = b;
-                                goto _0x99;
-                            }
-                            else
-                            {
-                                ListData.RemoveAt(0);
-                                continue;
-                            }
-                        }
-                        labe881:
+                        //_0x99:
+                        //if (tempbtye[0] == 0x99)
+                        //{
+                        //    if (bytesRead > 1)
+                        //    {
+                        //        byte[] b = new byte[bytesRead - 1];
+                        //        byte[] t = tempbtye;
+                        //        Array.Copy(t, 1, b, 0, b.Length);
+                        //        ListData[0] = b;
+                        //        tempbtye = b;
+                        //        goto _0x99;
+                        //    }
+                        //    else
+                        //    {
+                        //        ListData.RemoveAt(0);
+                        //        continue;
+                        //    }
+                        //}
+                     
                         if (bytesRead > 2)
                         {
                             int a = tempbtye[1];
@@ -418,7 +438,7 @@ namespace TCPclient
                                     catch
                                     { }
                                 }
-                                labered:
+                              
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
@@ -489,7 +509,7 @@ namespace TCPclient
                                         {
                                             //
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            receiveServerEvent?.Invoke(str.command, str.date);
+                                            receiveServerEvent(str.command, str.date);
                                             //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
@@ -505,7 +525,7 @@ namespace TCPclient
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
                                         // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        receiveServerEventbit?.Invoke(str.command, str.datebit);
+                                        receiveServerEventbit(str.command, str.datebit);
                                     }
                                     continue;
                                 }
@@ -555,8 +575,8 @@ namespace TCPclient
                             timeout = DateTime.Now;
 
                             tcpc.Client.ReceiveFrom(tempbtye, ref Remote);
-                         
-                            _0x99:
+
+                        _0x99:
                             if (tempbtye[0] == 0x99)
                             {
                                 timeout = DateTime.Now;

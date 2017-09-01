@@ -82,5 +82,22 @@ namespace test2
          //   p2pc.SendRoot<int>(0x01, "login", 34534534, 0);
             System.Threading.Thread.Sleep(5);
         }
+        WeaveUDPclient wudp = new WeaveUDPclient();
+        private void button3_Click(object sender, EventArgs e)
+        {
+            wudp.receiveServerEvent += Wudp_receiveServerEvent;
+            wudp.start("127.0.0.1", 8989,false);
+
+        }
+
+        private void Wudp_receiveServerEvent(byte command, string text)
+        {
+            MessageBox.Show(text);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            wudp.send(0x11, "不知道说什么好，反正成功了。");
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace TCPclient
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
      
-        bool NATUDP = false;
+      
         String IP; int PORT;
         public bool Isline
         {

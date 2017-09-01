@@ -58,3 +58,17 @@ D:\WeavingSocket\Code\test2\obj\Debug\test2.csproj.GenerateResource.Cache
 D:\WeavingSocket\Code\test2\obj\Debug\test2.exe
 D:\WeavingSocket\Code\test2\obj\Debug\test2.pdb
 D:\WeavingSocket\Code\test2\bin\Debug\test2.exe.CodeAnalysisLog.xml
+C:\weaving-socket\Code\test2\bin\Debug\test2.exe
+C:\weaving-socket\Code\test2\bin\Debug\test2.pdb
+C:\weaving-socket\Code\test2\bin\Debug\MyInterface.dll
+C:\weaving-socket\Code\test2\bin\Debug\WeavingSocketclient.dll
+C:\weaving-socket\Code\test2\bin\Debug\Newtonsoft.Json.dll
+C:\weaving-socket\Code\test2\bin\Debug\MyInterface.pdb
+C:\weaving-socket\Code\test2\bin\Debug\WeavingSocketclient.pdb
+C:\weaving-socket\Code\test2\obj\Debug\test2.csprojResolveAssemblyReference.cache
+C:\weaving-socket\Code\test2\obj\Debug\test2.Form1.resources
+C:\weaving-socket\Code\test2\obj\Debug\test2.Properties.Resources.resources
+C:\weaving-socket\Code\test2\obj\Debug\test2.csproj.GenerateResource.Cache
+C:\weaving-socket\Code\test2\obj\Debug\test2.csproj.CoreCompileInputs.cache
+C:\weaving-socket\Code\test2\obj\Debug\test2.exe
+C:\weaving-socket\Code\test2\obj\Debug\test2.pdb

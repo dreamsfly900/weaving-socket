@@ -130,7 +130,11 @@ namespace client
         }
         private void P2Pclient_receiveServerEvent(byte command, string text)
         {
-            xmhelper.Init(text, null);
+            try
+            {
+                xmhelper.Init(text, null);
+            }
+            catch { }
         }
         public bool start(string ip, int port, int _timeout, bool takon)
         {
@@ -376,7 +380,7 @@ namespace client
                                 continue;
                             } 
                         }
-                        labe881:
+                       
                         if (bytesRead > 2)
                         {
                             int a = tempbtye[1];
@@ -402,7 +406,7 @@ namespace client
                                     catch
                                     { }
                                 }
-                                labered:
+                              
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)

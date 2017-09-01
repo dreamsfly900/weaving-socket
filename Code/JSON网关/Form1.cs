@@ -19,7 +19,7 @@ namespace 统一登录服务
             InitializeComponent();
         }
         GateWay gw;
-        bool isweb = true;
+       
         //class A
         //{
         //    public string a;
@@ -37,9 +37,10 @@ namespace 统一登录服务
         {
             c.Text += log+"\r\n";
         }
+       
         private void 启动ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            isweb = false;
+          
             gw = new GateWay(WeavePortTypeEnum.Json,Convert.ToInt32(toolStripTextBox4.Text));
             gw.Proportion = Convert.ToInt32(toolStripTextBox3.Text);
             gw.Pipeline = (WeavePipelineTypeEnum)Enum.Parse( typeof(WeavePipelineTypeEnum), toolStripTextBox3.Text);
@@ -89,7 +90,7 @@ namespace 统一登录服务
         }
         private void 启动WEB网关ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            isweb = true;
+          
            gw = new GateWay(WeavePortTypeEnum.Web, Convert.ToInt32(toolStripTextBox4.Text));
             gw.EventMylog += Gw_EventMylog;
             if (gw.Run("127.0.0.1", Convert.ToInt32(toolStripTextBox1.Text), int.Parse(toolStripTextBox2.Text)))
