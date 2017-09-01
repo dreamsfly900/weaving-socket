@@ -340,17 +340,18 @@ namespace TCPclient
                 }
                 else
                 {
-                    for (int i = 0; i < count; i++)
-                    {
-                        int zz = b.Length - (i * 520) > 520 ? 520 : b.Length - (i * 520);
-                        byte[] temp = new byte[zz];
-                        Array.Copy(b, i * 520, temp, 0, zz);
-                        IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                        EndPoint ep = (EndPoint)server;
-                        tcpc.Client.SendTo(temp, ep);
-                        //tcpc.Client.Send(temp);
-                        System.Threading.Thread.Sleep(1);
-                    }
+                    throw new Exception("发送数据不得大于520byte");
+                    //for (int i = 0; i < count; i++)
+                    //{
+                    //    int zz = b.Length - (i * 520) > 520 ? 520 : b.Length - (i * 520);
+                    //    byte[] temp = new byte[zz];
+                    //    Array.Copy(b, i * 520, temp, 0, zz);
+                    //    IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
+                    //    EndPoint ep = (EndPoint)server;
+                    //    tcpc.Client.SendTo(temp, ep);
+                    //    //tcpc.Client.Send(temp);
+                    //    System.Threading.Thread.Sleep(1);
+                    //}
                 }
             }
             catch (Exception ee)

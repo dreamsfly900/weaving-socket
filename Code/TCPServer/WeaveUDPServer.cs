@@ -481,14 +481,16 @@ namespace WeaveBase
                 }
                 else
                 {
-                    for (int i = 0; i < count; i++)
-                    {
-                        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
-                        byte[] temp = new byte[zz];
-                        Array.Copy(b, i * slen, temp, 0, zz);
-                        socketLisener.SendTo(temp, ee);
-                        System.Threading.Thread.Sleep(100);
-                    }
+                    throw new Exception( "发送数据不得大于520byte");
+                    return false;
+                    //for (int i = 0; i < count; i++)
+                    //{
+                    //    int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
+                    //    byte[] temp = new byte[zz];
+                    //    Array.Copy(b, i * slen, temp, 0, zz);
+                    //    socketLisener.SendTo(temp, ee);
+                    //    System.Threading.Thread.Sleep(100);
+                    //}
                 }
             }
             catch { return false; }
