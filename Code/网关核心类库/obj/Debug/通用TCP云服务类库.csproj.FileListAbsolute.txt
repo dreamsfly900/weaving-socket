@@ -59,8 +59,8 @@ D:\WeavingSocket\Code\网关核心类库\bin\Debug\UDTLibary.dll
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPCloud.dll
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPCloud.pdb
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\MyInterface.dll
-D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPclient.dll
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\MyInterface.pdb
-D:\WeavingSocket\Code\网关核心类库\bin\Debug\TCPclient.pdb
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\WeavingSocketServer.dll
 D:\WeavingSocket\Code\网关核心类库\bin\Debug\WeavingSocketServer.pdb
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\WeavingSocketclient.dll
+D:\WeavingSocket\Code\网关核心类库\bin\Debug\WeavingSocketclient.pdb

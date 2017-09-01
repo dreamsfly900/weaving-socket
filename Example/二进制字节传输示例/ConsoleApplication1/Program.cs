@@ -16,7 +16,7 @@ namespace ConsoleApplication1
             p2pc.receiveServerEventbit += P2pc_receiveServerEventbit;
             p2pc.start("127.0.0.1", 8989, false);
             //随便发一个内容，前两BIT位，我认为是后台对应的方法。后三位是数据值
-            byte[] b = new byte[] {0x00,0x01,0x11,0xff,0x99 };
+            byte[] b = new byte[] {0x00,0x01,0x02,0xff,0x99 };
             p2pc.send(0x01, b);
             Console.ReadKey();
         }

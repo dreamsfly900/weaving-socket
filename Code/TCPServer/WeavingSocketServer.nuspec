@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata>
+        <id>WeavingSocketServer</id>
+        <version>2.0.0.3</version>
+        <title>WeavingSocketServer</title>
+        <authors>Dremsfly</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>WeavingSocketServer的服务端类库,QQ20573886</description>
+        <copyright>Dremsfly</copyright>
+        <references>
+            <group targetFramework=".NETFramework4.0">
+                <reference file="D:\WeavingSocket\Code\TCPServer\lib\MyInterface.dll" />
+                <reference file="D:\WeavingSocket\Code\TCPServer\lib\Newtonsoft.Json.dll" />
+                <reference file="D:\WeavingSocket\Code\TCPServer\lib\UDTCommon.dll" />
+                <reference file="D:\WeavingSocket\Code\TCPServer\lib\UDTLibary.dll" />
+            </group>
+        </references>
+    </metadata>
+</package>

@@ -17,7 +17,7 @@ namespace 智信构建结构
             byte[] bs = new byte[2];
             Array.Copy(data, 0, bs, 0, bs.Length);
             int req= ConvertToInt(bs);
-            if (req == 256)
+            if (req == 1)
             {
                 bm.Request = "getdata";
             }
@@ -80,11 +80,15 @@ namespace 智信构建结构
         }
         public int ConvertToInt(byte[] list)
         {
+            
             int ret = 0;
             int i = 0;
             foreach (byte item in list)
             {
+              
+
                 ret = ret + (item << i);
+                if(ret!=0)
                 i = i + 8;
             }
             return ret;

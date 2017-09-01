@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaveCore", "..\..\Code\MyInterface\WeaveCore.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketServer", "..\..\Code\TCPServer\WebSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeavingSocketServer", "..\..\Code\TCPServer\WeavingSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

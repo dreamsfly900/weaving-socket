@@ -47,7 +47,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UDTCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\UDTCommon.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -77,6 +76,7 @@
     <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
       <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
       <Name>WeaveCore</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

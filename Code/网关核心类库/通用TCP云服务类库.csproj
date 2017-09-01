@@ -80,11 +80,11 @@
       <Name>WeaveCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPclient\TCPclient.csproj">
-      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
+      <Project>{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}</Project>
       <Name>TCPclient</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
-      <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
+      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
       <Name>WeavingSocketServer</Name>
     </ProjectReference>
   </ItemGroup>
