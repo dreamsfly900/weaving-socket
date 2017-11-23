@@ -1,0 +1,23 @@
+﻿<Window x:Class="WeavingSocketServerWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WeavingSocketServerWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="631.609" Width="841.81">
+    <Grid>
+        <Label x:Name="label" Content="端口号" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" Height="38" Width="111" FontSize="16"/>
+        <TextBox x:Name="Port_textBox" HorizontalAlignment="Left" Height="46" Margin="23,53,0,0" TextWrapping="Wrap" Text="9999" VerticalAlignment="Top" Width="130" FontSize="16"/>
+        <Button x:Name="StartListen_button" Content="开始监听端口" HorizontalAlignment="Left" Margin="180,17,0,0" VerticalAlignment="Top" Width="230" Height="82" FontSize="18" Click="StartListen_button_Click"/>
+        <ListBox x:Name="UserList_listBox" HorizontalAlignment="Left" Height="239" Margin="655,71,0,0" VerticalAlignment="Top" Width="160"/>
+        <Label x:Name="UserList_label" Content="在线用户列表" HorizontalAlignment="Left" Margin="655,17,0,0" VerticalAlignment="Top" Height="38" Width="111" FontSize="16"/>
+        <TextBlock x:Name="ServerReceive_textBlock" HorizontalAlignment="Left" Margin="23,401,0,0" TextWrapping="Wrap" Text="MSG" VerticalAlignment="Top" Height="169" Width="554" Foreground="#FFFF1207" Background="#FFD3CDCD" FontSize="14"/>
+        <Label x:Name="label_Copy" Content="收到的信息" HorizontalAlignment="Left" Margin="23,364,0,0" VerticalAlignment="Top" Height="32" Width="111" FontSize="16"/>
+        <Label x:Name="label_Copy1" Content="要发送的消息" HorizontalAlignment="Left" Margin="23,131,0,0" VerticalAlignment="Top" Height="38" Width="111" FontSize="16"/>
+        <TextBox x:Name="InputSendMessage_textBox" HorizontalAlignment="Left" Height="46" Margin="23,174,0,0" TextWrapping="Wrap" Text="Message" VerticalAlignment="Top" Width="387" FontSize="16"/>
+        <Button x:Name="SendMsg_button" Content="发送消息" HorizontalAlignment="Left" Margin="23,247,0,0" VerticalAlignment="Top" Width="217" Height="82" FontSize="18" Click="SendMsg_button_Click"/>
+        <Button x:Name="StopListen_button" Content="关闭服务器" HorizontalAlignment="Left" Margin="435,17,0,0" VerticalAlignment="Top" Width="142" Height="82" FontSize="18" Click="StopListen_button_Click"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,10 @@
+﻿<Application x:Class="WeavingSocketServerWPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WeavingSocketServerWPF"
+             StartupUri="MyUnityServer.xaml">
+    <!--MyUnityServer-->
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
