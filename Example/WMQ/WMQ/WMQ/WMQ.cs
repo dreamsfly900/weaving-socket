@@ -49,15 +49,19 @@ namespace WMQ
         }
         public bool Send<T>(Socket soc, byte command, T t)
         {
-            foreach (WMQMODE wm in listiwtcp)
+            try
             {
-                if (wm.iwtb.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                foreach (WMQMODE wm in listiwtcp)
                 {
-                    String str = Newtonsoft.Json.JsonConvert.SerializeObject(t);
-                    return wm.iwtb.Send(soc, command, str);
+                    if (wm.iwtb.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                    {
+                        String str = Newtonsoft.Json.JsonConvert.SerializeObject(t);
+                        return wm.iwtb.Send(soc, command, str);
 
+                    }
                 }
             }
+            catch { deletesoc(soc); }
             return false;
         }
         void Queuego()

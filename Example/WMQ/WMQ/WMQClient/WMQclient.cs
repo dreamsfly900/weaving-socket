@@ -90,7 +90,9 @@ namespace WMQClient
                
             }
             str = Newtonsoft.Json.JsonConvert.SerializeObject(wmd);
+            System.Threading.Thread.Sleep(10);
             return client.send(command, str);
+
         }
         private void Client_receiveServerEvent(byte command, string text)
         {
