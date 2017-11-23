@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AsyncTCPServer\AsyncEventArgs.cs" />
     <Compile Include="AsyncTCPServer\AsyncTCPServer.cs" />
+    <Compile Include="Helper\WeaveServerHelper.cs" />
     <Compile Include="InstallFunAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AsyncTCPServer\TCPClientState.cs" />

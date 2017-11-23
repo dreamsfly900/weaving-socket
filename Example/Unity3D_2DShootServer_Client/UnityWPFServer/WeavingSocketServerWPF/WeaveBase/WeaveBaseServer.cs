@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using WeaveBase.Helper;
+
 namespace WeaveBase
 {
     public class WeaveBaseServer : IWeaveTcpBase
@@ -85,7 +87,7 @@ namespace WeaveBase
                         {
 
                             byte[] b = new byte[] { 0x99 };
-                            //初始化连接，这里 报错，socket没有
+                            //初始化连接，这里 报错，socket没有，客户端已经异常断开了，如断电，断网，，
                             workItem.SocketSession.Send(b);
                             workItem.ErrorNum = 0;
                         }
@@ -159,30 +161,7 @@ namespace WeaveBase
             WeaveEvent me = (WeaveEvent)obj;
             weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
         }
-        public int ConvertToInt(byte[] list)
-        {
-            int ret = 0;
-            int i = 0;
-            foreach (byte item in list)
-            {
-                ret = ret + (item << i);
-                i = i + 8;
-            }
-            return ret;
-        }
-        public byte[] ConvertToByteList(int v)
-        {
-            List<byte> ret = new List<byte>();
-            int value = v;
-            while (value != 0)
-            {
-                ret.Add((byte)value);
-                value = value >> 8;
-            }
-            byte[] bb = new byte[ret.Count];
-            ret.CopyTo(bb);
-            return bb;
-        }
+      
         private void packageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
@@ -211,7 +190,7 @@ namespace WeaveBase
                             {
                                 byte[] bb = new byte[a];
                                 Array.Copy(tempbtye, 2, bb, 0, a);
-                                len = ConvertToInt(bb);
+                                len = WeaveServerHelper.ConvertToInt(bb);
                             }
                             else
                             {
@@ -376,13 +355,15 @@ namespace WeaveBase
             try
             {
                 Socket socket = weaveNetworkItems[index].SocketSession;
-                byte[] sendb = Encoding.UTF8.GetBytes(text);
-                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
+                //byte[] sendb = Encoding.UTF8.GetBytes(text);
+                //byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                //byte[] b = new byte[2 + lens.Length + sendb.Length];
+                //b[0] = command;
+                //b[1] = (byte)lens.Length;
+                //lens.CopyTo(b, 2);
+                //sendb.CopyTo(b, 2 + lens.Length);
+                byte[] b = WeaveServerHelper.CodingProtocol(command, text);
+
                 socket.Send(b);
             }
             catch { return false; }
@@ -393,19 +374,22 @@ namespace WeaveBase
         {
             try
             {
-                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
+                //byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
+                //byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                //byte[] b = new byte[2 + lens.Length + sendb.Length];
+                //b[0] = command;
+                //b[1] = (byte)lens.Length;
                 //从指定的目标数组索引处开始，将当前一维数组的所有元素复制到指定的一维数组中 ,将lens所有元素复制到b中，从b的第2个元素开始
-                lens.CopyTo(b, 2);
+                //lens.CopyTo(b, 2);
                 //将sendb所有元素复制到b中，从（2+lens长度）开始
-                sendb.CopyTo(b, 2 + lens.Length);
+                // sendb.CopyTo(b, 2 + lens.Length);
 
                 //最终b的结构是[0] 是command的byte
                 // [1]是text数据转换为byte后的长度length
                 //[2]从2往后是实际的text数据转换为byte的数据
+
+                byte[] b = WeaveServerHelper.CodingProtocol(command, text);
+
                 int slen = 40960;  //40kb左右
                 if (socketLisener.ProtocolType == ProtocolType.Udp)
                     slen = 520;
@@ -418,7 +402,7 @@ namespace WeaveBase
                 }
                 else
                 {
-                    //只有在slen 大于40959 才会进入这个方法，实现数据分页发送
+                    //只有在slen 大于40959,约40kb 才会进入这个方法，实现数据分页发送
                     for (int i = 0; i < count; i++)
                     {
                         int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
@@ -441,16 +425,19 @@ namespace WeaveBase
                 int slen = 40960;
                 if (socketLisener.ProtocolType == ProtocolType.Udp)
                     slen = 520;
-                byte[] sendb = text;
-                byte[] lens = ConvertToByteList(sendb.Length);
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
+
+                //byte[] sendb = text;
+                //byte[] lens = WeaveServerHelper.ConvertToByteList(sendb.Length);
+                //byte[] b = new byte[2 + lens.Length + sendb.Length];
+                //b[0] = command;
+                //b[1] = (byte)lens.Length;
+                //lens.CopyTo(b, 2);
+                //sendb.CopyTo(b, 2 + lens.Length);
                 //最终b的结构是[0] 是command的byte
                 // [1]是text数据转换为byte后的长度length
                 //[2]从2往后是实际的text数据转换为byte的数据
+                byte[] b = WeaveServerHelper.CodingProtocol(command, text);
+
                 int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
                 if (count == 0)
                 {
