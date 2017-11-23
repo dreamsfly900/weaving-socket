@@ -28,7 +28,7 @@ public class Test : MonoBehaviour {
        
         try
         {
-            pcp2.SendRoot<int>(0x02, "login", 11111, 0);
+            pcp2.SendRoot<int>(0x01, "login", 11111, 0);
         }
         catch (Exception e)
         { Debug.Log(e.ToString()); }

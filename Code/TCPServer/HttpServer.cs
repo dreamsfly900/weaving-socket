@@ -226,32 +226,40 @@ namespace SocketServer
         }
         public bool Send(Socket soc, byte command, string text)
         {
-            int i = httpProcessorList.Count;
-            HttpProcessor[] hps = new HttpProcessor[i];
-            httpProcessorList.CopyTo(hps);
-            foreach (HttpProcessor hp in hps)
+            try
             {
-                if (hp.socket.Client == soc)
+                int i = httpProcessorList.Count;
+                HttpProcessor[] hps = new HttpProcessor[i];
+                httpProcessorList.CopyTo(hps);
+                foreach (HttpProcessor hp in hps)
                 {
-                    hp.retrunData = text;
-                    return true;
+                    if (hp.socket.Client == soc)
+                    {
+                        hp.retrunData = text;
+                        return true;
+                    }
                 }
             }
+            catch { return false; }
             return false;
         }
         public bool Send(Socket soc, byte command, byte[] data)
         {
-            int i = httpProcessorList.Count;
-            HttpProcessor[] hps = new HttpProcessor[i];
-            httpProcessorList.CopyTo(hps);
-            foreach (HttpProcessor hp in hps)
+            try
             {
-                if (hp.socket.Client == soc)
+                int i = httpProcessorList.Count;
+                HttpProcessor[] hps = new HttpProcessor[i];
+                httpProcessorList.CopyTo(hps);
+                foreach (HttpProcessor hp in hps)
                 {
-                    hp.retrunData = Convert.ToBase64String(data);
-                    return true;
+                    if (hp.socket.Client == soc)
+                    {
+                        hp.retrunData = Convert.ToBase64String(data);
+                        return true;
+                    }
                 }
             }
+            catch { return false; }
             return false;
         }
         void listen()

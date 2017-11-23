@@ -1,0 +1,3 @@
+﻿8989:socket
+8990:websocket
+88:http

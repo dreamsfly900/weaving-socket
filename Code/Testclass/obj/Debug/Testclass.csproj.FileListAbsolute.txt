@@ -6,7 +6,6 @@ D:\WeavingSocket\Code\Testclass\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.dll
 D:\WeavingSocket\Code\Testclass\obj\Debug\Testclass.pdb
-D:\WeavingSocket\Code\Testclass\bin\Debug\Testclass.dll.CodeAnalysisLog.xml
 C:\weaving-socket\Code\Testclass\bin\Debug\Testclass.dll
 C:\weaving-socket\Code\Testclass\bin\Debug\Testclass.pdb
 C:\weaving-socket\Code\Testclass\bin\Debug\MyInterface.dll
@@ -16,3 +15,4 @@ C:\weaving-socket\Code\Testclass\obj\Debug\Testclass.csprojResolveAssemblyRefere
 C:\weaving-socket\Code\Testclass\obj\Debug\Testclass.csproj.CoreCompileInputs.cache
 C:\weaving-socket\Code\Testclass\obj\Debug\Testclass.dll
 C:\weaving-socket\Code\Testclass\obj\Debug\Testclass.pdb
+D:\WeavingSocket\Code\Testclass\bin\Debug\Newtonsoft.Json.xml

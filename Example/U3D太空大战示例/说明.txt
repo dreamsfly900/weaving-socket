@@ -1,0 +1,6 @@
+U3D项目分为U3D和服务端两个项目
+由SuperLinMeng提供，部分代码根据SuperLinMeng编程习惯，
+SuperLinMeng进行了重载或小幅修改。
+具有参考价值
+SuperLinMeng：QQ2360450496
+Weaving-Socket交流群：17375149

@@ -40,3 +40,4 @@ C:\weaving-socket\Code\TCPclient\obj\Debug\TCPclient.csprojResolveAssemblyRefere
 C:\weaving-socket\Code\TCPclient\obj\Debug\TCPclient.csproj.CoreCompileInputs.cache
 C:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.dll
 C:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.pdb
+D:\WeavingSocket\Code\TCPclient\bin\Debug\Newtonsoft.Json.xml
