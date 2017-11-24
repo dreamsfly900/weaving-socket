@@ -258,7 +258,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u670D\u52A1\u5668\u4FE1\u606F"
+  m_Text: "\u670D\u52A1\u5668\u4FE1\u606F\u4FEE\u6539Git\u6D4B\u8BD5"
 --- !u!222 &40943960
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1347,6 +1347,7 @@ MonoBehaviour:
   input_ServerPort: {fileID: 1953680458}
   server_msg_text: {fileID: 40943959}
   login_button: {fileID: 368144892}
+  connectedServerOK: 0
 --- !u!1 &1149037169
 GameObject:
   m_ObjectHideFlags: 0
