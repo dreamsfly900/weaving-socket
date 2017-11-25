@@ -13,13 +13,21 @@ namespace MyTCPCloud
     {
         public event WeaveLogDelegate WeaveLogEvent;
 
-        public event WeaveServerReceiveDelegate WeaveReceiveEvent;
+        public event WeaveServerReceiveSocketMessageCallBack WeaveServerReceiveSocketMessageCallBackEvent;
 
-        public event WeaveServerUpdateSocketHander WeaveUpdateEvent;
 
-        public event WeaveServerDeleteSocketHander WeaveDeleteEvent;
+    public event WeaveServerDeleteSocketCallBack WeaveServerDeleteSocketCallBackEvent;
 
-        public event WeaveServerUpdateUnityPlayerSetOnLineHander WeaveServerUpdateUnityPlayerSetOnLineEvent;
+
+    public event WeaveServerUpdateSocketCallBack WeaveServerUpdateSocketCallBackEvent;
+
+
+    public event WeaveServerReceiveOnLineUnityPlayerMessageCallBack WeaveServerReceiveOnLineUnityPlayerMessageCallBackEvent;
+
+
+    public event WeaveServerGetUnityPlayerOnLineCallBack WeaveServerGetUnityPlayerOnLineCallBackEvent;
+
+    public event WeaveServerGetUnityPlayerOffLineCallBack WeaveServerGetUnityPlayerOffLineCallBackEvent;
 
 
         //public XmlDocument xml
@@ -27,16 +35,16 @@ namespace MyTCPCloud
         //    get;set;
         //}
 
-        public List<CmdWorkItem> CmdWorkItems
+        public List<WeaveTCPCommandItem> weaveTCPCommandItems
         {
             get
             {
-                return _CmdWorkItems;
+                return _weaveTCPCommandItems;
             }
 
             set
             {
-                _CmdWorkItems = value;
+                _weaveTCPCommandItems = value;
             }
         }
 
@@ -98,7 +106,7 @@ namespace MyTCPCloud
             }
         }
 
-        List<CmdWorkItem> _CmdWorkItems = new List<CmdWorkItem>();
+        List<WeaveTCPCommandItem> _weaveTCPCommandItems = new List<WeaveTCPCommandItem>();
         
         WeaveTable _weaveTable = new WeaveTable();
      
@@ -130,10 +138,10 @@ namespace MyTCPCloud
         /// <param name="WeaveServerPort"></param>
         public void StartServer(WeaveServerPort _ServerPort)
         {
-           
-             // WeaveTcpToken weaveTcpToken = new WeaveTcpToken();
-         
-               P2Server = new WeaveP2Server("127.0.0.1");
+            
+              // WeaveTcpToken weaveTcpToken = new WeaveTcpToken();
+
+              P2Server = new WeaveP2Server("127.0.0.1");
 
               P2Server.waveReceiveEvent += P2ServerReceiveHander;
                P2Server.weaveUpdateSocketListEvent += P2ServerUpdateSocketHander;
@@ -158,7 +166,7 @@ namespace MyTCPCloud
             try
             {
                 LoginManageCommand loginCmd = new LoginManageCommand();
-                loginCmd.ServerLoginOKEvent += UpdatePlayerListSetOnLine;
+                loginCmd.ServerLoginOKEvent += OnUnityPlayerLoginOK;
                 AddCmdWorkItems(loginCmd);
 
                 AddCmdWorkItems(new GameScoreCommand());
@@ -174,15 +182,65 @@ namespace MyTCPCloud
             }
         }
 
+        private void OnUnityPlayerLoginOK(string _u, Socket _socket)
+        {
+            WeaveOnLine onLineSocket = weaveOnline.Find(w => w.Socket == _socket);
+
+            // throw new NotImplementedException();
+            UnityPlayerOnClient gamer = new UnityPlayerOnClient()
+            {
+                UserName = _u,
+                isLogin = true,
+                 Name = onLineSocket.Name,
+                  Obj =onLineSocket.Obj,
+                    Socket = _socket,
+                     Token = onLineSocket.Token
+            };
+
+            WeaveServerGetUnityPlayerOnLineCallBackEvent(gamer);
+
+        }
+
+        public bool CheckIsOnLinePlayerMessage(Socket _socket)
+        {
+            WeaveOnLine onLineSocket = weaveOnline.Find(w => w.Socket == _socket);
+            if (unityPlayerOnClientList.Count == 0)
+                return false;
+            else
+            {
+                UnityPlayerOnClient player = unityPlayerOnClientList.Find(u => u.Name == onLineSocket.Name);
+                if (player != null)
+                    return true;
+                else
+                    return false;
+            }
+            
+        }
+
+        public void Check_ReceiveMessageCallBackEvent(byte command, string data, Socket _socket)
+        {
+            if(CheckIsOnLinePlayerMessage(_socket))
+            {
+                UnityPlayerOnClient player = unityPlayerOnClientList.Find(u => u.Socket == _socket);
+                WeaveServerReceiveOnLineUnityPlayerMessageCallBackEvent(command, data, player);
+            }
+            else
+            {
+                WeaveOnLine onLine = weaveOnline.Find(w => w.Socket == _socket);
+                WeaveServerReceiveSocketMessageCallBackEvent( command, data, onLine);
+            }
+        }
+
+
         public void AddCmdWorkItems(WeaveTCPCommand cmd)
         {
             cmd.SetGlobalQueueTable(weaveTable, TcpToken);
-            CmdWorkItem cmdItem = new CmdWorkItem();
+            WeaveTCPCommandItem cmdItem = new WeaveTCPCommandItem();
             // Ic.SetGlobalQueueTable(weaveTable, TcpTokenList);
             cmdItem.WeaveTcpCmd = cmd;
             cmdItem.CmdName = cmd.Getcommand();
             GetAttributeInfo(cmd, cmd.GetType(), cmd);
-            CmdWorkItems.Add(cmdItem);
+            weaveTCPCommandItems.Add(cmdItem);
         }
 
        
@@ -209,122 +267,15 @@ namespace MyTCPCloud
                 }
             }
         }
-        void P2ServerDeleteSocketHander(System.Net.Sockets.Socket soc)
-        {
-
-            /*我写的方法*/
-            WeaveOnLine hasOnline = weaveOnline.Find(item => item.Socket == soc);
-
-            if (hasOnline != null)
-            {
-                
-                UnityPlayerOnClient uplayer = ConvertWeaveOnlineToUnityPlayerOnClient(hasOnline);
-
-                WeaveDeleteEvent(uplayer);
-
-                weaveOnline.Remove(hasOnline);
-
-                // unityPlayerOnClientList.Remove(uplayer);
-                DeleteUnityPlayerOnClient(hasOnline.Socket);
-            }
-            /**/
-
-
-            try
-            {
-                int count = CmdWorkItems.Count;
-                CmdWorkItem[] cilist = new CmdWorkItem[count];
-                CmdWorkItems.CopyTo(0, cilist, 0, count);
-                foreach (CmdWorkItem CI in cilist)
-                {
-                    try
-                    {
-                        CI.WeaveTcpCmd.WeaveDeleteSocketEvent(soc);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (WeaveLogEvent != null)
-                            WeaveLogEvent("EventDeleteConnSoc", ex.Message);
-                    }
-                }
-            }
-            catch { }
-            try
-            {
-                int count = weaveOnline.Count;
-                WeaveOnLine[] ols = new WeaveOnLine[count];
-                weaveOnline.CopyTo(0, ols, 0, count);
-                foreach (WeaveOnLine ol in ols)
-                {
-                    if (ol.Socket.Equals(soc))
-                    {
-                        foreach (CmdWorkItem CI in CmdWorkItems)
-                        {
-                            try
-                            {
-                                WeaveExcCmdNoCheckCmdName(0xff, "out|" + ol.Token, ol.Socket);
-                                CI.WeaveTcpCmd.Tokenout(ol);
-                            }
-                            catch (Exception ex)
-                            {
-                                if (WeaveLogEvent != null)
-                                    WeaveLogEvent("Tokenout", ex.Message);
-                            }
-                        }
-                        weaveOnline.Remove(ol);
-                        return;
-                    }
-                }
-            }
-            catch { }
-        }
-
-
-        public void UpdatePlayerListSetOnLine(string _userName , System.Net.Sockets.Socket soc)
-        {
-            foreach(UnityPlayerOnClient oneclient in unityPlayerOnClientList)
-            {
-                if(oneclient.Socket == soc)
-                {
-                    oneclient.UserName = _userName;
-                    oneclient.isLogin = true;
-                    WeaveServerUpdateUnityPlayerSetOnLineEvent(oneclient);
-                    break;
-                }
-            }
-
-           
-        }
-
+       
 
         void P2ServerUpdateSocketHander(System.Net.Sockets.Socket soc)
         {
+            CallWeaveServerUpdateSocketCallBackEvent(soc);
            
-            #region  读取 Command接口类，每次有新的Socket加入 重新读取并设置
-            try
-            {
-                int count = CmdWorkItems.Count;
-                CmdWorkItem[] cilist = new CmdWorkItem[count];
-                CmdWorkItems.CopyTo(0, cilist, 0, count);
-                foreach (CmdWorkItem CI in cilist)
-                {
-                    try
-                    {
-                        CI.WeaveTcpCmd.WeaveUpdateSocketEvent(soc);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (WeaveLogEvent != null)
-                            WeaveLogEvent("EventUpdataConnSoc", ex.Message);
-                    }
-                }
-            }
-            catch
-            {
 
-            }
+            CallWeaveTCPCommandClassUpdateSocketEvent(soc);
 
-            #endregion  发送Token的代码
 
             WeaveTcpToken token = TcpToken;
             {
@@ -342,67 +293,17 @@ namespace MyTCPCloud
                             sendok = token.P2Server.Send(soc, 0xff, "token|" + Token + "");
 
 
-                        #region  if(sendok)
+                        #region  if(sendok) 如果发送token成功
                         if (sendok)
                         {
-                            WeaveOnLine ol = new WeaveOnLine()
-                            {
-                                Name = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                                Obj = DateTime.Now.ToString("yyyyMMddHHmmssfff")
-                            };
-                            ol.Token = Token;
-                            ol.Socket = soc;
-                           
-                                WeaveOnLine hasOnline = weaveOnline.Find(item => item.Name == ol.Name);
-                                {
-                                   if (hasOnline != null)
-                                  {
-                                    weaveOnline.Remove(hasOnline);
+                            WeaveOnLine onLine = CreatWeaveOnLine(Token, soc);
 
-                                    weaveOnline.Add(ol);
+                            AddWeaveOnLine(onLine);
 
-                                  }
-                                  else
-                                  {
-                                    weaveOnline.Add(ol);
-                                   }
-                                }
-                               
-                           
-                            /*我单独写的UnityClient*/
-                            /*我写的新方法*/
-                            UnityPlayerOnClient hasPlayerIn = unityPlayerOnClientList.Find(item => item.Name == ol.Name);
-                                if (hasPlayerIn != null)
-                                {
-                                    WeaveDeleteEvent(hasPlayerIn);
-                                    unityPlayerOnClientList.Remove(hasPlayerIn);
 
-                                }
-                                /*我写的方法结束*/
 
-                                UnityPlayerOnClient uplayer = ConvertWeaveOnlineToUnityPlayerOnClient(ol);
-                                // unityPlayerOnClientList.Add(uplayer);
-                                AddUnityPlayerClient_CheckSameItem(uplayer , ol.Name);
-                                WeaveUpdateEvent(uplayer);
+                            ForeachWeaveExecuteRuncommandMethod(onLine);
                             
-                            
-
-                            /**/
-
-
-                            foreach (CmdWorkItem cmdItem in CmdWorkItems)
-                            {
-                                try
-                                {
-                                    WeaveExcCmdNoCheckCmdName(0xff, "in|" + ol.Token, ol.Socket);
-                                    cmdItem.WeaveTcpCmd.TokenIn(ol);
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (WeaveLogEvent != null)
-                                        WeaveLogEvent("Tokenin", ex.Message);
-                                }
-                            }
                             return;
                         }
                         #endregion
@@ -410,188 +311,238 @@ namespace MyTCPCloud
                 }
                 else
                 {
-                    WeaveOnLine ol = new WeaveOnLine()
-                    {
-                        Name = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                        Obj = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                        Socket = soc,
-                        Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")
+                    WeaveOnLine online = CreatWeaveOnLine(soc);
+                    weaveOnline.Add(online);
 
-                    };
-                    weaveOnline.Add(ol);
-
-
-                    /*我单独写的UnityClient*/
-                    UnityPlayerOnClient hasPlayerIn = unityPlayerOnClientList.Find(item => item.Socket == soc);
-                    if (hasPlayerIn != null)
-                    {
-                        WeaveDeleteEvent(hasPlayerIn);
-                        unityPlayerOnClientList.Remove(hasPlayerIn);
-
-                    }
-
-                    UnityPlayerOnClient uplayer = ConvertWeaveOnlineToUnityPlayerOnClient(ol);
-                    AddUnityPlayerClient_CheckSameItem(uplayer, ol.Name);
-                    WeaveUpdateEvent(uplayer);
-                    /**/
-                    //  ol.Token = DateTime.Now.ToString();
-                    //  ol.Socket = soc;
-
+                    
 
                 }
 
             }
         }
+
+
+        void P2ServerDeleteSocketHander(System.Net.Sockets.Socket soc)
+        {
+
+
+            CallWeaveServerDeleteSocketCallBackEvent(soc);
+
+            // WeaveServerGetUnityPlayerOffLineCallBackEvent()
+            CallWeaveServerGetUnityPlayerOffLineCallBackEvent(soc);
+
+            CallWeaveTCPCommandClassDeleteSocketEvent(soc);
+
+            WeaveExecuteRuncommandMethod_Tokenout_RemoveWeaveOnline(soc);
+
+        }
+
+
         void P2ServerReceiveHander(byte command, string data, System.Net.Sockets.Socket soc)
         {
+            //这里待定判定，，是登陆用户的 还是，，，原始Socket发过来的,,来判定执行不同的事件
+            //普通Socket数据接收事件，还是 登陆的Unity客户端发过来的数据，进入数据接收处理事件
+            Check_ReceiveMessageCallBackEvent(command, data, soc);
+            //客户端 登陆 事件要 在这里执行
+
+            //客户端 登陆的 Unity用户发来的消息 会 在这里执行
             if(command == (byte)CommandEnum.ClientSendDisConnected)
             {
                 P2Server.CliendSendDisConnectedEvent(soc);
 
-                /*我写的方法*/
-                WeaveOnLine hasOnline = weaveOnline.Find(item => item.Socket == soc);
-
-                if (hasOnline != null)
-                {
-
-                    UnityPlayerOnClient uplayer = ConvertWeaveOnlineToUnityPlayerOnClient(hasOnline);
-
-                    WeaveDeleteEvent(uplayer);
-
-                    weaveOnline.Remove(hasOnline);
-
-                    // unityPlayerOnClientList.Remove(uplayer);
-                    DeleteUnityPlayerOnClient(hasOnline.Socket);
-                }
-
-              
-                /**/
+                
                 return;
             }
 
             try
             {
-                //触发接收到信息的事件...
-                /*我写的方法*/
-                WeaveOnLine hasOnline = weaveOnline.Find(item => item.Socket == soc);
-               
-                if(hasOnline != null)
-                {
-                    UnityPlayerOnClient uplayer = ConvertWeaveOnlineToUnityPlayerOnClient(hasOnline);
-
-                    WeaveReceiveEvent(command, data, uplayer);
-
-                }
-                /**/
-
                 if (command == 0xff)
                 {
                     //如果是网关command 发过来的 命名，那么执行下面的
-                    WeaveExcCmdNoCheckCmdName(command, data, soc);
+                    WeaveExecuteRuncommandMethod(command, data, soc);
                    
                     try
                     {
                         string[] temp = data.Split('|');
                         if (temp[0] == "in")
                         {
-                            //加入onlinetoken
-                            WeaveOnLine ol = new WeaveOnLine();
-                            ol.Token = temp[1];
-                            ol.Socket = soc;
-                            weaveOnline.Add(ol);
-                            foreach (CmdWorkItem CI in CmdWorkItems)
-                            {
-                                try
-                                {
-                                    CI.WeaveTcpCmd.TokenIn(ol);
-                                }
-                                catch (Exception ex)
-                                {
-                                    WeaveLogEvent?.Invoke("Tokenin", ex.Message);
-                                }
-                            }
+                         
+                            WeaveAddOnLineTokenIn(temp[1] , soc);
                             return;
                         }
                         else if (temp[0] == "Restart")
                         {
-                            int count = weaveOnline.Count;
-                            WeaveOnLine[] ols = new WeaveOnLine[count];
-                            weaveOnline.CopyTo(0, ols, 0, count);
-                            string IPport = ((System.Net.IPEndPoint)soc.RemoteEndPoint).Address.ToString() + ":" + temp[1];
-                            foreach (WeaveOnLine ol in ols)
-                            {
-                                try
-                                {
-                                    if (ol.Socket != null)
-                                    {
-                                        String IP = ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Port;
-                                        if (IP == IPport)
-                                        {
-                                            ol.Socket = soc;
-                                        }
-                                    }
-                                }
-                                catch { }
-                            }
+                            RestartWeaveOnLineSocket(temp[1], soc);
+                           
                         }
                         else if (temp[0] == "out")
                         {
+                            WeaveExecuteTokenoutMethod(temp[1]);
                             ////移出onlinetoken
-                            int count = weaveOnline.Count;
-                            WeaveOnLine[] ols = new WeaveOnLine[count];
-                            weaveOnline.CopyTo(0, ols, 0, count);
-                            foreach (WeaveOnLine onlinesession in ols)
-                            {
-                                if (onlinesession.Token == temp[1])
-                                {
-                                    foreach (CmdWorkItem cmdItem in CmdWorkItems)
-                                    {
-                                        try
-                                        {
-                                            cmdItem.WeaveTcpCmd.Tokenout(onlinesession);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            WeaveLogEvent?.Invoke("Tokenout", ex.Message);
-                                        }
-                                    }
-                                    weaveOnline.Remove(onlinesession);
-                                    return;
-                                }
-                            }
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                     return;
                 }
 
                 else
-                    WeaveExcCmd(command, data, soc);
+                    WeaveExecuteRunMethod(command, data, soc);
             }
             catch
             {
                 return;
             }
-            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(exec));
+        }
+
+        public void CallWeaveServerUpdateSocketCallBackEvent(Socket _soc)
+        {
+            WeaveOnLine online = weaveOnline.Find(s => s.Socket == _soc);
+            if (online == null)
+            {
+                WeaveOnLine temponline = CreatWeaveOnLine(_soc);
+                WeaveServerUpdateSocketCallBackEvent(temponline);
+            }
+            else
+            {
+                WeaveServerUpdateSocketCallBackEvent(online);
+            }
+                
+        }
+
+        public void CallWeaveServerDeleteSocketCallBackEvent(Socket _soc)
+        {
+            WeaveOnLine online = weaveOnline.Find(s => s.Socket == _soc);
+            if(online !=null)
+                WeaveServerDeleteSocketCallBackEvent(online);
         }
 
 
+        public void CallWeaveServerGetUnityPlayerOffLineCallBackEvent(Socket _soc)
+        {
+            UnityPlayerOnClient unitygm = unityPlayerOnClientList.Find(p => p.Socket == _soc);
 
-      
+            WeaveServerGetUnityPlayerOffLineCallBackEvent(unitygm);
+        }
+
+
+        public void WeaveExecuteRuncommandMethod_Tokenout_RemoveWeaveOnline(Socket _soc)
+        {
+            try
+            {
+                int count = weaveOnline.Count;
+                WeaveOnLine[] ols = new WeaveOnLine[count];
+                weaveOnline.CopyTo(0, ols, 0, count);
+                foreach (WeaveOnLine ol in ols)
+                {
+                    if (ol.Socket.Equals(_soc))
+                    {
+                        foreach (WeaveTCPCommandItem weaveTCPCommandItem in weaveTCPCommandItems)
+                        {
+                            try
+                            {
+                                WeaveExecuteRuncommandMethod(0xff, "out|" + ol.Token, ol.Socket);
+                                weaveTCPCommandItem.WeaveTcpCmd.Tokenout(ol);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (WeaveLogEvent != null)
+                                    WeaveLogEvent("Tokenout", ex.Message);
+                            }
+                        }
+                        weaveOnline.Remove(ol);
+                        return;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public void  CallWeaveTCPCommandClassDeleteSocketEvent(Socket soc)
+        {
+            try
+            {
+                int count = weaveTCPCommandItems.Count;
+                WeaveTCPCommandItem[] commandlist = new WeaveTCPCommandItem[count];
+                weaveTCPCommandItems.CopyTo(0, commandlist, 0, count);
+                foreach (WeaveTCPCommandItem weaveTCPCommandItem in commandlist)
+                {
+                    try
+                    {
+                        weaveTCPCommandItem.WeaveTcpCmd.WeaveDeleteSocketEvent(soc);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (WeaveLogEvent != null)
+                            WeaveLogEvent("EventDeleteConnSoc", ex.Message);
+                    }
+                }
+            }
+            catch { }
+        }
+        
+
+        public void CallWeaveTCPCommandClassUpdateSocketEvent(Socket soc)
+        {
+            try
+            {
+                int count = weaveTCPCommandItems.Count;
+                WeaveTCPCommandItem[] commandlist = new WeaveTCPCommandItem[count];
+                weaveTCPCommandItems.CopyTo(0, commandlist, 0, count);
+                foreach (WeaveTCPCommandItem weaveTCPCommandItem in commandlist)
+                {
+                    try
+                    {
+                        weaveTCPCommandItem.WeaveTcpCmd.WeaveUpdateSocketEvent(soc);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (WeaveLogEvent != null)
+                            WeaveLogEvent("EventUpdataConnSoc", ex.Message);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        public void ForeachWeaveExecuteRuncommandMethod(WeaveOnLine onLine)
+        {
+
+
+            foreach (WeaveTCPCommandItem cmdItem in weaveTCPCommandItems)
+            {
+                try
+                {
+                    WeaveExecuteRuncommandMethod(0xff, "in|" + onLine.Token, onLine.Socket);
+                    cmdItem.WeaveTcpCmd.TokenIn(onLine);
+                }
+                catch (Exception ex)
+                {
+                    if (WeaveLogEvent != null)
+                        WeaveLogEvent("Tokenin", ex.Message);
+                }
+            }
+        }
 
 
         /// <summary>
-        /// 网关0xff这个command发来的...命令
+        /// 执行继承自WeaveTCPCommand类里面的Runcommand方法
         /// </summary>
         /// <param name="command"></param>
         /// <param name="data"></param>
         /// <param name="soc"></param>
-        public void WeaveExcCmdNoCheckCmdName(byte command, string data, System.Net.Sockets.Socket soc)
+        public void WeaveExecuteRuncommandMethod(byte command, string data, System.Net.Sockets.Socket soc)
         {
-            foreach (CmdWorkItem cmd in CmdWorkItems)
+            foreach (WeaveTCPCommandItem cmd in weaveTCPCommandItems)
             {
                 try
                 {
+                    
                     cmd.WeaveTcpCmd.Runcommand(command, data, soc);
                 }
                 catch (Exception ex)
@@ -608,9 +559,9 @@ namespace MyTCPCloud
         /// <param name="command"></param>
         /// <param name="data"></param>
         /// <param name="soc"></param>
-        public void WeaveExcCmd(byte command, string data, System.Net.Sockets.Socket soc)
+        public void WeaveExecuteRunMethod(byte command, string data, System.Net.Sockets.Socket soc)
         {
-            foreach (CmdWorkItem cmd in CmdWorkItems)
+            foreach (WeaveTCPCommandItem cmd in weaveTCPCommandItems)
             {
                 if (cmd.CmdName == command)
                 {
@@ -626,6 +577,107 @@ namespace MyTCPCloud
                 }
             }
         }
+
+        public void WeaveExecuteTokenoutMethod(string _token)
+        {
+
+            ////移出onlinetoken
+            int count = weaveOnline.Count;
+            WeaveOnLine[] ols = new WeaveOnLine[count];
+            weaveOnline.CopyTo(0, ols, 0, count);
+            foreach (WeaveOnLine onlinesession in ols)
+            {
+                if (onlinesession.Token == _token)//temp[1])
+                {
+                    foreach (WeaveTCPCommandItem cmdItem in weaveTCPCommandItems)
+                    {
+                        try
+                        {
+                            cmdItem.WeaveTcpCmd.Tokenout(onlinesession);
+                        }
+                        catch (Exception ex)
+                        {
+                            WeaveLogEvent?.Invoke("Tokenout", ex.Message);
+                        }
+                    }
+                    weaveOnline.Remove(onlinesession);
+                    return;
+                }
+            }
+        }
+        
+
+        public void RestartWeaveOnLineSocket(string _s , Socket _soc)
+        {
+            int count = weaveOnline.Count;
+            WeaveOnLine[] ols = new WeaveOnLine[count];
+            weaveOnline.CopyTo(0, ols, 0, count);
+            string IPport = ((System.Net.IPEndPoint)_soc.RemoteEndPoint).Address.ToString() + ":" + _s;// temp[1];
+            foreach (WeaveOnLine ol in ols)
+            {
+                try
+                {
+                    if (ol.Socket != null)
+                    {
+                        String IP = ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Address.ToString() + ":" + ((System.Net.IPEndPoint)ol.Socket.RemoteEndPoint).Port;
+                        if (IP == IPport)
+                        {
+                            ol.Socket = _soc;
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        public void WeaveAddOnLineTokenIn(string _s , Socket soc)
+        {
+            WeaveOnLine ol = new WeaveOnLine();
+            ol.Token = _s;
+            ol.Socket = soc;
+            weaveOnline.Add(ol);
+            foreach (WeaveTCPCommandItem weaveTCPCommandItem in weaveTCPCommandItems)
+            {
+                try
+                {
+                    weaveTCPCommandItem.WeaveTcpCmd.TokenIn(ol);
+                }
+                catch (Exception ex)
+                {
+                    WeaveLogEvent?.Invoke("Tokenin", ex.Message);
+                }
+            }
+        }
+
+
+        public WeaveOnLine CreatWeaveOnLine(Socket _socket)
+        {
+            WeaveOnLine ol = new WeaveOnLine()
+            {
+                Name = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                Obj = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                Socket = _socket,
+                Token = DateTime.Now.ToString("yyyyMMddHHmmssfff")
+
+            };
+
+            return ol;
+        }
+
+        public WeaveOnLine CreatWeaveOnLine(string _token,Socket _socket)
+        {
+            WeaveOnLine ol = new WeaveOnLine()
+            {
+                Name = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                Obj = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                Socket = _socket,
+                Token = _token
+
+            };
+
+            return ol;
+        }
+
 
         public UnityPlayerOnClient ConvertWeaveOnlineToUnityPlayerOnClient(WeaveOnLine  wonline)
         {
@@ -670,16 +722,23 @@ namespace MyTCPCloud
                     unityPlayerOnClientList.Add(item);
             }
         }
-        //public class CmdWorkItem
-        //{
-        //    public byte CmdName
-        //    {
-        //        get;set;
-        //    }
-        //    public WeaveTCPCommand WeaveTcpCmd
-        //    {
-        //        get;set;
-        //    }
-        //}
+
+        public void AddWeaveOnLine(WeaveOnLine item)
+        {
+            WeaveOnLine hasOnline = weaveOnline.Find(w => w.Name == item.Name);
+            {
+                if (hasOnline != null)
+                {
+                    weaveOnline.Remove(hasOnline);
+                    //添加修改参数后的WeaveOnLine
+                    weaveOnline.Add(item);
+
+                }
+                else
+                {
+                    weaveOnline.Add(item);
+                }
+            }
+        }
     }
 }

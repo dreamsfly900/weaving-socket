@@ -85,7 +85,7 @@ namespace WeaveBase
                         Thread.Sleep(1);
                         try
                         {
-
+                            //心跳包指令......
                             byte[] b = new byte[] { 0x99 };
                             //初始化连接，这里 报错，socket没有，客户端已经异常断开了，如断电，断网，，
                             workItem.SocketSession.Send(b);
@@ -162,83 +162,105 @@ namespace WeaveBase
             weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
         }
       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         private void packageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
-            List<byte[]> ListData = netc.DataList;
+            List<byte[]> ListData = netc.DataList;  //当前传入的网络连接的socket对应，其发送过来的数据
             try
             {
                 int i = 0;
                 int count = ListData.Count;
                 if (count > 0)
                 {
+                    //ListData[0] 发过来数据的Length长度,,如果为0
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0)
                     {
-                        if (ListData.Count > 0) ListData.RemoveAt(0);
-                        netc.IsPage = false; return;
+                        if (ListData.Count > 0)
+                            ListData.RemoveAt(0);
+
+                        netc.IsPage = false;
+                        return;
                     };
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
                     if (bytesRead > 2)
                     {
-                        int a = tempbtye[1];
-                        if (bytesRead > 2 + a)
+                        //int a = tempbtye[1];
+                        int part3_Length = tempbtye[1];
+                        if (bytesRead > 2 + part3_Length)
                         {
-                            int len = 0;
+                            //说明 第四段有数据，，不然不会大于【 命令+ 长度+第三段】
+                            //int len = 0;
+                            int part4_Length = 0; //第四段数据的长度，，【既是第三段的内容】
                             if (weaveDataType == WeaveDataTypeEnum.Bytes)
                             {
-                                byte[] bb = new byte[a];
-                                Array.Copy(tempbtye, 2, bb, 0, a);
-                                len = WeaveServerHelper.ConvertToInt(bb);
+                                byte[] part3_byte = new byte[part3_Length];
+                                Array.Copy(tempbtye, 2, part3_byte, 0, part3_Length);
+                                //第三段 数据表示的是 第四段数据的长度，，所以这里。。
+                                part4_Length = WeaveServerHelper.ConvertToInt(part3_byte);
                             }
                             else
-                            {
-                                String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                                len = int.Parse(temp);
+                            {  //Json 类型的话
+                                String part3_string = System.Text.Encoding.UTF8.GetString(tempbtye, 2, part3_Length);
+                                part4_Length = int.Parse(part3_string);
                             }
-                            if ((len + 2 + a) > tempbtye.Length)
-                            {
+                            if ((part4_Length + 2 + part3_Length) > tempbtye.Length)
+                            {    //说明数据发送发生错误，，断链了？？？
                                 try
                                 {
                                     if (ListData.Count > 1)
                                     {
-                                        ListData.RemoveAt(i);
+                                        ListData.RemoveAt(i);  //删除收到的第一个包
                                         byte[] temps = new byte[tempbtye.Length];
                                         Array.Copy(tempbtye, temps, temps.Length);
+                                        //第一个包全部数据，先复制到temps数组里
                                         byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
                                         Array.Copy(temps, tempbtyes, temps.Length);
+                                        //再把后面的一个数据包，，接到tempbtyes数组后面
                                         Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                        //再把后面的一个数据包，，接到tempbtyes数组后面
                                         ListData[i] = tempbtyes;
                                     }
                                 }
                                 catch
                                 {
+
                                 }
-                                netc.IsPage = false; return;
+                                netc.IsPage = false;
+                                return;
                             }
-                            else if (tempbtye.Length > (len + 2 + a))
+                            else if (tempbtye.Length > (part4_Length + 2 + part3_Length))
                             {
                                 try
                                 {
-                                    byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    byte[] temps = new byte[tempbtye.Length - (part4_Length + 2 + part3_Length)];
+                                    Array.Copy(tempbtye, (part4_Length + 2 + part3_Length), temps, 0, temps.Length);
                                     ListData[i] = temps;
                                 }
                                 catch
                                 { }
                                 // netc.Ispage = false; return;
                             }
-                            else if (tempbtye.Length == (len + 2 + a))
-                            { if (ListData.Count > 0) ListData.RemoveAt(i); }
+                            else if (tempbtye.Length == (part4_Length + 2 + part3_Length))
+                            {    //正好匹配数据包格式
+                                if (ListData.Count > 0)
+                                    ListData.RemoveAt(i);
+
+                            }
                             try
                             {
                                 if (weaveDataType == WeaveDataTypeEnum.Json)
                                 {
-                                    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    //第四部分的数据......
+                                    String part4_Data = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + part3_Length , part4_Length);
                                     WeaveEvent me = new WeaveEvent();
                                     me.Command = tempbtye[0];
-                                    me.Data = temp;
+                                    me.Data = part4_Data;
                                     me.Soc = netc.SocketSession;
                                     if (waveReceiveEvent != null)
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
@@ -250,41 +272,51 @@ namespace WeaveBase
                                 else if (weaveDataType == WeaveDataTypeEnum.Bytes)
                                 {
                                     //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                    byte[] bs = new byte[len];
-                                    Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
+                                    byte[] part4_byteData = new byte[part4_Length];
+                                    Array.Copy(tempbtye, (2 + part3_Length), part4_byteData, 0, part4_byteData.Length);
+                                    //获得第四段数据的byte实际数据
                                     WeaveEvent me = new WeaveEvent();
                                     me.Command = tempbtye[0];
                                     me.Data = "";
-                                    me.Databit = bs;
+                                    me.Databit = part4_byteData;
                                     me.Soc = netc.SocketSession;
                                     if (weaveReceiveBitEvent != null)
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
                                 }
-                                netc.IsPage = false; return;
+                                netc.IsPage = false;
+                                return;
                             }
                             catch (Exception ex)
                             {
                                 string ems = ex.Message;
-                                netc.IsPage = false; return;
+                                netc.IsPage = false;
+                                return;
                             }
                         }
                         else
-                        {
+                        {   //bytesRead > 2 + part3_Length  不成立，，
+                            // 说明发生了，，断链，断包情况.... 
                             if (ListData.Count > 0)
                             {
                                 ListData.RemoveAt(i);
+                                //先把第一个数据删除,,,
                                 byte[] temps = new byte[tempbtye.Length];
                                 Array.Copy(tempbtye, temps, temps.Length);
+                                //创建一个扩充长度的数据，加上  第二个包的数据长度
                                 byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
+                                //复制temps数组数据到tempbtyes里面
                                 Array.Copy(temps, tempbtyes, temps.Length);
+                                //把第二个包的数据扩充到，tempbtyes后面（从刚才后面的位置开始)
                                 Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                //更新--当前数据为 第一个包数据
                                 ListData[i] = tempbtyes;
                             }
-                            netc.IsPage = false; return;
+                            netc.IsPage = false;
+                            return;
                         }
                     }
                     else
-                    {
+                    {  // 收到的第一个包数据ListData[0].Length =1 或 2 
                         try
                         {
                             if (ListData.Count > 1)
@@ -301,7 +333,8 @@ namespace WeaveBase
                         catch
                         {
                         }
-                        netc.IsPage = false; return;
+                        netc.IsPage = false;
+                        return;
                     }
                 }
             }
@@ -313,7 +346,9 @@ namespace WeaveBase
                 netc.IsPage = false;
                 return;
             }
-            finally { netc.IsPage = false; }
+            finally {
+                netc.IsPage = false;
+            }
         }
         private void ReadCallback(IAsyncResult ar)
         {

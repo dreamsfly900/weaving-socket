@@ -7,7 +7,7 @@ using WeaveBase;
 
 namespace MyTCPCloud
 {
-    public class CmdWorkItem
+    public class WeaveTCPCommandItem
     {
 
         public byte CmdName
