@@ -5,7 +5,7 @@ namespace WeaveBase
 {
     public class WeaveBaseManager
     {
-        List<WeaveModelData> listmode = new List<WeaveModelData>();
+      public  List<WeaveModelData> listmode = new List<WeaveModelData>();
         public event WeaveErrorMessageDelegate WeaveErrorMessageEvent = null;
         /// <summary>
         /// 请求数据集事件

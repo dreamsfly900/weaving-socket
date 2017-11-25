@@ -132,6 +132,7 @@ namespace client
         {
             try
             {
+                if(xmhelper.listmode.Count>0)
                 xmhelper.Init(text, null);
             }
             catch { }
@@ -282,12 +283,16 @@ namespace client
                 }
             }
             catch (Exception ee){
+                if (Isline)
+                {
+                    if (timeoutevent != null)
+                        timeoutevent();
+                    if (timeoutobjevent != null)
+                        timeoutobjevent(this);
+                }
                 Isline = false;
                 stop();
-                if(timeoutevent!=null)
-                timeoutevent();
-                if (timeoutobjevent != null)
-                    timeoutobjevent(this);
+                
                 send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false;

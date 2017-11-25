@@ -41,3 +41,12 @@ C:\weaving-socket\Code\TCPclient\obj\Debug\TCPclient.csproj.CoreCompileInputs.ca
 C:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.dll
 C:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.pdb
 D:\WeavingSocket\Code\TCPclient\bin\Debug\Newtonsoft.Json.xml
+E:\weaving-socket\Code\TCPclient\bin\Debug\WeavingSocketclient.dll
+E:\weaving-socket\Code\TCPclient\bin\Debug\WeavingSocketclient.pdb
+E:\weaving-socket\Code\TCPclient\bin\Debug\MyInterface.dll
+E:\weaving-socket\Code\TCPclient\bin\Debug\Newtonsoft.Json.dll
+E:\weaving-socket\Code\TCPclient\bin\Debug\MyInterface.pdb
+E:\weaving-socket\Code\TCPclient\obj\Debug\TCPclient.csprojResolveAssemblyReference.cache
+E:\weaving-socket\Code\TCPclient\obj\Debug\TCPclient.csproj.CoreCompileInputs.cache
+E:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.dll
+E:\weaving-socket\Code\TCPclient\obj\Debug\WeavingSocketclient.pdb
