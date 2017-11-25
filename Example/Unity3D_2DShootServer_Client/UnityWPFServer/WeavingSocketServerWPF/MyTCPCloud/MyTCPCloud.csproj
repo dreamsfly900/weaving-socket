@@ -45,14 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GateWay.cs" />
-    <Compile Include="MyCustomClass\CmdWorkItem.cs" />
+    <Compile Include="MyCustomClass\WeaveTCPCommandItem.cs" />
     <Compile Include="MyCustomClass\CommandItem.cs" />
     <Compile Include="DTUGateWay.cs" />
     <Compile Include="GateHelper.cs" />
     <Compile Include="MyHttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyCustomClass\UnityPlayerOnClient.cs" />
-    <Compile Include="MyCustomClass\WeaveReceiveDelegate.cs" />
+    <Compile Include="MyCustomClass\WeaveServerUpdateSocketCallBack.cs" />
     <Compile Include="WeaveTCPcloud.cs" />
   </ItemGroup>
   <ItemGroup>

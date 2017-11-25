@@ -59,13 +59,19 @@ namespace WeavingSocketServerWPF
             weaveTCPcloud.StartServer(wserverport);
 
 
-            weaveTCPcloud.WeaveReceiveEvent += OnWeaveReceiveMessage;
+            weaveTCPcloud.WeaveServerUpdateSocketCallBackEvent += OnWeaveUpdateSocket;
 
-            weaveTCPcloud.WeaveDeleteEvent += OnWeaveDeleteSocket;
+            weaveTCPcloud.WeaveServerReceiveSocketMessageCallBackEvent += OnWeaveReceiveSocketMessage;
 
-            weaveTCPcloud.WeaveUpdateEvent += OnWeaveUpdateSocket;
+            weaveTCPcloud.WeaveServerDeleteSocketCallBackEvent += OnWeaveDeleteSocket;
 
-            weaveTCPcloud.WeaveServerUpdateUnityPlayerSetOnLineEvent += OnWeaveServerUpdateUnityPlayerSetOnLineEvent;
+         
+
+            weaveTCPcloud.WeaveServerGetUnityPlayerOnLineCallBackEvent += OnWeaveServerGetUnityPlayerOnLineEvent;
+
+            weaveTCPcloud.WeaveServerGetUnityPlayerOffLineCallBackEvent += OnWeaveServerGetUnityPlayerOffLineEvent;
+
+            weaveTCPcloud.WeaveServerReceiveOnLineUnityPlayerMessageCallBackEvent += OnWeaveServerReceiveOnLineUnityPlayerMessageEvent;
 
             StartListen_button.Content = "正在监听";
 
@@ -73,50 +79,70 @@ namespace WeavingSocketServerWPF
             
         }
 
-        private void OnWeaveServerUpdateUnityPlayerSetOnLineEvent(UnityPlayerOnClient gamer)
-        {
+      
 
-            
-            //throw new NotImplementedException();
+        private void OnWeaveServerGetUnityPlayerOnLineEvent(UnityPlayerOnClient gamer)
+        {
             //当有用户 账号密码登陆成功的时候
-            AddListBoxItemAction(loginedUserList, CopyUnityPlayerOnClient(gamer));
-            SetServerReceiveText("--触发了一次（OnWeaveServerUpdateUnityPlayerSetOnLineEvent）" + Environment.NewLine);
+            AddListBoxItemAction(loginedUserList, CopyUnityPlayerOnClientToMyListBoxItem(gamer));
+            SetServerReceiveText("Unity登陆后的玩家--触发了一次（OnWeaveServerUpdateUnityPlayerSetOnLineEvent）" + Environment.NewLine);
+
+          
+        }
+
+
+        private void OnWeaveServerGetUnityPlayerOffLineEvent(UnityPlayerOnClient gamer)
+        {
+           
+            SetServerReceiveText("Unity玩家下线事件--触发了一次（OnWeaveServerGetUnityPlayerOffLineEvent）" + Environment.NewLine);
 
         }
 
-        private void OnWeaveUpdateSocket(UnityPlayerOnClient gamer)
+        private void OnWeaveServerReceiveOnLineUnityPlayerMessageEvent(byte command, string data, UnityPlayerOnClient gamer)
         {
-            SetServerReceiveText("--触发了一次（OnWeaveUpdateSocket）" + Environment.NewLine);
+            // 登陆用户发送过来的数据
+
+            SetServerReceiveText("Unity玩家登陆事件--触发了一次（OnWeaveServerReceiveOnLineUnityPlayerMessageEvent）" + Environment.NewLine);
+
+            WeaveSession ws = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>( data);
+
+            SetServerReceiveText("收到【"+gamer.UserName+"】发来的数据：  " + ws.Root + Environment.NewLine );
+
+        }
+
+
+        private void OnWeaveUpdateSocket(WeaveOnLine weaveOnLine)
+        {
+            SetServerReceiveText("Socket连接--触发了一次（OnWeaveUpdateSocket）" + Environment.NewLine);
 
             //有 Sokcet客户端连接到服务器的时候，暂未 账号，密码认证状态
 
-            AddListBoxItemAction(connectedSocketItemList, CopyUnityPlayerOnClient(gamer) );
+            AddListBoxItemAction(connectedSocketItemList, CopyWeaveOnLineToMyListBoxItem(weaveOnLine) );
            
         }
 
-       
-
-        private void OnWeaveDeleteSocket(UnityPlayerOnClient gamer)
+        private void OnWeaveReceiveSocketMessage(byte command, string data, WeaveOnLine _socket)
         {
-            SetServerReceiveText("--退出事件，，触发了一次（OnWeaveDeleteSocket）" + Environment.NewLine);
-
-            RemoveListBoxItemAction(connectedSocketItemList, CopyUnityPlayerOnClient(gamer));
-
-            RemoveListBoxItemAction(loginedUserList, CopyUnityPlayerOnClient(gamer));
-
-
-        }
-
-        private void OnWeaveReceiveMessage(byte command, string data, UnityPlayerOnClient  gamer)
-        {
-           
-
             WeaveSession ws = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(data);
 
-            SetServerReceiveText("接收到新信息：  "  + ws.Root  + Environment.NewLine );
+           
+            SetServerReceiveText("Socket发来数据--触发了一次（OnWeaveReceiveSocketMessage）" + Environment.NewLine);
+            SetServerReceiveText("收到的数据为：  " + ws.Root + Environment.NewLine);
 
-         
         }
+
+        private void OnWeaveDeleteSocket(WeaveOnLine weaveOnLine)
+        {
+            SetServerReceiveText("Socket断开--退出事件--触发了一次（OnWeaveDeleteSocket）" + Environment.NewLine);
+
+            RemoveListBoxItemAction(connectedSocketItemList, CopyWeaveOnLineToMyListBoxItem(weaveOnLine));
+            
+            MyListBoxItem oneItem = loginedUserList.Find(item => item.Ip == weaveOnLine.Socket.RemoteEndPoint.ToString());
+            RemoveListBoxItemAction(loginedUserList, oneItem );
+
+
+        }
+
 
         private void StopListen_button_Click(object sender, RoutedEventArgs e)
         {
@@ -162,7 +188,7 @@ namespace WeavingSocketServerWPF
 
         }
 
-        public MyListBoxItem CopyUnityPlayerOnClient(UnityPlayerOnClient one)
+        public MyListBoxItem CopyUnityPlayerOnClientToMyListBoxItem(UnityPlayerOnClient one)
         {
             MyListBoxItem item = new MyListBoxItem()
             {
@@ -173,6 +199,20 @@ namespace WeavingSocketServerWPF
             };
             return item;
         }
+
+
+        public MyListBoxItem CopyWeaveOnLineToMyListBoxItem(WeaveOnLine  one)
+        {
+            MyListBoxItem item = new MyListBoxItem()
+            {
+                UIName_Id = one.Socket.RemoteEndPoint.ToString(),
+                ShowMsg = "UserIP:" + one.Socket.RemoteEndPoint.ToString() + " -Token:" + one.Token,
+                UserName = "Uname:"+ one.Socket.RemoteEndPoint.ToString(),
+                Ip = one.Socket.RemoteEndPoint.ToString()
+            };
+            return item;
+        }
+
 
         public void AddListBoxItem(List<MyListBoxItem> sList  , MyListBoxItem one)
         {

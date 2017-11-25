@@ -13,7 +13,10 @@ public class MainClient : Singleton<MainClient>
 {
 
 
-    public WeaveSocketGameClient weaveSocketGameClient;
+    //public WeaveSocketGameClient weaveSocketGameClient;
+
+    public WeaveSocketGameClientUseEZThread weaveSocketGameClient;
+
 
     public ServerBackLoginEvent serverBackLoginEvent =new ServerBackLoginEvent();
 
@@ -85,7 +88,8 @@ public class MainClient : Singleton<MainClient>
     {
         try
         {
-            weaveSocketGameClient = new WeaveSocketGameClient(SocketDataType.Json);
+            //  weaveSocketGameClient = new WeaveSocketGameClient(SocketDataType.Json);
+            weaveSocketGameClient = new  WeaveSocketGameClientUseEZThread(SocketDataType.Json);
             weaveSocketGameClient.ConnectOkEvent += OnConnectOkEvent;
             weaveSocketGameClient.ReceiveMessageEvent += OnReceiveMessageEvent;
             weaveSocketGameClient.ErrorMessageEvent += OnErrorMessageEvent;
