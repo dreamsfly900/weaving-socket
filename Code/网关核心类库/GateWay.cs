@@ -450,7 +450,7 @@ namespace cloud
               
                 counttemp--;
                 IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
+             
                 List<String> listsercer = new List<string>();
                 bool tempb = true;
                 foreach (CommandItem ci in CommandItemS)
@@ -475,6 +475,7 @@ namespace cloud
                         }
                     }
                 }
+                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
 
             }
             catch (Exception ex)
