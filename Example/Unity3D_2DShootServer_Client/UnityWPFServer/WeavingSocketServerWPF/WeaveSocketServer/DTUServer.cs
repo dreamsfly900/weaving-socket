@@ -24,6 +24,20 @@ namespace WeaveSocketServer
         }
         public void start(int port)
         {
+            /* SocketOptionLevel
+             IP	
+Socket 选项仅适用于 IP 套接字。
+IPv6	
+Socket 选项仅适用于 IPv6 套接字。
+Socket	
+Socket 选项适用于所有套接字。
+Tcp	
+Socket 选项仅适用于 TCP 套接字。
+Udp	
+Socket 选项仅适用于 UDP 套接字。
+
+             */
+            /*ReuseAddress	允许将套接字绑定到已在使用中的地址。*/
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             socket.Bind(localEndPoint);

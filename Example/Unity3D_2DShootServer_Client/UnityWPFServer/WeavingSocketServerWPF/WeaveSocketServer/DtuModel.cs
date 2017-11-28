@@ -6,7 +6,7 @@ using System.Threading;
 using WeaveBase;
 namespace WeaveSocketServer
 {
-  public  class DtuModel
+        public  class DtuModel
         {
             byte[] data;
             Socket soc;
