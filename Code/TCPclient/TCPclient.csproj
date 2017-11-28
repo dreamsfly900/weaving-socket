@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
-      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
+      <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
       <Name>WeaveCore</Name>
     </ProjectReference>
   </ItemGroup>

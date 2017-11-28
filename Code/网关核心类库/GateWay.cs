@@ -376,24 +376,24 @@ namespace cloud
                 WeaveSession _0x01 = null;
                 try
                 {
-                     _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(text);
+                    _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(text);
                 }
                 catch { return; }
-            int temp = 0;
+                int temp = 0;
                 String ip = "";
                 int port = 0;
-            try
-            {
-                   ip = _0x01.Token.Split(':')[0];
-                    port= Convert.ToInt32( _0x01.Token.Split(':')[1]);
+                try
+                {
+                    ip = _0x01.Token.Split(':')[0];
+                    port = Convert.ToInt32(_0x01.Token.Split(':')[1]);
                     _0x01.Querycount = temp;
-            }
-            catch
-            {
-                 EventMylog("转发", "获取编号失败。"+ _0x01.Token);
-                return;
-            }
-              ConnObj cobj=  GateHelper.GetConnItemlist(ConnItemlist, ip, port, Pipeline);
+                }
+                catch
+                {
+                    EventMylog("转发", "获取编号失败。" + _0x01.Token);
+                    return;
+                }
+                ConnObj cobj=  GateHelper.GetConnItemlist(ConnItemlist, ip, port, Pipeline);
                 if (cobj != null)
                 {
                     int error = 0;
@@ -450,7 +450,7 @@ namespace cloud
               
                 counttemp--;
                 IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
-                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
+             
                 List<String> listsercer = new List<string>();
                 bool tempb = true;
                 foreach (CommandItem ci in CommandItemS)
@@ -475,6 +475,7 @@ namespace cloud
                         }
                     }
                 }
+                GateHelper.removeConnItemlist(ConnItemlist, soc, Pipeline);
 
             }
             catch (Exception ex)

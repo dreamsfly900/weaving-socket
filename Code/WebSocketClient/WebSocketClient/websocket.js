@@ -125,6 +125,32 @@ UDCsocket.prototype = {
         //  alert(str);
         this.takon = str;
     },
+    Send: function (command, text) {
+        try {
+            
+            // alert(JSON.stringify(test));
+            var sendb = (text).getBytes();
+            var lens = (sendb.length + '').getBytes();
+            //不清楚getBytes 是不是utf8格式
+            //byte[] b = new byte[2 + lens.Length + sendb.Length];
+            var bytes = [2 + lens.length + sendb.length];
+            // var b = new Int8Array(bytes);
+            bytes[0] = command;
+            bytes[1] = lens.length;
+            //lens.CopyTo(b, 2);
+            for (var i = 0; i < lens.length; i++) {
+                bytes[i + 2] = lens[i];
+            }
+            for (var i = 0; i < sendb.length; i++) {
+                bytes[i + 2 + lens.length] = sendb[i];
+            }
+            var b = new Int8Array(bytes);
+            //sendb.CopyTo(b, 2 + lens.Length);
+            this.soc.send(b);
+        } catch (ex) {
+            alert("SendData" + ex.message);
+        }
+    },
     SendData: function (command, Request, Root, Parameter) {
         try {
             if (takon == "") {

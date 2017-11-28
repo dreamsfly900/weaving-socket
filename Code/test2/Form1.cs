@@ -59,6 +59,7 @@ namespace test2
             {
                 P2Pclient p2pc = new P2Pclient(false);
                 p2pc.receiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
+                
                 p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
                 p2pc.start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
                 p2pc.Tokan = "123";

@@ -335,87 +335,52 @@ namespace cloud
         int count = 0;
         public void setconn(ConnObj cb)
         {
-            _Connlist.Add(cb);
+            IPEndPoint clientipe = (IPEndPoint)cb.Soc.RemoteEndPoint;
+            llbb11:
+            string key = clientipe.Address.ToString() + ":" + clientipe.Port;
+            Connlist.Add(key, cb);
+            if (Connlist.ContainsKey(key))
+                return;
+            else
+                goto llbb11;
         }
         public void removeconn(Socket soc)
         {
-            ConnObj[] cobs = new ConnObj[Connlist.Count];
-            Connlist.CopyTo(0,cobs,0, cobs.Length);
+            IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
 
-            for (int i=0;i< count; i++)
-            {
-                if(cobs[i]!=null)
-                if (cobs[i].Soc.Equals(soc))
-                    {
-                        try
-                        {
-                            cobs[i].Soc.Dispose();
-                        }
-                        catch { }
-                        try
-                        {
-                            Connlist.Remove(cobs[i]);
-                        }
-                        catch { }
-                    return;
-                }
-            }
+            string key = clientipe.Address.ToString() + ":" + clientipe.Port;
+
+            //这里通过IP和PORT获取对象
+            if (Connlist.ContainsKey(key))
+                Connlist.Remove(key);
         }
         
        public ConnObj getconn(String ip, int port)
         {
-            ConnObj[] cobs = new ConnObj[Connlist.Count];
-            Connlist.CopyTo(0, cobs, 0, cobs.Length);
+            string key = ip + ":" + port;
 
-            foreach (ConnObj cb in cobs)
-            {
-                if (cb != null)
-                {
-                    try
-                    {
-                        if (cb.Soc.RemoteEndPoint != null)
-                        {
-                            IPEndPoint clientipe = (IPEndPoint)cb.Soc.RemoteEndPoint;
-                            if ((clientipe.Address.ToString() + ":" + clientipe.Port) == (ip + ":" + port))
-                                return cb;
-                        }
-                    }
-                    catch { }
-                }
-            }
-            return null;
+            //这里通过IP和PORT获取对象
+            if (Connlist.ContainsKey(key))
+                return Connlist[key];
+            else
+                return null;
         }
         public ConnObj getconn(Socket soc)
         {
-            ConnObj[] cobs = new ConnObj[Connlist.Count];
-            Connlist.CopyTo(0, cobs, 0, cobs.Length);
-            foreach (ConnObj cb in cobs)
-            {
-                try
-                {
-                    if(cb!=null)
-                    if (cb.Soc.Equals(soc))
-                        return cb;
-                }
-                catch { }
-            }
-            return null;
+            IPEndPoint clientipe = (IPEndPoint)soc.RemoteEndPoint;
+
+            string key = clientipe.Address.ToString() + ":" + clientipe.Port;
+
+            //这里通过IP和PORT获取对象
+            if (Connlist.ContainsKey(key))
+                return Connlist[key];
+            else
+                return null;
         }
+        public Dictionary<string, ConnObj> Connlist { get { return _Connlist; } set { _Connlist = value; } }
+        Dictionary<string, ConnObj> _Connlist = new Dictionary<string, ConnObj>();
+
       
-        List<ConnObj> _Connlist = new List<ConnObj>();
-
-        public List<ConnObj> Connlist
-        {
-            get
-            {
-                return _Connlist;
-            }
-
-            set
-            {
-                _Connlist = value;
-            }
-        }
     }
     public class WayItem
     {
