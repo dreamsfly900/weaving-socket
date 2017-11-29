@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 
 using Newtonsoft.Json;
-using WeaveBase;
+using Weave.Base;
 
 namespace IMClass
 {

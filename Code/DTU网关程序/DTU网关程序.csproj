@@ -84,9 +84,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
-      <Project>{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}</Project>
-      <Name>通用TCP云服务类库</Name>
+    <ProjectReference Include="..\Weave.Cloud\Weave.Cloud.csproj">
+      <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
+      <Name>Weave.Cloud</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.TCPClient\Weave.TCPClient.csproj">
+      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
+      <Name>Weave.TCPClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

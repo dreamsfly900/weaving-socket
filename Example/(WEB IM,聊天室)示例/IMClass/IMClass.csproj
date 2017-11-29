@@ -47,14 +47,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Code\MyInterface\WeaveCore.csproj">
-      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
-      <Name>WeaveCore</Name>
+    <ProjectReference Include="..\..\..\Code\Weave.Base\Weave.Base.csproj">
+      <Project>{383e52ff-1f63-4514-ae5d-1b217a0c2bce}</Project>
+      <Name>Weave.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetFileName) D:\Weaving-Socket\Code\ServerRunPool\bin\Debug\command</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

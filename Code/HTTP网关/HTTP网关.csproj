@@ -75,20 +75,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>WeavingSocketServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
-      <Project>{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}</Project>
-      <Name>通用TCP云服务类库</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="node.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Weave.Cloud\Weave.Cloud.csproj">
+      <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
+      <Name>Weave.Cloud</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
+      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
+      <Name>Weave.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

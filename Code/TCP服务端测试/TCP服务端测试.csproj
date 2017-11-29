@@ -49,13 +49,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
+    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
       <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>WeaveCore</Name>
+      <Name>Weave.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
-      <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
-      <Name>WeavingSocketServer</Name>
+    <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
+      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
+      <Name>Weave.Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

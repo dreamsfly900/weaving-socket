@@ -135,21 +135,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
-      <Project>{fed411e6-075e-4de0-8284-8cbd0879b55d}</Project>
-      <Name>WeaveCore</Name>
+    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
+      <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
+      <Name>Weave.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TCPclient\TCPclient.csproj">
-      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
-      <Name>TCPclient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>WeavingSocketServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\网关核心类库\通用TCP云服务类库.csproj">
+    <ProjectReference Include="..\Weave.Cloud\Weave.Cloud.csproj">
       <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
-      <Name>通用TCP云服务类库</Name>
+      <Name>Weave.Cloud</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.TCPClient\Weave.TCPClient.csproj">
+      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
+      <Name>Weave.TCPClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

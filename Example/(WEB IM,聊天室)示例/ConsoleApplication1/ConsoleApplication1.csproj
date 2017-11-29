@@ -48,9 +48,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Code\TCPclient\TCPclient.csproj">
-      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
-      <Name>TCPclient</Name>
+    <ProjectReference Include="..\..\..\Code\Weave.Base\Weave.Base.csproj">
+      <Project>{383e52ff-1f63-4514-ae5d-1b217a0c2bce}</Project>
+      <Name>Weave.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Code\Weave.TCPClient\Weave.TCPClient.csproj">
+      <Project>{6d769a16-5847-4cc7-b768-afbfb89a8d68}</Project>
+      <Name>Weave.TCPClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

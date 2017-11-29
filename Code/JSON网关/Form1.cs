@@ -1,6 +1,4 @@
-﻿using client;
-using cloud;
-using WeaveBase;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Weave.Base;
+using Weave.TCPClient;
+using Weave.Cloud;
+
 namespace 统一登录服务
 {
     public partial class Form1 : Form

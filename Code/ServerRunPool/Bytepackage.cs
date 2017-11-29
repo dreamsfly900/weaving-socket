@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeaveBase;
+using Weave.Base.Interface;
+using Weave.Base;
 namespace 智信构建结构
 {
     public class Bytepackage : IDataparsing
@@ -13,7 +14,7 @@ namespace 智信构建结构
         public WeaveSession GetBaseModel(byte[] data)
         {
             //data 的内容为，协议中的内容段，不明白的查看 客户端协议的说明，内容段是自己定义的内容
-            WeaveBase.WeaveSession bm = new WeaveBase.WeaveSession();
+            WeaveSession bm = new WeaveSession();
             byte[] bs = new byte[2];
             Array.Copy(data, 0, bs, 0, bs.Length);
             int req= ConvertToInt(bs);
@@ -33,7 +34,7 @@ namespace 智信构建结构
         /// </summary>
         /// <param name="bm"></param>
         /// <returns></returns>
-        public byte[] Get_Byte(WeaveBase.WeaveSession bm)
+        public byte[] Get_Byte(WeaveSession bm)
         {
             byte[] b = bm.GetRoot<byte[]>();
             byte[] data = new byte[2 + b.Length];
@@ -73,7 +74,7 @@ namespace 智信构建结构
         /// </summary>
         /// <param name="bm"></param>
         /// <returns></returns>
-        public bool socketvalidation(WeaveBase.WeaveSession bm)
+        public bool socketvalidation(WeaveSession bm)
         {
             //这个方法主要是鉴权，如果内容不正确，返回false将不会继续向下执行
             return true;

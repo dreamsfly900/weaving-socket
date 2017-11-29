@@ -1,4 +1,4 @@
-﻿using cloud;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TCPServer;
+
+using Weave.TCPClient;
+using Weave.Cloud;
+
+
 namespace DTU网关程序
 {
     public partial class Form1 : Form

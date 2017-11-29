@@ -1,10 +1,11 @@
-﻿using cloud;
+﻿using Weave.Cloud;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WeaveBase;
+using Weave.Base;
+using Weave.Base.Interface;
 
 namespace 智信构建结构
 {
