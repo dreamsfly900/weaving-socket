@@ -8,8 +8,8 @@
     <ProjectGuid>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyInterface</RootNamespace>
-    <AssemblyName>MyInterface</AssemblyName>
+    <RootNamespace>WeaveBase</RootNamespace>
+    <AssemblyName>WeaveBase</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>Svn</SccProjectName>
