@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityBasicChat.Plugins", "UnityBasicChat.Plugins.csproj", "{189362B6-0029-2B60-8E32-E0D903842978}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityBasicChat", "UnityBasicChat.csproj", "{52D51791-66DB-0226-5A62-CEA3DFE7031C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{189362B6-0029-2B60-8E32-E0D903842978}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189362B6-0029-2B60-8E32-E0D903842978}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189362B6-0029-2B60-8E32-E0D903842978}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189362B6-0029-2B60-8E32-E0D903842978}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D51791-66DB-0226-5A62-CEA3DFE7031C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D51791-66DB-0226-5A62-CEA3DFE7031C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D51791-66DB-0226-5A62-CEA3DFE7031C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D51791-66DB-0226-5A62-CEA3DFE7031C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
