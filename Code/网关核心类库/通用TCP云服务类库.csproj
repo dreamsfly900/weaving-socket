@@ -75,9 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
+    <ProjectReference Include="..\MyInterface\WeaveBase.csproj">
       <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
-      <Name>WeaveCore</Name>
+      <Name>WeaveBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPclient\TCPclient.csproj">
       <Project>{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}</Project>

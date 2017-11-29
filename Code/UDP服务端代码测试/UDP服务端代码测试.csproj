@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyInterface\WeaveCore.csproj">
+    <ProjectReference Include="..\MyInterface\WeaveBase.csproj">
       <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>WeaveCore</Name>
+      <Name>WeaveBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\TCPServer\WeavingSocketServer.csproj">
       <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>

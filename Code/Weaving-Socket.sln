@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "ServerRunPool\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端", "服务端", "{AFDAF284-45F3-406D-A585-AE187827F28A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaveCore", "MyInterface\WeaveCore.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaveBase", "MyInterface\WeaveBase.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通用TCP云服务类库", "网关核心类库\通用TCP云服务类库.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
 EndProject
