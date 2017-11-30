@@ -541,12 +541,14 @@ namespace Weave.Base
             while (true)
             {
                 Socket handler = socketLisener.Accept();
-                 
+                //连接到服务器的客户端Socket封装类
                 WeaveNetWorkItems netc = new WeaveNetWorkItems();
                 netc.SocketSession = handler;
                 weaveNetworkItems.Add(netc);
               
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdateSocketListEventHander), handler);
+                System.Threading.ThreadPool.QueueUserWorkItem(
+                    new System.Threading.WaitCallback(UpdateSocketListEventHander),
+                      handler );
                 
             }
         }
