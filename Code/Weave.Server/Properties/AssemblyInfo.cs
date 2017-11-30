@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("WeavingSocketServer")]
-[assembly: AssemblyDescription("WeavingSocket的服务端类库包")]
+[assembly: AssemblyTitle("Weave.Server")]
+[assembly: AssemblyDescription("Weave.Socket的服务端类库包")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("QQ:20573886")]
-[assembly: AssemblyProduct("WeavingSocketServer")]
+[assembly: AssemblyProduct("Weave.Server")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

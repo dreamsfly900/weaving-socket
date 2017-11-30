@@ -6,6 +6,10 @@ using System.Threading;
 using Weave.Base;
 namespace Weave.Server
 {
+
+    /// <summary>
+    /// DtuModel模型，定义了 一个byte【】数组和一个Socket
+    /// </summary>
   public  class DtuModel
         {
             byte[] data;

@@ -15,6 +15,10 @@ using Weave.Base.Interface;
 namespace Weave.Cloud
 {
     public delegate void Mylog(string type, string log);
+
+    /// <summary>
+    /// 网关服务器类
+    /// </summary>
     public class GateWay
     {
         protected IWeaveTcpBase p2psev;

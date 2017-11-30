@@ -50,9 +50,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,11 +69,12 @@
     <Compile Include="ClientItem.cs" />
     <Compile Include="CommandItem.cs" />
     <Compile Include="ConnObj.cs" />
+    <Compile Include="Dtuclientcloud.cs" />
     <Compile Include="DTUGateWay.cs" />
     <Compile Include="GateHelper.cs" />
     <Compile Include="GateWay.cs" />
     <Compile Include="MyHttpServer.cs" />
-    <Compile Include="TCPcloud.cs" />
+    <Compile Include="WeaveTCPcloud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WayItem.cs" />
   </ItemGroup>

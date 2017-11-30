@@ -6,6 +6,10 @@ using System.Threading;
 using Weave.Base;
 namespace Weave.Server
 {
+
+    /// <summary>
+    /// DTU服务器类
+    /// </summary>
     public class DTUServer  
     {
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -37,6 +41,11 @@ namespace Weave.Server
             ReceivePageHanderThread.Start();
             KeepAliveThread.Start();
         }
+
+        /// <summary>
+        /// 获取连接到服务器的客户端Socket数量
+        /// </summary>
+        /// <returns></returns>
         public int GetNetWorkListCount()
         {
             return netWorkList.Count;

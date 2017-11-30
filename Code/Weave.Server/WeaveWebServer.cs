@@ -11,6 +11,10 @@ using Weave.Base.Interface;
 
 namespace Weave.Server
 {
+
+    /// <summary>
+    /// 继承自IWeaveTcpBase接口的HTTP Web服务器
+    /// </summary>
     public class WeaveWebServer : IWeaveTcpBase
     {
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

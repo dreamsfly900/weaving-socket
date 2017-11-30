@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("通用TCP云服务端")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("通用TCP云服务端")]
+[assembly: AssemblyTitle("Weave.Cloud通用TCP云服务端")]
+[assembly: AssemblyDescription("Weave.Cloud")]
+[assembly: AssemblyConfiguration("Weave.Cloud")]
+[assembly: AssemblyCompany("Weave.Cloud")]
+[assembly: AssemblyProduct("Weave.Cloud通用TCP云服务端")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

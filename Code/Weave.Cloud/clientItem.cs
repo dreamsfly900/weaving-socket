@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Weave.Cloud
 {
+    /// <summary>
+    /// 客户端封装类 ，拥有Connlist 字典（ string, ConnObj）类型和几个方法，，
+    /// </summary>
     public class ClientItem
     {
        // int count = 0;

@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Weave.Cloud
 {
+
+    /// <summary>
+    /// 连接封装类，有Makes,Socket，Token，Id,Validation(布尔）几个属性
+    /// </summary>
     [Serializable]
     public class ConnObj
     {

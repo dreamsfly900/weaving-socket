@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 namespace Weave.Server
 {
+
+    /// <summary>
+    /// 数据帧头 定义????
+    /// </summary>
     public class DataFrameHeader
     {
         private bool _fin;
@@ -33,7 +37,17 @@ namespace Weave.Server
             _maskcode = (buffer[1] & 0x80) == 0x80;
             _payloadlength = (sbyte)(buffer[1] & 0x7f);
         }
-        //发送封装数据
+
+        /// <summary>
+        /// 发送封装数据
+        /// </summary>
+        /// <param name="fin"></param>
+        /// <param name="rsv1"></param>
+        /// <param name="rsv2"></param>
+        /// <param name="rsv3"></param>
+        /// <param name="opcode"></param>
+        /// <param name="hasmask"></param>
+        /// <param name="length"></param>
         public DataFrameHeader(bool fin,bool rsv1,bool rsv2,bool rsv3,sbyte opcode,bool hasmask,int length)
         {
             _fin = fin;
@@ -45,7 +59,12 @@ namespace Weave.Server
             _maskcode = hasmask;
             _payloadlength = (sbyte)length;
         }
-        //返回帧头字节
+
+
+        /// <summary>
+        /// 返回帧头字节
+        /// </summary>
+        /// <returns>返回帧头字节</returns>
         public byte[] GetBytes()
         {
             byte[] buffer = new byte[2]{0,0};

@@ -10,6 +10,9 @@ using Weave.Base.Interface;
 
 namespace Weave.Base
 {
+    /// <summary>
+    /// 继承自IWeaveTcpBase接口的 类
+    /// </summary>
     public class WeaveBaseServer : IWeaveTcpBase
     {
         [DefaultValue(WeaveDataTypeEnum.Json)]
@@ -25,6 +28,7 @@ namespace Weave.Base
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
         public event WeaveReceiveBitEvent weaveReceiveBitEvent;
+
         protected string loaclip;
         public int Port { get; set; }
         public WeaveBaseServer()
@@ -145,6 +149,11 @@ namespace Weave.Base
             ret.CopyTo(bb);
             return bb;
         }
+
+        /// <summary>
+        /// 对粘包，分包的处理方法
+        /// </summary>
+        /// <param name="obj"></param>
         private void packageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;

@@ -6,6 +6,9 @@ using System.Net.Sockets;
 using System.Text;
 namespace Weave.Base
 {
+    /// <summary>
+    /// 连接到服务器的Socket封装类，含有Token,Name,Obj和原始Socket 
+    /// </summary>
     public class WeaveOnLine
     {
         public string Token

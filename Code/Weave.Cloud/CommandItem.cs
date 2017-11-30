@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Weave.Cloud
 {
+
+    /// <summary>
+    /// 命令封装对象，有命令名称，IP，端口，client4_10 = new P2Pclient[10, 10, 10, 10];client（List)和Commfun几个字段
+    /// </summary>
     public class CommandItem
     {
         byte commName;

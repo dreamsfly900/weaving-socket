@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataFrame.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>

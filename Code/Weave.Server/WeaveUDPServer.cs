@@ -11,6 +11,10 @@ using Weave.Base;
 
 namespace Weave.Server
 {
+
+    /// <summary>
+    /// UPD服务器类
+    /// </summary>
     public class WeaveUDPServer 
     {
         WeaveDataTypeEnum weaveDataType = WeaveDataTypeEnum.Json;

@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 namespace Weave.Base.Interface
 {
+    /// <summary>
+    /// 接口---定义可把自定义协议转换为网关理解的协议
+    /// </summary>
     public interface IDataparsing
     {
         /// <summary>

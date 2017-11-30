@@ -9,6 +9,9 @@ using Weave.Server;
 
 namespace Weave.Cloud
 {
+    /// <summary>
+    /// 继承自 IWeaveUniversal的类，拥有weaveOnline（在线客户端集合）,P2ServerList(IWeaveTcpBase集合)，TcpTokenList（WeaveTcpToken集合），这个类可以同时启动多个IWeaveTcpBase接口实现类，实现多个监听端口，不同的服务器端（只要是继承自IWeaveTcpBase接口的）
+    /// </summary>
     public class WeaveTCPcloud : IWeaveUniversal
     {
         public event WeaveLogDelegate WeaveLogEvent;

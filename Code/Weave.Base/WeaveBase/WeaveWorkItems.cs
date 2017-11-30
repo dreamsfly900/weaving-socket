@@ -6,6 +6,9 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 namespace Weave.Base
 {
+    /// <summary>
+    /// 连接到服务器的客户端Socket封装对象类
+    /// </summary>
     public class WeaveNetWorkItems
     {
         public Socket SocketSession

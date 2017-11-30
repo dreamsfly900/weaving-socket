@@ -2,6 +2,9 @@
 using System.Text;
 namespace Weave.Server
 {
+    /// <summary>
+    /// 数据帧 ？？类，定义了header，三个1位（ _extend，_mask，_content） byte 
+    /// </summary>
     public class DataFrame
     {
         DataFrameHeader _header;

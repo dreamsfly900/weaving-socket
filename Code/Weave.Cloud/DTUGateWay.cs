@@ -9,7 +9,10 @@ using Weave.TCPClient;
 
 namespace Weave.Cloud
 {
-    public  class DTUGateWay
+    /// <summary>
+    /// DTU网关类，有DTUServer,等一些方法....
+    /// </summary>
+    public class DTUGateWay
     {
         DTUServer DTUSer;
         public int V_ErrorMge { get; private set; }
@@ -92,7 +95,7 @@ namespace Weave.Cloud
                     }
             }
         }
-      public  List<dtuclient> listdtu = new List<dtuclient>();
+      public  List<Dtuclientcloud> listdtu = new List<Dtuclientcloud>();
         private void ReLoad()
         {
             ReloadFlies(null);
@@ -222,7 +225,7 @@ namespace Weave.Cloud
                 xml.Load("dtulist.xml");
                 foreach (XmlNode xn in xml.FirstChild.ChildNodes)
                 {
-                    dtuclient dl = new dtuclient();
+                    Dtuclientcloud dl = new Dtuclientcloud();
                     String ip= xn.Attributes["ip"].Value;
                     int Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     string Commfun= xn.Attributes["Commfun"].Value;
@@ -278,9 +281,9 @@ namespace Weave.Cloud
                 try
                 {
                     int count = listdtu.Count;
-                    dtuclient[] coobjs = new dtuclient[count];
+                    Dtuclientcloud[] coobjs = new Dtuclientcloud[count];
                     listdtu.CopyTo(0, coobjs, 0, count);
-                    foreach (dtuclient coob in coobjs)
+                    foreach (Dtuclientcloud coob in coobjs)
                     {
                         if (coob != null)
                             if (coob.Token == _0x01.Token)
@@ -298,7 +301,7 @@ namespace Weave.Cloud
         {
             try
             {
-                foreach (dtuclient dl in listdtu)
+                foreach (Dtuclientcloud dl in listdtu)
                 {
                     if (!dl.Tcpdtu.Isline)
                     {
@@ -370,91 +373,6 @@ namespace Weave.Cloud
             catch { }
         }
     }
-    public class dtuclient {
-        DTUclient tcpdtu;
-        public DTUclient Tcpdtu
-        {
-            get
-            {
-                return tcpdtu;
-            }
-            set
-            {
-                tcpdtu = value;
-            }
-        }
-        public string Token
-        {
-            get
-            {
-                return token;
-            }
-            set
-            {
-                token = value;
-            }
-        }
-        String token;
-    }
-
-    /*
-    public class CommandItem
-    {
-        byte commName;
-        public byte CommName
-        {
-            get { return commName; }
-            set { commName = value; }
-        }
-        String commfun;
-        public string Ip
-        {
-            get
-            {
-                return ip;
-            }
-            set
-            {
-                ip = value;
-            }
-        }
-        public int Port
-        {
-            get
-            {
-                return port;
-            }
-            set
-            {
-                port = value;
-            }
-        }
-        public List<P2Pclient> Client
-        {
-            get
-            {
-                return client;
-            }
-            set
-            {
-                client = value;
-            }
-        }
-        public string Commfun
-        {
-            get
-            {
-                return commfun;
-            }
-            set
-            {
-                commfun = value;
-            }
-        }
-        String ip = "";
-        int port;
-        List<P2Pclient> client = new List<P2Pclient>();
-    }
-
-    */
+    
+   
 }

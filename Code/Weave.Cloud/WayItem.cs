@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Weave.Cloud
 {
+    /// <summary>
+    /// 网关单个Item类，有IP,端口，P2Pclient，Num,Token几个属性
+    /// </summary>
     public class WayItem
     {
         string _Token;

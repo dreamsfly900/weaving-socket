@@ -9,6 +9,10 @@ using System.Xml;
 using Weave.Server;
 namespace Weave.Cloud
 {
+
+    /// <summary>
+    /// 继承自HttpServer的HTTP服务器类，，，增加了一些方法，，从文件中加载Command
+    /// </summary>
     public class MyHttpServer : HttpServer
     {
         public event Mylog EventMylog;

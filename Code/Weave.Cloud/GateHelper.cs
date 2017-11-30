@@ -9,7 +9,9 @@ using Weave.Base;
 
 namespace Weave.Cloud
 {
-
+    /// <summary>
+    /// 帮助类，内含一些static方法，便于直接调用
+    /// </summary>
     public class GateHelper
     {
 
