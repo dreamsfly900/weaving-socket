@@ -320,39 +320,44 @@ namespace Weave.Cloud
             catch { }
             foreach (WeaveTcpToken token in TcpTokenList)
             {
-                if (token.IsToken)
-                {
+                
                     string Token = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000, 9999);// EncryptDES(clientipe.Address.ToString() + "|" + DateTime.Now.ToString(), "lllssscc");
-                    if (token.P2Server.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                if (token.P2Server.Port == ((System.Net.IPEndPoint)soc.LocalEndPoint).Port)
+                {
+                    bool sendok = false;
+                    if (token.IsToken)
                     {
-                        bool sendok = false;
+
                         if (token.PortType == WeavePortTypeEnum.Bytes)
                             sendok = token.P2Server.Send(soc, 0xff, token.BytesDataparsing.Get_ByteBystring("token|" + Token + ""));
                         else
                             sendok = token.P2Server.Send(soc, 0xff, "token|" + Token + "");
-                        if (sendok)
+                    }
+                    else
+                        sendok = true;
+                    if (sendok)
+                    {
+                        WeaveOnLine ol = new WeaveOnLine();
+                        ol.Token = Token;
+                        ol.Socket = soc;
+                        weaveOnline.Add(ol);
+                        foreach (CmdWorkItem cmdItem in CmdWorkItems)
                         {
-                            WeaveOnLine ol = new WeaveOnLine();
-                            ol.Token = Token;
-                            ol.Socket = soc;
-                            weaveOnline.Add(ol);
-                            foreach (CmdWorkItem cmdItem in CmdWorkItems)
+                            try
                             {
-                                try
-                                {
-                                    WeaveExcCmdNoCheckCmdName(0xff, "in|" + ol.Token, ol.Socket);
-                                    cmdItem.WeaveTcpCmd.TokenIn(ol);
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (WeaveLogEvent != null)
-                                        WeaveLogEvent("Tokenin", ex.Message);
-                                }
+                                WeaveExcCmdNoCheckCmdName(0xff, "in|" + ol.Token, ol.Socket);
+                                cmdItem.WeaveTcpCmd.TokenIn(ol);
                             }
-                            return;
+                            catch (Exception ex)
+                            {
+                                if (WeaveLogEvent != null)
+                                    WeaveLogEvent("Tokenin", ex.Message);
+                            }
                         }
+                        return;
                     }
                 }
+                
             }
         }
         void P2ServerReceiveHander(byte command, string data, System.Net.Sockets.Socket soc)
