@@ -288,11 +288,12 @@ namespace Weave.TCPClient
                         timeoutevent();
                     if (timeoutobjevent != null)
                         timeoutobjevent(this);
+                    send(command, text);
                 }
                 Isline = false;
                 stop();
                 
-                send(command, text);
+              
                 ErrorMge(9, "send:" + ee.Message);
                 return false;
             }
