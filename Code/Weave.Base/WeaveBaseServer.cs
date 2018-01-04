@@ -298,9 +298,13 @@ namespace Weave.Base
             }
             catch //(Exception e)
             {
-                if (netc.DataList.Count > 0)
-                    netc.DataList.RemoveAt(0);
-                netc.IsPage = false;
+                try
+                {
+                    if (netc.DataList.Count > 0)
+                        netc.DataList.RemoveAt(0);
+                    netc.IsPage = false;
+                }
+                catch { }
                 return;
             }
             finally { netc.IsPage = false; }

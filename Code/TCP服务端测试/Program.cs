@@ -22,12 +22,13 @@ namespace TCP服务端测试
 
         private static void Wudp_weaveDeleteSocketListEvent(System.Net.Sockets.Socket soc)
         {
-            Console.WriteLine("我知道你来了:");
+            Console.WriteLine("我知道你走了:");
         }
 
         private static void Wudp_weaveUpdateSocketListEvent(System.Net.Sockets.Socket soc)
         {
-            Console.WriteLine("我知道你走了:");
+           
+            Console.WriteLine("我知道你来了:");
         }
 
         private static void Wudp_waveReceiveEvent(byte command, string data, System.Net.Sockets.Socket soc)
