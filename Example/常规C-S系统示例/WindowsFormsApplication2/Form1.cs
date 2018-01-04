@@ -1,10 +1,10 @@
-﻿using client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using UserLogin;
-using WeaveBase;
+using Weave.Base;
+using Weave.TCPClient;
 
 namespace WindowsFormsApplication2
 {

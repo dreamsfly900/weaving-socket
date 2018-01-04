@@ -75,13 +75,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Code\MyInterface\WeaveCore.csproj">
+    <ProjectReference Include="..\..\..\Code\Weave.Base\Weave.Base.csproj">
       <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>WeaveCore</Name>
+      <Name>Weave.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Code\TCPclient\TCPclient.csproj">
+    <ProjectReference Include="..\..\..\Code\Weave.TCPClient\Weave.TCPClient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
-      <Name>TCPclient</Name>
+      <Name>Weave.TCPClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserLogin\model.csproj">
       <Project>{b9828b34-9ef8-49a5-b058-04c2c4247e48}</Project>

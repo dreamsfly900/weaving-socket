@@ -14,11 +14,12 @@ D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\obj\De
 D:\Weaving-Socket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
-D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\MyInterface.dll
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Newtonsoft.Json.dll
-D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\MyInterface.pdb
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
 D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
-D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\WeavingSocketclient.dll
-D:\WeavingSocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\WeavingSocketclient.pdb
+D:\weavingsocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Weave.TCPClient.dll
+D:\weavingsocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Weave.Base.dll
+D:\weavingsocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Weave.TCPClient.pdb
+D:\weavingsocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Weave.Base.pdb
+D:\weavingsocket\Example\二进制字节传输示例\ConsoleApplication1\bin\Debug\Newtonsoft.Json.xml

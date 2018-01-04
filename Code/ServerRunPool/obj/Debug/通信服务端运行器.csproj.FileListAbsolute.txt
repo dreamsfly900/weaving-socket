@@ -114,8 +114,6 @@ C:\weaving-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.G
 C:\weaving-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CoreCompileInputs.cache
 C:\weaving-socket\Code\ServerRunPool\obj\Debug\智信构建结构.exe
 C:\weaving-socket\Code\ServerRunPool\obj\Debug\智信构建结构.pdb
-D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTCommon.dll
-D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTLibary.dll
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\Newtonsoft.Json.xml
 D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Base.dll
 D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Cloud.dll

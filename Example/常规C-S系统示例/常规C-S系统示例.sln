@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "..\..\Code\ServerRunPool\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -25,13 +25,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "0x01_manage", "0x01_manage\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "相关类库", "相关类库", "{4F8C7D9C-1ADA-45EB-9754-A3CE26A91107}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPclient", "..\..\Code\TCPclient\TCPclient.csproj", "{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.TCPClient", "..\..\Code\Weave.TCPClient\Weave.TCPClient.csproj", "{DC9B4157-68C6-4F52-B8E4-EC2E4BC1D237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaveCore", "..\..\Code\MyInterface\WeaveCore.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Base", "..\..\Code\Weave.Base\Weave.Base.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketServer", "..\..\Code\TCPServer\WebSocketServer.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Server", "..\..\Code\Weave.Server\Weave.Server.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通用TCP云服务类库", "..\..\Code\网关核心类库\通用TCP云服务类库.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Cloud", "..\..\Code\Weave.Cloud\Weave.Cloud.csproj", "{BCB76C92-15DD-436C-9B5C-6D8D9671FA88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Code\MyInterface\WeaveCore.csproj">
+    <ProjectReference Include="..\..\..\Code\Weave.Base\Weave.Base.csproj">
       <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>WeaveCore</Name>
+      <Name>Weave.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserLogin\model.csproj">
       <Project>{B9828B34-9EF8-49A5-B058-04C2C4247E48}</Project>
