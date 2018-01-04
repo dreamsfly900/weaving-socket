@@ -46,3 +46,6 @@ D:\WeavingSocket\Example\二进制字节传输示例\0x01_manage\bin\Debug\MyInt
 D:\WeavingSocket\Example\二进制字节传输示例\0x01_manage\obj\Debug\0x01_manage.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Example\二进制字节传输示例\0x01_manage\obj\Debug\0x01_manage.dll
 D:\WeavingSocket\Example\二进制字节传输示例\0x01_manage\obj\Debug\0x01_manage.pdb
+D:\weavingsocket\Example\二进制字节传输示例\0x01_manage\bin\Debug\Weave.Base.dll
+D:\weavingsocket\Example\二进制字节传输示例\0x01_manage\bin\Debug\Weave.Base.pdb
+D:\weavingsocket\Example\二进制字节传输示例\0x01_manage\bin\Debug\Newtonsoft.Json.xml
