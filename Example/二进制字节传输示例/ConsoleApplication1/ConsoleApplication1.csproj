@@ -47,7 +47,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Code\Weave.TCPClient\Weave.TCPClient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
-      <Name>TCPclient</Name>
+      <Name>Weave.TCPClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

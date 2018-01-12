@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "通信服务端运行器", "..\..\Code\ServerRunPool\通信服务端运行器.csproj", "{BA96C272-6744-4EAD-AF3B-BBB8EC8E7DC0}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -28,6 +28,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Base", "..\..\Code\Weave.Base\Weave.Base.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Server", "..\..\Code\Weave.Server\Weave.Server.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "简化服务端", "简化服务端", "{EA1410DD-EB63-447F-A8EE-C9F3C68E2168}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{78059B21-160A-4E2A-8014-400AFD45178F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,6 +217,30 @@ Global
 		{A237E772-678D-490B-ADDF-1D4535D970B6}.Release|x64.Build.0 = Release|Any CPU
 		{A237E772-678D-490B-ADDF-1D4535D970B6}.Release|x86.ActiveCfg = Release|Any CPU
 		{A237E772-678D-490B-ADDF-1D4535D970B6}.Release|x86.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|Any CPU.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|Any CPU.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|ARM.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|ARM.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|x64.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|x64.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|x86.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.AAA|x86.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|x64.Build.0 = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Debug|x86.Build.0 = Debug|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|ARM.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|x64.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|x64.Build.0 = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|x86.ActiveCfg = Release|Any CPU
+		{78059B21-160A-4E2A-8014-400AFD45178F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -226,5 +254,6 @@ Global
 		{64FEEF9F-6898-4441-AB34-E0F5AA51BAC6} = {27255D0F-C23D-4BA6-9015-8065D341CE24}
 		{B8D521E5-9073-4B32-A7A7-F415E623F67C} = {4F8C7D9C-1ADA-45EB-9754-A3CE26A91107}
 		{A237E772-678D-490B-ADDF-1D4535D970B6} = {4F8C7D9C-1ADA-45EB-9754-A3CE26A91107}
+		{78059B21-160A-4E2A-8014-400AFD45178F} = {EA1410DD-EB63-447F-A8EE-C9F3C68E2168}
 	EndGlobalSection
 EndGlobal

@@ -487,8 +487,10 @@ namespace Weave.TCPClient
                                     if (DT == DataType.bytes)
                                     {
                                        // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                        byte[] bs = new byte[len - 2 + a];
-                                        Array.Copy(tempbtye, bs, bs.Length);
+                                       // byte[] bs = new byte[len - 2 + a];
+                                        byte[] bs = new byte[len];
+                                        Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
+                                       // Array.Copy(tempbtye, bs, bs.Length);
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
