@@ -112,6 +112,8 @@ namespace Weave.Cloud
                 if (sp.PortType == WeavePortTypeEnum.Web)
                 {
                     p2psev = new WeaveWebServer();
+                    if(sp.Certificate!=null)
+                    ((WeaveWebServer)p2psev).Certificate = sp.Certificate;
                 }
                 else if (sp.PortType == WeavePortTypeEnum.Json)
                 {

@@ -1,4 +1,5 @@
-﻿using Weave.Base.Interface;
+﻿using System.Security.Cryptography.X509Certificates;
+using Weave.Base.Interface;
 
 namespace Weave.Base
 {
@@ -10,6 +11,8 @@ namespace Weave.Base
         {
             get; set;
         }
+        X509Certificate2 _Certificate=null;
         public IDataparsing BytesDataparsing { get; set; }
+        public X509Certificate2 Certificate { get => _Certificate; set => _Certificate = value; }
     }
 }

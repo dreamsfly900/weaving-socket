@@ -72,11 +72,13 @@ namespace 智信构建结构
             if (radioButton2.Checked)
             {
                 sp.PortType = WeavePortTypeEnum.Web;
+                //sp.Certificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(); 如果需要wss证书连接
                 listBox1.Items.Add("WEB端口" + sp.Port);
             }
             else if (radioButton3.Checked)
             {
                 sp.PortType = WeavePortTypeEnum.Http;
+         
                 listBox1.Items.Add("HTTP端口" + sp.Port);
             }
             else if (radioButton4.Checked)
