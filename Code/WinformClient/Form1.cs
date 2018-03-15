@@ -45,14 +45,14 @@ namespace winformclient
 
         private void button2_Click(object sender, EventArgs e)
         {
-         
+             
 
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(tt));
 
             t.Start();
             timer1.Start();
         }
-
+         
         void tt()
         {
             for (int i = 0; i < 300; i++)

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Net;
+using System.Net.Security;
+
 namespace Weave.Base
 {
     public delegate void WeaveErrorMessageDelegate(Socket soc, WeaveSession _0x01, string message);
@@ -23,5 +25,6 @@ namespace Weave.Base
     public delegate void WeaveDeleteudpListEvent(EndPoint ep);
     public delegate void WaveReceivedupEvent(byte command, String data, EndPoint ep);
     public delegate void WeaveReceiveBitdupEvent(byte command, byte[] data, EndPoint ep);
+    public delegate void WeaveReceiveSslEvent(byte command, string data, SslStream soc);
 
 }

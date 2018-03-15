@@ -2,6 +2,15 @@
 using System.Text;
 namespace Weave.Server
 {
+    public enum FrameType : byte
+    {
+        Continuation,
+        Text,
+        Binary,
+        Close = 8,
+        Ping = 9,
+        Pong = 10,
+    }
     /// <summary>
     /// 数据帧 ？？类，定义了header，三个1位（ _extend，_mask，_content） byte 
     /// </summary>
@@ -15,6 +24,16 @@ namespace Weave.Server
         { }
         public byte[] GetData(byte[] buffer,ref byte[] masks,ref int lens,ref int payload_len,ref DataFrameHeader dfh)
         {
+            var isFinal = (buffer[0] & 128) != 0;
+            var reservedBits = (buffer[0] & 112);
+            var frameType = (FrameType)(buffer[0] & 15);
+            var isMasked = (buffer[1] & 128) != 0;
+            var length = (buffer[1] & 127);
+            if (!isMasked
+                 || !Enum.IsDefined(typeof(FrameType), frameType)
+                 || reservedBits != 0 //Must be zero per spec 5.2
+                 || (frameType == FrameType.Continuation ))
+                return null;
             lens = 0;
             //帧头
             _header = new DataFrameHeader(buffer);
@@ -48,7 +67,12 @@ namespace Weave.Server
                 payload_len = _content.Length;
                 _content = new byte[_header.Length];
                 lens = _extend.Length + _mask.Length + 2;
-                Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2 , _content, 0, _content.Length);
+                try
+                {
+                    Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
+                }
+                catch(Exception e)
+                { }
             }
             else if (_extend.Length == 2)
             {

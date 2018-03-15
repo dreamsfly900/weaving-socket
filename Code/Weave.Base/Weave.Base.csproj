@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QueuedStream.cs" />
     <Compile Include="WeaveBase\WeaveEvent.cs" />
     <Compile Include="WeaveBase\WeaveWorkItems.cs" />
     <Compile Include="WeaveBaseServer.cs" />

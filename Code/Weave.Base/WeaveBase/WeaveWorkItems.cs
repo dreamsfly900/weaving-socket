@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Fleck;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 namespace Weave.Base
@@ -11,6 +14,7 @@ namespace Weave.Base
     /// </summary>
     public class WeaveNetWorkItems
     {
+        SslStream _stream;
         public Socket SocketSession
         {
             get; set;
@@ -55,6 +59,19 @@ namespace Weave.Base
 
         public EndPoint Ep { get; set; }
         public DateTime Lasttime { get; set; }
+
+        public SslStream Stream
+        {
+            get
+            {
+                return _stream;
+            }
+
+            set
+            {
+                _stream = value;
+            }
+        }
     }
     public class WeaveUdpWorkItems
     {

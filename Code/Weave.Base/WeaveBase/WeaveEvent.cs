@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 namespace Weave.Base
 {
@@ -47,5 +48,20 @@ namespace Weave.Base
             }
             byte[] databit;
         public EndPoint Ep { get; set; }
+
+        public SslStream Ssl
+        {
+            get
+            {
+                return ssl;
+            }
+
+            set
+            {
+                ssl = value;
+            }
+        }
+
+        SslStream ssl;
     }
 }

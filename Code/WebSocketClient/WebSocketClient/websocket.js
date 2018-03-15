@@ -13,12 +13,13 @@
     try {
         var ws;
         var settakon = this.settakon;
-        var SOCKECT_ADDR = "ws://" + options.ip + ":" + options.port + "";
+        var SOCKECT_ADDR = "" + options.ip + ":" + options.port + "";
         this.jump = options.jump;
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
         var tempthis = this;
         ws.onopen = function (event) { options.conn(this.readyState); };
+      //  ws.binaryType = "arrayBuffer"
         var timeout;
         ws.onmessage = function (evt) {
             try {
@@ -31,7 +32,7 @@
                         var myDate = new Date();
                         timeout = myDate;//记录当前时间
                         if (bytesRead > 1) {
-                            var b = new byte[bytesRead - 1];
+                            var b = [bytesRead - 1];
                             var t = tempbtye;
                             Array.Copy(t, 1, b, 0, b.Length);//拷贝数据到b
                             tempbtye = b;
@@ -153,6 +154,7 @@ UDCsocket.prototype = {
     },
     SendData: function (command, Request, Root, Parameter) {
         try {
+           var takon= this.takon;
             if (takon == "") {
                 alert("takon不存在！");
                 return;
@@ -187,7 +189,10 @@ UDCsocket.prototype = {
             }
             var b = new Int8Array(bytes);
             //sendb.CopyTo(b, 2 + lens.Length);
-            this.soc.send(b);
+         
+            this.soc.send(b.buffer);
+
+          
         } catch (ex) {
             alert("SendData" + ex.message);
         }
