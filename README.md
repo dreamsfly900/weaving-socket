@@ -1,4 +1,6 @@
- 图文版教程:https://my.oschina.net/u/2476624/blog
+ 2018-3-16 新增加websocket 对于ssl的支持
+
+图文版教程:https://my.oschina.net/u/2476624/blog
 
  QQ交流群17375149
 新版本更新：
