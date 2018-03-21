@@ -14,7 +14,7 @@ namespace TCP服务端测试
       //  static WeaveP2Server wudp = new WeaveP2Server(); //这是一般SOCKET
         static void Main(string[] args)
         {
-            wudp.Certificate= new System.Security.Cryptography.X509Certificates.X509Certificate2(@"D:\214495009180717.pfx", "214495009180717");
+           // wudp.Certificate= new System.Security.Cryptography.X509Certificates.X509Certificate2(@"D:\214495009180717.pfx", "214495009180717");
             wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
             wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
             wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;

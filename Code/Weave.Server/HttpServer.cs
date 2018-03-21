@@ -51,19 +51,25 @@ namespace Weave.Server
             while (true)
             {
                 int i = httpProcessorList.Count;
-                HttpProcessor[] hps = new HttpProcessor[i];
-                httpProcessorList.CopyTo(hps);
-                foreach (HttpProcessor hp in hps)
+                if (i > 0)
                 {
-                    try
+                    HttpProcessor[] hps = new HttpProcessor[i];
+                    //Array.Copy(httpProcessorList, hps, i);
+                    httpProcessorList.CopyTo(0, hps, 0, i);
+                    // httpProcessorList.CopyTo(hps);
+                    foreach (HttpProcessor hp in hps)
                     {
-                        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
-                        httpProcessorList.Remove(hp);
+                        try
+                        {
+                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
+                            httpProcessorList.Remove(hp);
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(10);
             }
+
         }
         public bool Send(Socket soc, byte command, string text)
         {
