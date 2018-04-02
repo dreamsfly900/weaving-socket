@@ -1,0 +1,162 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>功能应用</title>
+<link rel="stylesheet" href="css/Functional-application.css">
+<script src="jquery-3.2.1.min.js" type="text/javascript"></script>
+ <script src="websocket.js"></script>
+<script>
+    $(document).ready(function () {
+        conn();
+	 //alert($("#fengshan").attr('src'));
+	//	$("#fengshan").attr("onclick", "");
+	$("#fengshan").click(function(){
+		
+		var path=	$("#fengshan").attr('src');
+		 
+				if(path=="image/switch_1.png")
+		          {
+					  $("#fengshan").attr('src','image/switch_2.png');
+					  socket.SendData(0x01, "open", 99, 4)
+				  }else
+					  {
+				    $("#fengshan").attr('src', 'image/switch_1.png');
+				    socket.SendData(0x01, "close", 99, 4)
+					  }
+								 
+		});
+	 
+		
+		$("#penlin").click(function(){
+		
+		var path=	$("#penlin").attr('src');
+		 
+				if(path=="image/switch_1.png")
+		          {
+				    $("#penlin").attr('src', 'image/switch_2.png');   
+				    socket.SendData(0x01, "open", 99, 5)
+					  
+				  }else
+					  {
+				          $("#penlin").attr('src', 'image/switch_1.png');
+				          socket.SendData(0x01, "close", 99, 5)
+					  }
+								 
+		});
+			$("#juanlian").click(function(){
+		
+		var path=	$("#juanlian").attr('src');
+		 
+				if(path=="image/switch_1.png")
+		          {
+					  $("#juanlian").attr('src','image/switch_2.png');
+					 
+				  }
+				else
+					  {
+						   $("#juanlian").attr('src','image/switch_1.png');
+						     $("#zheng").attr('src','image/zf_gray1.png');
+						     $("#fan").attr('src', 'image/zf_gray2.png');
+						     socket.SendData(0x01, "closejuan", 99,'')
+						     
+					  }
+								 
+		});
+		$("#zheng").click(function(){
+		
+		var path=	$("#juanlian").attr('src');
+		 
+				if(path=="image/switch_1.png")
+				{
+				 
+					  $("#zheng").attr('src','image/zf_gray1.png');
+						   $("#fan").attr('src','image/zf_gray2.png');
+						
+				  }
+				else
+					  {
+						 
+						  $("#zheng").attr('src','image/zf_blue1.png');
+						  $("#fan").attr('src', 'image/zf_gray2.png');
+						  socket.SendData(0x01, "zheng", 99, '')
+					  }
+								 
+		});
+		$("#fan").click(function(){
+		var path=	$("#juanlian").attr('src');
+		 
+				if(path=="image/switch_1.png")
+		          {
+					  $("#zheng").attr('src','image/zf_gray1.png');
+						   $("#fan").attr('src','image/zf_gray2.png');
+						 
+				  }
+				else
+					  {
+						 
+						  $("#zheng").attr('src','image/zf_gray1.png');
+						  $("#fan").attr('src', 'image/zf_blue2.png');
+						  socket.SendData(0x01, "fan", 99, '')
+					  }
+								 
+		});
+		
+	});
+
+
+	function conn() {
+	    //这是使用证书时使用
+	    socket = new UDCsocket({
+	        ip: 'ws://127.0.0.1', port: 18181, conn: function () {
+	            socket.settakon("123123");
+	            socket.SendData(0x01, "cha", 99, '')
+	            
+	           // alert("连接成功");
+	            //socket.SendData(1, "login", "123123ssdfsdf", "");
+	        }
+          , recData: function (text) {
+              
+              var data = eval('(' + text + ')');
+              alert(data.Root);
+              $("#penlin").attr('src', 'image/switch_1.png');
+              $("#fengshan").attr('src', 'image/switch_1.png');
+              $("#juanlian").attr('src', 'image/switch_1.png');
+             // $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
+          }
+          , close: function () { alert("连接关闭"); }
+           , error: function (msg) { alert("连接错误" + msg); }
+            , jump: function (ip) { alert("服务器超过最大连接，请连接其他服务器：" + ip); }
+	    });
+	   
+	}
+	</script>
+</head>
+
+<body>
+<div class="navbox">物联网大棚仿真</div>
+<img src="image/banner.png" alt="" class="banner">
+<!--风扇-->
+<div class="typebox">
+	<img  src="image/behind_f.png" alt="" class="bejing">
+	<p class="type">风扇</p>
+	<img id="fengshan" src="image/switch_1.png" alt="" class="switch">
+</div>
+<!--喷淋-->
+<div class="typebox">
+	<img src="image/behind_p.png" alt="" class="bejing">
+	<p class="type">喷淋</p>
+	<img id="penlin" src="image/switch_1.png" alt="" class="switch">
+</div>
+<!--卷帘-->
+<div class="typebox">
+	<img src="image/behind_j.png" alt="" class="bejing">
+	<p class="type">卷帘</p>
+	<img id="zheng" src="image/zf_gray1.png" alt="" class="gray gray_z">
+	<img id="fan" src="image/zf_gray2.png" alt="" class="gray gray_f">
+	<div class="xian"></div>
+	<img id="juanlian" src="image/switch_1.png" alt="" class="switch">
+</div>
+</body>
+</html>

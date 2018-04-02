@@ -1,0 +1,94 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{
+	margin: 0;
+	padding: 0
+}
+html{
+	font-size: 62.5%;
+}
+body{
+	padding: 0;
+	width: 100%;
+	min-width: 320px;
+	max-width: 640px;
+	margin: 0 auto;
+	font-family: "微软雅黑";
+	background: #ffffff;
+}
+
+.navbox{
+	width: 100%;
+	height: 50px;
+	background-color: #4a78b7;
+	line-height: 50px;
+	text-align:center;
+	font-size: 1.8rem;
+	color: #ffffff;
+}
+.banner{
+	width: 100%;
+}
+/*风扇*/
+.typebox{
+	width: 98%;
+	margin-left: 1%;
+	position: relative;
+	margin-top: 15px;
+}
+.typebox .bejing{
+	width: 100%;
+}
+.typebox .type{
+	font-size: 1.6rem;
+	color: #333333;
+	position: absolute;
+	top: 26%;
+	left: 18%;
+}
+.typebox .switch{
+	position: absolute;
+	top: 18%;
+	right: 5%;
+	width: 18%;
+}
+
+/*正反*/
+.typebox .gray{
+	width: 10%;
+	position: absolute;
+	top: 16%;;
+}
+.typebox .gray_z{
+	left: 45%;
+}
+.typebox .gray_f{
+	left: 58%;
+}
+
+
+
+.typebox .xian{
+	border-right:1px solid #bbbbbb;
+	height: 50%;
+	position: absolute;
+	top: 20%;
+	left: 72%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

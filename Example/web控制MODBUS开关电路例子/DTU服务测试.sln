@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCP服务端测试", "TCP服务端测试\TCP服务端测试.csproj", "{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSocketClient", "WebSocketClient\", "{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_1590"
+		Debug.AspNetCompiler.PhysicalPath = "WebSocketClient\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_1590\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_1590"
+		Release.AspNetCompiler.PhysicalPath = "WebSocketClient\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_1590\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "1590"
+		SlnRelativePath = "WebSocketClient\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Base", "..\..\Code\Weave.Base\Weave.Base.csproj", "{B8D521E5-9073-4B32-A7A7-F415E623F67C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Server", "..\..\Code\Weave.Server\Weave.Server.csproj", "{A237E772-678D-490B-ADDF-1D4535D970B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "基础类", "基础类", "{0D25AAD3-30EF-4DAD-A5D8-1A5C566CF6C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AAA|Any CPU = AAA|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.AAA|Any CPU.ActiveCfg = Release|Any CPU
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.AAA|Any CPU.Build.0 = Release|Any CPU
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.AAA|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.AAA|Any CPU.Build.0 = Debug|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5251B3-5220-4C63-AE6A-C467F4E63D2B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.AAA|Any CPU.ActiveCfg = AAA|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.AAA|Any CPU.Build.0 = AAA|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.AAA|Any CPU.ActiveCfg = Release|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.AAA|Any CPU.Build.0 = Release|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A237E772-678D-490B-ADDF-1D4535D970B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B8D521E5-9073-4B32-A7A7-F415E623F67C} = {0D25AAD3-30EF-4DAD-A5D8-1A5C566CF6C2}
+		{A237E772-678D-490B-ADDF-1D4535D970B6} = {0D25AAD3-30EF-4DAD-A5D8-1A5C566CF6C2}
+	EndGlobalSection
+EndGlobal
