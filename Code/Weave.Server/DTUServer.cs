@@ -157,15 +157,22 @@ namespace Weave.Server
                     netc.SocketSession.Close();
                     netWorkList.Remove(netc);
                 }
-                byte[] tempbtye = new byte[bytesRead];
+                bytesRead = netc.Buffer.Length;
+                byte[] tempbtye = new byte[netc.Buffer.Length];
                 //netc.Buffer.CopyTo(tempbtye, 0);
                 if (bytesRead > 0)
                 {
-                    Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                    netc.DataList.Add(tempbtye);
+                    try
+                    {
+                        Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
+                       // handler.Send(tempbtye);
+                        netc.DataList.Add(tempbtye);
+                    }
+                    catch
+                    { }
                 }
             }
-            catch
+            catch(Exception e)
             {
             } 
         }
@@ -219,8 +226,9 @@ namespace Weave.Server
                             if (!netc.IsPage)
                             {
                                 netc.IsPage = true;
-                                System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(PackageData));
-                                t.Start(netc);
+                                ThreadPool.QueueUserWorkItem(new WaitCallback(PackageData), netc);
+                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(PackageData));
+                                //t.Start(netc);
                             }
                         }
                     }

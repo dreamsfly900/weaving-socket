@@ -1,6 +1,7 @@
 ﻿using smsForCsharp.CRC;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,25 +16,51 @@ namespace TCP服务端测试
         static List<nqdtu> LISTDTU = new List<nqdtu>();
         static DTUServer wudp = new DTUServer();
         static WeaveWebServer wudpweb = new WeaveWebServer(); //这是一般SOCKET
+      //  static WeaveP2Server wudp2p = new WeaveP2Server(); //这是一般SOCKET
+        
+             static List<chuganqi> LISTchuganqi = new List<chuganqi>();
         static void Main(string[] args)
         {
-          
             
-           // wudp.Certificate= new System.Security.Cryptography.X509Certificates.X509Certificate2(@"D:\214495009180717.pfx", "214495009180717");
-            //wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
             wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
             wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
             wudp.weaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent;
             wudp.start(60001);
+            //wudp2p.waveReceiveEvent += Wudp2p_waveReceiveEvent;
+            //wudp2p.Start(60002);
           //  wudpweb.weaveUpdateSocketListEvent += Wudpweb_weaveUpdateSocketListEvent;
             //wudpweb.weaveDeleteSocketListEvent += Wudpweb_weaveDeleteSocketListEvent;
             wudpweb.waveReceiveEvent += Wudpweb_waveReceiveEvent;
             wudpweb.Start(18181);
-            //   wudp.weaveReceiveSslEvent += Wudp_weaveReceiveSslEvent; ssl加密的接收事件
-            //wudp.Start(8181);
+           
 
-            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(gg),null);
+            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(zhuangtai),null);
             Console.ReadLine();
+        }
+
+    
+
+
+        private static void zhuangtai(object state)
+        {
+            while (true)
+            {
+
+                System.Threading.Thread.Sleep(3000);
+
+                foreach (nqdtu nqd in LISTDTU)
+                {
+                    if (nqd.state)
+                    {
+                        try
+                        {
+                            nqd.soc.Send(dtccommand.chaxun);
+                        }
+                        catch { }
+                    }
+                }
+
+            }
         }
 
         private static void Wudpweb_weaveDeleteSocketListEvent(System.Net.Sockets.Socket soc)
@@ -53,7 +80,23 @@ namespace TCP服务端测试
 
             try
             {
+                if (command == 0x03)
+                {
+                    foreach (chuganqi cq in LISTchuganqi)
+                    {
+                        if (cq.id == wsion.Root)
+                        {
+                            if (wsion.Request == "QXZ")
+                            {
+                                wsion.SetRoot<chuganqi>(cq);
 
+                                String strt = Newtonsoft.Json.JsonConvert.SerializeObject(wsion);
+                                wudpweb.Send(soc, 0x03, strt);
+                                return;
+                            }
+                        }
+                    }
+                }
                 foreach (nqdtu nqd in LISTDTU)
                 {
                     if (wsion.Root == nqd.ID)
@@ -103,6 +146,25 @@ namespace TCP服务端测试
                             return;
 
                         }
+                        if (wsion.Request == "chazhuangtai")
+                        {
+                            wsion.SetRoot<bool[]>(nqd.kg);
+                            String strt = Newtonsoft.Json.JsonConvert.SerializeObject(wsion);
+                            wudpweb.Send(soc, 0x01, strt);
+                            return;
+
+                        }
+                        if (wsion.Request == "tiaojian")
+                        {
+                            
+                            wsion.SetRoot<tiaojian>(nqd.tiaojiancc);
+                          
+                            String strt = Newtonsoft.Json.JsonConvert.SerializeObject(wsion);
+                            wudpweb.Send(soc, 0x02, strt);
+                            return;
+
+                        }
+                       
                         return;
                     }
                 }
@@ -164,6 +226,8 @@ namespace TCP服务端测试
                         {
                             nqd.soc = soc;
                             nqd.state = true;
+                            nqd.soc.Send(dtccommand.chaxun);
+                            nqd.tiaojiancc = dutiaojian(id);
                             return;
                         }
                     }
@@ -171,13 +235,48 @@ namespace TCP服务端测试
                     ndt.ID = id;
                     ndt.soc = soc;
                     ndt.state = true;
+                    ndt.tiaojiancc = dutiaojian(id);
                     LISTDTU.Add(ndt);
 
+                }
+                if (data[0] == 0xfe)
+                {
+                    if (data[1] == 0x01)
+                    {
+                        foreach (nqdtu nqd in LISTDTU)
+                        {
+                            if (nqd.soc == soc)
+                            {
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    nqd.kg[i]=  Convert.ToBoolean(((int)data[3]) >> i & 1);
+
+                                }
+                                //Console.WriteLine("状态:" + data[3].ToString());
+                                return;
+                            }
+                        }
+                            
+                    }
                 }
             }
             catch { }
         }
-
+        static tiaojian dutiaojian(string id)
+        {
+            try
+            {
+                if (File.Exists("tiaojian/" + id + ".txt"))
+                {
+                    System.IO.StreamReader sr = new StreamReader("tiaojian/" + id + ".txt");
+                    String str = sr.ReadToEnd();
+                    sr.Close();
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<tiaojian>(str);
+                }
+            }
+            catch { }
+            return new tiaojian();
+        }
         private static void Wudp_weaveReceiveSslEvent(byte command, string data, System.Net.Security.SslStream soc)
         {
            // wudp.Send(soc, 0x01, "现在我知道你发消息了");
@@ -253,7 +352,8 @@ namespace TCP服务端测试
         public static byte[] closefour = new byte[] { 0xFE, 0x05, 0x00, 0x03, 0x00, 0x00, 0x29, 0xC5 };//29 C5 
         public static byte[] closefive = new byte[] { 0xFE, 0x05, 0x00, 0x04, 0x00, 0x00, 0x98, 0x04 };// 98 04
         public static byte[] closesix = new byte[] { 0xFE, 0x05, 0x00, 0x05, 0x00, 0x00, 0xC9, 0xC4 };// 98 04
-
+        public static byte[] chaxun = new byte[] { 0xFE, 0x01, 0x00, 0x00, 0x00, 0x08, 0x29, 0xC3 };// 98 04
+        
         public static byte[] allclose = new byte[] { 0xFE, 0x0F, 0x00, 0x00, 0x00, 0x08, 0x01, 0x00, 0xB1, 0x91 };//C9 C4
 
     }
@@ -262,6 +362,31 @@ namespace TCP服务端测试
        public System.Net.Sockets.Socket soc;
         public string ID;
         public bool state=false;
+        public bool [] kg = new bool[8];
+
+        public tiaojian tiaojiancc = new tiaojian();
+
+    }
+    public class chuganqi
+    {
+        public string id = "";
+        public string Wd = string.Empty;
+        public string Sd = string.Empty;
+        public string Gz = string.Empty;
+        public string Dw = string.Empty;
+        public string Trsd = string.Empty;
+        public string Co2 = string.Empty;
+
+    }
+    public class tiaojian
+    {
+        public  int jcid = 0;
+        public int[] wendu = new int[2];
+        public int[] shidu = new int[2];
+        public int[] guangzhao = new int[2];
+        public int[] co2 = new int[2];
+        public int[] tuwen = new int[2];
+        public int[] tutushi = new int[2];
     }
 
    

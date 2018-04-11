@@ -19,11 +19,11 @@
 				if(path=="image/switch_1.png")
 		          {
 					  $("#fengshan").attr('src','image/switch_2.png');
-					  socket.SendData(0x01, "open", 99, 4)
+					  socket.SendData(0x01, "open", 99, 4)//打开风扇
 				  }else
 					  {
 				    $("#fengshan").attr('src', 'image/switch_1.png');
-				    socket.SendData(0x01, "close", 99, 4)
+				    socket.SendData(0x01, "close", 99, 4)//关闭风扇
 					  }
 								 
 		});
@@ -36,12 +36,12 @@
 				if(path=="image/switch_1.png")
 		          {
 				    $("#penlin").attr('src', 'image/switch_2.png');   
-				    socket.SendData(0x01, "open", 99, 5)
+				    socket.SendData(0x01, "open", 99, 5)//打开喷淋
 					  
 				  }else
 					  {
 				          $("#penlin").attr('src', 'image/switch_1.png');
-				          socket.SendData(0x01, "close", 99, 5)
+				          socket.SendData(0x01, "close", 99, 5)//关闭喷淋
 					  }
 								 
 		});
@@ -59,7 +59,7 @@
 						   $("#juanlian").attr('src','image/switch_1.png');
 						     $("#zheng").attr('src','image/zf_gray1.png');
 						     $("#fan").attr('src', 'image/zf_gray2.png');
-						     socket.SendData(0x01, "closejuan", 99,'')
+						     socket.SendData(0x01, "closejuan", 99,'')//关闭卷帘
 						     
 					  }
 								 
@@ -80,7 +80,7 @@
 						 
 						  $("#zheng").attr('src','image/zf_blue1.png');
 						  $("#fan").attr('src', 'image/zf_gray2.png');
-						  socket.SendData(0x01, "zheng", 99, '')
+						  socket.SendData(0x01, "zheng", 99, '')//卷帘正转
 					  }
 								 
 		});
@@ -98,7 +98,7 @@
 						 
 						  $("#zheng").attr('src','image/zf_gray1.png');
 						  $("#fan").attr('src', 'image/zf_blue2.png');
-						  socket.SendData(0x01, "fan", 99, '')
+						  socket.SendData(0x01, "fan", 99, '')//卷帘反转
 					  }
 								 
 		});
