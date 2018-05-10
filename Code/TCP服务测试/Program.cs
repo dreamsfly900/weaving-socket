@@ -8,12 +8,17 @@ namespace TCP服务测试
 {
     class Program
     {
-        static DTUServer wudp = new DTUServer();
+        static WeaveWebServer wudp = new WeaveWebServer();
         static void Main(string[] args)
         {
-            wudp.weaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent;
-            wudp.start(8989);
+            wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
+            wudp.Start(8989);
             Console.ReadLine();
+        }
+
+        private static void Wudp_waveReceiveEvent(byte command, string data, System.Net.Sockets.Socket soc)
+        {
+            
         }
 
         private static void Wudp_weaveReceiveDtuEvent(byte[] data, System.Net.Sockets.Socket soc)

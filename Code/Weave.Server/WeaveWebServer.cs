@@ -274,10 +274,11 @@ namespace Weave.Server
             }
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
-        void sendhead(Socket handler, byte[] tempbtye)
+        bool sendhead(Socket handler, byte[] tempbtye)
         {
             byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
             handler.Send(aaa);
+            return true;
         }
         public byte[] ManageHandshake(byte[] receivedDataBuffer, int HandshakeLength)
         {
@@ -971,7 +972,7 @@ namespace Weave.Server
                             if (netc.SocketSession != null)
                                 if (netc.State == 0)
                                 {
-                                    if ((DateTime.Now - netc.Lasttime).Seconds > 10)
+                                    if ((DateTime.Now - netc.Lasttime).Seconds > 2)
                                     {
                                         connlist.Remove(netc);
                                         try { netc.SocketSession.Close(); } catch { }
@@ -1022,19 +1023,25 @@ namespace Weave.Server
 
         void setherd(object obj)
         {
+            WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             try
             {
-                WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
+
                 if (Certificate != null)
                 {
-                   String httpstr= ReadMessage(netc.Stream);
+                    String httpstr = ReadMessage(netc.Stream);
                     byte[] tempbtye = System.Text.Encoding.Default.GetBytes(httpstr);
-                     tempbtye = ManageHandshake(tempbtye, tempbtye.Length);
+                    tempbtye = ManageHandshake(tempbtye, tempbtye.Length);
                     netc.Stream.Write(tempbtye);
                     netc.Stream.Flush();
                 }
                 else
-                    sendhead(netc.SocketSession, netc.Buffer);
+               if (!sendhead(netc.SocketSession, netc.Buffer))
+                {
+                    weaveWorkItemsList.Remove(netc);
+                    try { netc.SocketSession.Close(); } catch { }
+                    return;
+                }
                 //  System.Threading.Thread.Sleep(50);
                 // new sendheaddele(sendhead).BeginInvoke(netc.Soc, netc.Buffer, null, null);
                 netc.State = 1;
@@ -1042,7 +1049,11 @@ namespace Weave.Server
                     weaveUpdateSocketListEvent(netc.SocketSession);
                 // EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
             }
-            catch { }
+            catch {
+                weaveWorkItemsList.Remove(netc);
+                try { netc.SocketSession.Close(); } catch { }
+                return;
+            }
         }
         List<WeaveNetWorkItems> connlist = new List<WeaveNetWorkItems>();
         void Accept(object ias)
