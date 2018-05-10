@@ -11,3 +11,4 @@ D:\weavingsocket\Example\常规C-S系统示例\UserLogin\bin\Debug\UserLogin.dll
 D:\weavingsocket\Example\常规C-S系统示例\UserLogin\bin\Debug\UserLogin.pdb
 D:\weavingsocket\Example\常规C-S系统示例\UserLogin\obj\Debug\UserLogin.dll
 D:\weavingsocket\Example\常规C-S系统示例\UserLogin\obj\Debug\UserLogin.pdb
+D:\weavingsocket\Example\常规C-S系统示例\UserLogin\obj\Debug\model.csprojResolveAssemblyReference.cache

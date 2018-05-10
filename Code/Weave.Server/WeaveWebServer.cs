@@ -970,7 +970,12 @@ namespace Weave.Server
                         if (netc != null)
                             if (netc.SocketSession != null)
                                 if (netc.State == 0)
-                                    if (netc.SocketSession.Available > 200)
+                                {
+                                    if ((DateTime.Now - netc.Lasttime).Seconds > 10)
+                                    {
+                                        connlist.Remove(netc);
+                                    }
+                                    else if (netc.SocketSession.Available > 200)
                                     {
                                         if (Certificate != null)
                                         {
@@ -978,12 +983,13 @@ namespace Weave.Server
                                         else
                                         {
                                             netc.SocketSession.Receive(netc.Buffer = new byte[netc.SocketSession.Available]);
-                                           
+
                                         }
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
                                         connlist.Remove(netc);
                                         weaveWorkItemsList.Add(netc);
                                     }
+                                }
                     }
                     catch { }
                 }
@@ -1054,13 +1060,14 @@ namespace Weave.Server
                     netc.SocketSession = handler;
                     netc.State = 0;
                     // listconn.Add(netc);
-
+                    netc.Lasttime = DateTime.Now;
                     if (Certificate != null)
                     {
                         String error;
                        
                         netc.Stream = Authenticate(handler, Certificate, SslProtocols.Default); 
                         netc.Stream.AuthenticateAsServer(Certificate, false, SslProtocols.Tls, true);
+                       
                         connlist.Add(netc);
                     }
                     else
