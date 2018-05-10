@@ -989,7 +989,6 @@ namespace Weave.Server
                                         }
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
                                         connlist.Remove(netc);
-                                        weaveWorkItemsList.Add(netc);
                                     }
                                 }
                     }
@@ -1038,19 +1037,21 @@ namespace Weave.Server
                 else
                if (!sendhead(netc.SocketSession, netc.Buffer))
                 {
-                    weaveWorkItemsList.Remove(netc);
+                   
                     try { netc.SocketSession.Close(); } catch { }
                     return;
                 }
                 //  System.Threading.Thread.Sleep(50);
                 // new sendheaddele(sendhead).BeginInvoke(netc.Soc, netc.Buffer, null, null);
                 netc.State = 1;
+              
+                weaveWorkItemsList.Add(netc);
                 if (weaveUpdateSocketListEvent != null)
                     weaveUpdateSocketListEvent(netc.SocketSession);
                 // EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
             }
             catch {
-                weaveWorkItemsList.Remove(netc);
+               
                 try { netc.SocketSession.Close(); } catch { }
                 return;
             }
