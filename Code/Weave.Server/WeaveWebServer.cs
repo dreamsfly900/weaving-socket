@@ -974,6 +974,7 @@ namespace Weave.Server
                                     if ((DateTime.Now - netc.Lasttime).Seconds > 10)
                                     {
                                         connlist.Remove(netc);
+                                        try { netc.SocketSession.Close(); } catch { }
                                     }
                                     else if (netc.SocketSession.Available > 200)
                                     {
