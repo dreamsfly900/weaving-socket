@@ -25,6 +25,7 @@ namespace Weave.Server
         public string http_protocol_versionstring;
         public Hashtable httpHeaders = new Hashtable();
         public String retrunData = "";
+        public DateTime updatetime ;
         private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
         public HttpProcessor(TcpClient s, HttpServer srv)
         {

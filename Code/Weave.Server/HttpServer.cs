@@ -61,8 +61,8 @@ namespace Weave.Server
                     {
                         try
                         {
-                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(hp.process));
-                            httpProcessorList.Remove(hp);
+                            if((DateTime.Now- hp.updatetime).TotalSeconds>45) 
+                              httpProcessorList.Remove(hp);
                         }
                         catch { }
                     }
@@ -120,7 +120,7 @@ namespace Weave.Server
                     TcpClient s = listener.AcceptTcpClient();
                     HttpProcessor processor = new HttpProcessor(s, this);
                     httpProcessorList.Add(processor);
-                    
+                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(processor.process));
                     Thread.Sleep(1);
                 }
                 catch
@@ -181,7 +181,7 @@ namespace Weave.Server
                         while (p.retrunData== "")
                         {
                             System.Threading.Thread.Sleep(200);
-                            if (count > 450)
+                            if (count > 225)
                             {
                                 p.outputStream.WriteLine("响应超时");
                                 return false;
