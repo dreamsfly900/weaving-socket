@@ -1,4 +1,8 @@
- 2018-3-16 新增加websocket 对于ssl的支持
+2018-7-30 新增WeaveSocketDemoForUnity项目资料及视频教程下载地址
+链接：https://pan.baidu.com/s/1Qu0zmPUAd3oLdves8fpyBQ 密码：jpyu
+
+
+2018-3-16 新增加websocket 对于ssl的支持
 
 图文版教程:https://my.oschina.net/u/2476624/blog
 
