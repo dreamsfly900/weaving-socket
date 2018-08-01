@@ -9,14 +9,19 @@ namespace TCP服务测试
 {
     class Program
     {
-        static WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.Json);
+        static DTUServer wudp = new DTUServer();
      
         static void Main(string[] args)
         {
-            wudp.waveReceiveEvent += Wudp_waveReceiveEvent1;
+            wudp.weaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent1;
             //wudp.Send(soc, 0X01, "字符串");
-            wudp.Start(8989);
+            wudp.start(8989);
             Console.ReadLine();
+        }
+
+        private static void Wudp_weaveReceiveDtuEvent1(byte[] data, System.Net.Sockets.Socket soc)
+        {
+            wudp.send()
         }
 
         private static void Wudp_waveReceiveEvent1(byte command, string data, System.Net.Sockets.Socket soc)

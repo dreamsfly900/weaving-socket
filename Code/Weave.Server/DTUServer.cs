@@ -35,11 +35,11 @@ namespace Weave.Server
             Thread AcceptHanderThread = new Thread(new ParameterizedThreadStart(AcceptHander));
             Thread ReceiveHanderThread = new Thread(new ParameterizedThreadStart(ReceiveHander));
             Thread ReceivePageHanderThread = new Thread(new ParameterizedThreadStart(ReceivePageHander));
-            Thread KeepAliveThread = new Thread(new ParameterizedThreadStart(KeepAlive));
+         //   Thread KeepAliveThread = new Thread(new ParameterizedThreadStart(KeepAlive));
             AcceptHanderThread.Start();
             ReceiveHanderThread.Start();
             ReceivePageHanderThread.Start();
-            KeepAliveThread.Start();
+            //KeepAliveThread.Start();
         }
 
         /// <summary>
@@ -176,19 +176,12 @@ namespace Weave.Server
             {
             } 
         }
-        public bool send(int index, byte command, string text)
+        public bool send(Socket soc, byte[] command)
         {
             try
             {
-                Socket soc = netWorkList[index].SocketSession;
-                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
-                soc.Send(b);
+               
+                soc.Send(command);
             }
             catch { return false; }
             // tcpc.Close();
@@ -232,7 +225,7 @@ namespace Weave.Server
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(1);
                 }
                 catch { }
             }
