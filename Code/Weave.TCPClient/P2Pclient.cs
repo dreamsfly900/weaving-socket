@@ -508,8 +508,16 @@ namespace Weave.TCPClient
                         }
                         else
                         {
-                            if (tempbtye[0]==0)
-                            ListData.RemoveAt(0);
+                            if (tempbtye[0] == 0)
+                                ListData.RemoveAt(0);
+                            else
+                            {
+                                ListData.RemoveAt(0);
+                                byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
+                                Array.Copy(tempbtye, 0, temps, 0, temps.Length);
+                                Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
+                                ListData[0] = temps;
+                            }
                         }
                     }
                 }
