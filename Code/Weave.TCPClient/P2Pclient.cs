@@ -546,7 +546,7 @@ namespace Weave.TCPClient
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(2);
                 try
                 {
                     int bytesRead = tcpc.Client.Available;
