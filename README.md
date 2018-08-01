@@ -1,14 +1,11 @@
 
 
-- 2018-7-30 新增WeaveSocketDemoForUnity项目资料及视频教程下载地址
-- 链接：https://pan.baidu.com/s/1Qu0zmPUAd3oLdves8fpyBQ 密码：jpyu
+
+- https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows/wikis
+
+- 图文版教程:https://my.oschina.net/u/2476624/
 - 
-- 
-- 2018-3-16 新增加websocket 对于ssl的支持
-- 
-- 图文版教程:https://my.oschina.net/u/2476624/blog
-- 
--  QQ交流群17375149
+- QQ交流群17375149
 
 
 - 新版本更新：
@@ -17,16 +14,12 @@
 - 2017-5-3更新新版本。老版本在多协议公用业务逻辑方面使用了协议中转网关，将协议进行兼容转换，并做到了分布式部署。
 - 目前大量的项目中，大多数不需要使用分布式的连接部署，新版本更新后，可实现单机多协议多接口共享业务逻辑的方式，也就是业务逻辑只用写一次，通过不同的端口监听不同的协议内容，即可达到不同设备不同协议的互联互通。
 
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0503/172653_618507d1_598831.png "在这里输入图片标题")
+- 2018-3-16 新增加websocket 对于ssl的支持
 
-**新增：
-使用该架构制作的聊天室示例程序：
-[IM聊天室示例展示](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/IM/chat.html)
+- 2018-7-30 新增WeaveSocketDemoForUnity项目资料及视频教程下载地址
+- 链接：https://pan.baidu.com/s/1Qu0zmPUAd3oLdves8fpyBQ 密码：jpyu
 
-** 
-[WIN10IOT树莓派（物联网）展示示例，如果数值不变动，说明我把树莓派关闭了](http://dreamsfly900.oschina.io/universal-data-communication-system-for-windows/WebApplication1/)
- **
-[图片：----IOT运行照片](http://git.oschina.net/uploads/images/2016/1201/135739_2baae981_598831.jpeg "IOT运行照片")
+
 
 
 ### 视频教程架构：
@@ -81,4 +74,69 @@ QQ交流群17375149 联系QQ：20573886
 1. 6。 新增DTU网关，可实现传感器等DTU数值中转至服务器端处理逻辑。
 1. 7。新增uwp socket 客户端示例，可支持wp系统与win10 iot底层设备数据直链服务器端。帮助您更简单的实现物联网云平台。
 1. 8.新增HTTP协议网关，可使用ajax方式，获取与传输数据，兼容http简单熟悉的编码方式，又可得到socket的高效传输处理属性。
+ 
 
+### **简单示例** 
+
+
+服务端：
+
+创建一个控制台程序，引用类库 
+using Weave.Base;
+using Weave.Server;
+
+然后编写代码
+```
+static void Main(string[] args)
+        {
+            WeaveP2Server server = new WeaveP2Server();//初始化类库
+            server.receiveevent += Server_receiveevent;//注册接收事件
+//当然还有很多其他的事件可以注册，比如新增连接事件，连接断开事件
+            server.start(8989);//启动监听8989端口
+             
+           
+            Console.WriteLine("8989listen:");
+            Console.ReadKey();
+        }
+
+        private static void Server_receiveevent(byte command, string data, System.Net.Sockets.Socket soc)
+        {
+            Console.WriteLine(data);//输出客户端发来的信息
+        }
+```
+客户端：
+
+然后创建一个控制台程序，引用类库
+using Weave.TCPClient;
+using Weave.Base;
+
+然后编写代码
+```
+   P2Pclient client = new P2Pclient(false);//初始化类库
+static void  Main(string[] args)
+        {
+           
+            client.timeoutevent += Client_timeoutevent;//注册连接超时事件
+            client.receiveServerEvent += Client_receiveServerEvent;//注册接收事件
+              client.start("127.0.0.1", 8989, false);//启动连接127.0.0.1服务器的8989端口。不需要服务器TOKEN
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine("server link OK:");
+            client.send(0x1, "test2017-5-5");//给服务器发送信息，参数1，0x01指令，指令可以设置0-254，其中0x9c与0xff，是保留指令不能使用。参数2：发送string类型的数据。
+            Console.WriteLine("send:test2017-5-5");
+            Console.ReadKey();
+        }
+
+        private static void Client_receiveServerEvent(byte command, string text)
+        {
+          //command是从服务器发来的指令
+          //text是从服务器发来的数据
+        }
+
+        private static void Client_timeoutevent()
+        {
+         //连接超时或断线会启动此事件
+            client。Restart(false);//重新连接
+        }
+ 
+```
+最后：先运行服务器端，在运行客户端，就能在服务器端看到 test2017-5-5 的输出内容。
