@@ -10,6 +10,7 @@ namespace TCP服务测试
     class Program
     {
         static WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.Json);
+     
         static void Main(string[] args)
         {
             wudp.waveReceiveEvent += Wudp_waveReceiveEvent1;
