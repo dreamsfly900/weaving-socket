@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Weave.TCPClient
 {
-    public enum DataType { json, bytes };
+    public enum DataType { json, bytes,custom };
 
     class EnumDataType
     {

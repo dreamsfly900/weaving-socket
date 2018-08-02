@@ -498,9 +498,9 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                                receiveServerEvent(str.command, str.date);
+                                               // receiveServerEvent(str.command, str.date);
                                                 //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                                 //receiveServerEvent(str.command, str.date);
                                                 //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                                 //tt.Start(str);
@@ -510,8 +510,8 @@ namespace Weave.TCPClient
                                         {
                                             //
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            receiveServerEvent(str.command, str.date);
-                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                          //  receiveServerEvent(str.command, str.date);
+                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                             // receiveServerEvent();
@@ -525,8 +525,8 @@ namespace Weave.TCPClient
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
-                                        // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        receiveServerEventbit(str.command, str.datebit);
+                                         receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                       // receiveServerEventbit(str.command, str.datebit);
                                     }
                                     continue;
                                 }

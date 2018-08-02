@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Windows.Forms;
 using Weave.TCPClient;
 using Weave.Base;
@@ -52,22 +50,34 @@ namespace winformclient
             t.Start();
             timer1.Start();
         }
-         
+
+        //int i = 0;
         void tt()
         {
+           // timer1.Start();
             for (int i = 0; i < 300; i++)
             {
-                P2Pclient p2pc = new P2Pclient(false);
-                p2pc.receiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
-                
+                P2Pclient p2pc = new P2Pclient(DataType.custom);
+                p2pc.receiveServerEvent += P2pc_receiveServerEvent ;//接收数据事件
+                p2pc.receiveServerEventbit += P2pc_receiveServerEventbit;
                 p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
                 p2pc.start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
-                p2pc.Tokan = "123";
-                p2pc.SendRoot<int>(0x01, "login", 99987, 0);
+                 
+                p2pc.Send(new byte[1000]);
+                //p2pc.SendRoot<int>(0x01, "login", 99987, 0);
                 System.Threading.Thread.Sleep(5);
+
             }
 
         }
+
+        private void P2pc_receiveServerEventbit(byte command, byte[] data)
+        {
+            count++;
+            //p2pc.Send(data);
+          
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             label1.Invoke((EventHandler)delegate { label1.Text = count.ToString(); });

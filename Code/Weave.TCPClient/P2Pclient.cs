@@ -152,10 +152,13 @@ namespace Weave.TCPClient
         {
             try
             {
+                acallsend = new AsyncCallback(SendDataEnd);
                 if (DT == DataType.json && receiveServerEvent == null)
                     throw new Exception("没有注册receiveServerEvent事件");
                 if (DT == DataType.bytes && receiveServerEventbit == null)
                     throw new Exception("没有注册receiveServerEventbit事件");
+                if (DT == DataType.custom && receiveServerEventbit == null)
+                    throw new Exception("没有注册receiveeventbit事件");
                 IP = ip;
                 PORT = port;
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -243,9 +246,16 @@ namespace Weave.TCPClient
             b.Querycount = Querycount;
             return send(command, b.Getjson());
         }
+        private void SendDataEnd(IAsyncResult ar)
+        {
+            ((Socket)ar.AsyncState).EndSend(ar);
+        }
+
+        AsyncCallback acallsend;
+       
         public void Send(byte[] b)
         {
-            tcpc.Client.Send(b);
+            tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
         }
         public bool send(byte command, string text)
         {
@@ -261,13 +271,8 @@ namespace Weave.TCPClient
                 int count =(b.Length<=40960? b.Length/40960: (b.Length/40960)+1);
                 if (count == 0)
                 {
-                    tcpc.Client.Send(b);
-                    //System.IO.StreamWriter sw = new System.IO.StreamWriter("test.txt");
-                    //foreach (byte bb in b)
-                    //{
-                    //    sw.Write(bb.ToString("X")+" ");
-                    //}
-                    //sw.Close();
+                    Send(b);
+                    
                 }
                 else
                 {
@@ -276,7 +281,7 @@ namespace Weave.TCPClient
                        int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
                          Array.Copy(b, i * 40960, temp, 0, zz);
-                        tcpc.Client.Send(temp);
+                       Send(temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -314,7 +319,7 @@ namespace Weave.TCPClient
                 int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
                 if (count == 0)
                 {
-                    tcpc.Client.Send(b);
+                   Send(b);
                 }
                 else
                 {
@@ -323,7 +328,7 @@ namespace Weave.TCPClient
                         int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * 40960, temp, 0, zz);
-                        tcpc.Client.Send(temp);
+                        Send(temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -354,6 +359,11 @@ namespace Weave.TCPClient
             temppake str = obj as temppake;
             receiveServerEvent(str.command, str.date);
         }
+        void recbit(object obj)
+        {
+            temppake str = obj as temppake;
+            receiveServerEventbit(str.command, str.datebit );
+        }
         void unup()
         {
             while (isok)
@@ -365,9 +375,25 @@ namespace Weave.TCPClient
                     if (count > 0)
                     {
                         int bytesRead = ListData[0]!=null? ListData[0].Length:0;
-                        if (bytesRead == 0) continue;
+                        if (bytesRead == 0)
+                        {
+                            ListData.RemoveAt(0); continue;
+                        }
+                       
                         byte[] tempbtye = new byte[bytesRead];
+
                         Array.Copy(ListData[0], tempbtye, tempbtye.Length);
+                        if (DT == DataType.custom )
+                        { 
+                            temppake str = new temppake();
+                            str.command = 0;
+                            str.datebit = tempbtye;
+                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
+                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                            //receiveServerEventbit?.Invoke(str.command, str.datebit);
+                            ListData.RemoveAt(0);
+                            continue;
+                        }
                         _0x99:
                         if (tempbtye[0] == 0x99)
                         {
@@ -465,9 +491,9 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                                receiveServerEvent(str.command, str.date);
+                                             //   receiveServerEvent(str.command, str.date);
                                                 //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                                 //receiveServerEvent(str.command, str.date);
                                                 //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                                 //tt.Start(str);
@@ -477,8 +503,8 @@ namespace Weave.TCPClient
                                         {
                                             //
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            receiveServerEvent?.Invoke(str.command, str.date);
-                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                           // receiveServerEvent?.Invoke(str.command, str.date);
+                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                             // receiveServerEvent();
@@ -494,8 +520,10 @@ namespace Weave.TCPClient
                                         temppake str = new temppake();
                                         str.command = tempbtye[0];
                                         str.datebit = bs;
-                                        // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                        receiveServerEventbit?.Invoke(str.command, str.datebit);
+                                        
+                                         System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
+                                       // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                                      //  receiveServerEventbit?.Invoke(str.command, str.datebit);
                                     }
                                         continue;
                                 }
@@ -558,23 +586,31 @@ namespace Weave.TCPClient
                             timeout = DateTime.Now;
 
                             tcpc.Client.Receive(tempbtye);
-                            _0x99:
-                            if (tempbtye[0] == 0x99)
+                            if (DT == DataType.custom && receiveServerEventbit == null)
                             {
-                                timeout = DateTime.Now;
-                                if (tempbtye.Length > 1)
+                               
+
+                            }
+                            else
+                            {
+                                _0x99:
+                                if (tempbtye[0] == 0x99)
                                 {
-                                    byte[] b = new byte[bytesRead - 1];
-                                    try
+                                    timeout = DateTime.Now;
+                                    if (tempbtye.Length > 1)
                                     {
-                                        Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                        byte[] b = new byte[bytesRead - 1];
+                                        try
+                                        {
+                                            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                        }
+                                        catch { }
+                                        tempbtye = b;
+                                        goto _0x99;
                                     }
-                                    catch { }
-                                    tempbtye = b;
-                                    goto _0x99;
+                                    else
+                                        continue;
                                 }
-                                else
-                                    continue;
                             }
                         }
                         catch (Exception ee)
@@ -588,6 +624,7 @@ namespace Weave.TCPClient
                     }
                     else
                     {
+                        
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;
