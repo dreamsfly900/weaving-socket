@@ -177,7 +177,7 @@ namespace Weave.Server
                     { }
                 }
             }
-            catch(Exception e)
+            catch 
             {
             } 
         }

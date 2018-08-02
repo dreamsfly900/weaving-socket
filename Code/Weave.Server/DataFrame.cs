@@ -71,7 +71,7 @@ namespace Weave.Server
                 {
                     Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
                 }
-                catch(Exception e)
+                catch 
                 { }
             }
             else if (_extend.Length == 2)

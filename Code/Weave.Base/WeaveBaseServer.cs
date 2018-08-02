@@ -46,6 +46,7 @@ namespace Weave.Base
         }
         public void Start(int port)
         {
+            acallsend = new AsyncCallback(SendDataEnd);
             Port = port;
             if (weaveDataType == WeaveDataTypeEnum.Json && waveReceiveEvent == null)
                 throw new Exception("没有注册receiveevent事件");
@@ -369,7 +370,8 @@ namespace Weave.Base
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                socket.Send(b);
+               
+                Send(socket, b);
             }
             catch { return false; }
             // tcpc.Close();
@@ -392,7 +394,7 @@ namespace Weave.Base
                 int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
                 if (count == 0)
                 {
-                    socket.Send(b);
+                    Send( socket,b);
                     
                 }
                 else
@@ -401,8 +403,8 @@ namespace Weave.Base
                     {
                         int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
                         byte[] temp = new byte[zz];
-                        Array.Copy(b, i * slen, temp, 0, zz);
-                        socket.Send(temp);
+                        Array.Copy(b, i * slen, temp, 0, zz); 
+                        Send(socket, temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -412,11 +414,18 @@ namespace Weave.Base
             // tcpc.Close();
             return true;
         }
+        private  void SendDataEnd(IAsyncResult ar)
+        {
+            ((Socket)ar.AsyncState).EndSend(ar);
+        }
+
+        AsyncCallback acallsend;
         public bool Send(Socket socket, byte[] text)
         {
             try
-            { 
-                    socket.Send(text);
+            {
+                socket.BeginSend(text, 0, text.Length, SocketFlags.None, acallsend, socket);
+                //socket.Send(text);
                 return true;
             }
             catch
@@ -439,7 +448,8 @@ namespace Weave.Base
                 int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
                 if (count == 0)
                 {
-                    socket.Send(b);
+                   // socket.Send(b);
+                    Send(socket, b);
                 }
                 else
                 {
@@ -448,7 +458,7 @@ namespace Weave.Base
                         int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * slen, temp, 0, zz);
-                        socket.Send(temp);
+                        Send(socket, temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -477,7 +487,7 @@ namespace Weave.Base
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(1);
                 }
                 catch { }
             }

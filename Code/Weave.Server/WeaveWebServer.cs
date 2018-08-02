@@ -46,6 +46,7 @@ namespace Weave.Server
         public int Port { get; set; }
         public void Start(int port)
         {
+            callsend = new AsyncCallback(SendDataEnd);
             Port = port;
             if (DT == WeaveDataTypeEnum.Json && waveReceiveEvent == null)
                 throw new Exception("没有注册receiveevent事件");
@@ -543,16 +544,23 @@ namespace Weave.Server
                         ssl.Stream.Write(bp.GetBytes());
                 }
                 else
-                    soc.Send(bp.GetBytes());
+                    Send(soc, b);
                 //soc.Send(bp);
             }
-            catch (Exception e)
+            catch  
             {
                 return false; }
             // tcpc.Close();
             return true;
         }
-        public bool Send(Socket soc, byte [] text)
+        private void SendDataEnd(IAsyncResult ar) 
+        { 
+            ((Socket) ar.AsyncState).EndSend(ar); 
+        }
+
+
+        AsyncCallback callsend;
+    public bool Send(Socket soc, byte [] text)
         {
             try
             {
@@ -569,10 +577,14 @@ namespace Weave.Server
                         ssl.Stream.Write(bp.GetBytes());
                 }
                 else
-                    soc.Send(bp.GetBytes());
-               
+                   // soc.Send(bp.GetBytes());
+                text= bp.GetBytes();
+                soc.BeginSend(text, 0, text.Length, SocketFlags.None, callsend, soc);
+
+
+
             }
-            catch (Exception e)
+            catch  
             {
                 return false;
             }
@@ -601,7 +613,7 @@ namespace Weave.Server
                 
                 
             }
-            catch (Exception e)
+            catch  
             {
                 return false;
             }
@@ -1124,7 +1136,7 @@ namespace Weave.Server
                     netc.Lasttime = DateTime.Now;
                     if (Certificate != null)
                     {
-                        String error;
+                        
                        
                         netc.Stream = Authenticate(handler, Certificate, SslProtocols.Default); 
                         netc.Stream.AuthenticateAsServer(Certificate, false, SslProtocols.Tls, true);
