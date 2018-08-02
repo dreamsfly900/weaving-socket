@@ -35,11 +35,11 @@ namespace Weave.Server
             Thread AcceptHanderThread = new Thread(new ParameterizedThreadStart(AcceptHander));
             Thread ReceiveHanderThread = new Thread(new ParameterizedThreadStart(ReceiveHander));
             Thread ReceivePageHanderThread = new Thread(new ParameterizedThreadStart(ReceivePageHander));
-         //   Thread KeepAliveThread = new Thread(new ParameterizedThreadStart(KeepAlive));
+            Thread KeepAliveThread = new Thread(new ParameterizedThreadStart(KeepAlive));
             AcceptHanderThread.Start();
             ReceiveHanderThread.Start();
             ReceivePageHanderThread.Start();
-            //KeepAliveThread.Start();
+            KeepAliveThread.Start();
         }
 
         /// <summary>
@@ -165,7 +165,12 @@ namespace Weave.Server
                     try
                     {
                         Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                       // handler.Send(tempbtye);
+                        // handler.Send(tempbtye);
+                        //DtuModel dd = new DtuModel();
+                        //dd.Data = tempbtye;
+                        //dd.Soc = netc.SocketSession;
+                        //if (weaveReceiveDtuEvent != null)
+                        //    ThreadPool.QueueUserWorkItem(new WaitCallback(DtuReceiveEventCallBack), dd);
                         netc.DataList.Add(tempbtye);
                     }
                     catch

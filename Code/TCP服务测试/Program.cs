@@ -21,7 +21,7 @@ namespace TCP服务测试
 
         private static void Wudp_weaveReceiveDtuEvent1(byte[] data, System.Net.Sockets.Socket soc)
         {
-            wudp.send()
+            wudp.send(soc, data);
         }
 
         private static void Wudp_waveReceiveEvent1(byte command, string data, System.Net.Sockets.Socket soc)
