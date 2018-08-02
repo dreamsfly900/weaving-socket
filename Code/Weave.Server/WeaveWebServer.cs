@@ -554,10 +554,17 @@ namespace Weave.Server
             return true;
         }
         private void SendDataEnd(IAsyncResult ar) 
-        { 
-            ((Socket) ar.AsyncState).EndSend(ar); 
-        }
+        {
+            try
+            {
+                ((Socket)ar.AsyncState).EndSend(ar);
+            }
+            catch
+            {
 
+            }
+        }
+      
 
         AsyncCallback callsend;
     public bool Send(Socket soc, byte [] text)

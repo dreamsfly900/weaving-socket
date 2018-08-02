@@ -247,7 +247,16 @@ namespace Weave.TCPClient
             return send(command, b.Getjson());
         }
         private void SendDataEnd(IAsyncResult ar)
-        {
+        {   
+            try
+            {
+                ((Socket)ar.AsyncState).EndSend(ar);
+            }
+            catch
+            {
+
+            }
+       
             ((Socket)ar.AsyncState).EndSend(ar);
         }
 

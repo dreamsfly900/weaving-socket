@@ -416,7 +416,14 @@ namespace Weave.Base
         }
         private  void SendDataEnd(IAsyncResult ar)
         {
-            ((Socket)ar.AsyncState).EndSend(ar);
+            try
+            {
+                ((Socket)ar.AsyncState).EndSend(ar);
+            }
+            catch
+            {
+
+            }
         }
 
         AsyncCallback acallsend;
