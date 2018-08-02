@@ -257,7 +257,7 @@ namespace Weave.TCPClient
 
             }
        
-            ((Socket)ar.AsyncState).EndSend(ar);
+           
         }
 
         AsyncCallback acallsend;
