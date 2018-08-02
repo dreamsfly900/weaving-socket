@@ -51,6 +51,8 @@ namespace Weave.Server
                 throw new Exception("没有注册receiveevent事件");
             if (DT == WeaveDataTypeEnum.Bytes && weaveReceiveBitEvent == null)
                 throw new Exception("没有注册receiveeventbit事件");
+            if (DT == WeaveDataTypeEnum.custom && weaveReceiveBitEvent == null)
+                throw new Exception("没有注册receiveeventbit事件");
             string New_Handshake = "";
             //Switching Protocols
             New_Handshake = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine;
@@ -107,7 +109,11 @@ namespace Weave.Server
                             {
                               
                                  DataFrame df = new DataFrame();
-                                df.setByte(new byte[] { 0x99 });
+                               
+                                if (DT == WeaveDataTypeEnum.custom)
+                                    df.setByte(new byte[1]);
+                                else
+                                    df.setByte(new byte[] { 0x99 });
                                 if (Certificate != null)
                                 {
                                     workItem.Stream.Write(df.GetBytes());
@@ -546,6 +552,33 @@ namespace Weave.Server
             // tcpc.Close();
             return true;
         }
+        public bool Send(Socket soc, byte [] text)
+        {
+            try
+            {
+                
+                DataFrame bp = new DataFrame();
+                bp.setByte(text);
+                if (Certificate != null)
+                {
+
+                    var queryResults = from item in weaveWorkItemsList
+                                       where item.SocketSession == soc
+                                       select item;
+                    foreach (var ssl in queryResults)
+                        ssl.Stream.Write(bp.GetBytes());
+                }
+                else
+                    soc.Send(bp.GetBytes());
+               
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+           
+            return true;
+        }
         public bool Send(SslStream ssl, byte command, string text)
         {
             try
@@ -566,7 +599,7 @@ namespace Weave.Server
                         ssl.Write(bp.GetBytes());
                 }
                 
-                //soc.Send(bp);
+                
             }
             catch (Exception e)
             {
@@ -730,7 +763,8 @@ namespace Weave.Server
                 int i = 0;
                 if (netc.DataList.Count > 0)
                 {
-                    DataFrameHeader dfh = null;
+                    
+                        DataFrameHeader dfh = null;
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0) { if (ListData.Count > 0) ListData.RemoveAt(0); netc.IsPage = false; return; };
                     byte[] tempbtyes = new byte[bytesRead];
@@ -746,6 +780,20 @@ namespace Weave.Server
                         tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
+                            ListData.RemoveAt(i);
+                            netc.IsPage = false; return;
+                        }
+                        if (DT == WeaveDataTypeEnum.custom)
+                        { 
+                                
+                                WeaveEvent me = new WeaveEvent();
+                                me.Command =0;
+                                me.Data = "";
+                                me.Databit = tempbtye;
+                                me.Soc = netc.SocketSession;
+                                me.Ssl = netc.Stream;
+                                if (weaveReceiveBitEvent != null)
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
                             ListData.RemoveAt(i);
                             netc.IsPage = false; return;
                         }

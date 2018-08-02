@@ -55,6 +55,8 @@ namespace Weave.Server
                 throw new Exception("没有注册receiveevent事件");
             if (weaveDataType == WeaveDataTypeEnum.Bytes && weaveReceiveBitEvent == null)
                 throw new Exception("没有注册receiveeventbit事件");
+            if (weaveDataType == WeaveDataTypeEnum.custom && weaveReceiveBitEvent == null)
+                throw new Exception("没有注册receiveeventbit事件");
             socketLisener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             socketLisener.Bind(localEndPoint);
@@ -136,11 +138,7 @@ namespace Weave.Server
                     var query = weaveNetworkItems.Where(p => p.Ep.Equals(ep));
                     foreach (WeaveNetWorkItems wnw in query)
                     {
-                        if (tempbtye.Length == 1 && tempbtye[0] == 0x99)
-                        {
-                            wnw.Lasttime = DateTime.Now;
-                            return;
-                        }
+                        
                         wnw.DataList.Add(tempbtye);
                         return;
                     }
@@ -213,6 +211,21 @@ namespace Weave.Server
                         if (ListData.Count > 0) ListData.RemoveAt(0);
                         netc.IsPage = false; return;
                     };
+                    if (weaveDataType == WeaveDataTypeEnum.custom)
+                    {
+                        byte[] tempbtyec = new byte[ListData[i].Length];
+                        Array.Copy(ListData[i], tempbtyec, tempbtyec.Length);
+                        WeaveEvent me = new WeaveEvent();
+                        me.Command = 0x0;
+                        me.Data = "";
+                        me.Databit = tempbtyec;
+                        me.Ep = netc.Ep;
+                        if (weaveReceiveBitEvent != null)
+                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                        ListData.RemoveAt(0);
+                        netc.IsPage = false;
+                        return;
+                    }
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
                     if (bytesRead > 2)
