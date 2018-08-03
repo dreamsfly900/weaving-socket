@@ -7,10 +7,10 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
             //通过POST方法请求，个别浏览器有可能有问题(自行测试)
-            //httpposttoserver(31, "Getnum", "");
+            httpposttoserver(1, "login", "123");
             //通过Get方法jsonp请求，个别浏览器有可能有问题(自行测试)
-            //httpgettoserver(1, "Send_content", "");
-            conn();
+            httpgettoserver(1, "login", "123");
+            //conn();
         });
         var socket;
         function conn()
@@ -90,7 +90,7 @@
                 dataType: "jsonp",
                 jsonp: 'jsoncallback',
                 success: function (data) {
-                    alert("success:" + JSON.stringify(data));
+                    alert("success:" +data);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("error:" + errorThrown);

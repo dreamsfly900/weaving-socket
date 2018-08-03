@@ -66,15 +66,19 @@ namespace Weave.Server
                     handlePOSTRequest();
                 }
             }
-            catch //(Exception e)
+            catch (Exception e)
             {
                 //Console.WriteLine("Exception: " + e.ToString());
                 writeFailure();
             }
-            outputStream.Flush();
-            // bs.Flush(); // flush any remaining output
-            inputStream = null; outputStream = null; // bs = null;            
-            socket.Close();
+            try
+            {
+                outputStream.Flush();
+                // bs.Flush(); // flush any remaining output
+                inputStream = null; outputStream = null; // bs = null;            
+                socket.Close();
+            }
+            catch { }
         }
         public void parseRequest()
         {

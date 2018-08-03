@@ -33,10 +33,11 @@ namespace Weave.Server
         public void Start(int port)
         {
             Port = port;
+            acallsend = new AsyncCallback(SendDataEnd);
             Thread thread = new Thread(new ThreadStart(listen));
             thread.Start();
-            Thread thread2 = new Thread(new ThreadStart(process));
-            thread2.Start();
+            //Thread thread2 = new Thread(new ThreadStart(process));
+            //thread2.Start();
         }
         public int GetNetworkItemCount()
         {
@@ -71,21 +72,28 @@ namespace Weave.Server
             }
 
         }
+        private void SendDataEnd(IAsyncResult ar)
+        {
+            try
+            {
+                ((Socket)ar.AsyncState).EndSend(ar);
+            }
+            catch
+            {
+
+            }
+
+
+        }
+        AsyncCallback acallsend;
         public bool Send(Socket soc, byte command, string text)
         {
             try
             {
-                int i = httpProcessorList.Count;
-                HttpProcessor[] hps = new HttpProcessor[i];
-                httpProcessorList.CopyTo(hps);
-                foreach (HttpProcessor hp in hps)
-                {
-                    if (hp.socket.Client == soc)
-                    {
-                        hp.retrunData = text;
-                        return true;
-                    }
-                }
+                 
+                byte[] b = System.Text.Encoding.UTF8.GetBytes(text);
+                soc.Send(b, 0, b.Length, SocketFlags.None);
+           
             }
             catch { return false; }
             return false;
@@ -94,17 +102,10 @@ namespace Weave.Server
         {
             try
             {
-                int i = httpProcessorList.Count;
-                HttpProcessor[] hps = new HttpProcessor[i];
-                httpProcessorList.CopyTo(hps);
-                foreach (HttpProcessor hp in hps)
-                {
-                    if (hp.socket.Client == soc)
-                    {
-                        hp.retrunData = Convert.ToBase64String(data);
-                        return true;
-                    }
-                }
+
+                byte[] b = data;
+                soc.Send(b, 0, b.Length, SocketFlags.None);
+
             }
             catch { return false; }
             return false;
@@ -119,7 +120,8 @@ namespace Weave.Server
                 {
                     TcpClient s = listener.AcceptTcpClient();
                     HttpProcessor processor = new HttpProcessor(s, this);
-                    httpProcessorList.Add(processor);
+                    processor.updatetime = DateTime.Now;
+                   // httpProcessorList.Add(processor);
                     System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(processor.process));
                     Thread.Sleep(1);
                 }
@@ -144,9 +146,10 @@ namespace Weave.Server
             string data = p.http_url.Split('&')[1];
             p.writeSuccess();
             p.outputStream.WriteLine(fun + "(");
-            getdata(p, command, data);
+            p.outputStream.Flush();
+            getdata(p, command, System.Web.HttpUtility.UrlDecode(data));
             p.outputStream.WriteLine(")");
-            
+            p.outputStream.Flush();
         }
 
         /// <summary>
@@ -162,8 +165,10 @@ namespace Weave.Server
             byte command = Convert.ToByte(p.http_url, 16);
             string data = inputData.ReadToEnd();
             p.writeSuccess();
+            p.outputStream.Flush();
             getdata(p, command, data);
-          
+            p.outputStream.Flush();
+
         }
 
         /// <summary>
@@ -175,22 +180,11 @@ namespace Weave.Server
         /// <returns></returns>
         public virtual bool getdata(HttpProcessor p, byte command, string data)
         {
-                      waveReceiveEvent?.Invoke(command, data, p.socket.Client);
+             
+                      waveReceiveEvent?.Invoke(command,data, p.socket.Client);
                       weaveReceiveBitEvent?.Invoke(command,  Convert.FromBase64String(data), p.socket.Client);
-                        int count = 0;
-                        while (p.retrunData== "")
-                        {
-                            System.Threading.Thread.Sleep(200);
-                            if (count > 225)
-                            {
-                                p.outputStream.WriteLine("响应超时");
-                                return false;
-                            }
-                            count++;
-                        }
-                        p.outputStream.WriteLine(p.retrunData);
-               p.retrunData = "";
-           
+                   
+          //  p.updatetime =Convert.ToDateTime( "0000-01-01 00:00:00");
             return true;
         }
     }

@@ -86,7 +86,6 @@ D:\WeavingSocket\Code\ServerRunPool\bin\Debug\log\TextFile1.txt
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\智信构建结构.exe
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\智信构建结构.pdb
 D:\WeavingSocket\Code\ServerRunPool\bin\Debug\Newtonsoft.Json.dll
-D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csprojResolveAssemblyReference.cache
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\智信构建结构.Form1.resources
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\智信构建结构.Properties.Resources.resources
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.GenerateResource.Cache
@@ -123,3 +122,6 @@ D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Base.pdb
 D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Cloud.pdb
 D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.TCPClient.pdb
 D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Server.pdb
+D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csprojAssemblyReference.cache
+D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CoreCompileInputs.cache
+D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CopyComplete
