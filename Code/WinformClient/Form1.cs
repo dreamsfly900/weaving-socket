@@ -17,7 +17,7 @@ namespace winformclient
 
             p2pc.receiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
             p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-            p2pc.start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+           bool vv= p2pc.start("122.114.53.233", 12233, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
         }
         [InstallFunAttribute("forever")]//客户端也支持像服务端那样写，刚才看懂返回的内容也是testaabb，所以客户端也要把方法命名testaabb
         public void login(System.Net.Sockets.Socket soc, WeaveSession _0x01)

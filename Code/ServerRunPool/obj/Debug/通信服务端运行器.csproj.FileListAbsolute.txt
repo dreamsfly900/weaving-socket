@@ -125,3 +125,5 @@ D:\weavingsocket\Code\ServerRunPool\bin\Debug\Weave.Server.pdb
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csprojAssemblyReference.cache
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CoreCompileInputs.cache
 D:\WeavingSocket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CopyComplete
+D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTCommon.dll
+D:\WeavingSocket\Code\ServerRunPool\bin\Debug\UDTLibary.dll
