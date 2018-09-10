@@ -77,6 +77,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB JS库", "WEB JS库", "{6C7E3149-7F97-4B41-992B-0B25CBD4FCF3}"
 	ProjectSection(SolutionItems) = preProject
 		WebSocketClient\WebSocketClient\websocket.js = WebSocketClient\WebSocketClient\websocket.js
+		..\..\QQ接收\websocket.js = ..\..\QQ接收\websocket.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UDP服务端测试", "UDP服务端测试", "{656C73AE-9D47-48BD-81FE-97C33FD4B7BE}"

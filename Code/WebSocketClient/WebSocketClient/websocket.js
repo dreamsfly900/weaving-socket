@@ -13,26 +13,31 @@
     try {
         var ws;
         var settakon = this.settakon;
-        var SOCKECT_ADDR = "" + options.ip + ":" + options.port + "";
+        var SOCKECT_ADDR = "";
+        if (options.ip.indexOf("ws")>=0)
+             SOCKECT_ADDR = "" + options.ip + ":" + options.port + "";
+        else
+             SOCKECT_ADDR = "ws://" + options.ip + ":" + options.port + "";
+
         this.jump = options.jump;
         ws = new WebSocket(SOCKECT_ADDR);
         ws.binaryType = "arraybuffer";
-        var tempthis = this;
+
+        var token;
         ws.onopen = function (event) { options.conn(this.readyState); };
-      //  ws.binaryType = "arrayBuffer"
         var timeout;
         ws.onmessage = function (evt) {
             try {
                 var bytesRead = evt.data.length;
                 var text;
                 //evt.data blob类型
-                if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(event.data)) {
+                if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(evt.data)) {
                     var tempbtye = new Uint8Array(evt.data);//转成byte[] 类型，或者其他array类型
                     if (tempbtye[0] == 0x99) {
                         var myDate = new Date();
                         timeout = myDate;//记录当前时间
                         if (bytesRead > 1) {
-                            var b = [bytesRead - 1];
+                            var b = new byte[bytesRead - 1];
                             var t = tempbtye;
                             Array.Copy(t, 1, b, 0, b.Length);//拷贝数据到b
                             tempbtye = b;
@@ -50,43 +55,45 @@
                 }
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0) {
+
                         settakon(text.split('|')[1]);
-                        options.conn('token');
+                       
+                        //settakon(token);
+                        options.conn('token',token);
                     }
                     if (text.indexOf("jump") >= 0)
                         if (options.jump != null)
                             options.jump(text.split('|')[1]);
                 }
                 else
-                    if (options.recData != null) {
+                    if (options.recData != null)
                         options.recData(text);
-                        var len = tempthis.listListen.length;
-                        for (var i = 0; i < len; i++) {
-                            try {
-                                var data = eval("(" + text + ")");
-                            } catch (e) {
-                                alert('返回的内容错误：不是JSON格式');
-                            }
-                            if (tempthis.listListen[i].name == data['Request'])
-                                tempthis.listListen[i](tempbtye[0], data['Root'], data);
-                        }
-                    }
             } catch (e) { alert(e.message); }
             //   alert("接收到服务器发送的数据：\r\n" + text);
+
+
+
         };
-        ws.onclose = function (event) { if (options.close != null) options.close(this.readyState); };
+        ws.onclose = function (event) { if (options.close != null) options.close(this.readyState, token); };
         ws.onerror = function (event) {
             if (options.error != null)
                 options.error(event.data);
+
         };
         this.soc = ws;
+
     } catch (ex) {
         alert(ex.message);
     }
+
+
+
     function Utf8ArrayToStr(array, i, len) {
         var out, c;
         var char2, char3;
+
         out = "";
+
         len = parseInt(i) + parseInt(len);
         while (i < len) {
             c = array[i++];
@@ -110,8 +117,12 @@
                     break;
             }
         }
+
         return out;
     }
+
+
+
 }
 UDCsocket.prototype = {
     listListen: new Array(),
@@ -123,55 +134,36 @@ UDCsocket.prototype = {
         this.listListen.push(fun);
     },
     settakon: function (str) {
-        //  alert(str);
+         // alert(str);
         this.takon = str;
     },
-    Send: function (command, text) {
-        try {
-            
-            // alert(JSON.stringify(test));
-            var sendb = (text).getBytes();
-            var lens = (sendb.length + '').getBytes();
-            //不清楚getBytes 是不是utf8格式
-            //byte[] b = new byte[2 + lens.Length + sendb.Length];
-            var bytes = [2 + lens.length + sendb.length];
-            // var b = new Int8Array(bytes);
-            bytes[0] = command;
-            bytes[1] = lens.length;
-            //lens.CopyTo(b, 2);
-            for (var i = 0; i < lens.length; i++) {
-                bytes[i + 2] = lens[i];
-            }
-            for (var i = 0; i < sendb.length; i++) {
-                bytes[i + 2 + lens.length] = sendb[i];
-            }
-            var b = new Int8Array(bytes);
-            //sendb.CopyTo(b, 2 + lens.Length);
-            this.soc.send(b);
-        } catch (ex) {
-            alert("SendData" + ex.message);
-        }
-    },
     SendData: function (command, Request, Root, Parameter) {
+
         try {
-           var takon= this.takon;
-            if (takon == "") {
-                alert("takon不存在！");
-                return;
-            }
+          //  var takon = this.takon;
+            // alert(this.takon);
+            //alert(takon);
+            //debugger;
+            try {
+                if (takon == "" || takon==null) {
+                    //alert("takon不存在！");
+                    takon = "bbbb";
+                }
+            } catch (e) { takon = "bbbb"; }
             var test = new Object();
             test.Request = Request;
             test.Root = JSON.stringify(Root);
             test.Parameter = JSON.stringify(Parameter);
-           
-            try{
+            try {
                 test.Token = takon;
-            }catch(e){
-                test.Token = "";
+            } catch (e) {
+                test.Token = "bbbb";
             }
+         
             test.Querycount = 0;
             test.Number = null;
             // alert(JSON.stringify(test));
+
             var sendb = (JSON.stringify(test)).getBytes();
             var lens = (sendb.length + '').getBytes();
             //不清楚getBytes 是不是utf8格式
@@ -189,15 +181,15 @@ UDCsocket.prototype = {
             }
             var b = new Int8Array(bytes);
             //sendb.CopyTo(b, 2 + lens.Length);
-         
-            this.soc.send(b.buffer);
 
-          
+            this.soc.send(b);
         } catch (ex) {
             alert("SendData" + ex.message);
         }
     }
+
 }
+
 String.prototype.getBytes = function () {
     //var bytes = [];
     //for (var i = 0; i < this.length; i++) {
@@ -207,6 +199,7 @@ String.prototype.getBytes = function () {
     //        bytes.push((charCode << (j * 8)) & 0xFF);
     //    }
     //}
+
     //return bytes;
     var str = this;
     var byteArray = [];

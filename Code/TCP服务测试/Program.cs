@@ -23,7 +23,12 @@ namespace TCP服务测试
 
         private static void Wudp_weaveUpdateSocketListEvent(System.Net.Sockets.Socket soc)
         {
-             
+            string txt = "$GPRSUID,000213";
+
+            wudp.Send(soc, System.Text.ASCIIEncoding.ASCII.GetBytes(txt));
+            System.Threading.Thread.Sleep(1000 * 60);
+            txt = "$GPRSSTATIM,0,24,01,01";
+            wudp.Send(soc, System.Text.ASCIIEncoding.ASCII.GetBytes(txt));
         }
 
         private static void Wudp_weaveReceiveBitEvent1(byte command, byte[] data, System.Net.Sockets.Socket soc)
@@ -31,7 +36,7 @@ namespace TCP服务测试
 
             string text = System.Text.ASCIIEncoding.ASCII.GetString(data);
 
-            if (DateTime.Now.Minute == 0 && DateTime.Now.Second >= 50)
+            if (  DateTime.Now.Second >= 50)
             {
                 string txt = "$GPRSTIM,"+ DateTime.Now.ToString("yyyyMMddHHmmss");
 
@@ -41,6 +46,10 @@ namespace TCP服务测试
             if (text == "$GPRS,OK")
             {
                 return;
+            }
+            else
+            {
+                Console.WriteLine(text);
             }
            
         }

@@ -25,7 +25,7 @@ namespace Testclass
         }
         public override void WeaveBaseErrorMessageEvent(Socket soc, WeaveSession _0x01, string message)
         {
-          
+         
         }
 
         public override void WeaveDeleteSocketEvent(Socket soc)

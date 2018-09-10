@@ -58,7 +58,7 @@ namespace Weave.Cloud
                     Client.Tokan = clientipe.Address.ToString() + "|" + clientipe.Port;
                     Client.SendRoot<byte[]>(ci.CommName, ci.Commfun, data, 0);
                 }
-            }
+            } 
         }
         List<ConnObj> ConnObjlist = new List<ConnObj>();
         private void DTUSer_EventUpdataConnSoc(System.Net.Sockets.Socket soc)
