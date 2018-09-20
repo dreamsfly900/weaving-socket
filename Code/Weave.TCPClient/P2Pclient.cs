@@ -14,6 +14,10 @@ namespace Weave.TCPClient
         public TcpClient tcpc;
         public delegate void receive(byte command, String text);
         public event receive receiveServerEvent;
+        public delegate void receiveobj(byte command, String text, P2Pclient soc);
+        public event receiveobj receiveServerEventobj;
+        public event myreceivebitobj receiveServerEventbitobj;
+        public delegate void myreceivebitobj(byte command, byte[] data, P2Pclient soc);
         public delegate void jump(String text);
         public event jump jumpServerEvent;
         public delegate void istimeout();
@@ -153,11 +157,11 @@ namespace Weave.TCPClient
             try
             {
                 acallsend = new AsyncCallback(SendDataEnd);
-                if (DT == DataType.json && receiveServerEvent == null)
+                if (DT == DataType.json && receiveServerEvent == null && receiveServerEventobj==null)
                     throw new Exception("没有注册receiveServerEvent事件");
-                if (DT == DataType.bytes && receiveServerEventbit == null)
+                if (DT == DataType.bytes && receiveServerEventbit == null && receiveServerEventbitobj == null)
                     throw new Exception("没有注册receiveServerEventbit事件");
-                if (DT == DataType.custom && receiveServerEventbit == null)
+                if (DT == DataType.custom && receiveServerEventbit == null && receiveServerEventbitobj == null)
                     throw new Exception("没有注册receiveeventbit事件");
                 IP = ip;
                 PORT = port;
@@ -262,9 +266,14 @@ namespace Weave.TCPClient
 
         AsyncCallback acallsend;
        
-        public void Send(byte[] b)
+        public bool Send(byte[] b)
         {
-            tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
+            try
+            {
+                tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
+                return true;
+            }
+            catch { return false; }
         }
         public bool send(byte command, string text)
         {
@@ -316,6 +325,7 @@ namespace Weave.TCPClient
         }
         public bool send(byte command, byte[] text)
         {
+            bool bb = false;
             try
             {
                 byte[] sendb = text;
@@ -328,7 +338,7 @@ namespace Weave.TCPClient
                 int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
                 if (count == 0)
                 {
-                   Send(b);
+                    bb=Send(b);
                 }
                 else
                 {
@@ -337,7 +347,7 @@ namespace Weave.TCPClient
                         int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * 40960, temp, 0, zz);
-                        Send(temp);
+                        bb= Send(temp);
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -354,7 +364,7 @@ namespace Weave.TCPClient
                 ErrorMge(9, "send:" + ee.Message);
                 return false; }
             // tcpc.Close();
-            return true;
+            return bb;
         }
         public void stop()
         {
@@ -366,12 +376,18 @@ namespace Weave.TCPClient
         void rec(object obj)
         {
             temppake str = obj as temppake;
+            if(receiveServerEvent!=null)
             receiveServerEvent(str.command, str.date);
+            if (receiveServerEventobj != null)
+                receiveServerEventobj(str.command, str.date,this);
         }
         void recbit(object obj)
         {
             temppake str = obj as temppake;
+            if(receiveServerEventbit!=null)
             receiveServerEventbit(str.command, str.datebit );
+            if (receiveServerEventbitobj != null)
+                receiveServerEventbitobj(str.command, str.datebit,this);
         }
         void unup()
         {
@@ -508,7 +524,7 @@ namespace Weave.TCPClient
                                                 //tt.Start(str);
                                             }
                                         }
-                                        else if (receiveServerEvent != null)
+                                        else if (receiveServerEvent != null || receiveServerEventobj!=null)
                                         {
                                             //
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
