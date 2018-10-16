@@ -285,7 +285,11 @@ namespace Weave.Base
                             if (ListData.Count > 0)
                             {
                                 ListData.RemoveAt(i);
-                                byte[] temps = new byte[tempbtye.Length];
+                                if (ListData.Count == 0)
+                                {
+                                    netc.IsPage = false; return;
+                                }
+                                  byte[] temps = new byte[tempbtye.Length];
                                 Array.Copy(tempbtye, temps, temps.Length);
                                 byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
                                 Array.Copy(temps, tempbtyes, temps.Length);

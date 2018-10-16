@@ -203,6 +203,7 @@ namespace Weave.Cloud
                     {
                         try
                         {
+                            
                             if (t.IsSubclassOf(typeof(WeaveTCPCommand)))
                             {
                                 CmdWorkItem ci = new CmdWorkItem();

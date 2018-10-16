@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Weave.Base;
 using Weave.Server;
@@ -15,12 +16,20 @@ namespace TCP服务测试
         {
             wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent1;
             wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
+        //    wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
             //wudp.Send(soc, 0X01, "字符串");
             wudp.Start(12233);
            // System.Threading.Thread t=new System.Threading.Thread(new System.Threading.ThreadStart())
             Console.ReadLine();
+             
         }
-
+        static WeaveTCPCommand wtcpc;
+        private static void Wudp_waveReceiveEvent(byte command, string data, System.Net.Sockets.Socket soc)
+        {
+            if (wtcpc.Getcommand() == command)
+                wtcpc.RunBase(data, soc);
+        }
+        
         private static void Wudp_weaveUpdateSocketListEvent(System.Net.Sockets.Socket soc)
         {
             string txt = "$GPRSUID,000213";
@@ -30,9 +39,12 @@ namespace TCP服务测试
             txt = "$GPRSSTATIM,0,24,01,01";
             wudp.Send(soc, System.Text.ASCIIEncoding.ASCII.GetBytes(txt));
         }
-
+       
         private static void Wudp_weaveReceiveBitEvent1(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
+
+        
+
 
             string text = System.Text.ASCIIEncoding.ASCII.GetString(data);
 
