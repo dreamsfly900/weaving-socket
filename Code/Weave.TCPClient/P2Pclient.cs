@@ -36,7 +36,7 @@ namespace Weave.TCPClient
         int mytimeout = 90;
         public delegate void P2Preceive(byte command, String data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
-      
+        public byte defaultCommand = 0x0;
         bool NATUDP = false;
      public   String IP;
        public int PORT;
@@ -411,7 +411,7 @@ namespace Weave.TCPClient
                         if (DT == DataType.custom )
                         { 
                             temppake str = new temppake();
-                            str.command = 0;
+                            str.command = defaultCommand;
                             str.datebit = tempbtye;
                             System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
                             //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);

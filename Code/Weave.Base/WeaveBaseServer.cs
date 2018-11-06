@@ -28,7 +28,7 @@ namespace Weave.Base
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
         public event WeaveReceiveBitEvent weaveReceiveBitEvent;
-
+        public byte defaultCommand = 0x0;
         protected string loaclip;
         public int Port { get; set; }
         public WeaveBaseServer()
@@ -181,7 +181,7 @@ namespace Weave.Base
                         byte[] tempbtyec = new byte[ListData[i].Length];
                         Array.Copy(ListData[i], tempbtyec, tempbtyec.Length);
                         WeaveEvent me = new WeaveEvent();
-                        me.Command = 0;
+                        me.Command = defaultCommand;
                         me.Data = "";
                         me.Databit = tempbtyec;
                         me.Soc = netc.SocketSession;

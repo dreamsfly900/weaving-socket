@@ -36,6 +36,7 @@ namespace Weave.Server
         WeaveDataTypeEnum DT = WeaveDataTypeEnum.Json;
         public X509Certificate2 Certificate { get; set; }
         public SslProtocols EnabledSslProtocols { get; set; }
+        public byte defaultCommand = 0x0;
         public WeaveWebServer(WeaveDataTypeEnum _DT)
         {
             DT = _DT;
@@ -806,7 +807,7 @@ namespace Weave.Server
                         { 
                                 
                                 WeaveEvent me = new WeaveEvent();
-                                me.Command =0;
+                                me.Command = defaultCommand;
                                 me.Data = "";
                                 me.Databit = tempbtye;
                                 me.Soc = netc.SocketSession;
