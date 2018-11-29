@@ -16,6 +16,7 @@ namespace TCP服务测试
 
       
         static List<Socket> listsoc = new List<Socket>();
+        static List<P2Pclient> listp2p = new List<P2Pclient>();
            static void Main(string[] args)
         {
             wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
@@ -23,26 +24,49 @@ namespace TCP服务测试
             wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
        
              wudp.Start(12404);
-
-            Weave.TCPClient.P2Pclient p2pc = new Weave.TCPClient.P2Pclient(DataType.custom);
-            p2pc.receiveServerEventbitobj += P2pc_receiveServerEventbitobj;
-            p2pc.timeoutobjevent += P2pc_timeoutobjevent;
-            bool ss= p2pc.start("192.168.1.1", 2404,60*10,false);
-            byte[] bbs = strToToHexByte("680407000000");
-            p2pc.Send(bbs);
-            Console.WriteLine("已链接"+ ss.ToString());
+            System.IO.StreamReader sr = new System.IO.StreamReader(System.IO.Directory.GetCurrentDirectory()+ "\\config.txt", Encoding.GetEncoding("gb2312"));
+         
+            while (!sr.EndOfStream)
+            {
+                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+             //   Console.WriteLine(sr.ReadLine());
+                string str = sr.ReadLine();
+                string ip = str.Split('|')[0];
+                int port = Convert.ToInt32(str.Split('|')[1]);
+          
+                Weave.TCPClient.P2Pclient p2pc = new Weave.TCPClient.P2Pclient(DataType.custom);
+                listp2p.Add(p2pc);
+                p2pc.receiveServerEventbitobj += P2pc_receiveServerEventbitobj;
+                p2pc.timeoutobjevent += P2pc_timeoutobjevent;
+                p2pc.ErrorMge += P2pc_ErrorMge;
+             
+                bool ss = p2pc.start(ip, port, 60 * 10, false);
+                if (ss)
+                {
+                    byte[] bbs = strToToHexByte("680407000000");
+                    p2pc.Send(bbs);
+                    Console.WriteLine("已链接" + ss.ToString());
+                }
+                Console.WriteLine(ip+":"+port);
+            }
+            sr.Close();
             //wudp.Send();
             // System.Threading.Thread t=new System.Threading.Thread(new System.Threading.ThreadStart())
-            while (true)
-            {
-              String str=  Console.ReadLine();
-               
-                    byte[] bb = strToToHexByte(str);
-                    bool v = p2pc.Send( bb);
-                    Console.WriteLine("已发送：" + v.ToString());
-                
-            }
-             
+            //while (true)
+            //{
+            //  String str=  Console.ReadLine();
+
+            //        byte[] bb = strToToHexByte(str);
+            //        bool v = p2pc.Send( bb);
+            //        Console.WriteLine("已发送：" + v.ToString());
+
+            //}
+            Console.ReadLine();
+        }
+
+        private static void P2pc_ErrorMge(int type, string error)
+        {
+            Console.WriteLine( error);
         }
 
         private static void P2pc_receiveServerEventbitobj(byte command, byte[] data, P2Pclient p2p)
@@ -71,7 +95,7 @@ namespace TCP服务测试
                                         //data
                                         WeaveSession wsee = new WeaveSession();
                                         wsee.Token = "server";
-                                        wsee.Request = command.ToString();
+                                        wsee.Request = p2p.PORT.ToString();
                                         wsee.SetRoot<string>(str);
                                         wudp.Send(soc, data[6], wsee.Getjson());
                                         Console.WriteLine("转发成功");

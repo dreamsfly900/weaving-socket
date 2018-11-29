@@ -59,6 +59,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HTMLPage1.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

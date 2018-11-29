@@ -157,11 +157,11 @@ namespace Weave.TCPClient
             try
             {
                 acallsend = new AsyncCallback(SendDataEnd);
-                if (DT == DataType.json && receiveServerEvent == null && receiveServerEventobj==null)
+                if (DT == DataType.json &&( receiveServerEvent == null && receiveServerEventobj==null))
                     throw new Exception("没有注册receiveServerEvent事件");
-                if (DT == DataType.bytes && receiveServerEventbit == null && receiveServerEventbitobj == null)
+                if (DT == DataType.bytes &&( receiveServerEventbit == null && receiveServerEventbitobj == null))
                     throw new Exception("没有注册receiveServerEventbit事件");
-                if (DT == DataType.custom && receiveServerEventbit == null && receiveServerEventbitobj == null)
+                if (DT == DataType.custom &&(receiveServerEventbit == null && receiveServerEventbitobj == null))
                     throw new Exception("没有注册receiveeventbit事件");
                 IP = ip;
                 PORT = port;
