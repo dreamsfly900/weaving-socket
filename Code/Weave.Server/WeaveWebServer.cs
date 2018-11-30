@@ -76,8 +76,8 @@ namespace Weave.Server
             t.Start();
             System.Threading.Thread t1 = new Thread(new ParameterizedThreadStart(receive));
             t1.Start();
-            System.Threading.Thread t2 = new Thread(new ParameterizedThreadStart(receivepackageData));
-            t2.Start();
+            //System.Threading.Thread t2 = new Thread(new ParameterizedThreadStart(receivepackageData));
+            //t2.Start();
             System.Threading.Thread t3 = new Thread(new ParameterizedThreadStart(KeepAliveHander));
             t3.Start();
             System.Threading.Thread t4 = new Thread(new ParameterizedThreadStart(receiveconn));
@@ -460,6 +460,7 @@ namespace Weave.Server
             } while (byteCount <= 2);
 
             netc.DataList.Add(listb.ToArray());
+            packageData(netc);
             netc.State = 1;
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
@@ -483,6 +484,7 @@ namespace Weave.Server
                 //netc.Buffer.CopyTo(tempbtye, 0);
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length);
                 netc.DataList.Add(tempbtye);
+                packageData(netc);
                 //  System.Threading.Thread.Sleep(10);
             }
             catch

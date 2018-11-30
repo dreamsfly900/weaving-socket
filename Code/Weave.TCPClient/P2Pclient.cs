@@ -179,8 +179,9 @@ namespace Weave.TCPClient
                     isreceives = true;
                     System.Threading.Thread t=new System.Threading.Thread(new ParameterizedThreadStart(receives));
                     t.Start();
-                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
-                    t1.Start();
+                    
+                    //System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
+                    //t1.Start();
                 }
                 int ss = 0;
                 if (!takon) return true;
@@ -373,26 +374,26 @@ namespace Weave.TCPClient
             Isline = false;
             tcpc.Close();
         }
-        class temppake { public byte command; public string date; public byte [] datebit; }
-        void rec(object obj)
-        {
-            temppake str = obj as temppake;
-            if(receiveServerEvent!=null)
-            receiveServerEvent(str.command, str.date);
-            if (receiveServerEventobj != null)
-                receiveServerEventobj(str.command, str.date,this);
-        }
-        void recbit(object obj)
-        {
-            temppake str = obj as temppake;
-            if(receiveServerEventbit!=null)
-            receiveServerEventbit(str.command, str.datebit );
-            if (receiveServerEventbitobj != null)
-                receiveServerEventbitobj(str.command, str.datebit,this);
-        }
+      //  class temppake { public byte command; public string date; public byte [] datebit; }
+        //void rec(object obj)
+        //{
+        //    temppake str = obj as temppake;
+        //    if(receiveServerEvent!=null)
+        //    receiveServerEvent(str.command, str.date);
+        //    if (receiveServerEventobj != null)
+        //        receiveServerEventobj(str.command, str.date,this);
+        //}
+        //void recbit(object obj)
+        //{
+        //    temppake str = obj as temppake;
+        //    if(receiveServerEventbit!=null)
+        //    receiveServerEventbit(str.command, str.datebit );
+        //    if (receiveServerEventbitobj != null)
+        //        receiveServerEventbitobj(str.command, str.datebit,this);
+        //}
         void unup()
         {
-            while (isok)
+         //   while (isok)
             {
                 System.Threading.Thread.Sleep(1);
                 try
@@ -404,40 +405,44 @@ namespace Weave.TCPClient
                         if (bytesRead == 0)
                         {
                             // ListData.RemoveAt(0); 
-                            continue;
+                            return;
                         }
                        
                         byte[] tempbtye = new byte[bytesRead];
 
                         Array.Copy(ListData[0], tempbtye, tempbtye.Length);
                         if (DT == DataType.custom )
-                        { 
-                            temppake str = new temppake();
-                            str.command = defaultCommand;
-                            str.datebit = tempbtye;
-                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
-                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                            //receiveServerEventbit?.Invoke(str.command, str.datebit);
-                            ListData.RemoveAt(0);
-                            continue;
-                        }
-                        _0x99:
-                        if (tempbtye[0] == 0x99)
                         {
-                            if (bytesRead > 1)
-                            {
-                                byte[] b = new byte[bytesRead - 1];
-                                byte[] t = tempbtye;
-                                Array.Copy(t, 1, b, 0, b.Length);
-                                ListData[0] = b;
-                                tempbtye = b;
-                                goto _0x99;
-                            }
-                            else {
-                                ListData.RemoveAt(0);
-                                continue;
-                            } 
+                            //temppake str = new temppake();
+                            //str.command = defaultCommand;
+                            //str.datebit = tempbtye;
+                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
+                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                            if (receiveServerEventbit != null)
+                                receiveServerEventbit(defaultCommand, tempbtye);
+                            if (receiveServerEventbitobj != null)
+                                receiveServerEventbitobj(defaultCommand, tempbtye, this);
+                           
+                            ListData.RemoveAt(0);
+                            return;
                         }
+                        //_0x99:
+                        //if (tempbtye[0] == 0x99)
+                        //{
+                        //    if (bytesRead > 1)
+                        //    {
+                        //        byte[] b = new byte[bytesRead - 1];
+                        //        byte[] t = tempbtye;
+                        //        Array.Copy(t, 1, b, 0, b.Length);
+                        //        ListData[0] = b;
+                        //        tempbtye = b;
+                        //        goto _0x99;
+                        //    }
+                        //    else {
+                        //        ListData.RemoveAt(0);
+                        //        return;
+                        //    } 
+                        //}
                        
                         if (bytesRead > 2)
                         {
@@ -459,7 +464,7 @@ namespace Weave.TCPClient
                                     {
                                         len = int.Parse(temp);
                                         if (len == 0)
-                                        { ListData.RemoveAt(0); continue; }
+                                        { ListData.RemoveAt(0); return; }
                                     }
                                     catch
                                     { }
@@ -483,7 +488,7 @@ namespace Weave.TCPClient
                                             {
                                                 System.Threading.Thread.Sleep(1);
                                             }
-                                        continue;
+                                        return;
                                     }
                                     else if (tempbtye.Length > (len + 2 + a))
                                     {
@@ -504,9 +509,9 @@ namespace Weave.TCPClient
                                     if (DT == DataType.json)
                                     {
                                        string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                        temppake str = new temppake();
-                                        str.command = tempbtye[0];
-                                        str.date = temp;
+                                        //temppake str = new temppake();
+                                        //str.command = tempbtye[0];
+                                        //str.date = temp;
                                         if (tempbtye[0] == 0xff)
                                         {
                                             if (temp.IndexOf("token") >= 0)
@@ -518,20 +523,29 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                             //   receiveServerEvent(str.command, str.date);
+                                                //   receiveServerEvent(str.command, str.date);
                                                 //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                                receiveServerEvent?.Invoke(tempbtye[0], temp);
                                                 //receiveServerEvent(str.command, str.date);
                                                 //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                                 //tt.Start(str);
+                                                if (receiveServerEvent != null)
+                                                    receiveServerEvent(tempbtye[0], temp);
+                                                if (receiveServerEventobj != null)
+                                                    receiveServerEventobj(tempbtye[0], temp, this);
                                             }
                                         }
                                         else if (receiveServerEvent != null || receiveServerEventobj!=null)
                                         {
                                             //
                                             // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                           // receiveServerEvent?.Invoke(str.command, str.date);
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                            
+                                            if (receiveServerEvent != null)
+                                                receiveServerEvent(tempbtye[0], temp);
+                                            if (receiveServerEventobj != null)
+                                                receiveServerEventobj(tempbtye[0], temp, this);
+                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
                                             //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
                                             //tt.Start(str);
                                             // receiveServerEvent();
@@ -544,15 +558,19 @@ namespace Weave.TCPClient
                                         byte[] bs = new byte[len];
                                         Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
                                        // Array.Copy(tempbtye, bs, bs.Length);
-                                        temppake str = new temppake();
-                                        str.command = tempbtye[0];
-                                        str.datebit = bs;
+                                        //temppake str = new temppake();
+                                        //str.command = tempbtye[0];
+                                        //str.datebit = bs;
                                         
-                                         System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
+                                        // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
                                        // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                      //  receiveServerEventbit?.Invoke(str.command, str.datebit);
+                                        
+                                        if (receiveServerEventbit != null)
+                                            receiveServerEventbit(tempbtye[0], bs);
+                                        if (receiveServerEventbitobj != null)
+                                            receiveServerEventbitobj(tempbtye[0], bs, this);
                                     }
-                                        continue;
+                                    return;
                                 }
                                 catch (Exception e)
                                 {
@@ -565,7 +583,7 @@ namespace Weave.TCPClient
                                 if (ListData.Count > 0)
                                     ListData.RemoveAt(0);
                                 if (ListData.Count <= 0)
-                                    continue;
+                                    return;
                                 byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
                                 Array.Copy(tempbtye, 0, temps, 0, temps.Length);
                                 Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
@@ -578,7 +596,7 @@ namespace Weave.TCPClient
                                 if(ListData.Count>0)
                                 ListData.RemoveAt(0);
                                 if (ListData.Count <= 0)
-                                    continue;
+                                return;
                                 byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
                                 Array.Copy(tempbtye, 0, temps, 0, temps.Length);
                                 Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
@@ -604,7 +622,7 @@ namespace Weave.TCPClient
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(1);
+              
                 try
                 {
                     if (tcpc.Client == null) 
@@ -652,14 +670,15 @@ namespace Weave.TCPClient
                         {
                             ErrorMge(22, ee.Message);
                         }
-                        lock (ListData)
+                      //  lock (ListData)
                         {
                             ListData.Add(tempbtye);
                         }
+                        unup();
                     }
                     else
                     {
-                        
+                        System.Threading.Thread.Sleep(1);
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;

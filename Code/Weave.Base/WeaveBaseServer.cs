@@ -60,11 +60,11 @@ namespace Weave.Base
             socketLisener.Listen(1000000);
             Thread ThreadAcceptHander = new Thread(new ParameterizedThreadStart(AcceptHander));
             Thread ThreadReceiveHander = new Thread(new ParameterizedThreadStart(ReceiveHander));
-            Thread ThreadReceivePageHander = new Thread(new ParameterizedThreadStart(ReceivePageHander));
+          //  Thread ThreadReceivePageHander = new Thread(new ParameterizedThreadStart(ReceivePageHander));
             Thread ThreadKeepAliveHander = new Thread(new ParameterizedThreadStart(this.KeepAliveHander));
             ThreadAcceptHander.Start();
             ThreadReceiveHander.Start();
-            ThreadReceivePageHander.Start();
+          //  ThreadReceivePageHander.Start();
             ThreadKeepAliveHander.Start();
         }
         public int GetNetworkItemCount()
@@ -180,13 +180,14 @@ namespace Weave.Base
                     {
                         byte[] tempbtyec = new byte[ListData[i].Length];
                         Array.Copy(ListData[i], tempbtyec, tempbtyec.Length);
-                        WeaveEvent me = new WeaveEvent();
-                        me.Command = defaultCommand;
-                        me.Data = "";
-                        me.Databit = tempbtyec;
-                        me.Soc = netc.SocketSession;
+                        //WeaveEvent me = new WeaveEvent();
+                        //me.Command = defaultCommand;
+                        //me.Data = "";
+                        //me.Databit = tempbtyec;
+                        //me.Soc = netc.SocketSession;
                         if (weaveReceiveBitEvent != null)
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                            weaveReceiveBitEvent?.Invoke(defaultCommand, tempbtyec, netc.SocketSession);
+                        // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
                         ListData.RemoveAt(0);
                         netc.IsPage = false;
                         return;
@@ -249,12 +250,13 @@ namespace Weave.Base
                                 if (weaveDataType == WeaveDataTypeEnum.Json)
                                 {
                                     String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                    WeaveEvent me = new WeaveEvent();
-                                    me.Command = tempbtye[0];
-                                    me.Data = temp;
-                                    me.Soc = netc.SocketSession;
+                                    //WeaveEvent me = new WeaveEvent();
+                                    //me.Command = tempbtye[0];
+                                    //me.Data = temp;
+                                    //me.Soc = netc.SocketSession;
                                     if (waveReceiveEvent != null)
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
+                                        waveReceiveEvent?.Invoke(tempbtye[0], temp, netc.SocketSession);
+                                    // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
                                     //receiveeventto(me);
                                     //if (receiveevent != null)
                                     //    receiveevent.BeginInvoke(tempbtye[0], temp, netc.Soc, null, null);
@@ -265,13 +267,14 @@ namespace Weave.Base
                                     //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                     byte[] bs = new byte[len];
                                     Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
-                                    WeaveEvent me = new WeaveEvent();
-                                    me.Command = tempbtye[0];
-                                    me.Data = "";
-                                    me.Databit = bs;
-                                    me.Soc = netc.SocketSession;
+                                    //WeaveEvent me = new WeaveEvent();
+                                    //me.Command = tempbtye[0];
+                                    //me.Data = "";
+                                    //me.Databit = bs;
+                                    //me.Soc = netc.SocketSession;
                                     if (weaveReceiveBitEvent != null)
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                        //  System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                        weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, netc.SocketSession);
                                 }
                                 netc.IsPage = false; return;
                             }
@@ -358,7 +361,8 @@ namespace Weave.Base
                 if (bytesRead > 0)
                 {
                     Array.Copy(workItem.Buffer, 0, tempbtye, 0, bytesRead);
-                    workItem.DataList.Add(tempbtye);
+                     workItem.DataList.Add(tempbtye);
+                    packageData(workItem);
                 }
             }
             catch

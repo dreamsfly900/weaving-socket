@@ -24,32 +24,32 @@ namespace TCP服务测试
             wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
        
              wudp.Start(12404);
-            System.IO.StreamReader sr = new System.IO.StreamReader(System.IO.Directory.GetCurrentDirectory()+ "\\config.txt", Encoding.GetEncoding("gb2312"));
+            //System.IO.StreamReader sr = new System.IO.StreamReader(System.IO.Directory.GetCurrentDirectory()+ "\\config.txt", Encoding.GetEncoding("gb2312"));
          
-            while (!sr.EndOfStream)
-            {
-                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
-             //   Console.WriteLine(sr.ReadLine());
-                string str = sr.ReadLine();
-                string ip = str.Split('|')[0];
-                int port = Convert.ToInt32(str.Split('|')[1]);
+            //while (!sr.EndOfStream)
+            //{
+            //    Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+            // //   Console.WriteLine(sr.ReadLine());
+            //    string str = sr.ReadLine();
+            //    string ip = str.Split('|')[0];
+            //    int port = Convert.ToInt32(str.Split('|')[1]);
           
-                Weave.TCPClient.P2Pclient p2pc = new Weave.TCPClient.P2Pclient(DataType.custom);
-                listp2p.Add(p2pc);
-                p2pc.receiveServerEventbitobj += P2pc_receiveServerEventbitobj;
-                p2pc.timeoutobjevent += P2pc_timeoutobjevent;
-                p2pc.ErrorMge += P2pc_ErrorMge;
+            //    Weave.TCPClient.P2Pclient p2pc = new Weave.TCPClient.P2Pclient(DataType.custom);
+            //    listp2p.Add(p2pc);
+            //    p2pc.receiveServerEventbitobj += P2pc_receiveServerEventbitobj;
+            //    p2pc.timeoutobjevent += P2pc_timeoutobjevent;
+            //    p2pc.ErrorMge += P2pc_ErrorMge;
              
-                bool ss = p2pc.start(ip, port, 60 * 10, false);
-                if (ss)
-                {
-                    byte[] bbs = strToToHexByte("680407000000");
-                    p2pc.Send(bbs);
-                    Console.WriteLine("已链接" + ss.ToString());
-                }
-                Console.WriteLine(ip+":"+port);
-            }
-            sr.Close();
+            //    bool ss = p2pc.start(ip, port, 60 * 10, false);
+            //    if (ss)
+            //    {
+            //        byte[] bbs = strToToHexByte("680407000000");
+            //        p2pc.Send(bbs);
+            //        Console.WriteLine("已链接" + ss.ToString());
+            //    }
+            //    Console.WriteLine(ip+":"+port);
+            //}
+            //sr.Close();
             //wudp.Send();
             // System.Threading.Thread t=new System.Threading.Thread(new System.Threading.ThreadStart())
             //while (true)
@@ -122,7 +122,13 @@ namespace TCP服务测试
 
         private static void Wudp_waveReceiveEvent(byte command, string data, Socket soc)
         {
-           
+            WeaveSession wsee = new WeaveSession();
+            wsee.Token = "server";
+            wsee.Request = "212341234";
+            wsee.SetRoot<string>("wrqerwer");
+            wudp.Send(soc,1, wsee.Getjson());
+
+
         }
 
         private static void Wudp_weaveDeleteSocketListEvent(Socket soc)

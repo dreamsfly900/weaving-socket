@@ -39,7 +39,7 @@
                 ip: 'ws://127.0.0.1', port: 12404, conn: function () {
                     socket.settakon("123123");
                     alert("连接成功");
-                    //socket.SendData(1, "login", "123123ssdfsdf", "");
+                    socket.SendData(1, "login", "123123ssdfsdf", "");
                 }
                 , recData: function (text) {
                     $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
@@ -50,11 +50,13 @@
             });
 
         }
-
+        function SendData() {
+            socket.SendData(1, "login", "123123ssdfsdf", "");
+        }
     </script>
 </head>
 <body>
-    <!--<button id='ToggleConnection' type="button" onclick='conn();'>
+    <button id='ToggleConnection' type="button" onclick='conn();'>
         连接服务器</button><br />
     <br />
     <button id='ToggleConnection' type="button" onclick='SendData();'>
@@ -62,7 +64,7 @@
     <br />
     <button id='ToggleConnection' type="button" onclick='seestate();'>
         查看状态</button><br />
-    <br />-->
+    <br />
     <div id="test" style="width:1024px"></div>
 </body>
 </html>
