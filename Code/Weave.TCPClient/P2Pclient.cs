@@ -102,17 +102,18 @@ namespace Weave.TCPClient
                 tokan = value;
             }
         }
-        public List<byte[]> ListData
-        {
-            get
-            {
-                return listtemp;
-            }
-            set
-            {
-                listtemp = value;
-            }
-        }
+        byte[] alldata = new byte[0];
+        //public List<byte[]> ListData
+        //{
+        //    get
+        //    {
+        //        return listtemp;
+        //    }
+        //    set
+        //    {
+        //        listtemp = value;
+        //    }
+        //}
         public P2Pclient(bool _NATUDP)
         {
             this.receiveServerEvent += P2Pclient_receiveServerEvent;
@@ -395,13 +396,13 @@ namespace Weave.TCPClient
         {
          //   while (isok)
             {
-                System.Threading.Thread.Sleep(1);
+               // System.Threading.Thread.Sleep(1);
                 try
                 {
-                    int count = ListData.Count;
-                    if (count > 0)
+                    //int count = ListData.Count;
+                    //if (count > 0)
                     {
-                        int bytesRead = ListData[0]!=null? ListData[0].Length:0;
+                        int bytesRead = alldata.Length;
                         if (bytesRead == 0)
                         {
                             // ListData.RemoveAt(0); 
@@ -410,7 +411,7 @@ namespace Weave.TCPClient
                        
                         byte[] tempbtye = new byte[bytesRead];
 
-                        Array.Copy(ListData[0], tempbtye, tempbtye.Length);
+                        Array.Copy(alldata, tempbtye, tempbtye.Length);
                         if (DT == DataType.custom )
                         {
                             //temppake str = new temppake();
@@ -422,27 +423,11 @@ namespace Weave.TCPClient
                                 receiveServerEventbit(defaultCommand, tempbtye);
                             if (receiveServerEventbitobj != null)
                                 receiveServerEventbitobj(defaultCommand, tempbtye, this);
-                           
-                            ListData.RemoveAt(0);
+
+                            alldata = new byte[0];
                             return;
                         }
-                        //_0x99:
-                        //if (tempbtye[0] == 0x99)
-                        //{
-                        //    if (bytesRead > 1)
-                        //    {
-                        //        byte[] b = new byte[bytesRead - 1];
-                        //        byte[] t = tempbtye;
-                        //        Array.Copy(t, 1, b, 0, b.Length);
-                        //        ListData[0] = b;
-                        //        tempbtye = b;
-                        //        goto _0x99;
-                        //    }
-                        //    else {
-                        //        ListData.RemoveAt(0);
-                        //        return;
-                        //    } 
-                        //}
+                     
                        
                         if (bytesRead > 2)
                         {
@@ -464,7 +449,7 @@ namespace Weave.TCPClient
                                     {
                                         len = int.Parse(temp);
                                         if (len == 0)
-                                        { ListData.RemoveAt(0); return; }
+                                        { alldata = new byte[0]; return; }
                                     }
                                     catch
                                     { }
@@ -473,31 +458,33 @@ namespace Weave.TCPClient
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
-                                    { 
-                                            if (ListData.Count > 1)
-                                            {
-                                                ListData.RemoveAt(0);
-                                              byte[] temps = new byte[ListData[0].Length];
-                                                Array.Copy(ListData[0], temps, temps.Length);
-                                                byte[] temps2 = new byte[tempbtye.Length + temps.Length];
-                                                Array.Copy(tempbtye,0, temps2,0, tempbtye.Length);
-                                                Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
-                                                ListData[0] = temps2; 
-                                            }
-                                            else
-                                            {
-                                                System.Threading.Thread.Sleep(1);
-                                            }
+                                    {
+                                        ////if (ListData.Count > 1)
+                                        ////{
+                                        ////    ListData.RemoveAt(0);
+
+                                        //byte[] temps = new byte[alldata.Length];
+                                        //Array.Copy(alldata, temps, temps.Length);
+                                        //byte[] temps2 = new byte[tempbtye.Length + temps.Length];
+                                        //Array.Copy(tempbtye, 0, temps2, 0, tempbtye.Length);
+                                        //Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
+                                        //alldata = temps2;
+                                        ////}
+                                        ////else
+                                        ////{
+                                        ////    System.Threading.Thread.Sleep(1);
+                                        ////}
                                         return;
                                     }
                                     else if (tempbtye.Length > (len + 2 + a))
                                     {
                                         byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
                                         Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
-                                        ListData[0] = temps;
+                                        alldata = temps;
+                                        
                                     }
                                     else if (tempbtye.Length == (len + 2 + a))
-                                    { ListData.RemoveAt(0); }
+                                    { alldata = new byte[0]; }
                                 }
                                 catch (Exception e)
                                 {
@@ -580,27 +567,12 @@ namespace Weave.TCPClient
                             }
                             else
                             {
-                                if (ListData.Count > 0)
-                                    ListData.RemoveAt(0);
-                                if (ListData.Count <= 0)
-                                    return;
-                                byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
-                                Array.Copy(tempbtye, 0, temps, 0, temps.Length);
-                                Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
-                                ListData[0] = temps;
+                                return;
                             }
                         }
                         else
                         {
-                            
-                                if(ListData.Count>0)
-                                ListData.RemoveAt(0);
-                                if (ListData.Count <= 0)
-                                return;
-                                byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
-                                Array.Copy(tempbtye, 0, temps, 0, temps.Length);
-                                Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
-                                ListData[0] = temps;
+                            return;
                           
                         }
                     }
@@ -609,15 +581,11 @@ namespace Weave.TCPClient
                 {
                     if (ErrorMge != null)
                         ErrorMge(3, "unup:" + e.Message+"---"+e.StackTrace);
-                    try
-                    {
-                        ListData.RemoveAt(0);
-                    }
-                    catch { }
+                    alldata = new byte[0];
                 }
             }
         }
-          List<Byte[]> listtemp = new List<Byte[]>();
+       //   List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
             while (isok)
@@ -670,10 +638,13 @@ namespace Weave.TCPClient
                         {
                             ErrorMge(22, ee.Message);
                         }
-                      //  lock (ListData)
-                        {
-                            ListData.Add(tempbtye);
-                        }
+                        ////  lock (ListData)
+                        //  {
+                        //      ListData.Add(tempbtye);
+                        //  }
+                        int lle = alldata.Length;
+                        alldata = new byte[lle + tempbtye.Length];
+                        Array.Copy(tempbtye, 0, alldata, lle, tempbtye.Length);
                         unup();
                     }
                     else

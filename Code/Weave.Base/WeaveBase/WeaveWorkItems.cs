@@ -43,7 +43,7 @@ namespace Weave.Base
         {
             get; set;
         }
-
+        public byte[] allDataList=new byte[0];
         public List<byte[]> DataList
         {
             get
