@@ -105,7 +105,7 @@ namespace Weave.Server
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0)
                     {
-                        if (ListData.Count > 0) ListData.RemoveAt(0);
+                        //if (ListData.Count > 0) ListData.RemoveAt(0);
                         netc.IsPage = false; return;
                     };
                     byte[] tempbtye = new byte[bytesRead];

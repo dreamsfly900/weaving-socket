@@ -328,7 +328,7 @@ namespace Weave.Base
                     }
                 }
             }
-            catch (Exception e)
+            catch 
             {
                 try
                 {
@@ -417,7 +417,7 @@ namespace Weave.Base
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * slen, temp, 0, zz); 
                         Send(socket, temp);
-                        System.Threading.Thread.Sleep(1);
+                      //  System.Threading.Thread.Sleep(1);
                     }
                 }
              
@@ -478,7 +478,7 @@ namespace Weave.Base
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * slen, temp, 0, zz);
                         Send(socket, temp);
-                        System.Threading.Thread.Sleep(1);
+                      //  System.Threading.Thread.Sleep(1);
                     }
                 }
             }
@@ -486,32 +486,32 @@ namespace Weave.Base
             // tcpc.Close();
             return true;
         }
-        void ReceivePageHander(object ias)
-        {
-            while (true)
-            {
-                try
-                {
-                    WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[weaveNetworkItems.Count];
-                    weaveNetworkItems.CopyTo(netlist);
-                    foreach (WeaveNetWorkItems netc in netlist)
-                    {
-                        if (netc.DataList.Count > 0)
-                        {
-                            if (!netc.IsPage)
-                            {
-                                netc.IsPage = true;
-                                ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
+        //void ReceivePageHander(object ias)
+        //{
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[weaveNetworkItems.Count];
+        //            weaveNetworkItems.CopyTo(netlist);
+        //            foreach (WeaveNetWorkItems netc in netlist)
+        //            {
+        //                if (netc.DataList.Count > 0)
+        //                {
+        //                    if (!netc.IsPage)
+        //                    {
+        //                        netc.IsPage = true;
+        //                        ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
                               
-                            }
-                        }
-                    }
-                    System.Threading.Thread.Sleep(1);
-                }
-                catch
-                { }
-            }
-        }
+        //                    }
+        //                }
+        //            }
+        //            System.Threading.Thread.Sleep(1);
+        //        }
+        //        catch
+        //        { }
+        //    }
+        //}
         //void endpackageData(IAsyncResult ia)
         //{
         //    ia.AsyncState
@@ -559,27 +559,27 @@ namespace Weave.Base
                 {
                     int c = weaveNetworkItems.Count;
                     int count = (c / Partition) + 1;
-                    getbufferdelegate[] iagbd = new getbufferdelegate[count];
-                    IAsyncResult[] ia = new IAsyncResult[count];
+                    //getbufferdelegate[] iagbd = new getbufferdelegate[count];
+                    //IAsyncResult[] ia = new IAsyncResult[count];
                     if (c > 0)
                     {
-                        WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
-                        weaveNetworkItems.CopyTo(0, netlist, 0, c);
-                        getbuffer(netlist, 0, Partition);
+                        //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
+                        //weaveNetworkItems.CopyTo(0, netlist, 0, c);
+                        getbuffer(weaveNetworkItems, 0, c);
                    
                     }
                  
                 }
                 catch { }
-                System.Threading.Thread.Sleep(1);
+               // System.Threading.Thread.Sleep(1);
             }
         }
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
-        void getbuffer(WeaveNetWorkItems[] netlist, int index, int len)
+        void getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
         {
             for (int i = index; i < len; i++)
             {
-                if (i >= netlist.Length)
+                if (i >= netlist.Count)
                     return;
                 try
                 {
