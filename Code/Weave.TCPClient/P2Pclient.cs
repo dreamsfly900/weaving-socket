@@ -393,7 +393,7 @@ namespace Weave.TCPClient
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(1);
                 try
                 {
                     int count = ListData.Count;
@@ -479,7 +479,7 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                                System.Threading.Thread.Sleep(20);
+                                                System.Threading.Thread.Sleep(5);
                                             }
                                         continue;
                                     }
@@ -599,7 +599,7 @@ namespace Weave.TCPClient
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(2);
+                System.Threading.Thread.Sleep(1);
                 try
                 {
                     int bytesRead = tcpc.Client.Available;
