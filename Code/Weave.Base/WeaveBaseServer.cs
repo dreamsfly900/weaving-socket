@@ -173,7 +173,7 @@ namespace Weave.Base
                         int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0)
                     {
-                        if (ListData.Count > 0) ListData.RemoveAt(0);
+                      //  if (ListData.Count > 0) ListData.RemoveAt(0);
                         netc.IsPage = false; return;
                     };
                     if (weaveDataType == WeaveDataTypeEnum.custom)
@@ -240,7 +240,7 @@ namespace Weave.Base
                                 }
                                 catch
                                 { }
-                                // netc.Ispage = false; return;
+                                //netc.IsPage = false; return;
                             }
                             else if (tempbtye.Length == (len + 2 + a))
                             { if (ListData.Count > 0) ListData.RemoveAt(i); }
@@ -325,7 +325,7 @@ namespace Weave.Base
                     }
                 }
             }
-            catch //(Exception e)
+            catch (Exception e)
             {
                 try
                 {
@@ -504,7 +504,8 @@ namespace Weave.Base
                     }
                     System.Threading.Thread.Sleep(1);
                 }
-                catch { }
+                catch
+                { }
             }
         }
         //void endpackageData(IAsyncResult ia)

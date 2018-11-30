@@ -273,7 +273,8 @@ namespace Weave.TCPClient
                 tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
                 return true;
             }
-            catch { return false; }
+            catch {
+                return false; }
         }
         public bool send(byte command, string text)
         {
@@ -402,7 +403,8 @@ namespace Weave.TCPClient
                         int bytesRead = ListData[0]!=null? ListData[0].Length:0;
                         if (bytesRead == 0)
                         {
-                            ListData.RemoveAt(0); continue;
+                            // ListData.RemoveAt(0); 
+                            continue;
                         }
                        
                         byte[] tempbtye = new byte[bytesRead];
@@ -479,7 +481,7 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                                System.Threading.Thread.Sleep(5);
+                                                System.Threading.Thread.Sleep(1);
                                             }
                                         continue;
                                     }
@@ -560,7 +562,10 @@ namespace Weave.TCPClient
                             }
                             else
                             {
-                                ListData.RemoveAt(0);
+                                if (ListData.Count > 0)
+                                    ListData.RemoveAt(0);
+                                if (ListData.Count <= 0)
+                                    continue;
                                 byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
                                 Array.Copy(tempbtye, 0, temps, 0, temps.Length);
                                 Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
@@ -569,16 +574,16 @@ namespace Weave.TCPClient
                         }
                         else
                         {
-                            if (tempbtye[0] == 0)
+                            
+                                if(ListData.Count>0)
                                 ListData.RemoveAt(0);
-                            else
-                            {
-                                ListData.RemoveAt(0);
+                                if (ListData.Count <= 0)
+                                    continue;
                                 byte[] temps = new byte[tempbtye.Length + ListData[0].Length];
                                 Array.Copy(tempbtye, 0, temps, 0, temps.Length);
                                 Array.Copy(ListData[0], 0, temps, temps.Length, ListData[0].Length);
                                 ListData[0] = temps;
-                            }
+                          
                         }
                     }
                 }
@@ -602,6 +607,11 @@ namespace Weave.TCPClient
                 System.Threading.Thread.Sleep(1);
                 try
                 {
+                    if (tcpc.Client == null) 
+                    {
+                        continue;
+
+                    }
                     int bytesRead = tcpc.Client.Available;
                     if (bytesRead > 0)
                     {
@@ -642,10 +652,10 @@ namespace Weave.TCPClient
                         {
                             ErrorMge(22, ee.Message);
                         }
-                        //lock (this)
-                        //{
-                        ListData.Add(tempbtye);
-                       // }
+                        lock (ListData)
+                        {
+                            ListData.Add(tempbtye);
+                        }
                     }
                     else
                     {
