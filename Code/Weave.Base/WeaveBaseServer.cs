@@ -249,7 +249,10 @@ namespace Weave.Base
                                     alldata = temps;
                                 }
                                 catch
-                                { }
+                                {
+
+                                    return alldata;
+                                }
                                 //netc.IsPage = false; return;
                             }
                             else if (tempbtye.Length == (len + 2 + a))
@@ -368,14 +371,18 @@ namespace Weave.Base
                     //netc.Soc.Close();
                     //listconn.Remove(netc);
                 }
+                bytesRead=workItem.Buffer.Length;
                 byte[] tempbtye = new byte[bytesRead];
                 if (bytesRead > 0)
                 {
-                    Array.Copy(workItem.Buffer, 0, tempbtye, 0, bytesRead);
+                     
+                    Array.Copy(workItem.Buffer, 0, tempbtye, 0, tempbtye.Length);
                     int lle = workItem.allDataList.Length;
-                    workItem.allDataList = new byte[lle + tempbtye.Length];
-                    Array.Copy(tempbtye, 0, workItem.allDataList, lle, bytesRead);
-                    //workItem.DataList.Add(tempbtye);
+                    
+                      byte []  temp= new byte[lle + tempbtye.Length];
+                    Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+                    Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                    workItem.allDataList = temp;                    //workItem.DataList.Add(tempbtye);
                     workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
                     workItem.IsPage = false;
                 }
@@ -608,7 +615,7 @@ namespace Weave.Base
                     {
                         if (netc.SocketSession.Available > 0 && !netc.IsPage)
                         {
-                        
+                            netc.IsPage = true;
                             netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
                          
                         }

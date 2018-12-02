@@ -338,22 +338,23 @@ namespace Weave.TCPClient
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
-                int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
-                if (count == 0)
-                {
-                    bb=Send(b);
-                }
-                else
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
-                        byte[] temp = new byte[zz];
-                        Array.Copy(b, i * 40960, temp, 0, zz);
-                        bb= Send(temp);
-                        System.Threading.Thread.Sleep(1);
-                    }
-                }
+                bb = Send(b);
+                //int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                //if (count == 0)
+                //{
+                //    bb=Send(b);
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < count; i++)
+                //    {
+                //        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                //        byte[] temp = new byte[zz];
+                //        Array.Copy(b, i * 40960, temp, 0, zz);
+                //        bb= Send(temp);
+                //        System.Threading.Thread.Sleep(1);
+                //    }
+                //}
             }
             catch(Exception ee)
             {
@@ -643,8 +644,11 @@ namespace Weave.TCPClient
                         //      ListData.Add(tempbtye);
                         //  }
                         int lle = alldata.Length;
-                        alldata = new byte[lle + tempbtye.Length];
-                        Array.Copy(tempbtye, 0, alldata, lle, tempbtye.Length);
+                        byte[] temp = new byte[lle + tempbtye.Length];
+                        Array.Copy(alldata, 0, temp, 0, alldata.Length);
+                        Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                        alldata = temp;                    //workItem.DataList.Add(tempbtye);
+                        
                         unup();
                     }
                     else
