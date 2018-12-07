@@ -36,12 +36,13 @@
         function conn() {
             //这是使用证书时使用
             socket = new UDCsocket({
-                ip: 'ws://127.0.0.1', port: 12404, conn: function () {
-                    socket.settakon("123123");
+                ip: 'ws://115.28.26.204', port: 11001, conn: function () {
+                  //  socket.settakon("123123");
                     alert("连接成功");
-                    socket.SendData(1, "login", "123123ssdfsdf", "");
+                    //socket.SendData(1, "login", "123123ssdfsdf", "");
                 }
                 , recData: function (text) {
+                    $('#test').html("");
                     $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
                 }
                 , close: function () { alert("连接关闭"); }
@@ -51,7 +52,12 @@
 
         }
         function SendData() {
-            socket.SendData(1, "login", "123123ssdfsdf", "");
+            //socket.SendData(0x02, "GetLISTimei", '', "");
+            socket.SendData(0x04, "getonlinedanseping", "1609092A005", "");
+        }
+        function SendData2() {
+            socket.SendData(0x02, "GetLISTimei", '', "");
+            //socket.SendData(0x04, "getonlinedanseping", "1609092A005", "");
         }
     </script>
 </head>
@@ -62,7 +68,7 @@
     <button id='ToggleConnection' type="button" onclick='SendData();'>
         发送内容：beston</button><br />
     <br />
-    <button id='ToggleConnection' type="button" onclick='seestate();'>
+    <button id='ToggleConnection' type="button" onclick='SendData2();'>
         查看状态</button><br />
     <br />
     <div id="test" style="width:1024px"></div>

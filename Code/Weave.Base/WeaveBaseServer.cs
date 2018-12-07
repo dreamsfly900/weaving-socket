@@ -89,7 +89,8 @@ namespace Weave.Base
                             byte[] b = new byte[] { 0x99 };
                             if (weaveDataType == WeaveDataTypeEnum.custom)
                                 b = new byte[1];
-                            workItem.SocketSession.Send(b);
+                            Send(workItem.SocketSession, b);
+                           // workItem.SocketSession.Send(b);
                             workItem.ErrorNum = 0;
                         }
                         catch
@@ -598,7 +599,7 @@ namespace Weave.Base
                  
                 }
                 catch { }
-               // System.Threading.Thread.Sleep(1);
+                System.Threading.Thread.Sleep(1);
             }
         }
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);

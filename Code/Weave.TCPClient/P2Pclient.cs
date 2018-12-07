@@ -653,7 +653,7 @@ namespace Weave.TCPClient
                     }
                     else
                     {
-                       // System.Threading.Thread.Sleep(1);
+                        System.Threading.Thread.Sleep(1);
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;

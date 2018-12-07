@@ -121,7 +121,7 @@ namespace Weave.Server
                                     workItem.Stream.Write(df.GetBytes());
                                 }
                                 else
-                                  workItem.SocketSession.Send(df.GetBytes());
+                                    Send(workItem.SocketSession, df.GetBytes());
                                 workItem.ErrorNum = 0;
                                  
                             }
