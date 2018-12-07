@@ -380,7 +380,7 @@ namespace Weave.Base
                 }
                 bytesRead=workItem.Buffer.Length;
                 byte[] tempbtye = new byte[bytesRead];
-                if (bytesRead > 0)
+                //if (bytesRead > 0)
                 {
                      
                     Array.Copy(workItem.Buffer, 0, tempbtye, 0, tempbtye.Length);
@@ -542,7 +542,7 @@ namespace Weave.Base
                  
                 }
                 catch { }
-                System.Threading.Thread.Sleep(1);
+              //  System.Threading.Thread.Sleep(1);
             }
         }
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
@@ -566,7 +566,8 @@ namespace Weave.Base
                         else if (netc.allDataList.Length > 0 && !netc.IsPage)
                         {
                             netc.IsPage = true;
-                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
+                            netc.SocketSession.BeginReceive(netc.Buffer = new byte[0], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                          //  System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
                         }
                         //if (!netc.IsPage)
                         //{
