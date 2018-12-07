@@ -610,7 +610,7 @@ namespace Weave.TCPClient
                             tcpc.Client.Receive(tempbtye);
                             if (DT == DataType.custom && receiveServerEventbit == null)
                             {
-                               
+
 
                             }
                             else
@@ -648,11 +648,13 @@ namespace Weave.TCPClient
                         Array.Copy(alldata, 0, temp, 0, alldata.Length);
                         Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                         alldata = temp;                    //workItem.DataList.Add(tempbtye);
-                        
+
                         unup();
                     }
                     else
                     {
+                        if (alldata.Length > 0)
+                            unup();
                         System.Threading.Thread.Sleep(1);
                         try
                         {

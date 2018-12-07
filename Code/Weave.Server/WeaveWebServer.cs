@@ -246,42 +246,7 @@ namespace Weave.Server
             WeaveEvent me = (WeaveEvent)obj;
             weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
         }
-        private void ReadCallback2(IAsyncResult ar)
-        {
-            WeaveNetWorkItems netc = (WeaveNetWorkItems)ar.AsyncState;
-            Socket handler = netc.SocketSession;
-            int bytesRead = 0;
-            try
-            {
-                try
-                {
-                    bytesRead = handler.EndReceive(ar);
-                }
-                catch
-                {
-                    netc.SocketSession.Close();
-                    weaveWorkItemsList.Remove(netc);
-                }
-                byte[] tempbtye = new byte[bytesRead];
-                Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                //   System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback())
-                netc.State = 1;
-                SendHeadDelegate sh = new SendHeadDelegate(sendhead);
-                IAsyncResult ia = sh.BeginInvoke(handler, tempbtye, null, null);
-                sh.EndInvoke(ia);
-                //if (EventUpdataConnSoc != null)
-                //    EventUpdataConnSoc.BeginInvoke(handler, null, null);
-                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(UpdateSocketListHander), handler);
-                return;
-                //System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(UpdataConnSoc));
-                //t.Start(handler);
-                // handler.BeginSend(aaa, 0, aaa.Length, 0, HandshakeFinished, handler);
-            }
-            catch //(Exception e)
-            {
-            }
-            //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
-        }
+        
         bool sendhead(Socket handler, byte[] tempbtye)
         {
             byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
@@ -403,43 +368,7 @@ namespace Weave.Server
             secWebSocketAccept = Convert.ToBase64String(sha1Hash);
             return secWebSocketAccept;
         }
-        private void ReadCallback(IAsyncResult ar)
-        {
-            WeaveNetWorkItems netc = (WeaveNetWorkItems)ar.AsyncState;
-            Socket handler = netc.SocketSession;
-            
-            //if (!netc.Soc.Poll(100, SelectMode.SelectRead))
-            //{
-            //    listconn.Remove(netc);
-            //    return;
-            //}
-            // Read data from the client socket. 
-            try
-            {
-                int bytesRead = 0;
-                try
-                {
-                    bytesRead = handler.EndReceive(ar);
-                }
-                catch
-                {
-                    netc.SocketSession.Close();
-                    weaveWorkItemsList.Remove(netc);
-                }
-                //if (bytesRead > 0)
-                //{
-                //    // There  might be more data, so store the data received so far.
-                byte[] tempbtye = new byte[bytesRead];
-                //netc.Buffer.CopyTo(tempbtye, 0);
-                Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                netc.DataList.Add(tempbtye);
-                //  System.Threading.Thread.Sleep(10);
-            }
-            catch
-            {
-            }
-            //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
-        }
+     
         private void ReadCallbackssl(object ar)
         {
             WeaveNetWorkItems netc = (WeaveNetWorkItems)ar;
@@ -699,8 +628,9 @@ namespace Weave.Server
                             {
                                 if (netc.SocketSession.Available > num)
                                 {
-                                  //  if (state == 0)
-                                     //   netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
+                                    netc.IsPage = true;
+                                    //  if (state == 0)
+                                    //   netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
                                     if (state == 1)
                                     {
                                         if (Certificate != null)
@@ -734,25 +664,7 @@ namespace Weave.Server
                                 }
                             }
                         }
-                    }
-                }
-                catch
-                { }
-            }
-        }
-        void receivepackageData(object ias)
-        {
-            while (true)
-            {
-                try
-                {
-                    WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[weaveWorkItemsList.Count];
-                    weaveWorkItemsList.CopyTo(netlist);
-                    foreach (WeaveNetWorkItems netc in netlist)
-                    {
-                        if (netc.DataList.Count > 0)
-                        {
-                            if (!netc.IsPage)
+                        else  if (netc.DataList.Count>0  && !netc.IsPage)
                             {
                                 netc.IsPage = true;
                                 //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
@@ -761,16 +673,13 @@ namespace Weave.Server
                                 //packageDataHandler pdh = new packageDataHandler(packageData);
                                 //pdh.BeginInvoke(netc, null, null);
                             }
-                            // System.Threading.Thread.Sleep(1);
-                        }
-                        // System.Threading.Thread.Sleep(5);
                     }
-                    System.Threading.Thread.Sleep(5);
                 }
-                catch// (Exception ex)
+                catch
                 { }
             }
         }
+        
         public delegate void packageDataHandler(WeaveNetWorkItems netc);
         private void packageData(object obj)
         {
@@ -967,6 +876,10 @@ namespace Weave.Server
             catch //(Exception ex)
             {
                 if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); netc.IsPage = false; return;
+            }
+            finally
+            {
+                netc.IsPage = false; 
             }
         }
         public delegate void TestDelegate(string name);
