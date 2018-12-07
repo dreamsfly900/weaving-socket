@@ -403,7 +403,7 @@ namespace Weave.TCPClient
                     //int count = ListData.Count;
                     //if (count > 0)
                     {
-                        _0x99:
+                        
                         int bytesRead = alldata.Length;
                         if (bytesRead == 0)
                         {
@@ -411,23 +411,7 @@ namespace Weave.TCPClient
                             return;
                         }
                        
-                        if (alldata[0] == 0x99)
-                        {
-                            timeout = DateTime.Now;
-                            if (alldata.Length > 1)
-                            {
-                                byte[] b = new byte[bytesRead - 1];
-                                try
-                                {
-                                    Array.Copy(alldata, 1, b, 0, b.Length);
-                                }
-                                catch { }
-                                alldata = b;
-                                goto _0x99;
-                            }
-                            else
-                                return;
-                        }
+                     
                         byte[] tempbtye = new byte[bytesRead];
 
                         Array.Copy(alldata, tempbtye, tempbtye.Length);
@@ -664,9 +648,10 @@ namespace Weave.TCPClient
                         try
                         {
                             int lle = alldata.Length;
-                            byte[] temp = new byte[lle + tempbtye.Length];
-                            Array.Copy(alldata, 0, temp, 0, alldata.Length);
-                            Array.Copy(tempbtye, 0, temp, lle, tempbtye.Length);
+                            bytesRead = tempbtye.Length;
+                            byte[] temp = new byte[lle + bytesRead];
+                            Array.Copy(alldata, 0, temp, 0, lle);
+                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                             alldata = temp;                    //workItem.DataList.Add(tempbtye);
 
                             unup();
@@ -676,10 +661,30 @@ namespace Weave.TCPClient
                     }
                     else
                     {
-                        if (alldata.Length > 0)
+                        if (alldata.Length > 3)
+                        {
+                            _0x99:
+                            if (alldata[0] == 0x99)
+                            {
+                                timeout = DateTime.Now;
+                                if (alldata.Length > 1)
+                                {
+                                    byte[] b = new byte[bytesRead - 1];
+                                    try
+                                    {
+                                        Array.Copy(alldata, 1, b, 0, b.Length);
+                                    }
+                                    catch { }
+                                    alldata = b;
+                                    goto _0x99;
+                                }
+                                else
+                                    continue;
+                            }
                             unup();
-                        else
-                        System.Threading.Thread.Sleep(1);
+                        }
+                        //else
+                        //    System.Threading.Thread.Sleep(1);
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;
