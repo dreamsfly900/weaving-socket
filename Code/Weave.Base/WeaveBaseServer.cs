@@ -83,7 +83,7 @@ namespace Weave.Base
                     {
                         if (workItem == null)
                             continue;
-                        Thread.Sleep(1);
+                      //  Thread.Sleep(1);
                         try
                         {
                             byte[] b = new byte[] { 0x99 };
@@ -92,6 +92,13 @@ namespace Weave.Base
                             if (!Send(workItem.SocketSession, b))
                             {
                                 workItem.ErrorNum += 1;
+                                if (workItem.ErrorNum > 3)
+                                {
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+
+
+                                    weaveNetworkItems.Remove(workItem);
+                                }
                             }
                             else
                             {
@@ -230,23 +237,7 @@ namespace Weave.Base
 
                             if ((len + 2 + a) > tempbtye.Length)
                             {
-                                //try
-                                //{
-                                //    if (ListData.Count > 1)
-                                //    {
-                                //        ListData.RemoveAt(i);
-                                //        byte[] temps = new byte[tempbtye.Length];
-                                //        Array.Copy(tempbtye, temps, temps.Length);
-                                //        byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                                //        Array.Copy(temps, tempbtyes, temps.Length);
-                                //        Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
-                                //        ListData[i] = tempbtyes;
-                                //    }
-                                //}
-                                //catch
-                                //{
-                                //   }
-                                // netc.IsPage = false;
+                                
                                 return alldata;
                             }
                             else if (tempbtye.Length > (len + 2 + a))
@@ -311,47 +302,13 @@ namespace Weave.Base
                         }
                         else
                         {
-                            //if (ListData.Count > 0)
-                            //{
-                            //    ListData.RemoveAt(i);
-                            //    if (ListData.Count == 0)
-                            //    {
-                            //        netc.IsPage = false; return;
-                            //    }
-                            //      byte[] temps = new byte[tempbtye.Length];
-                            //    Array.Copy(tempbtye, temps, temps.Length);
-                            //    byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                            //    Array.Copy(temps, tempbtyes, temps.Length);
-                            //    Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
-                            //    ListData[i] = tempbtyes;
-                            //}
-                            //netc.IsPage = false; return;
+                           
                             return alldata;
                         }
                     }
                     else
                     {
-                        //try
-                        //{
-                        //    if (ListData.Count > 0)
-                        //    {
-                        //        ListData.RemoveAt(i);
-                        //        if (ListData.Count == 0)
-                        //        {
-                        //            netc.IsPage = false; return;
-                        //        }
-                        //        byte[] temps = new byte[tempbtye.Length];
-                        //        Array.Copy(tempbtye, temps, temps.Length);
-                        //        byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                        //        Array.Copy(temps, tempbtyes, temps.Length);
-                        //        Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
-                        //        ListData[i] = tempbtyes;
-                        //    }
-                        //}
-                        //catch
-                        //{
-                        //}
-                        //   netc.IsPage = false; 
+                       
                         return alldata;
                     }
                 }

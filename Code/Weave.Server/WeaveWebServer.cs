@@ -124,6 +124,13 @@ namespace Weave.Server
                                 if (!Send(workItem.SocketSession, df.GetBytes()))
                                 {
                                     workItem.ErrorNum += 1;
+                                    if (workItem.ErrorNum > 3)
+                                    {
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListHander), workItem.SocketSession);
+
+
+                                        weaveWorkItemsList.Remove(workItem);
+                                    }
                                 }
                                 else
                                 {
