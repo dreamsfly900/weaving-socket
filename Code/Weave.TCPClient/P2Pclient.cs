@@ -604,6 +604,8 @@ namespace Weave.TCPClient
                     int bytesRead = tcpc.Client.Available;
                     if (bytesRead > 0)
                     {
+                        //System.Threading.Thread.Sleep(100);
+                        //bytesRead = tcpc.Client.Available;
                         byte[] tempbtye = new byte[bytesRead];
                         try
                         {
