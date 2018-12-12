@@ -94,7 +94,7 @@ namespace Weave.Base
                                 workItem.ErrorNum += 1;
                                 if (workItem.ErrorNum > 3)
                                 {
-                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
 
 
                                     weaveNetworkItems.Remove(workItem);
@@ -113,7 +113,7 @@ namespace Weave.Base
                             workItem.ErrorNum += 1;
                             if (workItem.ErrorNum > 3)
                             {
-                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+                                System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
                                
                               
                                 weaveNetworkItems.Remove(workItem);
@@ -255,7 +255,7 @@ namespace Weave.Base
                                     me.Soc =soc;
                                     if (waveReceiveEvent != null)
                                         //  waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
-                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
+                                         System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
                                         //receiveeventto(me);
                                         //if (receiveevent != null)
                                        // waveReceiveEvent.BeginInvoke(tempbtye[0], temp, soc, null, null);
@@ -272,7 +272,7 @@ namespace Weave.Base
                                     me.Databit = bs;
                                     me.Soc = soc;
                                     if (weaveReceiveBitEvent != null)
-                                          System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                          System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
                                        // weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
                                         //weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
                                 }
@@ -338,20 +338,20 @@ namespace Weave.Base
                     {
                         if (tempbtye.Length > 0)
                         {
-                            //WeaveEvent me = new WeaveEvent();
-                            //me.Command = defaultCommand;
-                            //me.Data = "";
-                            //me.Databit = tempbtye;
-                            //me.Soc = workItem.SocketSession;
+                            WeaveEvent me = new WeaveEvent();
+                            me.Command = defaultCommand;
+                            me.Data = "";
+                            me.Databit = tempbtye;
+                            me.Soc = workItem.SocketSession;
                             if (weaveReceiveBitEvent != null)
-                                 weaveReceiveBitEvent?.BeginInvoke(defaultCommand, tempbtye, workItem.SocketSession,null,null);
-                                //System.Threading.ThreadPool.QueueUserWorkItem(
-                                //    new System.Threading.WaitCallback(ReceiveBitEventHander), me);
-                           
+                                // weaveReceiveBitEvent?.BeginInvoke(defaultCommand, tempbtye, workItem.SocketSession,null,null);
+                            System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
+                                new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+
                             //netc.IsPage = false;
 
                         }
-                        
+
                     }
                     else
                     {

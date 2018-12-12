@@ -666,7 +666,7 @@ namespace Weave.Server
                                         }
                                         else
                                         {
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReadCallback3), netc);
+                                            System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReadCallback3), netc);
 
                                         }
                                       
@@ -681,7 +681,7 @@ namespace Weave.Server
                                 netc.IsPage = true;
                                 //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
                                 //t.Start(netc);
-                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(packageData), netc);
+                                System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(packageData), netc);
                                 //packageDataHandler pdh = new packageDataHandler(packageData);
                                 //pdh.BeginInvoke(netc, null, null);
                             }
@@ -736,7 +736,7 @@ namespace Weave.Server
                                 me.Soc = netc.SocketSession;
                                 me.Ssl = netc.Stream;
                                 if (weaveReceiveBitEvent != null)
-                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
                             ListData.RemoveAt(i);
                             netc.IsPage = false; return;
                         }
@@ -854,9 +854,9 @@ namespace Weave.Server
                                     //t.Start(me);
                                     //receiveeventto(me);
                                     if (waveReceiveEvent != null)
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHander), me);
+                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHander), me);
                                     if (weaveReceiveSslEvent != null)
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHanderssl), me); 
+                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHanderssl), me); 
                                     //if (receiveevent != null)
                                     //    receiveevent(me.Command, me.Data, me.Soc);
                                 }
@@ -871,7 +871,7 @@ namespace Weave.Server
                                     me.Soc = netc.SocketSession;
                                     me.Ssl = netc.Stream;
                                     if (weaveReceiveBitEvent != null)
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
+                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
                                 }
                                 netc.IsPage = false; return;
                             }
