@@ -15702,12 +15702,12 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj",
+      "projectUniqueName": "D:\\weavingsocket\\Code\\IotClient\\IotClientClass.csproj",
       "projectName": "IotClientClass",
-      "projectPath": "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj",
-      "projectJsonPath": "D:\\WeavingSocket\\Code\\IotClient\\project.json",
+      "projectPath": "D:\\weavingsocket\\Code\\IotClient\\IotClientClass.csproj",
+      "projectJsonPath": "D:\\weavingsocket\\Code\\IotClient\\project.json",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\WeavingSocket\\Code\\IotClient\\obj\\",
+      "outputPath": "D:\\weavingsocket\\Code\\IotClient\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
         "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",

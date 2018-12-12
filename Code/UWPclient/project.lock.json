@@ -15638,12 +15638,12 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "D:\\WeavingSocket\\Code\\UWPclient\\UWPclient.csproj",
+      "projectUniqueName": "D:\\weavingsocket\\Code\\UWPclient\\UWPclient.csproj",
       "projectName": "UWPclient",
-      "projectPath": "D:\\WeavingSocket\\Code\\UWPclient\\UWPclient.csproj",
-      "projectJsonPath": "D:\\WeavingSocket\\Code\\UWPclient\\project.json",
+      "projectPath": "D:\\weavingsocket\\Code\\UWPclient\\UWPclient.csproj",
+      "projectJsonPath": "D:\\weavingsocket\\Code\\UWPclient\\project.json",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\WeavingSocket\\Code\\UWPclient\\obj\\",
+      "outputPath": "D:\\weavingsocket\\Code\\UWPclient\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
         "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -15656,8 +15656,8 @@
       "frameworks": {
         "uap10.0.10240": {
           "projectReferences": {
-            "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj": {
-              "projectPath": "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj"
+            "D:\\weavingsocket\\Code\\IotClient\\IotClientClass.csproj": {
+              "projectPath": "D:\\weavingsocket\\Code\\IotClient\\IotClientClass.csproj"
             }
           }
         }

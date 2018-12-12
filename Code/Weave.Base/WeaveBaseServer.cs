@@ -192,22 +192,7 @@ namespace Weave.Base
                         //  if (ListData.Count > 0) ListData.RemoveAt(0);
                         return alldata;
                     };
-                    if (weaveDataType == WeaveDataTypeEnum.custom)
-                    {
-                        byte[] tempbtyec = new byte[alldata.Length];
-                        Array.Copy(alldata, tempbtyec, tempbtyec.Length);
-                        WeaveEvent me = new WeaveEvent();
-                        me.Command = defaultCommand;
-                        me.Data = "";
-                        me.Databit = tempbtyec;
-                        me.Soc = soc;
-                        if (weaveReceiveBitEvent != null)
-                           // weaveReceiveBitEvent?.Invoke(defaultCommand, tempbtyec, soc);
-                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
-                        alldata = new byte[0];
-                        //netc.IsPage = false;
-                        return alldata;
-                    }
+                   
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(alldata, tempbtye, tempbtye.Length);
                     if (bytesRead > 2)
@@ -349,13 +334,36 @@ namespace Weave.Base
                 {
                      
                     Array.Copy(workItem.Buffer, 0, tempbtye, 0, tempbtye.Length);
-                    int lle = workItem.allDataList.Length;
-                    
-                      byte []  temp= new byte[lle + tempbtye.Length];
-                    Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
-                    Array.Copy(tempbtye, 0, temp, lle, bytesRead);
-                    workItem.allDataList = temp;                    //workItem.DataList.Add(tempbtye);
-                    workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
+                    if (weaveDataType == WeaveDataTypeEnum.custom)
+                    {
+                        if (tempbtye.Length > 0)
+                        {
+                            //WeaveEvent me = new WeaveEvent();
+                            //me.Command = defaultCommand;
+                            //me.Data = "";
+                            //me.Databit = tempbtye;
+                            //me.Soc = workItem.SocketSession;
+                            if (weaveReceiveBitEvent != null)
+                                 weaveReceiveBitEvent?.BeginInvoke(defaultCommand, tempbtye, workItem.SocketSession,null,null);
+                                //System.Threading.ThreadPool.QueueUserWorkItem(
+                                //    new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                           
+                            //netc.IsPage = false;
+
+                        }
+                        
+                    }
+                    else
+                    {
+                        int lle = workItem.allDataList.Length;
+
+                        byte[] temp = new byte[lle + tempbtye.Length];
+                        Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+                        Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                        workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
+                        workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
+                    }
+
                     workItem.IsPage = false;
                 }
             }
