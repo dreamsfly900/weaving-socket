@@ -97,6 +97,7 @@ namespace Weave.Server
         {
             while (true)
             {
+                byte [] xintiao=new byte[1];
                 try
                 {
                     WeaveNetWorkItems[] weaveWorkItems = new WeaveNetWorkItems[weaveWorkItemsList.Count];
@@ -109,19 +110,13 @@ namespace Weave.Server
                                 continue;
                             if (workItem.State != 0)
                             {
-                              
-                                 DataFrame df = new DataFrame();
-                               
-                                if (DT == WeaveDataTypeEnum.custom)
-                                    df.setByte(new byte[1]);
-                                else
-                                    df.setByte(new byte[] { 0x99 });
-                                if (Certificate != null)
-                                {
-                                    workItem.Stream.Write(df.GetBytes());
-                                }
-                                else
-                                if (!Send(workItem.SocketSession, df.GetBytes()))
+
+
+
+                                if (DT != WeaveDataTypeEnum.custom) 
+                                    xintiao[1] = 0x99;
+                                
+                                if (!Send(workItem.SocketSession, xintiao))
                                 {
                                     workItem.ErrorNum += 1;
                                     if (workItem.ErrorNum > 3)

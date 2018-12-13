@@ -33,6 +33,10 @@ namespace Weave.Base
         {
             get; set;
         }
+        public int SendState
+        {
+            get; set;
+        }
         List<byte[]> _DataList = new List<byte[]>();
         
         public bool IsPage
