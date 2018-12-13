@@ -114,7 +114,7 @@ namespace Weave.Server
 
 
                                 if (DT != WeaveDataTypeEnum.custom) 
-                                    xintiao[1] = 0x99;
+                                    xintiao[0] = 0x99;
                                 
                                 if (!Send(workItem.SocketSession, xintiao))
                                 {
