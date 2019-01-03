@@ -292,7 +292,7 @@ namespace Weave.TCPClient
                 int count =(b.Length<=40960? b.Length/40960: (b.Length/40960)+1);
                 if (count == 0)
                 {
-                    Send(b);
+                      Send(b);
                     
                 }
                 else
@@ -302,7 +302,7 @@ namespace Weave.TCPClient
                        int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
                         byte[] temp = new byte[zz];
                          Array.Copy(b, i * 40960, temp, 0, zz);
-                       Send(temp);
+                        Send(temp);
                         //System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -403,7 +403,7 @@ namespace Weave.TCPClient
                     //int count = ListData.Count;
                     //if (count > 0)
                     {
-                        
+                        lb0x99:
                         int bytesRead = alldata.Length;
                         if (bytesRead == 0)
                         {
@@ -415,6 +415,22 @@ namespace Weave.TCPClient
                         byte[] tempbtye = new byte[bytesRead];
 
                         Array.Copy(alldata, tempbtye, tempbtye.Length);
+                        if (tempbtye[0] == 0x99)
+                        {
+                            timeout = DateTime.Now;
+                            if (tempbtye.Length > 1)
+                            {
+                                byte[] b = new byte[bytesRead - 1];
+                                try
+                                {
+                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                }
+                                catch { }
+                                alldata= tempbtye = b;
+                                goto lb0x99;
+                            }
+                            
+                        }
                         if (DT == DataType.custom )
                         {
                             //temppake str = new temppake();
@@ -685,8 +701,8 @@ namespace Weave.TCPClient
                             }
                             unup();
                         }
-                        //else
-                        //    System.Threading.Thread.Sleep(1);
+                        else
+                            System.Threading.Thread.Sleep(1);
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;

@@ -113,10 +113,22 @@ namespace Weave.Base
                             workItem.ErrorNum += 1;
                             if (workItem.ErrorNum > 3)
                             {
-                                System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
-                               
-                              
-                                weaveNetworkItems.Remove(workItem);
+                                System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
+                                    new System.Threading.WaitCallback(DeleteSocketListEventHander),
+                                    workItem.SocketSession);
+
+                                try
+                                {
+                                    weaveNetworkItems.Remove(workItem);
+                                }
+                                catch (Exception EX_NAME)
+                                {
+                                    Console.WriteLine(EX_NAME);
+                                    throw;
+                                }
+
+
+
                             }
                         }
                     }

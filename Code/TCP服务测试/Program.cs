@@ -14,15 +14,29 @@ namespace TCP服务测试
     {
         static Weave.Server.WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.custom);
 
-      
-   
-           static void Main(string[] args)
+        static P2Pclient ptcp = new P2Pclient(DataType.custom);
+
+        static void Main(string[] args)
         {
-            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent; ;
-            
-             wudp.Start(12404);
-           
-            Console.ReadLine();
+            //wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent; ;
+
+            // wudp.Start(12404);
+
+            //Console.ReadLine();
+          
+            ptcp.receiveServerEventbit += Ptcp_receiveServerEventbit;
+            ptcp.timeoutobjevent += Ptcp_timeoutobjevent;
+            ptcp.start("127.0.0.1", 1110, false);
+        }
+
+        private static void Ptcp_timeoutobjevent(P2Pclient p2pobj)
+        {
+            p2pobj.Restart(false);
+        }
+
+        private static void Ptcp_receiveServerEventbit(byte command, byte[] data)
+        {
+            ptcp.Send(data);
         }
 
         private static void Wudp_weaveReceiveBitEvent(byte command, byte[] data, Socket soc)
