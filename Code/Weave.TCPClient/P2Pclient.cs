@@ -610,7 +610,7 @@ namespace Weave.TCPClient
                                     timeout = DateTime.Now;
                                     if (tempbtye.Length > 1)
                                     {
-                                        byte[] b = new byte[bytesRead - 1];
+                                        byte[] b = new byte[tempbtye.Length - 1];
                                         try
                                         {
                                             Array.Copy(tempbtye, 1, b, 0, b.Length);
