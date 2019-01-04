@@ -290,22 +290,22 @@ namespace Weave.TCPClient
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 int count =(b.Length<=40960? b.Length/40960: (b.Length/40960)+1);
-                if (count == 0)
-                {
+                //if (count == 0)
+                //{
                       Send(b);
                     
-                }
-                else
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                       int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
-                        byte[] temp = new byte[zz];
-                         Array.Copy(b, i * 40960, temp, 0, zz);
-                        Send(temp);
-                        //System.Threading.Thread.Sleep(1);
-                    }
-                }
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < count; i++)
+                //    {
+                //       int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                //        byte[] temp = new byte[zz];
+                //         Array.Copy(b, i * 40960, temp, 0, zz);
+                //        Send(temp);
+                //        //System.Threading.Thread.Sleep(1);
+                //    }
+                //}
             }
             catch (Exception ee){
                 if (Isline)
@@ -375,6 +375,7 @@ namespace Weave.TCPClient
             isok = false;
             Isline = false;
             tcpc.Close();
+            alldata = new byte[0];
         }
       //  class temppake { public byte command; public string date; public byte [] datebit; }
         //void rec(object obj)
@@ -426,8 +427,8 @@ namespace Weave.TCPClient
                                     Array.Copy(tempbtye, 1, b, 0, b.Length);
                                 }
                                 catch { }
-                                alldata= tempbtye = b;
-                                goto lb0x99;
+                                alldata = b;
+                                return;
                             }
                             
                         }
@@ -493,15 +494,7 @@ namespace Weave.TCPClient
                                 {
                                     if (ErrorMge != null)
                                         ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
-                                    byte[] b = new byte[bytesRead - 1];
-                                    try
-                                    {
-                                        Array.Copy(tempbtye, 1, b, 0, b.Length);
-                                    }
-                                    catch { }
-                                    alldata = tempbtye = b;
-                                    goto lb0x99;
-                                   
+                                    alldata = new byte[0];
                                 }
                                 try
                                 {
@@ -557,6 +550,7 @@ namespace Weave.TCPClient
                                 {
                                     if (ErrorMge != null)
                                         ErrorMge(3,e.StackTrace+ "unup122:" + e.Message);
+                                    alldata = new byte[0];
                                 }
                             }
                             else
@@ -648,6 +642,7 @@ namespace Weave.TCPClient
                             alldata = temp;                    //workItem.DataList.Add(tempbtye);
 
                             unup();
+                            continue;
                         }
                         catch
                         { }

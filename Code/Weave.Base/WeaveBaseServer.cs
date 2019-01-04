@@ -89,7 +89,7 @@ namespace Weave.Base
                             byte[] b = new byte[] { 0x99 };
                             if (weaveDataType == WeaveDataTypeEnum.custom)
                                 b = new byte[1];
-                            //lock (workItem.SocketSession)
+                            lock (workItem.SocketSession)
                             {
                                 if (!Send(workItem.SocketSession, b))
                                 {
