@@ -433,11 +433,7 @@ namespace Weave.TCPClient
                         }
                         if (DT == DataType.custom )
                         {
-                            //temppake str = new temppake();
-                            //str.command = defaultCommand;
-                            //str.datebit = tempbtye;
-                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
-                            //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
+                            
                             if (receiveServerEventbit != null)
                                 receiveServerEventbit(defaultCommand, tempbtye);
                             if (receiveServerEventbitobj != null)
@@ -456,9 +452,11 @@ namespace Weave.TCPClient
                                 int len = 0;
                                 if (DT == DataType.bytes)
                                 {
+                                  
                                     byte[] bb = new byte[a];
                                     Array.Copy(tempbtye, 2, bb, 0, a);
                                     len = ConvertToInt(bb);
+                                  
                                 }
                                 else
                                 {
@@ -478,21 +476,7 @@ namespace Weave.TCPClient
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
                                     {
-                                        ////if (ListData.Count > 1)
-                                        ////{
-                                        ////    ListData.RemoveAt(0);
-
-                                        //byte[] temps = new byte[alldata.Length];
-                                        //Array.Copy(alldata, temps, temps.Length);
-                                        //byte[] temps2 = new byte[tempbtye.Length + temps.Length];
-                                        //Array.Copy(tempbtye, 0, temps2, 0, tempbtye.Length);
-                                        //Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
-                                        //alldata = temps2;
-                                        ////}
-                                        ////else
-                                        ////{
-                                        ////    System.Threading.Thread.Sleep(1);
-                                        ////}
+                                       
                                         return;
                                     }
                                     else if (tempbtye.Length > (len + 2 + a))
@@ -508,16 +492,23 @@ namespace Weave.TCPClient
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
-                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message+ "2 + a"+ 2 + a+ "---len"+ len+ "--tempbtye"+ tempbtye.Length);
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
+                                    byte[] b = new byte[bytesRead - 1];
+                                    try
+                                    {
+                                        Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                    }
+                                    catch { }
+                                    alldata = tempbtye = b;
+                                    goto lb0x99;
+                                   
                                 }
                                 try
                                 {
                                     if (DT == DataType.json)
                                     {
                                        string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                        //temppake str = new temppake();
-                                        //str.command = tempbtye[0];
-                                        //str.date = temp;
+                                         
                                         if (tempbtye[0] == 0xff)
                                         {
                                             if (temp.IndexOf("token") >= 0)
@@ -529,13 +520,9 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                                //   receiveServerEvent(str.command, str.date);
-                                                //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
+                                               
                                                 receiveServerEvent?.Invoke(tempbtye[0], temp);
-                                                //receiveServerEvent(str.command, str.date);
-                                                //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
-                                                //tt.Start(str);
+                                              
                                                 if (receiveServerEvent != null)
                                                     receiveServerEvent(tempbtye[0], temp);
                                                 if (receiveServerEventobj != null)
@@ -543,18 +530,12 @@ namespace Weave.TCPClient
                                             }
                                         }
                                         else if (receiveServerEvent != null || receiveServerEventobj!=null)
-                                        {
-                                            //
-                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                            
+                                        { 
                                             if (receiveServerEvent != null)
                                                 receiveServerEvent(tempbtye[0], temp);
                                             if (receiveServerEventobj != null)
                                                 receiveServerEventobj(tempbtye[0], temp, this);
-                                            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                            //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
-                                            //tt.Start(str);
-                                            // receiveServerEvent();
+                                           
                                         }
                                     }
                                     if (DT == DataType.bytes)
@@ -563,13 +544,7 @@ namespace Weave.TCPClient
                                        // byte[] bs = new byte[len - 2 + a];
                                         byte[] bs = new byte[len];
                                         Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
-                                       // Array.Copy(tempbtye, bs, bs.Length);
-                                        //temppake str = new temppake();
-                                        //str.command = tempbtye[0];
-                                        //str.datebit = bs;
                                         
-                                        // System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(recbit), str);
-                                       // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
                                         
                                         if (receiveServerEventbit != null)
                                             receiveServerEventbit(tempbtye[0], bs);

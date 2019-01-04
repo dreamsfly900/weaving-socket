@@ -89,22 +89,24 @@ namespace Weave.Base
                             byte[] b = new byte[] { 0x99 };
                             if (weaveDataType == WeaveDataTypeEnum.custom)
                                 b = new byte[1];
-                            if (!Send(workItem.SocketSession, b))
+                            //lock (workItem.SocketSession)
                             {
-                                workItem.ErrorNum += 1;
-                                if (workItem.ErrorNum > 3)
+                                if (!Send(workItem.SocketSession, b))
                                 {
-                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+                                    workItem.ErrorNum += 1;
+                                    if (workItem.ErrorNum > 3)
+                                    {
+                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
 
 
-                                    weaveNetworkItems.Remove(workItem);
+                                        weaveNetworkItems.Remove(workItem);
+                                    }
+                                }
+                                else
+                                {
+                                    workItem.ErrorNum = 0;
                                 }
                             }
-                            else
-                            {
-                                workItem.ErrorNum = 0;
-                            }
-
                             // workItem.SocketSession.Send(b);
                            
                         }
@@ -422,21 +424,24 @@ namespace Weave.Base
                 if (socketLisener.ProtocolType == ProtocolType.Udp)
                     slen = 520;
                 int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
-                if (count == 0)
+                lock (socket)
                 {
-                    Send( socket,b);
-                    
-                }
-                else
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
-                        byte[] temp = new byte[zz];
-                        Array.Copy(b, i * slen, temp, 0, zz); 
-                        Send(socket, temp);
-                      //  System.Threading.Thread.Sleep(1);
-                    }
+                    //if (count == 0)
+                    //{
+                        Send(socket, b);
+
+                    //}
+                    //else
+                    //{
+                    //    for (int i = 0; i < count; i++)
+                    //    {
+                    //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
+                    //        byte[] temp = new byte[zz];
+                    //        Array.Copy(b, i * slen, temp, 0, zz);
+                    //        Send(socket, temp);
+                    //        //  System.Threading.Thread.Sleep(1);
+                    //    }
+                    //}
                 }
              
             }
@@ -461,7 +466,10 @@ namespace Weave.Base
         {
             try
             {
-                socket.BeginSend(text, 0, text.Length, SocketFlags.None, acallsend, socket);
+               
+                {
+                    socket.BeginSend(text, 0, text.Length, SocketFlags.None, acallsend, socket);
+                }
                 //socket.Send(text);
                 return true;
             }
@@ -483,21 +491,24 @@ namespace Weave.Base
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
-                if (count == 0)
+                lock (socket)
                 {
-                   // socket.Send(b);
-                    Send(socket, b);
-                }
-                else
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
-                        byte[] temp = new byte[zz];
-                        Array.Copy(b, i * slen, temp, 0, zz);
-                        Send(socket, temp);
-                      //  System.Threading.Thread.Sleep(1);
-                    }
+                    //if (count == 0)
+                    //{
+                        // socket.Send(b);
+                        Send(socket, b);
+                    //}
+                    //else
+                    //{
+                    //    for (int i = 0; i < count; i++)
+                    //    {
+                    //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
+                    //        byte[] temp = new byte[zz];
+                    //        Array.Copy(b, i * slen, temp, 0, zz);
+                    //        Send(socket, temp);
+                    //        //  System.Threading.Thread.Sleep(1);
+                    //    }
+                    //}
                 }
             }
             catch { return false; }
