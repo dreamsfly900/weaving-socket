@@ -377,7 +377,7 @@ namespace Weave.TCPClient
             tcpc.Close();
             alldata = new byte[0];
         }
-      //  class temppake { public byte command; public string date; public byte [] datebit; }
+        //  class temppake { public byte command; public string date; public byte [] datebit; }
         //void rec(object obj)
         //{
         //    temppake str = obj as temppake;
@@ -394,6 +394,7 @@ namespace Weave.TCPClient
         //    if (receiveServerEventbitobj != null)
         //        receiveServerEventbitobj(str.command, str.datebit,this);
         //}
+        byte[] tempp = new byte[0];
         void unup()
         {
          //   while (isok)
@@ -404,8 +405,9 @@ namespace Weave.TCPClient
                     //int count = ListData.Count;
                     //if (count > 0)
                     {
-                        lb0x99:
+                    lb0x99:
                         int bytesRead = alldata.Length;
+                        
                         if (bytesRead == 0)
                         {
                             // ListData.RemoveAt(0); 
@@ -485,7 +487,7 @@ namespace Weave.TCPClient
                                         byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
                                         Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                         alldata = temps;
-                                        
+                                        goto lb0x99;
                                     }
                                     else if (tempbtye.Length == (len + 2 + a))
                                     { alldata = new byte[0]; }
@@ -634,6 +636,8 @@ namespace Weave.TCPClient
                         //  }
                         try
                         {
+                            tempp = new byte[alldata.Length];
+                            alldata.CopyTo(tempp, 0);
                             int lle = alldata.Length;
                             bytesRead = tempbtye.Length;
                             byte[] temp = new byte[lle + bytesRead];
