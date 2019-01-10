@@ -169,6 +169,7 @@ namespace Weave.TCPClient
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new TcpClient();
                 tcpc.ExclusiveAddressUse = false;
+                tcpc.ReceiveBufferSize = int.MaxValue;
                 tcpc.Connect(ip, port);
                 localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
                 Isline = true;
@@ -331,13 +332,16 @@ namespace Weave.TCPClient
             bool bb = false;
             try
             {
+                
+                
                 byte[] sendb = text;
                 byte[] lens = ConvertToByteList(sendb.Length);
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
+                byte[] b = new byte[2 + 2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
+                CRC.ConCRC(ref b, 2 + lens.Length);
+                sendb.CopyTo(b, 2 + 2 + lens.Length);
                 bb = Send(b);
                 //int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
                 //if (count == 0)
@@ -377,29 +381,46 @@ namespace Weave.TCPClient
             tcpc.Close();
             alldata = new byte[0];
         }
-        //  class temppake { public byte command; public string date; public byte [] datebit; }
-        //void rec(object obj)
-        //{
-        //    temppake str = obj as temppake;
-        //    if(receiveServerEvent!=null)
-        //    receiveServerEvent(str.command, str.date);
-        //    if (receiveServerEventobj != null)
-        //        receiveServerEventobj(str.command, str.date,this);
-        //}
-        //void recbit(object obj)
-        //{
-        //    temppake str = obj as temppake;
-        //    if(receiveServerEventbit!=null)
-        //    receiveServerEventbit(str.command, str.datebit );
-        //    if (receiveServerEventbitobj != null)
-        //        receiveServerEventbitobj(str.command, str.datebit,this);
-        //}
+      
         byte[] tempp = new byte[0];
         void unup()
         {
-         //   while (isok)
+            if (DT == DataType.custom)
             {
-               // System.Threading.Thread.Sleep(1);
+                int bytesRead = alldata.Length;
+
+                if (bytesRead == 0)
+                {
+                    // ListData.RemoveAt(0); 
+                    return;
+                }
+                byte[] tempbtye = new byte[bytesRead];
+
+                Array.Copy(alldata, tempbtye, tempbtye.Length);
+                if (receiveServerEventbit != null)
+                    receiveServerEventbit(defaultCommand, tempbtye);
+                if (receiveServerEventbitobj != null)
+                    receiveServerEventbitobj(defaultCommand, tempbtye, this);
+
+                alldata = new byte[0];
+                return;
+            }
+            else if (DT == DataType.json)
+            {
+                unupjson();
+                return;
+            }
+            else if (DT == DataType.bytes)
+            {
+                unupbyte();
+                return;
+            }
+        }
+        void unupjson()
+        {
+       
+             
+                // System.Threading.Thread.Sleep(1);
                 try
                 {
                     //int count = ListData.Count;
@@ -407,14 +428,14 @@ namespace Weave.TCPClient
                     {
                     lb0x99:
                         int bytesRead = alldata.Length;
-                        
+
                         if (bytesRead == 0)
                         {
                             // ListData.RemoveAt(0); 
                             return;
                         }
-                       
-                     
+
+
                         byte[] tempbtye = new byte[bytesRead];
 
                         Array.Copy(alldata, tempbtye, tempbtye.Length);
@@ -432,39 +453,19 @@ namespace Weave.TCPClient
                                 alldata = b;
                                 return;
                             }
-                            
-                        }
-                        if (DT == DataType.custom )
-                        {
-                            
-                            if (receiveServerEventbit != null)
-                                receiveServerEventbit(defaultCommand, tempbtye);
-                            if (receiveServerEventbitobj != null)
-                                receiveServerEventbitobj(defaultCommand, tempbtye, this);
 
-                            alldata = new byte[0];
-                            return;
                         }
-                     
-                       
+                         
+
                         if (bytesRead > 2)
                         {
                             int a = tempbtye[1];
                             if (bytesRead > 2 + a)
                             {
                                 int len = 0;
-                                if (DT == DataType.bytes)
-                                {
-                                  
-                                    byte[] bb = new byte[a];
-                                    Array.Copy(tempbtye, 2, bb, 0, a);
-                                    len = ConvertToInt(bb);
-                                  
-                                }
-                                else
-                                {
+                               
                                     String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
-                                     len = 0;
+                                    len = 0;
                                     try
                                     {
                                         len = int.Parse(temp);
@@ -472,14 +473,13 @@ namespace Weave.TCPClient
                                         { alldata = new byte[0]; return; }
                                     }
                                     catch
-                                    { }
-                                }
-                              
+                                    { } 
+
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
                                     {
-                                       
+
                                         return;
                                     }
                                     else if (tempbtye.Length > (len + 2 + a))
@@ -502,8 +502,8 @@ namespace Weave.TCPClient
                                 {
                                     if (DT == DataType.json)
                                     {
-                                       string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                         
+                                          temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
                                         if (tempbtye[0] == 0xff)
                                         {
                                             if (temp.IndexOf("token") >= 0)
@@ -515,43 +515,31 @@ namespace Weave.TCPClient
                                             }
                                             else
                                             {
-                                               
+
                                                 receiveServerEvent?.Invoke(tempbtye[0], temp);
-                                              
+
                                                 if (receiveServerEvent != null)
                                                     receiveServerEvent(tempbtye[0], temp);
                                                 if (receiveServerEventobj != null)
                                                     receiveServerEventobj(tempbtye[0], temp, this);
                                             }
                                         }
-                                        else if (receiveServerEvent != null || receiveServerEventobj!=null)
-                                        { 
+                                        else if (receiveServerEvent != null || receiveServerEventobj != null)
+                                        {
                                             if (receiveServerEvent != null)
                                                 receiveServerEvent(tempbtye[0], temp);
                                             if (receiveServerEventobj != null)
                                                 receiveServerEventobj(tempbtye[0], temp, this);
-                                           
+
                                         }
                                     }
-                                    if (DT == DataType.bytes)
-                                    {
-                                       // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                       // byte[] bs = new byte[len - 2 + a];
-                                        byte[] bs = new byte[len];
-                                        Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
-                                        
-                                        
-                                        if (receiveServerEventbit != null)
-                                            receiveServerEventbit(tempbtye[0], bs);
-                                        if (receiveServerEventbitobj != null)
-                                            receiveServerEventbitobj(tempbtye[0], bs, this);
-                                    }
+                                    
                                     return;
                                 }
                                 catch (Exception e)
                                 {
                                     if (ErrorMge != null)
-                                        ErrorMge(3,e.StackTrace+ "unup122:" + e.Message);
+                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
                                     alldata = new byte[0];
                                 }
                             }
@@ -563,19 +551,148 @@ namespace Weave.TCPClient
                         else
                         {
                             return;
-                          
+
                         }
                     }
                 }
                 catch (Exception e)
                 {
                     if (ErrorMge != null)
-                        ErrorMge(3, "unup:" + e.Message+"---"+e.StackTrace);
+                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
+                    alldata = new byte[0];
+                }
+            
+        }
+        void unupbyte()
+        {
+
+            {
+                // System.Threading.Thread.Sleep(1);
+                try
+                {
+                    //int count = ListData.Count;
+                    //if (count > 0)
+                    {
+                    lb0x99:
+                        int bytesRead = alldata.Length;
+
+                        if (bytesRead == 0)
+                        {
+                            // ListData.RemoveAt(0); 
+                            return;
+                        }
+
+
+                        byte[] tempbtye = new byte[bytesRead];
+
+                        Array.Copy(alldata, tempbtye, tempbtye.Length);
+                        if (tempbtye[0] == 0x99)
+                        {
+                            timeout = DateTime.Now;
+                            if (tempbtye.Length > 1)
+                            {
+                                byte[] b = new byte[bytesRead - 1];
+                                try
+                                {
+                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                }
+                                catch { }
+                                alldata = b;
+                                return;
+                            }
+
+                        }
+
+
+                        if (bytesRead > 2)
+                        {
+                            int a = tempbtye[1];
+                            if (bytesRead > 4 + a)
+                            {
+                                 
+                                int len = 0;
+
+                                byte[] bbcrc = new byte[4 + a];
+                                Array.Copy(tempbtye, 0, bbcrc, 0, 4 + a);
+                                if (CRC.DataCRC(ref bbcrc, 4 + a))
+                                {
+                                    byte[] bb = new byte[a];
+                                    Array.Copy(tempbtye, 2, bb, 0, a);
+                                    len = ConvertToInt(bb);
+                                }
+                                else
+                                {
+                                    byte[] temps = new byte[tempbtye.Length - 1];
+                                    Array.Copy(tempbtye, 1, temps, 0, temps.Length);
+                                    alldata = temps;
+                                    goto lb0x99;
+                                }
+                                try
+                                {
+                                    if ((len + 4 + a) > tempbtye.Length)
+                                    {
+
+                                        return;
+                                    }
+                                    else if (tempbtye.Length > (len + 4 + a))
+                                    {
+                                        byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
+                                        Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
+                                        alldata = temps;
+                                        goto lb0x99;
+                                    }
+                                    else if (tempbtye.Length == (len + 4 + a))
+                                    { alldata = new byte[0]; }
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
+                                    alldata = new byte[0];
+                                }
+                                try
+                                {
+                                    
+                                   
+                                        byte[] bs = new byte[len];
+                                        Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+
+
+                                        if (receiveServerEventbit != null)
+                                            receiveServerEventbit(tempbtye[0], bs);
+                                        if (receiveServerEventbitobj != null)
+                                            receiveServerEventbitobj(tempbtye[0], bs, this);
+                                   
+                                    return;
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
+                                    alldata = new byte[0];
+                                }
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (ErrorMge != null)
+                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
                     alldata = new byte[0];
                 }
             }
         }
-       //   List<Byte[]> listtemp = new List<Byte[]>();
+        //   List<Byte[]> listtemp = new List<Byte[]>();
         void receives(object obj)
         {
             while (isok)
@@ -636,15 +753,17 @@ namespace Weave.TCPClient
                         //  }
                         try
                         {
-                            tempp = new byte[alldata.Length];
-                            alldata.CopyTo(tempp, 0);
-                            int lle = alldata.Length;
-                            bytesRead = tempbtye.Length;
-                            byte[] temp = new byte[lle + bytesRead];
-                            Array.Copy(alldata, 0, temp, 0, lle);
-                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
-                            alldata = temp;                    //workItem.DataList.Add(tempbtye);
-
+                            lock (alldata)
+                            {
+                                tempp = new byte[alldata.Length];
+                                alldata.CopyTo(tempp, 0);
+                                int lle = alldata.Length;
+                                bytesRead = tempbtye.Length;
+                                byte[] temp = new byte[lle + bytesRead];
+                                Array.Copy(alldata, 0, temp, 0, lle);
+                                Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                                alldata = temp;                    //workItem.DataList.Add(tempbtye);
+                            }
                             unup();
                             continue;
                         }
