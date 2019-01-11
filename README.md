@@ -1,5 +1,6 @@
 
-
+https://gitee.com/UDCS/WeavingDB
+基于 weaving-socket 通讯架构制作的内存数据库，缓存库。
 
 - https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows/wikis
 
