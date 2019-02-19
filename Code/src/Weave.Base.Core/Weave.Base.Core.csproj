@@ -5,14 +5,14 @@
     <AssemblyName>Weave.Base</AssemblyName>
     <RootNamespace>Weave.Base</RootNamespace>
     <Product>Weave.Base</Product>
-    <Copyright>广西五次方软件科技有限公司</Copyright>
-    <Company>广西五次方软件科技有限公司</Company>
-    <Authors>五次方研发团队</Authors>
+    <Copyright>葛杰</Copyright>
+    <Company>葛杰</Company>
+    <Authors>葛杰</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Weave;applicationframework;dotnetcore;aspnetcore;mq;</PackageTags>
-    <Description>Weave.Base是一个五次方软件基于.net core平台下的应用框架的通用接口类库。</Description>
+    <PackageTags>Weave;Weave.Base;applicationframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
+    <Description>Weave.Base是基于weaving-socket的网关应用框架的通用接口类库。</Description>
     <PackageId>Weave.Base</PackageId>
-    <PackageReleaseNotes>用于广西五次方软件科技有限公司内部使用</PackageReleaseNotes>
+    <PackageReleaseNotes>U3D、物联网、web、通用、网关、socket通讯等功能扩展及项目通信解决方法</PackageReleaseNotes>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl></PackageProjectUrl>
@@ -21,5 +21,20 @@
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\output\release\</OutputPath>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Base.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\release\</OutputPath>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Base.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Interface\" />
+    <Folder Include="WeaveBase\" />
+  </ItemGroup>
 
 </Project>
