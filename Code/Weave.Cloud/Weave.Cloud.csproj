@@ -79,10 +79,6 @@
     <Compile Include="WayItem.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>Weave.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weave.TCPClient\Weave.TCPClient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>Weave.TCPClient</Name>

@@ -1,5 +1,4 @@
-﻿using Fleck;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,13 +10,11 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Weave.Base;
 using Weave.Base.Interface;
 
 namespace Weave.Server
 {
-
     /// <summary>
     /// 继承自IWeaveTcpBase接口的HTTP Web服务器
     /// </summary>
@@ -26,25 +23,29 @@ namespace Weave.Server
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public List<WeaveNetWorkItems> weaveWorkItemsList = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
-     
+
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
         public event WeaveReceiveBitEvent weaveReceiveBitEvent;
-    
-        public event WeaveReceiveSslEvent weaveReceiveSslEvent;
-        WeaveDataTypeEnum DT = WeaveDataTypeEnum.Json;
+
+        public event WeaveReceiveSslEvent WeaveReceiveSslEvent;
+        readonly WeaveDataTypeEnum DT = WeaveDataTypeEnum.Json;
         public X509Certificate2 Certificate { get; set; }
         public SslProtocols EnabledSslProtocols { get; set; }
         public byte defaultCommand = 0x0;
+
         public WeaveWebServer(WeaveDataTypeEnum _DT)
         {
             DT = _DT;
         }
+
         public WeaveWebServer()
         {
         }
+
         public int Port { get; set; }
+
         public void Start(int port)
         {
             callsend = new AsyncCallback(SendDataEnd);
@@ -72,32 +73,26 @@ namespace Weave.Server
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             socket.Bind(localEndPoint);
             socket.Listen(1000000);
-            System.Threading.Thread t = new Thread(new ParameterizedThreadStart(Accept));
+            Thread t = new Thread(new ParameterizedThreadStart(Accept));
             t.Start();
-            System.Threading.Thread t1 = new Thread(new ParameterizedThreadStart(receive));
+            Thread t1 = new Thread(new ParameterizedThreadStart(Receive));
             t1.Start();
-            //System.Threading.Thread t2 = new Thread(new ParameterizedThreadStart(receivepackageData));
-            //t2.Start();
-            System.Threading.Thread t3 = new Thread(new ParameterizedThreadStart(KeepAliveHander));
+            Thread t3 = new Thread(new ParameterizedThreadStart(KeepAliveHander));
             t3.Start();
-            System.Threading.Thread t4 = new Thread(new ParameterizedThreadStart(receiveconn));
+            Thread t4 = new Thread(new ParameterizedThreadStart(Receiveconn));
             t4.Start();
-            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(receiveconn));
         }
-        //void udp_receiveevent(byte command, string data, NETcollectionUdp NETc)
-        //{
-        //    if (NATthroughevent != null)
-        //        NATthroughevent(data, NETc.Iep);
-        //}
+
         public int GetNetworkItemCount()
         {
             return weaveWorkItemsList.Count;
         }
+
         public void KeepAliveHander(object obj)
         {
             while (true)
             {
-                byte [] xintiao=new byte[1];
+                byte[] xintiao = new byte[1];
                 try
                 {
                     WeaveNetWorkItems[] weaveWorkItems = new WeaveNetWorkItems[weaveWorkItemsList.Count];
@@ -110,19 +105,15 @@ namespace Weave.Server
                                 continue;
                             if (workItem.State != 0)
                             {
-
-
-
-                                if (DT != WeaveDataTypeEnum.custom) 
+                                if (DT != WeaveDataTypeEnum.custom)
                                     xintiao[0] = 0x99;
-                                
+
                                 if (!Send(workItem.SocketSession, xintiao))
                                 {
                                     workItem.ErrorNum += 1;
                                     if (workItem.ErrorNum > 3)
                                     {
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListHander), workItem.SocketSession);
-
+                                        ThreadPool.QueueUserWorkItem(new WaitCallback(DeleteSocketListHander), workItem.SocketSession);
 
                                         weaveWorkItemsList.Remove(workItem);
                                     }
@@ -138,19 +129,18 @@ namespace Weave.Server
                             workItem.ErrorNum += 1;
                             if (workItem.ErrorNum > 3)
                             {
-                                ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListHander), workItem.SocketSession);
-                              
-                              
-                                // EventDeleteConnSoc.BeginInvoke(netc.Soc, null, null);
+                                ThreadPool.QueueUserWorkItem(new WaitCallback(DeleteSocketListHander), workItem.SocketSession);
+
                                 weaveWorkItemsList.Remove(workItem);
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(8000);
+                    Thread.Sleep(8000);
                 }
                 catch { }
             }
         }
+
         public int ConvertToInt(byte[] list)
         {
             int ret = 0;
@@ -162,6 +152,7 @@ namespace Weave.Server
             }
             return ret;
         }
+
         public byte[] ConvertToByteList(int v)
         {
             List<byte> ret = new List<byte>();
@@ -175,6 +166,7 @@ namespace Weave.Server
             ret.CopyTo(bb);
             return bb;
         }
+
         private byte[] AnalyticData(byte[] recBytes, int recByteLength, ref byte[] masks, ref int lens, ref int payload_len)
         {
             lens = 0;
@@ -194,7 +186,7 @@ namespace Weave.Server
             if (payload_len == 126)
             {
                 Array.Copy(recBytes, 4, masks, 0, 4);
-                payload_len = (UInt16)(recBytes[2] << 8 | recBytes[3]);
+                payload_len = (ushort)(recBytes[2] << 8 | recBytes[3]);
                 lens = 8;
                 payload_data = new byte[payload_len];
                 Array.Copy(recBytes, 8, payload_data, 0, payload_len);
@@ -210,7 +202,7 @@ namespace Weave.Server
                 ulong len = BitConverter.ToUInt64(uInt64Bytes, 0);
                 lens = 14;
                 payload_data = new byte[len];
-                for (UInt64 i = 0; i < len; i++)
+                for (ulong i = 0; i < len; i++)
                 {
                     payload_data[i] = recBytes[i + 14];
                 }
@@ -228,38 +220,44 @@ namespace Weave.Server
             }
             return (payload_data);
         }
+
         private void DeleteSocketListHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
             try { (state as Socket).Close(); }
             catch { }
         }
+
         private void UpdateSocketListHander(object state)
         {
             weaveUpdateSocketListEvent?.Invoke(state as Socket);
         }
+
         void ReceiveToEventHander(object obj)
         {
             WeaveEvent me = (WeaveEvent)obj;
             waveReceiveEvent?.Invoke(me.Command, me.Data, me.Soc);
         }
+
         void ReceiveToEventHanderssl(object obj)
         {
             WeaveEvent me = (WeaveEvent)obj;
-            weaveReceiveSslEvent?.Invoke(me.Command, me.Data, me.Ssl);
+            WeaveReceiveSslEvent?.Invoke(me.Command, me.Data, me.Ssl);
         }
+
         void ReceiveToBitEventHander(object obj)
         {
             WeaveEvent me = (WeaveEvent)obj;
             weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
         }
-        
-        bool sendhead(Socket handler, byte[] tempbtye)
+
+        bool Sendhead(Socket handler, byte[] tempbtye)
         {
             byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
             handler.Send(aaa);
             return true;
         }
+
         public byte[] ManageHandshake(byte[] receivedDataBuffer, int HandshakeLength)
         {
             string New_Handshake = "";
@@ -270,19 +268,16 @@ namespace Weave.Server
             New_Handshake += Environment.NewLine;
             string header = "Sec-WebSocket-Version:";
             byte[] last8Bytes = new byte[8];
-            System.Text.UTF8Encoding decoder = new System.Text.UTF8Encoding();
+            UTF8Encoding decoder = new UTF8Encoding();
             String rawClientHandshake = Encoding.UTF8.GetString(receivedDataBuffer);
-            //String rawClientHandshake = decoder.GetString(receivedDataBuffer, 0, HandshakeLength);
             Array.Copy(receivedDataBuffer, HandshakeLength - 8, last8Bytes, 0, 8);
             //现在使用的是比较新的Websocket协议
             if (rawClientHandshake.IndexOf(header) != -1)
             {
-                //  isDataMasked = true;
                 string[] rawClientHandshakeLines = rawClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
                 string acceptKey = "";
                 foreach (string Line in rawClientHandshakeLines)
                 {
-                    // //Console.WriteLine(Line);
                     if (Line.Contains("Sec-WebSocket-Key:"))
                     {
                         acceptKey = ComputeWebSocketHandshakeSecurityHash09(Line.Substring(Line.IndexOf(":") + 2));
@@ -290,16 +285,13 @@ namespace Weave.Server
                 }
                 New_Handshake = string.Format(New_Handshake, acceptKey);
                 byte[] newHandshakeText = Encoding.UTF8.GetBytes(New_Handshake);
-                //   ConnectionSocket.BeginSend(newHandshakeText, 0, newHandshakeText.Length, 0, HandshakeFinished, null);
                 return newHandshakeText;
             }
             string ClientHandshake = decoder.GetString(receivedDataBuffer, 0, HandshakeLength - 8);
             string[] ClientHandshakeLines = ClientHandshake.Split(new string[] { Environment.NewLine }, System.StringSplitOptions.RemoveEmptyEntries);
-            //   logger.Log("新的连接请求来自" + ConnectionSocket.LocalEndPoint + "。正在准备连接 ...");
             // Welcome the new client
             foreach (string Line in ClientHandshakeLines)
             {
-                // logger.Log(Line);
                 if (Line.Contains("Sec-WebSocket-Key1:"))
                     BuildServerPartialKey(1, Line.Substring(Line.IndexOf(":") + 2));
                 if (Line.Contains("Sec-WebSocket-Key2:"))
@@ -320,11 +312,9 @@ namespace Weave.Server
             byte[] serverKey = BuildServerFullKey(last8Bytes);
             Array.Copy(HandshakeText, serverHandshakeResponse, HandshakeText.Length);
             Array.Copy(serverKey, 0, serverHandshakeResponse, HandshakeText.Length, 16);
-            //logger.Log("发送握手信息 ...");
-            // ConnectionSocket.BeginSend(serverHandshakeResponse, 0, HandshakeText.Length + 16, 0, HandshakeFinished, null);
-            //    logger.Log(Handshake);
             return serverHandshakeResponse;
         }
+
         private string Handshake;
         private void BuildServerPartialKey(int keyNum, string clientKey)
         {
@@ -339,7 +329,7 @@ namespace Weave.Server
             }
             try
             {
-                currentKey = BitConverter.GetBytes((int)(Int64.Parse(partialServerKey) / spacesNum));
+                currentKey = BitConverter.GetBytes((int)(long.Parse(partialServerKey) / spacesNum));
                 if (BitConverter.IsLittleEndian) Array.Reverse(currentKey);
                 if (keyNum == 1) ServerKey1 = currentKey;
                 else ServerKey2 = currentKey;
@@ -350,6 +340,7 @@ namespace Weave.Server
                 if (ServerKey2 != null) Array.Clear(ServerKey2, 0, ServerKey2.Length);
             }
         }
+
         private byte[] ServerKey1;
         private byte[] ServerKey2;
         private byte[] BuildServerFullKey(byte[] last8Bytes)
@@ -359,15 +350,16 @@ namespace Weave.Server
             Array.Copy(ServerKey2, 0, concatenatedKeys, 4, 4);
             Array.Copy(last8Bytes, 0, concatenatedKeys, 8, 8);
             // MD5 Hash
-            System.Security.Cryptography.MD5 MD5Service = System.Security.Cryptography.MD5.Create();
+            MD5 MD5Service = MD5.Create();
             return MD5Service.ComputeHash(concatenatedKeys);
         }
-        public static String ComputeWebSocketHandshakeSecurityHash09(String secWebSocketKey)
+
+        public static string ComputeWebSocketHandshakeSecurityHash09(string secWebSocketKey)
         {
-            const String MagicKEY = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-            String secWebSocketAccept = String.Empty;
+            const string MagicKEY = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+            string secWebSocketAccept = string.Empty;
             // 1. Combine the request Sec-WebSocket-Key with magic key.
-            String ret = secWebSocketKey + MagicKEY;
+            string ret = secWebSocketKey + MagicKEY;
             // 2. Compute the SHA1 hash
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] sha1Hash = sha.ComputeHash(Encoding.UTF8.GetBytes(ret));
@@ -375,7 +367,7 @@ namespace Weave.Server
             secWebSocketAccept = Convert.ToBase64String(sha1Hash);
             return secWebSocketAccept;
         }
-     
+
         private void ReadCallbackssl(object ar)
         {
             WeaveNetWorkItems netc = (WeaveNetWorkItems)ar;
@@ -386,69 +378,55 @@ namespace Weave.Server
             List<byte> listb = new List<byte>();
             do
             {
-
                 byteCount = stream.Read(buffer, 0, buffer.Length);
 
                 listb.AddRange(buffer.Take(byteCount));
 
-
-               
             } while (byteCount <= 2);
 
             netc.DataList.Add(listb.ToArray());
-            packageData(netc);
+            PackageData(netc);
             netc.State = 1;
-            //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
+
         private void ReadCallback3(object ar)
         {
             WeaveNetWorkItems netc = (WeaveNetWorkItems)ar;
             Socket handler = netc.SocketSession;
-            //if (!netc.Soc.Poll(100, SelectMode.SelectRead))
-            //{
-            //    listconn.Remove(netc);
-            //    return;
-            //}
-            // Read data from the client socket. 
             try
             {
                 handler.Receive(netc.Buffer = new byte[netc.SocketSession.Available]);
-                //if (bytesRead > 0)
-                //{
-                //    // There  might be more data, so store the data received so far.
                 byte[] tempbtye = new byte[netc.Buffer.Length];
-                //netc.Buffer.CopyTo(tempbtye, 0);
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length);
                 netc.DataList.Add(tempbtye);
-                packageData(netc);
-                //  System.Threading.Thread.Sleep(10);
+                PackageData(netc);
             }
             catch
             {
             }
-            //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
-        public bool send(int index, byte command, string text)
+
+        public bool Send(int index, byte command, string text)
         {
             try
             {
                 Socket soc = weaveWorkItemsList[index].SocketSession;
-                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] sendb = Encoding.UTF8.GetBytes(text);
+                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 DataFrame bp = new DataFrame();
-                bp.setByte(b);
+                bp.SetByte(b);
                 soc.Send(bp.GetBytes());
             }
             catch { return false; }
-            // tcpc.Close();
             return true;
         }
-        public IPAddress getLocalmachineIPAddress()
+
+        public IPAddress GetLocalmachineIPAddress()
         {
             string strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
@@ -460,19 +438,20 @@ namespace Weave.Server
             }
             return ipEntry.AddressList[0];
         }
+
         public bool Send(Socket soc, byte command, string text)
         {
             try
             {
                 byte[] sendb = Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 DataFrame bp = new DataFrame();
-                bp.setByte(b);
+                bp.SetByte(b);
                 if (Certificate != null)
                 {
 
@@ -484,15 +463,15 @@ namespace Weave.Server
                 }
                 else
                     Send(soc, b);
-                //soc.Send(bp);
             }
-            catch  
+            catch
             {
-                return false; }
-            // tcpc.Close();
+                return false;
+            }
             return true;
         }
-        private void SendDataEnd(IAsyncResult ar) 
+
+        private void SendDataEnd(IAsyncResult ar)
         {
             try
             {
@@ -500,22 +479,18 @@ namespace Weave.Server
             }
             catch
             {
-
             }
         }
-      
 
         AsyncCallback callsend;
-    public bool Send(Socket soc, byte [] text)
+        public bool Send(Socket soc, byte[] text)
         {
             try
             {
-                
                 DataFrame bp = new DataFrame();
-                bp.setByte(text);
+                bp.SetByte(text);
                 if (Certificate != null)
                 {
-
                     var queryResults = from item in weaveWorkItemsList
                                        where item.SocketSession == soc
                                        select item;
@@ -523,102 +498,69 @@ namespace Weave.Server
                         ssl.Stream.Write(bp.GetBytes());
                 }
                 else
-                   // soc.Send(bp.GetBytes());
-                text= bp.GetBytes();
+                    text = bp.GetBytes();
                 soc.BeginSend(text, 0, text.Length, SocketFlags.None, callsend, soc);
-
-
-
             }
-            catch  
+            catch
             {
                 return false;
             }
-           
+
             return true;
         }
+
         public bool Send(SslStream ssl, byte command, string text)
         {
             try
             {
                 byte[] sendb = Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
                 byte[] b = new byte[2 + lens.Length + sendb.Length];
                 b[0] = command;
                 b[1] = (byte)lens.Length;
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 DataFrame bp = new DataFrame();
-                bp.setByte(b);
+                bp.SetByte(b);
                 if (Certificate != null)
                 {
-
-                     
-                        ssl.Write(bp.GetBytes());
+                    ssl.Write(bp.GetBytes());
                 }
-                
-                
             }
-            catch  
+            catch
             {
                 return false;
             }
-            // tcpc.Close();
             return true;
         }
+
         public int Partition = 5000;
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len, int state, int num);
-        void receive(object ias)
+
+        void Receive(object ias)
         {
             while (true)
             {
                 try
                 {
-                    //int c = listconn.Count;
-                    //int count = (c / Partition) + 1;
-                    //getbufferdelegate[] iagbd = new getbufferdelegate[count];
-                    //IAsyncResult[] ia = new IAsyncResult[count];
-                    //if (c > 0)
-                    //{
-                    //    for (int i = 0; i < count; i++)
-                    //    {
-                    //        c = c - (i * Partition) > Partition ? Partition : c - (i * Partition);
-                    //        NETcollection[] netlist = new NETcollection[c];
-                    //        listconn.CopyTo(i * Partition, netlist, 0, c);
-                    //        iagbd[i] = new getbufferdelegate(getbuffer);
-                    //        ia[i] = iagbd[i].BeginInvoke(netlist, 0, Partition,1,30, null, null);
-                    //    }
-                    //    for (int i = 0; i < count; i++)
-                    //    {
-                    //        iagbd[i].EndInvoke(ia[i]);
-                    //    }
-                    //}
                     int c = weaveWorkItemsList.Count;
-                    //int count = (c / 2000) + 1;
-                    //if (c > 0)
-                    //    for (int i = 0; i < count; i++)
-                    //    {
-                    //        c = c - (i * 2000) > 2000 ? 2000 : c - (i * 2000);
-                    //        NETcollection[] netlist2 = new NETcollection[c];
-                    //        listconn.CopyTo(i * 2000, netlist2, 0, c);
-                    //        System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(gg), netlist2);
-                    //        //new getbufferdelegate(getbuffer).BeginInvoke(netlist, 0, 2000,null,null);
-                    //    }
                     WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                     weaveWorkItemsList.CopyTo(0, netlist, 0, c);
-                    getbuffer(netlist, 0, c, 1, 30);
-                    System.Threading.Thread.Sleep(1);
+                    Getbuffer(netlist, 0, c, 1, 30);
+                    Thread.Sleep(1);
                 }
-                catch //(Exception ex)
+                catch
                 { }
             }
         }
-        void gg(object obj)
+
+        void Gg(object obj)
         {
             WeaveNetWorkItems[] netlist = obj as WeaveNetWorkItems[];
-            getbuffer(netlist, 0, netlist.Length, 1, 100);
+            Getbuffer(netlist, 0, netlist.Length, 1, 100);
         }
-        void getbuffer(WeaveNetWorkItems[] netlist, int index, int len, int state, int num)
+
+        void Getbuffer(WeaveNetWorkItems[] netlist, int index, int len, int state, int num)
         {
             for (int i = index; i < len; i++)
             {
@@ -636,73 +578,52 @@ namespace Weave.Server
                                 if (netc.SocketSession.Available > num)
                                 {
                                     netc.IsPage = true;
-                                    //  if (state == 0)
-                                    //   netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback2), netc);
                                     if (state == 1)
                                     {
                                         if (Certificate != null)
                                         {
-                                        
-                                           SslStream sslStream = netc.Stream;
+
+                                            SslStream sslStream = netc.Stream;
                                             if (sslStream.IsAuthenticated)
                                             {
-                                                // byte[] bb = new byte[2];
-                                                //int c= sslStream.Read(bb, 0, 2);
-                                                // if (c <= 2)
-                                                // {
-                                                //     netc.Buffer = new byte[20480];
-                                                //     for (int g = 0; g < c; g++)
-                                                //         netc.Buffer[g] = bb[g];
-                                                //     sslStream.BeginRead(netc.Buffer, c, netc.Buffer.Length, ReadCallbackssl, netc);
-                                                // }
                                                 netc.State = 2;
-                                                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReadCallbackssl), netc);
+                                                ThreadPool.QueueUserWorkItem(new WaitCallback(ReadCallbackssl), netc);
                                             }
                                         }
                                         else
                                         {
-                                            System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReadCallback3), netc);
+                                            ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReadCallback3), netc);
 
                                         }
-                                      
                                     }
-                                    // netc.Soc.BeginReceive(netc.Buffer = new byte[netc.Soc.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
-                                    // listconn.Find(p=>p==netc).State = 1;
                                 }
                             }
                         }
-                        else  if (netc.DataList.Count>0  && !netc.IsPage)
-                            {
-                                netc.IsPage = true;
-                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(packageData));
-                                //t.Start(netc);
-                                System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(packageData), netc);
-                                //packageDataHandler pdh = new packageDataHandler(packageData);
-                                //pdh.BeginInvoke(netc, null, null);
-                            }
+                        else if (netc.DataList.Count > 0 && !netc.IsPage)
+                        {
+                            netc.IsPage = true;
+                            ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(PackageData), netc);
+                        }
                     }
                 }
                 catch
                 { }
             }
         }
-        
+
         public delegate void packageDataHandler(WeaveNetWorkItems netc);
-        private void packageData(object obj)
+        private void PackageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             try
             {
-                //  Array.Copy(netc.Datalist, ListData, count);
-                //while (true)
-                //{
                 int count = netc.DataList.Count;
-                List<Byte[]> ListData = netc.DataList;
+                List<byte[]> ListData = netc.DataList;
                 int i = 0;
                 if (netc.DataList.Count > 0)
                 {
-                    
-                        DataFrameHeader dfh = null;
+
+                    DataFrameHeader dfh = null;
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0) { if (ListData.Count > 0) ListData.RemoveAt(0); netc.IsPage = false; return; };
                     byte[] tempbtyes = new byte[bytesRead];
@@ -714,7 +635,6 @@ namespace Weave.Server
                     try
                     {
                         DataFrame df = new DataFrame();
-                        // AnalyticData(tempbtyes, bytesRead, ref masks, ref lens, ref paylen);
                         tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
@@ -722,16 +642,18 @@ namespace Weave.Server
                             netc.IsPage = false; return;
                         }
                         if (DT == WeaveDataTypeEnum.custom)
-                        { 
-                                
-                                WeaveEvent me = new WeaveEvent();
-                                me.Command = defaultCommand;
-                                me.Data = "";
-                                me.Databit = tempbtye;
-                                me.Soc = netc.SocketSession;
-                                me.Ssl = netc.Stream;
-                                if (weaveReceiveBitEvent != null)
-                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
+                        {
+
+                            WeaveEvent me = new WeaveEvent
+                            {
+                                Command = defaultCommand,
+                                Data = "",
+                                Databit = tempbtye,
+                                Soc = netc.SocketSession,
+                                Ssl = netc.Stream
+                            };
+                            if (weaveReceiveBitEvent != null)
+                                ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReceiveToBitEventHander), me);
                             ListData.RemoveAt(i);
                             netc.IsPage = false; return;
                         }
@@ -758,11 +680,11 @@ namespace Weave.Server
                     {
                         netc.IsPage = false; return;
                     }
-                  
+
                     if (tempbtye.Length > 0)
                     {
                         #region MyRegion
-                        String temp = "";
+                        string temp = "";
                         int a = tempbtye[1];
                         if (bytesRead > 2 + a)
                         {
@@ -775,7 +697,7 @@ namespace Weave.Server
                             }
                             else
                             {
-                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                temp = Encoding.UTF8.GetString(tempbtye, 2, a);
                                 try
                                 {
                                     len = int.Parse(temp);
@@ -808,7 +730,7 @@ namespace Weave.Server
                                     ListData.RemoveAt(i);
                                 if (DT == WeaveDataTypeEnum.Json)
                                 {
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    temp = Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 }
                             }
                             else
@@ -816,7 +738,7 @@ namespace Weave.Server
                                 len = tempbtye.Length - 2 - a;
                                 if (DT == WeaveDataTypeEnum.Json)
                                 {
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+                                    temp = Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 }
                                 if (bytesRead > tempbtye.Length + lens)
                                 {
@@ -824,53 +746,51 @@ namespace Weave.Server
                                     byte[] temptt = new byte[aa];
                                     Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
                                     ListData[i] = temptt;
-                                    temp = combine(temp, temptt, ListData);
+                                    temp = Combine(temp, temptt, ListData);
                                 }
                                 else
                                 {
                                     ListData.RemoveAt(i);
                                     while (!(ListData.Count > 0))
-                                        System.Threading.Thread.Sleep(100);
-                                    temp = combine(temp, ListData[i], ListData);
+                                        Thread.Sleep(100);
+                                    temp = Combine(temp, ListData[i], ListData);
                                 }
-                                // netc.Ispage = false; return;
                             }
                             try
                             {
                                 if (DT == WeaveDataTypeEnum.Json)
                                 {
-                                    WeaveEvent me = new WeaveEvent();
-                                    me.Command = tempbtye[0];
-                                    me.Data = temp;
-                                    me.Soc = netc.SocketSession;
-                                    me.Masks = masks;
-                                    me.Ssl = netc.Stream;
-                                    //System.Threading.Thread t = new Thread(new ParameterizedThreadStart(receiveeventto));
-                                    //t.Start(me);
-                                    //receiveeventto(me);
+                                    WeaveEvent me = new WeaveEvent
+                                    {
+                                        Command = tempbtye[0],
+                                        Data = temp,
+                                        Soc = netc.SocketSession,
+                                        Masks = masks,
+                                        Ssl = netc.Stream
+                                    };
                                     if (waveReceiveEvent != null)
-                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHander), me);
-                                    if (weaveReceiveSslEvent != null)
-                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHanderssl), me); 
-                                    //if (receiveevent != null)
-                                    //    receiveevent(me.Command, me.Data, me.Soc);
+                                        ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReceiveToEventHander), me);
+                                    if (WeaveReceiveSslEvent != null)
+                                        ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReceiveToEventHanderssl), me);
                                 }
                                 else if (DT == WeaveDataTypeEnum.Bytes)
                                 {
                                     byte[] bs = new byte[len - (2 + a)];
                                     Array.Copy(tempbtye, 2 + a, bs, 0, bs.Length);
-                                    WeaveEvent me = new WeaveEvent();
-                                    me.Command = tempbtye[0];
-                                    me.Data = "";
-                                    me.Databit = bs;
-                                    me.Soc = netc.SocketSession;
-                                    me.Ssl = netc.Stream;
+                                    WeaveEvent me = new WeaveEvent
+                                    {
+                                        Command = tempbtye[0],
+                                        Data = "",
+                                        Databit = bs,
+                                        Soc = netc.SocketSession,
+                                        Ssl = netc.Stream
+                                    };
                                     if (weaveReceiveBitEvent != null)
-                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
+                                        ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReceiveToBitEventHander), me);
                                 }
                                 netc.IsPage = false; return;
                             }
-                            catch //(Exception e)
+                            catch
                             {
                                 netc.IsPage = false; return;
                             }
@@ -878,28 +798,26 @@ namespace Weave.Server
                         #endregion
                     }
                 }
-                // }
             }
-            catch //(Exception ex)
+            catch
             {
                 if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); netc.IsPage = false; return;
             }
             finally
             {
-                netc.IsPage = false; 
+                netc.IsPage = false;
             }
         }
+
         public delegate void TestDelegate(string name);
-        String combine(string temp, byte[] tempbtyes, List<byte[]> ListData)
+        string Combine(string temp, byte[] tempbtyes, List<byte[]> ListData)
         {
             DataFrameHeader dfh = null;
-            //  Array.Copy(ListData[0], tempbtyes, tempbtyes.Length);
             byte[] masks = new byte[4];
             int lens = 0;
             int paylen = 0;
             byte[] tempbtye = null;
             DataFrame df = new DataFrame();
-            // AnalyticData(tempbtyes, bytesRead, ref masks, ref lens, ref paylen);
             try
             {
                 tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
@@ -915,13 +833,13 @@ namespace Weave.Server
                     Array.Copy(temps, tempbtyes, temps.Length);
                     Array.Copy(ListData[0], 0, tempbtyes, temps.Length, ListData[0].Length);
                     ListData[0] = tempbtyes;
-                    temp = combine(temp, ListData[0], ListData);
+                    temp = Combine(temp, ListData[0], ListData);
                     return temp;
                 }
             }
             try
             {
-                temp += System.Text.Encoding.UTF8.GetString(tempbtye);
+                temp += Encoding.UTF8.GetString(tempbtye);
                 if (ListData[0].Length > tempbtye.Length + lens)
                 {
                     int aa = ListData[0].Length - (tempbtye.Length + lens);
@@ -936,19 +854,19 @@ namespace Weave.Server
                 if (!dfh.FIN)
                 {
                     while (!(ListData.Count > 0))
-                        System.Threading.Thread.Sleep(100);
-                    temp = combine(temp, ListData[0], ListData);
+                        Thread.Sleep(100);
+                    temp = Combine(temp, ListData[0], ListData);
                 }
             }
-            catch //(Exception e)
+            catch
             {
             }
             return temp;
         }
+
         delegate void receiveconndele(object ias);
-        void receiveconn(object ias)
+        void Receiveconn(object ias)
         {
-            //  NETcollection netcs = ias as NETcollection;
             while (true)
             {
                 int c = connlist.Count;
@@ -977,16 +895,17 @@ namespace Weave.Server
                                             netc.SocketSession.Receive(netc.Buffer = new byte[netc.SocketSession.Available]);
 
                                         }
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd), netc);
+                                        ThreadPool.QueueUserWorkItem(new WaitCallback(Setherd), netc);
                                         connlist.Remove(netc);
                                     }
                                 }
                     }
                     catch { }
                 }
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
             }
         }
+
         static string ReadMessage(SslStream sslStream)
         {
             byte[] buffer = new byte[2048];
@@ -994,13 +913,13 @@ namespace Weave.Server
             int bytes = -1;
             do
             {
-                 
-                  bytes = sslStream.Read(buffer, 0, buffer.Length);
+
+                bytes = sslStream.Read(buffer, 0, buffer.Length);
                 Decoder decoder = Encoding.UTF8.GetDecoder();
                 char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
                 decoder.GetChars(buffer, 0, bytes, chars, 0);
                 messageData.Append(chars);
-                
+
                 if (messageData.ToString().IndexOf("client_max_window_bits") != -1)
                 {
                     break;
@@ -1010,7 +929,7 @@ namespace Weave.Server
             return messageData.ToString();
         }
 
-        void setherd(object obj)
+        void Setherd(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             try
@@ -1018,34 +937,32 @@ namespace Weave.Server
 
                 if (Certificate != null)
                 {
-                    String httpstr = ReadMessage(netc.Stream);
-                    byte[] tempbtye = System.Text.Encoding.Default.GetBytes(httpstr);
+                    string httpstr = ReadMessage(netc.Stream);
+                    byte[] tempbtye = Encoding.Default.GetBytes(httpstr);
                     tempbtye = ManageHandshake(tempbtye, tempbtye.Length);
                     netc.Stream.Write(tempbtye);
                     netc.Stream.Flush();
                 }
                 else
-               if (!sendhead(netc.SocketSession, netc.Buffer))
+               if (!Sendhead(netc.SocketSession, netc.Buffer))
                 {
-                   
+
                     try { netc.SocketSession.Close(); } catch { }
                     return;
                 }
-                //  System.Threading.Thread.Sleep(50);
-                // new sendheaddele(sendhead).BeginInvoke(netc.Soc, netc.Buffer, null, null);
                 netc.State = 1;
-              
+
                 weaveWorkItemsList.Add(netc);
-                if (weaveUpdateSocketListEvent != null)
-                    weaveUpdateSocketListEvent(netc.SocketSession);
-                // EventUpdataConnSoc.BeginInvoke(netc.Soc, null, null);
+                weaveUpdateSocketListEvent?.Invoke(netc.SocketSession);
             }
-            catch {
-               
+            catch
+            {
+
                 try { netc.SocketSession.Close(); } catch { }
                 return;
             }
         }
+
         List<WeaveNetWorkItems> connlist = new List<WeaveNetWorkItems>();
         void Accept(object ias)
         {
@@ -1054,44 +971,35 @@ namespace Weave.Server
                 try
                 {
                     Socket handler = socket.Accept();
-                    //if (listener == null)
-                    //    return;
-                    //Socket handler = listener.EndAccept(ar);
-                    //listener.BeginAccept(new AsyncCallback(Accept), listener);
-                    // Create the state object.
                     WeaveNetWorkItems netc = new WeaveNetWorkItems();
                     netc.SocketSession = handler;
                     netc.State = 0;
-                    // listconn.Add(netc);
                     netc.Lasttime = DateTime.Now;
                     if (Certificate != null)
                     {
-                        
-                       
-                        netc.Stream = Authenticate(handler, Certificate, SslProtocols.Default); 
+
+                        netc.Stream = Authenticate(handler, Certificate, SslProtocols.Default);
                         netc.Stream.AuthenticateAsServer(Certificate, false, SslProtocols.Tls, true);
-                       
+
                         connlist.Add(netc);
                     }
                     else
                         connlist.Add(netc);
-                    // new receiveconndele(setherd2).BeginInvoke(handler, null, null);
-                    // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(setherd2), handler);
-                    //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback2), netc);
                 }
-                catch// (Exception ex)
+                catch
                 {
                 }
             }
         }
+
         public SslStream Authenticate(Socket _socket, X509Certificate2 certificate, SslProtocols enabledSslProtocols)
         {
             Stream _stream = new NetworkStream(_socket);
             var ssl = new SslStream(_stream, false);
-            
 
             return ssl;
         }
+
         public bool Send(Socket soc, byte command, byte[] data)
         {
             try
@@ -1104,12 +1012,10 @@ namespace Weave.Server
                 lens.CopyTo(b, 2);
                 sendb.CopyTo(b, 2 + lens.Length);
                 DataFrame bp = new DataFrame();
-                bp.setByte(b);
+                bp.SetByte(b);
                 soc.Send(bp.GetBytes());
-                //soc.Send(bp);
             }
             catch { return false; }
-            // tcpc.Close();
             return true;
         }
     }

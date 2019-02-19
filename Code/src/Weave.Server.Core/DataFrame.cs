@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+
 namespace Weave.Server
 {
     public enum FrameType : byte
@@ -11,6 +12,7 @@ namespace Weave.Server
         Ping = 9,
         Pong = 10,
     }
+
     /// <summary>
     /// 数据帧 ？？类，定义了header，三个1位（ _extend，_mask，_content） byte 
     /// </summary>
@@ -20,9 +22,11 @@ namespace Weave.Server
         private byte[] _extend = new byte[0];
         private byte[] _mask = new byte[0];
         private byte[] _content = new byte[0];
+
         public DataFrame()
         { }
-        public byte[] GetData(byte[] buffer,ref byte[] masks,ref int lens,ref int payload_len,ref DataFrameHeader dfh)
+
+        public byte[] GetData(byte[] buffer, ref byte[] masks, ref int lens, ref int payload_len, ref DataFrameHeader dfh)
         {
             var isFinal = (buffer[0] & 128) != 0;
             var reservedBits = (buffer[0] & 112);
@@ -32,7 +36,7 @@ namespace Weave.Server
             if (!isMasked
                  || !Enum.IsDefined(typeof(FrameType), frameType)
                  || reservedBits != 0 //Must be zero per spec 5.2
-                 || (frameType == FrameType.Continuation ))
+                 || (frameType == FrameType.Continuation))
                 return null;
             lens = 0;
             //帧头
@@ -71,7 +75,7 @@ namespace Weave.Server
                 {
                     Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
                 }
-                catch 
+                catch
                 { }
             }
             else if (_extend.Length == 2)
@@ -92,14 +96,15 @@ namespace Weave.Server
                     n *= 256;
                 }
                 payload_len = (int)len;
-               _content = new byte[len];
+                _content = new byte[len];
                 lens = _extend.Length + _mask.Length + 2;
                 Buffer.BlockCopy(buffer, _extend.Length + _mask.Length + 2, _content, 0, _content.Length);
             }
             if (_header.HasMask) _content = Mask(_content, _mask);
             return _content;
         }
-        public void setByte(byte[] contents)
+
+        public void SetByte(byte[] contents)
         {
             _content = contents;
             int length = _content.Length;
@@ -130,6 +135,7 @@ namespace Weave.Server
                 }
             }
         }
+
         public byte[] GetBytes()
         {
             byte[] buffer = new byte[2 + _extend.Length + _mask.Length + _content.Length];
@@ -139,15 +145,17 @@ namespace Weave.Server
             Buffer.BlockCopy(_content, 0, buffer, 2 + _extend.Length + _mask.Length, _content.Length);
             return buffer;
         }
-        public string Text 
-        { 
-            get 
+
+        public string Text
+        {
+            get
             {
                 if (_header.OpCode != 1)
                     return string.Empty;
-                return Encoding.UTF8.GetString(_content); 
-            } 
+                return Encoding.UTF8.GetString(_content);
+            }
         }
+
         private byte[] Mask(byte[] data, byte[] mask)
         {
             for (var i = 0; i < data.Length; i++)

@@ -85,10 +85,6 @@
       <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
       <Name>Weave.Cloud</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>Weave.Server</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

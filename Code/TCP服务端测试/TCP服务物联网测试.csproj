@@ -55,11 +55,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
-      <Project>{a237e772-678d-490b-addf-1d4535d970b6}</Project>
-      <Name>Weave.Server</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

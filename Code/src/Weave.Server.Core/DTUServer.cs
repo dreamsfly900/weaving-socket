@@ -4,29 +4,32 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Weave.Base;
+
 namespace Weave.Server
 {
-
     /// <summary>
     /// DTU服务器类
     /// </summary>
-    public class DTUServer  
+    public class DTUServer
     {
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         List<WeaveNetWorkItems> netWorkList = new List<WeaveNetWorkItems>();
-        public event WeaveReceiveDtuEvent weaveReceiveDtuEvent;
+        public event WeaveReceiveDtuEvent WeaveReceiveDtuEvent;
         public static ManualResetEvent allDone = new ManualResetEvent(false);
-        public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
-        public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
-        string loaclip;
+        public event WeaveUpdateSocketListEvent WeaveUpdateSocketListEvent;
+        public event WeaveDeleteSocketListEvent WeaveDeleteSocketListEvent;
+        readonly string loaclip;
+
         public DTUServer(string _loaclip)
         {
             loaclip = _loaclip;
         }
+
         public DTUServer()
         {
         }
-        public void start(int port)
+
+        public void Start(int port)
         {
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
@@ -50,22 +53,21 @@ namespace Weave.Server
         {
             return netWorkList.Count;
         }
+
         public void KeepAlive(object obj)
         {
             while (true)
             {
                 try
                 {
-                    System.Threading.Thread.Sleep(8000);
-                    //  ArrayList al = new ArrayList();
-                    // al.Clone()
+                    Thread.Sleep(8000);
                     WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[netWorkList.Count];
                     netWorkList.CopyTo(netlist);
                     foreach (WeaveNetWorkItems netc in netlist)
                     {
                         try
                         {
-                            byte[] b = new byte[1]  ;
+                            byte[] b = new byte[1];
                             netc.SocketSession.Send(b);
                         }
                         catch
@@ -84,14 +86,17 @@ namespace Weave.Server
                 catch { }
             }
         }
+
         private void DeleteSocketListHander(object state)
         {
-            weaveDeleteSocketListEvent?.Invoke(state as Socket);
+            WeaveDeleteSocketListEvent?.Invoke(state as Socket);
         }
+
         private void UpdateSocketListHander(object state)
         {
-            weaveUpdateSocketListEvent?.Invoke(state as Socket);
+            WeaveUpdateSocketListEvent?.Invoke(state as Socket);
         }
+
         private void PackageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
@@ -105,29 +110,29 @@ namespace Weave.Server
                     int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                     if (bytesRead == 0)
                     {
-                        //if (ListData.Count > 0) ListData.RemoveAt(0);
                         netc.IsPage = false; return;
                     };
                     byte[] tempbtye = new byte[bytesRead];
                     Array.Copy(ListData[i], tempbtye, tempbtye.Length);
                     try
                     {
-                        DtuModel dd = new DtuModel();
-                        dd.Data = tempbtye;
-                        dd.Soc = netc.SocketSession;
-                        if (weaveReceiveDtuEvent != null)
+                        DtuModel dd = new DtuModel
+                        {
+                            Data = tempbtye,
+                            Soc = netc.SocketSession
+                        };
+                        if (WeaveReceiveDtuEvent != null)
                             ThreadPool.QueueUserWorkItem(new WaitCallback(DtuReceiveEventCallBack), dd);
-                       // receiveeventDtu.BeginInvoke(tempbtye, netc.Soc, null, null);
                         if (ListData.Count > 0) ListData.RemoveAt(i);
                         netc.IsPage = false; return;
                     }
-                    catch //(Exception e)
+                    catch
                     {
                         netc.IsPage = false; return;
                     }
                 }
             }
-            catch //(Exception e)
+            catch
             {
                 if (netc.DataList.Count > 0)
                     netc.DataList.RemoveAt(0);
@@ -136,11 +141,13 @@ namespace Weave.Server
             }
             finally { netc.IsPage = false; }
         }
+
         private void DtuReceiveEventCallBack(object state)
         {
             DtuModel dd = state as DtuModel;
-            weaveReceiveDtuEvent(dd.Data, dd.Soc);
+            WeaveReceiveDtuEvent(dd.Data, dd.Soc);
         }
+
         private void ReadCallback(IAsyncResult ar)
         {
             WeaveNetWorkItems netc = (WeaveNetWorkItems)ar.AsyncState;
@@ -159,40 +166,34 @@ namespace Weave.Server
                 }
                 bytesRead = netc.Buffer.Length;
                 byte[] tempbtye = new byte[netc.Buffer.Length];
-                //netc.Buffer.CopyTo(tempbtye, 0);
                 if (bytesRead > 0)
                 {
                     try
                     {
                         Array.Copy(netc.Buffer, 0, tempbtye, 0, bytesRead);
-                        // handler.Send(tempbtye);
-                        //DtuModel dd = new DtuModel();
-                        //dd.Data = tempbtye;
-                        //dd.Soc = netc.SocketSession;
-                        //if (weaveReceiveDtuEvent != null)
-                        //    ThreadPool.QueueUserWorkItem(new WaitCallback(DtuReceiveEventCallBack), dd);
                         netc.DataList.Add(tempbtye);
                     }
                     catch
                     { }
                 }
             }
-            catch 
+            catch
             {
-            } 
+            }
         }
-        public bool send(Socket soc, byte[] command)
+
+        public bool Send(Socket soc, byte[] command)
         {
             try
             {
-               
+
                 soc.Send(command);
             }
             catch { return false; }
-            // tcpc.Close();
             return true;
         }
-        public bool send(Socket soc, byte command, string text)
+
+        public bool Send(Socket soc, byte command, string text)
         {
             try
             {
@@ -206,9 +207,9 @@ namespace Weave.Server
                 soc.Send(b);
             }
             catch { return false; }
-            // tcpc.Close();
             return true;
         }
+
         void ReceivePageHander(object ias)
         {
             while (true)
@@ -225,16 +226,15 @@ namespace Weave.Server
                             {
                                 netc.IsPage = true;
                                 ThreadPool.QueueUserWorkItem(new WaitCallback(PackageData), netc);
-                                //System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(PackageData));
-                                //t.Start(netc);
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(1);
+                    Thread.Sleep(1);
                 }
                 catch { }
             }
         }
+
         void ReceiveHander(object ias)
         {
             while (true)
@@ -244,14 +244,15 @@ namespace Weave.Server
                     int c = netWorkList.Count;
                     WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                     netWorkList.CopyTo(0, netlist, 0, c);
-                    getbuffer(netlist, 0, c);
+                    Getbuffer(netlist, 0, c);
                 }
                 catch { }
-                System.Threading.Thread.Sleep(10);
+                Thread.Sleep(10);
             }
         }
+
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
-        void getbuffer(WeaveNetWorkItems[] netlist, int index, int len)
+        void Getbuffer(WeaveNetWorkItems[] netlist, int index, int len)
         {
             for (int i = index; i < len; i++)
             {
@@ -270,15 +271,18 @@ namespace Weave.Server
                 { }
             }
         }
+
         void AcceptHander(object ias)
         {
             while (true)
             {
                 Socket handler = socket.Accept();
-                WeaveNetWorkItems netc = new WeaveNetWorkItems();
-                netc.SocketSession = handler;
+                WeaveNetWorkItems netc = new WeaveNetWorkItems
+                {
+                    SocketSession = handler
+                };
                 netWorkList.Add(netc);
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdateSocketListHander), handler);
+                ThreadPool.QueueUserWorkItem(new WaitCallback(UpdateSocketListHander), handler);
             }
         }
     }
