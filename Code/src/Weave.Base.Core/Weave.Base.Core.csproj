@@ -7,7 +7,7 @@
     <Product>Weave.Base</Product>
     <Copyright>葛杰</Copyright>
     <Company>葛杰</Company>
-    <Authors>葛杰</Authors>
+    <Authors>葛杰、丁川</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Weave;Weave.Base;applicationframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
     <Description>Weave.Base是基于weaving-socket的网关应用框架的通用接口类库。</Description>
@@ -33,8 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interface\" />
-    <Folder Include="WeaveBase\" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
 </Project>

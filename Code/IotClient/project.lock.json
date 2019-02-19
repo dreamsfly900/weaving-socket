@@ -15698,23 +15698,25 @@
     "UAP,Version=v10.0.10240": []
   },
   "packageFolders": {
-    "C:\\Users\\DELL\\.nuget\\packages\\": {}
+    "C:\\Users\\qcjxb\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
-      "projectUniqueName": "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj",
+      "projectUniqueName": "E:\\Code\\weaving-socket\\Code\\IotClient\\IotClientClass.csproj",
       "projectName": "IotClientClass",
-      "projectPath": "D:\\WeavingSocket\\Code\\IotClient\\IotClientClass.csproj",
-      "projectJsonPath": "D:\\WeavingSocket\\Code\\IotClient\\project.json",
-      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\WeavingSocket\\Code\\IotClient\\obj\\",
+      "projectPath": "E:\\Code\\weaving-socket\\Code\\IotClient\\IotClientClass.csproj",
+      "projectJsonPath": "E:\\Code\\weaving-socket\\Code\\IotClient\\project.json",
+      "packagesPath": "C:\\Users\\qcjxb\\.nuget\\packages\\",
+      "outputPath": "E:\\Code\\weaving-socket\\Code\\IotClient\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
-        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\qcjxb\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "E:\\Code\\系统框架\\FivePower V0.4\\output\\release": {},
+        "http://172.8.122.63:8624/nuget/FivePower/": {},
         "https://api.nuget.org/v3/index.json": {}
       }
     },
