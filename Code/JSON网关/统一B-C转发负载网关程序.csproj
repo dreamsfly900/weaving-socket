@@ -131,10 +131,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
-      <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>Weave.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weave.Cloud\Weave.Cloud.csproj">
       <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
       <Name>Weave.Cloud</Name>

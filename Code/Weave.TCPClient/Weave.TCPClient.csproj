@@ -62,12 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeaveUDPclient.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
-      <Project>{383e52ff-1f63-4514-ae5d-1b217a0c2bce}</Project>
-      <Name>Weave.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

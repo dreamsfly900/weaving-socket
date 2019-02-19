@@ -45,10 +45,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
-      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
-      <Name>Weave.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weave.Server\Weave.Server.csproj">
       <Project>{A237E772-678D-490B-ADDF-1D4535D970B6}</Project>
       <Name>Weave.Server</Name>

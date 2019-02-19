@@ -75,12 +75,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
-      <Project>{B8D521E5-9073-4B32-A7A7-F415E623F67C}</Project>
-      <Name>Weave.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Handlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -49,10 +49,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weave.Base\Weave.Base.csproj">
-      <Project>{b8d521e5-9073-4b32-a7a7-f415e623f67c}</Project>
-      <Name>Weave.Base</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weave.TCPClient\Weave.TCPClient.csproj">
       <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
       <Name>Weave.TCPClient</Name>
