@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/version.props" />
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Weave.Base</AssemblyName>
+    <RootNamespace>Weave.Base</RootNamespace>
+    <Product>Weave.Base</Product>
+    <Copyright>广西五次方软件科技有限公司</Copyright>
+    <Company>广西五次方软件科技有限公司</Company>
+    <Authors>五次方研发团队</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Weave;applicationframework;dotnetcore;aspnetcore;mq;</PackageTags>
+    <Description>Weave.Base是一个五次方软件基于.net core平台下的应用框架的通用接口类库。</Description>
+    <PackageId>Weave.Base</PackageId>
+    <PackageReleaseNotes>用于广西五次方软件科技有限公司内部使用</PackageReleaseNotes>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- Disable warning for Controller/Action/Method not have block comment -->
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+
+</Project>
