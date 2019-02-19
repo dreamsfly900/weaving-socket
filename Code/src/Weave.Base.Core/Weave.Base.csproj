@@ -16,7 +16,7 @@
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl></PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
