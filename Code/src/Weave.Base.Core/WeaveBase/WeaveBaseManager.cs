@@ -36,7 +36,7 @@ namespace Weave.Base
             listmode.Add(md);
         }
 
-        public void DeleteListen()
+        public void DeleteListen(String Reques)
         {
             int count = listmode.Count;
             WeaveModelData[] mds = new WeaveModelData[count];
