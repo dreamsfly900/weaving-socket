@@ -1,70 +1,54 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using Weave.Base;
 
 namespace Weave.TCPClient
 {
-  
     public class WeaveUDPclient
     {
-        WeaveBaseManager xmhelper = new WeaveBaseManager();
+        readonly WeaveBaseManager xmhelper = new WeaveBaseManager();
         public UdpClient tcpc;
-        public delegate void receive(byte command, String text);
-        public event receive receiveServerEvent;
-        public delegate void jump(String text);
-        public event jump jumpServerEvent;
+        public delegate void receive(byte command, string text);
+        public event receive ReceiveServerEvent;
+        public delegate void jump(string text);
+        public event jump JumpServerEvent;
         public delegate void istimeout();
         public delegate void istimeoutobj(WeaveUDPclient p2pobj);
-        public event istimeout timeoutevent;
-        public event istimeoutobj timeoutobjevent;
+        public event istimeout Timeoutevent;
+        public event istimeoutobj Timeoutobjevent;
         public delegate void errormessage(int type, string error);
-        DataType DT = DataType.json;
-        public event myreceivebit receiveServerEventbit;
+        readonly DataType DT = DataType.json;
+        public event myreceivebit ReceiveServerEventbit;
         public delegate void myreceivebit(byte command, byte[] data);
         public event errormessage ErrorMge;
         bool isok = false;
         bool isreceives = false;
-        bool isline = false;
         DateTime timeout;
         int mytimeout = 90;
-        public delegate void P2Preceive(byte command, String data, EndPoint ep);
+        public delegate void P2Preceive(byte command, string data, EndPoint ep);
         public event P2Preceive P2PreceiveEvent;
-        
-   
-        public String IP;
+
+        public string IP;
         public int PORT;
-        public bool Isline
-        {
-            get
-            {
-                return isline;
-            }
-            set
-            {
-                isline = value;
-            }
-        }
-        List<object> objlist = new List<object>();
+        public bool Isline { get; set; } = false;
+
+        private readonly List<object> objlist = new List<object>();
+
         public void AddListenClass(object obj)
         {
             GetAttributeInfo(obj.GetType(), obj);
-            //xmhelper.AddListen()
-            //objlist.Add(obj);
         }
+
         public void DeleteListenClass(object obj)
         {
-            deleteAttributeInfo(obj.GetType(), obj);
-            //xmhelper.AddListen()
-            //objlist.Add(obj);
+            DeleteAttributeInfo(obj.GetType(), obj);
         }
-        public void deleteAttributeInfo(Type t, object obj)
+
+        public void DeleteAttributeInfo(Type t, object obj)
         {
             foreach (MethodInfo mi in t.GetMethods())
             {
@@ -77,6 +61,7 @@ namespace Weave.TCPClient
                 }
             }
         }
+
         public void GetAttributeInfo(Type t, object obj)
         {
             foreach (MethodInfo mi in t.GetMethods())
@@ -91,45 +76,30 @@ namespace Weave.TCPClient
                 }
             }
         }
-        public string Tokan
-        {
-            get
-            {
-                return tokan;
-            }
-            set
-            {
-                tokan = value;
-            }
-        }
-        public List<byte[]> ListData
-        {
-            get
-            {
-                return listtemp;
-            }
-            set
-            {
-                listtemp = value;
-            }
-        }
+
+        public string Tokan { get; set; }
+
+        public List<byte[]> ListData { get; set; } = new List<Byte[]>();
+
         public WeaveUDPclient()
         {
-            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            ReceiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
-             
+
         }
+
         public WeaveUDPclient(DataType _DT)
         {
             DT = _DT;
-            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            ReceiveServerEvent += P2Pclient_receiveServerEvent;
             xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
         }
+
         private void Xmhelper_errorMessageEvent(Socket soc, WeaveSession _0x01, string message)
         {
-            if (ErrorMge != null)
-                ErrorMge(0, message);
+            ErrorMge?.Invoke(0, message);
         }
+
         private void P2Pclient_receiveServerEvent(byte command, string text)
         {
             try
@@ -138,50 +108,55 @@ namespace Weave.TCPClient
             }
             catch { }
         }
-        public bool start(string ip, int port, int _timeout, bool takon)
+
+        public bool Start(string ip, int port, int _timeout, bool takon)
         {
             mytimeout = _timeout;
             IP = ip;
             PORT = port;
-            return start(ip, port, takon);
+            return Start(ip, port, takon);
         }
+
         public bool Restart(bool takon)
         {
-            return start(IP, PORT, takon);
+            return Start(IP, PORT, takon);
         }
+
         public string localprot;
-        public bool start(string ip, int port, bool takon)
+        public bool Start(string ip, int port, bool takon)
         {
             try
             {
-                if (DT == DataType.json && receiveServerEvent == null)
+                if (DT == DataType.json && ReceiveServerEvent == null)
                     throw new Exception("没有注册receiveServerEvent事件");
-                if (DT == DataType.bytes && receiveServerEventbit == null)
+                if (DT == DataType.bytes && ReceiveServerEventbit == null)
                     throw new Exception("没有注册receiveServerEventbit事件");
                 IP = ip;
                 PORT = port;
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-                tcpc = new UdpClient();
-                tcpc.ExclusiveAddressUse = false;
-               
+                tcpc = new UdpClient
+                {
+                    ExclusiveAddressUse = false
+                };
+
                 Isline = true;
-                isok = true; 
+                isok = true;
                 timeout = DateTime.Now;
                 if (!isreceives)
                 {
                     isreceives = true;
-                    System.Threading.Thread t = new System.Threading.Thread(new ParameterizedThreadStart(receives));
+                    Thread t = new Thread(new ParameterizedThreadStart(Receives));
                     t.Start();
-                    System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart(unup));
+                    Thread t1 = new Thread(new ThreadStart(Unup));
                     t1.Start();
-                    System.Threading.Thread t2 = new System.Threading.Thread(new ThreadStart(KeepAliveHander));
+                    Thread t2 = new Thread(new ThreadStart(KeepAliveHander));
                     t2.Start();
                 }
                 int ss = 0;
                 if (!takon) return true;
                 while (Tokan == null)
                 {
-                    System.Threading.Thread.Sleep(1000);
+                    Thread.Sleep(1000);
                     ss++;
                     if (ss > 10)
                         return false;
@@ -191,8 +166,7 @@ namespace Weave.TCPClient
             catch (Exception e)
             {
                 Isline = false;
-                if (ErrorMge != null)
-                    ErrorMge(1, e.Message);
+                ErrorMge?.Invoke(1, e.Message);
                 return false;
             }
         }
@@ -201,27 +175,29 @@ namespace Weave.TCPClient
         {
             while (true)
             {
-                System.Threading.Thread.Sleep(8000);
+                Thread.Sleep(8000);
                 try
                 {
                     IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                    EndPoint ep = (EndPoint)server;
+                    EndPoint ep = server;
                     tcpc.Client.SendTo(new byte[] { 0x99 }, ep);
                 }
                 catch { }
             }
         }
+
         public int ConvertToInt(byte[] list)
         {
             int ret = 0;
             int i = 0;
             foreach (byte item in list)
             {
-                ret = ret + (item << i);
-                i = i + 8;
+                ret += (item << i);
+                i += 8;
             }
             return ret;
         }
+
         public byte[] ConvertToByteList(int v)
         {
             List<byte> ret = new List<byte>();
@@ -229,42 +205,48 @@ namespace Weave.TCPClient
             while (value != 0)
             {
                 ret.Add((byte)value);
-                value = value >> 8;
+                value >>= 8;
             }
             byte[] bb = new byte[ret.Count];
             ret.CopyTo(bb);
             return bb;
         }
-        void udp_receiveevent(byte command, string data, EndPoint iep)
+
+        private void Udp_receiveevent(byte command, string data, EndPoint iep)
         {
-            if (P2PreceiveEvent != null)
-                P2PreceiveEvent(command, data, iep);
+            P2PreceiveEvent?.Invoke(command, data, iep);
         }
-         
-        private string tokan;
-        public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
+
+        public bool SendParameter<T>(byte command, string Request, T Parameter, int Querycount)
         {
-            WeaveSession b = new WeaveSession();
-            b.Request = Request;
-            b.Token = this.Tokan;
-            b.SetParameter<T>(Parameter);
+            WeaveSession b = new WeaveSession
+            {
+                Request = Request,
+                Token = Tokan
+            };
+            b.SetParameter(Parameter);
             b.Querycount = Querycount;
-            return send(command, b.Getjson());
+            return Send(command, b.Getjson());
         }
-        public bool SendRoot<T>(byte command, String Request, T Root, int Querycount)
+
+        public bool SendRoot<T>(byte command, string Request, T Root, int Querycount)
         {
-            WeaveSession b = new WeaveSession();
-            b.Request = Request;
-            b.Token = this.Tokan;
-            b.SetRoot<T>(Root);
+            WeaveSession b = new WeaveSession
+            {
+                Request = Request,
+                Token = Tokan
+            };
+            b.SetRoot(Root);
             b.Querycount = Querycount;
-            return send(command, b.Getjson());
+            return Send(command, b.Getjson());
         }
+
         public void Send(byte[] b)
         {
             tcpc.Client.Send(b);
         }
-        public bool send(byte command, string text)
+        
+        public bool Send(byte command, string text)
         {
             try
             {
@@ -279,14 +261,8 @@ namespace Weave.TCPClient
                 if (count == 0)
                 {
                     IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                    EndPoint ep = (EndPoint)server;
+                    EndPoint ep = server;
                     tcpc.Client.SendTo(b, ep);
-                    //System.IO.StreamWriter sw = new System.IO.StreamWriter("test.txt");
-                    //foreach (byte bb in b)
-                    //{
-                    //    sw.Write(bb.ToString("X")+" ");
-                    //}
-                    //sw.Close();
                 }
                 else
                 {
@@ -296,30 +272,27 @@ namespace Weave.TCPClient
                         byte[] temp = new byte[zz];
                         Array.Copy(b, i * 520, temp, 0, zz);
                         IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                        EndPoint ep = (EndPoint)server;
+                        EndPoint ep = server;
                         tcpc.Client.SendTo(temp, ep);
-                        //tcpc.Client.Send(temp);
-                        
-                        System.Threading.Thread.Sleep(1);
+
+                        Thread.Sleep(1);
                     }
                 }
             }
             catch (Exception ee)
             {
                 Isline = false;
-                stop();
-                if (timeoutevent != null)
-                    timeoutevent();
-                if (timeoutobjevent != null)
-                    timeoutobjevent(this);
-                send(command, text);
+                Stop();
+                Timeoutevent?.Invoke();
+                Timeoutobjevent?.Invoke(this);
+                Send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false;
             }
-            // tcpc.Close();
             return true;
         }
-        public bool send(byte command, byte[] text)
+
+        public bool Send(byte command, byte[] text)
         {
             try
             {
@@ -334,58 +307,46 @@ namespace Weave.TCPClient
                 if (count == 0)
                 {
                     IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                    EndPoint ep = (EndPoint)server;
+                    EndPoint ep = server;
                     tcpc.Client.SendTo(b, ep);
-                   // tcpc.Client.Send(b);
                 }
                 else
                 {
                     throw new Exception("发送数据不得大于520byte");
-                    //for (int i = 0; i < count; i++)
-                    //{
-                    //    int zz = b.Length - (i * 520) > 520 ? 520 : b.Length - (i * 520);
-                    //    byte[] temp = new byte[zz];
-                    //    Array.Copy(b, i * 520, temp, 0, zz);
-                    //    IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                    //    EndPoint ep = (EndPoint)server;
-                    //    tcpc.Client.SendTo(temp, ep);
-                    //    //tcpc.Client.Send(temp);
-                    //    System.Threading.Thread.Sleep(1);
-                    //}
                 }
             }
             catch (Exception ee)
             {
                 Isline = false;
-                stop();
-                if (timeoutevent != null)
-                    timeoutevent();
-                if (timeoutobjevent != null)
-                    timeoutobjevent(this);
-                send(command, text);
+                Stop();
+                Timeoutevent?.Invoke();
+                Timeoutobjevent?.Invoke(this);
+                Send(command, text);
                 ErrorMge(9, "send:" + ee.Message);
                 return false;
             }
-            // tcpc.Close();
             return true;
         }
-        public void stop()
+
+        public void Stop()
         {
-            //  isok = false;
             Isline = false;
             tcpc.Close();
         }
-        class temppake { public byte command; public string date; public byte[] datebit; }
-        void rec(object obj)
+
+        class Temppake { public byte command; public string date; public byte[] datebit; }
+
+        void Rec(object obj)
         {
-            temppake str = obj as temppake;
-            receiveServerEvent(str.command, str.date);
+            Temppake str = obj as Temppake;
+            ReceiveServerEvent(str.command, str.date);
         }
-        void unup()
+
+        void Unup()
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(10);
+                Thread.Sleep(10);
                 try
                 {
                     int count = ListData.Count;
@@ -395,25 +356,7 @@ namespace Weave.TCPClient
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
                         Array.Copy(ListData[0], tempbtye, tempbtye.Length);
-                        //_0x99:
-                        //if (tempbtye[0] == 0x99)
-                        //{
-                        //    if (bytesRead > 1)
-                        //    {
-                        //        byte[] b = new byte[bytesRead - 1];
-                        //        byte[] t = tempbtye;
-                        //        Array.Copy(t, 1, b, 0, b.Length);
-                        //        ListData[0] = b;
-                        //        tempbtye = b;
-                        //        goto _0x99;
-                        //    }
-                        //    else
-                        //    {
-                        //        ListData.RemoveAt(0);
-                        //        continue;
-                        //    }
-                        //}
-                     
+
                         if (bytesRead > 2)
                         {
                             int a = tempbtye[1];
@@ -428,7 +371,7 @@ namespace Weave.TCPClient
                                 }
                                 else
                                 {
-                                    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                    string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
                                     len = 0;
                                     try
                                     {
@@ -439,7 +382,7 @@ namespace Weave.TCPClient
                                     catch
                                     { }
                                 }
-                              
+
                                 try
                                 {
                                     if ((len + 2 + a) > tempbtye.Length)
@@ -456,7 +399,7 @@ namespace Weave.TCPClient
                                         }
                                         else
                                         {
-                                            System.Threading.Thread.Sleep(20);
+                                            Thread.Sleep(20);
                                         }
                                         continue;
                                     }
@@ -471,8 +414,7 @@ namespace Weave.TCPClient
                                 }
                                 catch (Exception e)
                                 {
-                                    if (ErrorMge != null)
-                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
+                                    ErrorMge?.Invoke(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
                                 }
                                 try
                                 {
@@ -484,9 +426,11 @@ namespace Weave.TCPClient
                                     if (DT == DataType.json)
                                     {
                                         string temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                        temppake str = new temppake();
-                                        str.command = tempbtye[0];
-                                        str.date = temp;
+                                        Temppake str = new Temppake
+                                        {
+                                            command = tempbtye[0],
+                                            date = temp
+                                        };
                                         if (tempbtye[0] == 0xff)
                                         {
                                             if (temp.IndexOf("token") >= 0)
@@ -494,60 +438,46 @@ namespace Weave.TCPClient
                                             else if (temp.IndexOf("jump") >= 0)
                                             {
                                                 Tokan = "连接数量满";
-                                                jumpServerEvent(temp.Split('|')[1]);
+                                                JumpServerEvent(temp.Split('|')[1]);
                                             }
                                             else
                                             {
-                                               // receiveServerEvent(str.command, str.date);
-                                                //receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                                //receiveServerEvent(str.command, str.date);
-                                                //    = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
-                                                //tt.Start(str);
+                                                ThreadPool.QueueUserWorkItem(new WaitCallback(Rec), str);
                                             }
                                         }
-                                        else if (receiveServerEvent != null)
+                                        else if (ReceiveServerEvent != null)
                                         {
-                                            //
-                                            // receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                          //  receiveServerEvent(str.command, str.date);
-                                            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(rec), str);
-                                            //System.Threading.Thread tt = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(rec));
-                                            //tt.Start(str);
-                                            // receiveServerEvent();
+                                            ThreadPool.QueueUserWorkItem(new WaitCallback(Rec), str);
                                         }
                                     }
                                     if (DT == DataType.bytes)
                                     {
-                                        // temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                         byte[] bs = new byte[len - 2 + a];
                                         Array.Copy(tempbtye, bs, bs.Length);
-                                        temppake str = new temppake();
-                                        str.command = tempbtye[0];
-                                        str.datebit = bs;
-                                         receiveServerEvent.BeginInvoke(str.command, str.date, null, null);
-                                       // receiveServerEventbit(str.command, str.datebit);
+                                        Temppake str = new Temppake
+                                        {
+                                            command = tempbtye[0],
+                                            datebit = bs
+                                        };
+                                        ReceiveServerEvent.BeginInvoke(str.command, str.date, null, null);
                                     }
                                     continue;
                                 }
                                 catch (Exception e)
                                 {
-                                    if (ErrorMge != null)
-                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
+                                    ErrorMge?.Invoke(3, e.StackTrace + "unup122:" + e.Message);
                                 }
                             }
                         }
                         else
-                           {
-                            //if (tempbtye[0] == 0)
-                                ListData.RemoveAt(0);
+                        {
+                            ListData.RemoveAt(0);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    if (ErrorMge != null)
-                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
+                    ErrorMge?.Invoke(3, "unup:" + e.Message + "---" + e.StackTrace);
                     try
                     {
                         ListData.RemoveAt(0);
@@ -556,15 +486,15 @@ namespace Weave.TCPClient
                 }
             }
         }
-        List<Byte[]> listtemp = new List<Byte[]>();
-        void receives(object obj)
+
+        void Receives(object obj)
         {
             while (isok)
             {
-                System.Threading.Thread.Sleep(50);
+                Thread.Sleep(50);
                 try
                 {
-                   
+
                     int bytesRead = tcpc.Available;
                     if (bytesRead > 0)
                     {
@@ -572,7 +502,7 @@ namespace Weave.TCPClient
                         try
                         {
                             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-                            EndPoint Remote = (EndPoint)sender;
+                            EndPoint Remote = sender;
                             timeout = DateTime.Now;
 
                             tcpc.Client.ReceiveFrom(tempbtye, ref Remote);
@@ -600,10 +530,7 @@ namespace Weave.TCPClient
                         {
                             ErrorMge(22, ee.Message);
                         }
-                        //lock (this)
-                        //{
                         ListData.Add(tempbtye);
-                        // }
                     }
                     else
                     {
@@ -613,14 +540,10 @@ namespace Weave.TCPClient
                             if (ts.TotalSeconds > mytimeout)
                             {
                                 Isline = false;
-                                stop();
-                                //isreceives = false;
-                                if (timeoutevent != null)
-                                    timeoutevent();
-                                if (timeoutobjevent != null)
-                                    timeoutobjevent(this);
-                                if (ErrorMge != null)
-                                    ErrorMge(2, "连接超时，未收到服务器指令");
+                                Stop();
+                                Timeoutevent?.Invoke();
+                                Timeoutobjevent?.Invoke(this);
+                                ErrorMge?.Invoke(2, "连接超时，未收到服务器指令");
                                 continue;
                             }
                         }
@@ -632,8 +555,7 @@ namespace Weave.TCPClient
                 }
                 catch (Exception e)
                 {
-                    if (ErrorMge != null)
-                        ErrorMge(2, e.Message);
+                    ErrorMge?.Invoke(2, e.Message);
                 }
             }
         }

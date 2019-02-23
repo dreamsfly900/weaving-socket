@@ -75,12 +75,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Weave.TCPClient\Weave.TCPClient.csproj">
-      <Project>{dc9b4157-68c6-4f52-b8e4-ec2e4bc1d237}</Project>
-      <Name>Weave.TCPClient</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

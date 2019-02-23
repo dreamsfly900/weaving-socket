@@ -2,16 +2,16 @@
   <Import Project="../../build/version.props" />
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <AssemblyName>Weave.Server</AssemblyName>
-    <RootNamespace>Weave.Server</RootNamespace>
-    <Product>Weave.Server</Product>
+    <AssemblyName>Weave.TCPClient</AssemblyName>
+    <RootNamespace>Weave.TCPClient</RootNamespace>
+    <Product>Weave.TCPClient</Product>
     <Copyright>葛杰</Copyright>
     <Company>葛杰</Company>
     <Authors>葛杰、丁川</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Weave;Server;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
-    <Description>Weave.Server是基于weaving-socket的网关应用框架的服务端核心类库。</Description>
-    <PackageId>Weave.Server</PackageId>
+    <PackageTags>Weave;TCPClient;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
+    <Description>Weave.TCPClient是基于weaving-socket的网关应用框架的客户端核心类库。</Description>
+    <PackageId>Weave.TCPClient</PackageId>
     <PackageReleaseNotes>U3D、物联网、web、通用、网关、socket通讯等功能扩展及项目通信解决方法</PackageReleaseNotes>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
@@ -24,17 +24,13 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\output\release\</OutputPath>
-    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Server.xml</DocumentationFile>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.TCPClient.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\output\release\</OutputPath>
-    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Server.xml</DocumentationFile>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.TCPClient.xml</DocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <Reference Include="System.Web" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Weave.Base.Core\Weave.Base.csproj" />

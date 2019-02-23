@@ -9,7 +9,7 @@
     <Company>葛杰</Company>
     <Authors>葛杰、丁川</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Weave;Weave.Base;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
+    <PackageTags>Weave;Base;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
     <Description>Weave.Base是基于weaving-socket的网关应用框架的通用接口类库。</Description>
     <PackageId>Weave.Base</PackageId>
     <PackageReleaseNotes>U3D、物联网、web、通用、网关、socket通讯等功能扩展及项目通信解决方法</PackageReleaseNotes>
