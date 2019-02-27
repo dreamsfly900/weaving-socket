@@ -1,0 +1,830 @@
+﻿using Weave.Base;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
+using System.Threading;
+namespace Weave.TCPClient
+{
+   
+    public class P2Pclient
+    {
+        WeaveBaseManager xmhelper = new WeaveBaseManager();
+        public TcpClient tcpc;
+        public delegate void receive(byte command, String text);
+        public event receive receiveServerEvent;
+        public delegate void receiveobj(byte command, String text, P2Pclient soc);
+        public event receiveobj receiveServerEventobj;
+        public event myreceivebitobj receiveServerEventbitobj;
+        public delegate void myreceivebitobj(byte command, byte[] data, P2Pclient soc);
+        public delegate void jump(String text);
+        public event jump jumpServerEvent;
+        public delegate void istimeout();
+        public delegate void istimeoutobj(P2Pclient p2pobj);
+        public event istimeout timeoutevent;
+        public event istimeoutobj timeoutobjevent;
+        public delegate void errormessage(int type, string error);
+        DataType DT = DataType.json;
+        public event myreceivebit receiveServerEventbit;
+        public delegate void myreceivebit(byte command, byte[] data);
+        public event errormessage ErrorMge;
+        bool isok = false;
+        bool isreceives = false;
+        bool isline = false;
+        DateTime timeout;
+        int mytimeout = 90;
+        public delegate void P2Preceive(byte command, String data, EndPoint ep);
+        public event P2Preceive P2PreceiveEvent;
+        public byte defaultCommand = 0x0;
+        bool NATUDP = false;
+     public   String IP;
+       public int PORT;
+        public bool Isline
+        {
+            get
+            {
+                return isline;
+            }
+            set
+            {
+                isline = value;
+            }
+        }
+        List<object> objlist = new List<object>();
+        public void AddListenClass(object obj)
+        {
+            GetAttributeInfo(obj.GetType(), obj);
+            //xmhelper.AddListen()
+            //objlist.Add(obj);
+        }
+        public void DeleteListenClass(object obj)
+        {
+            deleteAttributeInfo(obj.GetType(), obj);
+            //xmhelper.AddListen()
+            //objlist.Add(obj);
+        }
+        public void deleteAttributeInfo(Type t, object obj)
+        {
+            foreach (MethodInfo mi in t.GetMethods())
+            {
+                InstallFunAttribute myattribute = (InstallFunAttribute)Attribute.GetCustomAttribute(mi, typeof(InstallFunAttribute));
+                if (myattribute == null)
+                { }
+                else
+                {
+                    xmhelper.DeleteListen(mi.Name);
+                }
+            }
+        }
+        public void GetAttributeInfo(Type t, object obj)
+        {
+            foreach (MethodInfo mi in t.GetMethods())
+            {
+                InstallFunAttribute myattribute = (InstallFunAttribute)Attribute.GetCustomAttribute(mi, typeof(InstallFunAttribute));
+                if (myattribute == null)
+                { }
+                else
+                {
+                    Delegate del = Delegate.CreateDelegate(typeof(WeaveRequestDataDelegate), obj, mi, true);
+                    xmhelper.AddListen(mi.Name, del as WeaveRequestDataDelegate, myattribute.Type);
+                }
+            }
+        }
+        public string Tokan
+        {
+            get
+            {
+                return tokan;
+            }
+            set
+            {
+                tokan = value;
+            }
+        }
+        byte[] alldata = new byte[0];
+        //public List<byte[]> ListData
+        //{
+        //    get
+        //    {
+        //        return listtemp;
+        //    }
+        //    set
+        //    {
+        //        listtemp = value;
+        //    }
+        //}
+        public P2Pclient(bool _NATUDP)
+        {
+            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
+            NATUDP = _NATUDP;
+            
+        }
+        public P2Pclient(DataType _DT)
+        {
+            DT = _DT;
+            this.receiveServerEvent += P2Pclient_receiveServerEvent;
+            xmhelper.WeaveErrorMessageEvent += Xmhelper_errorMessageEvent;
+        }
+        private void Xmhelper_errorMessageEvent(Socket soc, WeaveSession _0x01, string message)
+        {
+            if (ErrorMge != null)
+                ErrorMge(0, message);
+        }
+        private void P2Pclient_receiveServerEvent(byte command, string text)
+        {
+            try
+            {
+                if(xmhelper.listmode.Count>0)
+                xmhelper.Init(text, null);
+            }
+            catch { }
+        }
+        public bool start(string ip, int port, int _timeout, bool takon)
+        {
+            mytimeout = _timeout;
+            IP = ip;
+            PORT = port;
+            return start(ip, port, takon);
+        }
+        public bool Restart(bool takon)
+        {
+            return start(IP, PORT, takon);
+        }
+       public string localprot;
+        public bool start(string ip, int port, bool takon)
+        {
+            try
+            {
+                acallsend = new AsyncCallback(SendDataEnd);
+                if (DT == DataType.json &&( receiveServerEvent == null && receiveServerEventobj==null))
+                    throw new Exception("没有注册receiveServerEvent事件");
+                if (DT == DataType.bytes &&( receiveServerEventbit == null && receiveServerEventbitobj == null))
+                    throw new Exception("没有注册receiveServerEventbit事件");
+                if (DT == DataType.custom &&(receiveServerEventbit == null && receiveServerEventbitobj == null))
+                    throw new Exception("没有注册receiveeventbit事件");
+                IP = ip;
+                PORT = port;
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                tcpc = new TcpClient();
+                tcpc.ExclusiveAddressUse = false;
+                tcpc.ReceiveBufferSize = int.MaxValue;
+                tcpc.Connect(ip, port);
+                localprot = ((System.Net.IPEndPoint)tcpc.Client.LocalEndPoint).Port.ToString();
+                Isline = true;
+                isok = true;
+               
+                timeout = DateTime.Now;
+                if (!isreceives)
+                {
+                    isreceives = true;
+                    System.Threading.Thread t=new System.Threading.Thread(new ParameterizedThreadStart(receives));
+                    t.Start();
+                    
+                    //System.Threading.Thread t1 = new System.Threading.Thread(new ThreadStart (unup));
+                    //t1.Start();
+                }
+                int ss = 0;
+                if (!takon) return true;
+                while (Tokan == null)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    ss++;
+                    if (ss > 10)
+                        return false;
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Isline = false;
+                if (ErrorMge != null)
+                    ErrorMge(1, e.Message);
+                return false;
+            }
+        }
+        public int ConvertToInt(byte[] list)
+        {
+            int ret = 0;
+            int i = 0;
+            foreach (byte item in list)
+            {
+                ret = ret + (item << i);
+                i = i + 8;
+            }
+            return ret;
+        }
+        public byte[] ConvertToByteList(int v)
+        {
+            List<byte> ret = new List<byte>();
+            int value = v;
+            while (value != 0)
+            {
+                ret.Add((byte)value);
+                value = value >> 8;
+            }
+            byte[] bb = new byte[ret.Count];
+            ret.CopyTo(bb);
+            return bb;
+        }
+        void udp_receiveevent(byte command, string data, EndPoint iep)
+        {
+            if (P2PreceiveEvent != null)
+                P2PreceiveEvent(command, data, iep);
+        }
+        
+        private string tokan;
+        public bool SendParameter<T>(byte command, String Request, T Parameter, int Querycount)
+        {
+            WeaveSession b = new WeaveSession();
+            b.Request = Request;
+            b.Token = this.Tokan;
+            b.SetParameter<T>(Parameter);
+            b.Querycount = Querycount;
+            return send(command, b.Getjson());
+        }
+        public bool SendRoot<T>(byte command, String Request, T Root, int Querycount)
+        {
+            WeaveSession b = new WeaveSession();
+            b.Request = Request;
+            b.Token = this.Tokan;
+            b.SetRoot<T>(Root);
+            b.Querycount = Querycount;
+            return send(command, b.Getjson());
+        }
+        private void SendDataEnd(IAsyncResult ar)
+        {   
+            try
+            {
+                ((Socket)ar.AsyncState).EndSend(ar);
+            }
+            catch
+            {
+
+            }
+       
+           
+        }
+
+        AsyncCallback acallsend;
+       
+        public bool Send(byte[] b)
+        {
+            try
+            {
+                tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
+                return true;
+            }
+            catch {
+                return false; }
+        }
+        public bool send(byte command, string text)
+        {
+            try
+            {
+                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
+                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                byte[] b = new byte[2 + lens.Length + sendb.Length];
+                b[0] = command;
+                b[1] = (byte)lens.Length;
+                lens.CopyTo(b, 2);
+                sendb.CopyTo(b, 2 + lens.Length);
+                int count =(b.Length<=40960? b.Length/40960: (b.Length/40960)+1);
+                //if (count == 0)
+                //{
+                      Send(b);
+                    
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < count; i++)
+                //    {
+                //       int zz= b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                //        byte[] temp = new byte[zz];
+                //         Array.Copy(b, i * 40960, temp, 0, zz);
+                //        Send(temp);
+                //        //System.Threading.Thread.Sleep(1);
+                //    }
+                //}
+            }
+            catch (Exception ee){
+                if (Isline)
+                {
+                    if (timeoutevent != null)
+                        timeoutevent();
+                    if (timeoutobjevent != null)
+                        timeoutobjevent(this);
+                    send(command, text);
+                }
+                Isline = false;
+                stop();
+                
+              
+                ErrorMge(9, "send:" + ee.Message);
+                return false;
+            }
+            // tcpc.Close();
+            return true;
+        }
+        public bool send(byte command, byte[] text)
+        {
+            bool bb = false;
+            try
+            {
+                
+                
+                byte[] sendb = text;
+                byte[] lens = ConvertToByteList(sendb.Length);
+                byte[] b = new byte[2 + 2 + lens.Length + sendb.Length];
+                b[0] = command;
+                b[1] = (byte)lens.Length;
+                lens.CopyTo(b, 2);
+                CRC.ConCRC(ref b, 2 + lens.Length);
+                sendb.CopyTo(b, 2 + 2 + lens.Length);
+                bb = Send(b);
+                //int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                //if (count == 0)
+                //{
+                //    bb=Send(b);
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < count; i++)
+                //    {
+                //        int zz = b.Length - (i * 40960) > 40960 ? 40960 : b.Length - (i * 40960);
+                //        byte[] temp = new byte[zz];
+                //        Array.Copy(b, i * 40960, temp, 0, zz);
+                //        bb= Send(temp);
+                //        System.Threading.Thread.Sleep(1);
+                //    }
+                //}
+            }
+            catch(Exception ee)
+            {
+                Isline = false;
+                stop();
+                if (timeoutevent != null)
+                    timeoutevent();
+                if (timeoutobjevent != null)
+                    timeoutobjevent(this);
+                send(command, text);
+                ErrorMge(9, "send:" + ee.Message);
+                return false; }
+            // tcpc.Close();
+            return bb;
+        }
+        public void stop()
+        {
+            isok = false;
+            Isline = false;
+            tcpc.Close();
+            alldata = new byte[0];
+        }
+      
+        byte[] tempp = new byte[0];
+        void unup()
+        {
+            if (DT == DataType.custom)
+            {
+                int bytesRead = alldata.Length;
+
+                if (bytesRead == 0)
+                {
+                    // ListData.RemoveAt(0); 
+                    return;
+                }
+                byte[] tempbtye = new byte[bytesRead];
+
+                Array.Copy(alldata, tempbtye, tempbtye.Length);
+                if (receiveServerEventbit != null)
+                    receiveServerEventbit(defaultCommand, tempbtye);
+                if (receiveServerEventbitobj != null)
+                    receiveServerEventbitobj(defaultCommand, tempbtye, this);
+
+                alldata = new byte[0];
+                return;
+            }
+            else if (DT == DataType.json)
+            {
+                unupjson();
+                return;
+            }
+            else if (DT == DataType.bytes)
+            {
+                unupbyte();
+                return;
+            }
+        }
+        void unupjson()
+        {
+       
+             
+                // System.Threading.Thread.Sleep(1);
+                try
+                {
+                    //int count = ListData.Count;
+                    //if (count > 0)
+                    {
+                    lb0x99:
+                        int bytesRead = alldata.Length;
+
+                        if (bytesRead == 0)
+                        {
+                            // ListData.RemoveAt(0); 
+                            return;
+                        }
+
+
+                        byte[] tempbtye = new byte[bytesRead];
+
+                        Array.Copy(alldata, tempbtye, tempbtye.Length);
+                        if (tempbtye[0] == 0x99)
+                        {
+                            timeout = DateTime.Now;
+                            if (tempbtye.Length > 1)
+                            {
+                                byte[] b = new byte[bytesRead - 1];
+                                try
+                                {
+                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                }
+                                catch { }
+                                alldata = b;
+                                return;
+                            }
+
+                        }
+                         
+
+                        if (bytesRead > 2)
+                        {
+                            int a = tempbtye[1];
+                            if (bytesRead > 2 + a)
+                            {
+                                int len = 0;
+                               
+                                    String temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2, a);
+                                    len = 0;
+                                    try
+                                    {
+                                        len = int.Parse(temp);
+                                        if (len == 0)
+                                        { alldata = new byte[0]; return; }
+                                    }
+                                    catch
+                                    { } 
+
+                                try
+                                {
+                                    if ((len + 2 + a) > tempbtye.Length)
+                                    {
+
+                                        return;
+                                    }
+                                    else if (tempbtye.Length > (len + 2 + a))
+                                    {
+                                        byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
+                                        Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                        alldata = temps;
+                                        goto lb0x99;
+                                    }
+                                    else if (tempbtye.Length == (len + 2 + a))
+                                    { alldata = new byte[0]; }
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
+                                    alldata = new byte[0];
+                                }
+                                try
+                                {
+                                    if (DT == DataType.json)
+                                    {
+                                          temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
+                                        if (tempbtye[0] == 0xff)
+                                        {
+                                            if (temp.IndexOf("token") >= 0)
+                                                Tokan = temp.Split('|')[1];
+                                            else if (temp.IndexOf("jump") >= 0)
+                                            {
+                                                Tokan = "连接数量满";
+                                                jumpServerEvent(temp.Split('|')[1]);
+                                            }
+                                            else
+                                            {
+
+                                                receiveServerEvent?.Invoke(tempbtye[0], temp);
+
+                                                if (receiveServerEvent != null)
+                                                    receiveServerEvent(tempbtye[0], temp);
+                                                if (receiveServerEventobj != null)
+                                                    receiveServerEventobj(tempbtye[0], temp, this);
+                                            }
+                                        }
+                                        else if (receiveServerEvent != null || receiveServerEventobj != null)
+                                        {
+                                            if (receiveServerEvent != null)
+                                                receiveServerEvent(tempbtye[0], temp);
+                                            if (receiveServerEventobj != null)
+                                                receiveServerEventobj(tempbtye[0], temp, this);
+
+                                        }
+                                    }
+                                    
+                                    return;
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
+                                    alldata = new byte[0];
+                                }
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (ErrorMge != null)
+                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
+                    alldata = new byte[0];
+                }
+            
+        }
+        void unupbyte()
+        {
+
+            {
+                // System.Threading.Thread.Sleep(1);
+                try
+                {
+                    //int count = ListData.Count;
+                    //if (count > 0)
+                    {
+                    lb0x99:
+                        int bytesRead = alldata.Length;
+
+                        if (bytesRead == 0)
+                        {
+                            // ListData.RemoveAt(0); 
+                            return;
+                        }
+
+
+                        byte[] tempbtye = new byte[bytesRead];
+
+                        Array.Copy(alldata, tempbtye, tempbtye.Length);
+                        if (tempbtye[0] == 0x99)
+                        {
+                            timeout = DateTime.Now;
+                            if (tempbtye.Length > 1)
+                            {
+                                byte[] b = new byte[bytesRead - 1];
+                                try
+                                {
+                                    Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                }
+                                catch { }
+                                alldata = b;
+                                return;
+                            }
+
+                        }
+
+
+                        if (bytesRead > 2)
+                        {
+                            int a = tempbtye[1];
+                            if (bytesRead > 4 + a)
+                            {
+                                 
+                                int len = 0;
+
+                                byte[] bbcrc = new byte[4 + a];
+                                Array.Copy(tempbtye, 0, bbcrc, 0, 4 + a);
+                                if (CRC.DataCRC(ref bbcrc, 4 + a))
+                                {
+                                    byte[] bb = new byte[a];
+                                    Array.Copy(tempbtye, 2, bb, 0, a);
+                                    len = ConvertToInt(bb);
+                                }
+                                else
+                                {
+                                    byte[] temps = new byte[tempbtye.Length - 1];
+                                    Array.Copy(tempbtye, 1, temps, 0, temps.Length);
+                                    alldata = temps;
+                                    goto lb0x99;
+                                }
+                                try
+                                {
+                                    if ((len + 4 + a) > tempbtye.Length)
+                                    {
+
+                                        return;
+                                    }
+                                    else if (tempbtye.Length > (len + 4 + a))
+                                    {
+                                        byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
+                                        Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
+                                        alldata = temps;
+                                        goto lb0x99;
+                                    }
+                                    else if (tempbtye.Length == (len + 4 + a))
+                                    { alldata = new byte[0]; }
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
+                                    alldata = new byte[0];
+                                }
+                                try
+                                {
+                                    
+                                   
+                                        byte[] bs = new byte[len];
+                                        Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+
+
+                                        if (receiveServerEventbit != null)
+                                            receiveServerEventbit(tempbtye[0], bs);
+                                        if (receiveServerEventbitobj != null)
+                                            receiveServerEventbitobj(tempbtye[0], bs, this);
+                                   
+                                    return;
+                                }
+                                catch (Exception e)
+                                {
+                                    if (ErrorMge != null)
+                                        ErrorMge(3, e.StackTrace + "unup122:" + e.Message);
+                                    alldata = new byte[0];
+                                }
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (ErrorMge != null)
+                        ErrorMge(3, "unup:" + e.Message + "---" + e.StackTrace);
+                    alldata = new byte[0];
+                }
+            }
+        }
+        //   List<Byte[]> listtemp = new List<Byte[]>();
+        void receives(object obj)
+        {
+            while (isok)
+            {
+              
+                try
+                {
+                    if (tcpc.Client == null) 
+                    {
+                        continue;
+
+                    }
+                    int bytesRead = tcpc.Client.Available;
+                    if (bytesRead > 0)
+                    {
+                        //System.Threading.Thread.Sleep(100);
+                        //bytesRead = tcpc.Client.Available;
+                        byte[] tempbtye = new byte[bytesRead];
+                        try
+                        {
+                            timeout = DateTime.Now;
+
+                            tcpc.Client.Receive(tempbtye);
+                            if (DT == DataType.custom && receiveServerEventbit == null)
+                            {
+
+
+                            }
+                            else
+                            {
+                                _0x99:
+                                if (tempbtye[0] == 0x99)
+                                {
+                                    timeout = DateTime.Now;
+                                    if (tempbtye.Length > 1)
+                                    {
+                                        byte[] b = new byte[tempbtye.Length - 1];
+                                        try
+                                        {
+                                            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                        }
+                                        catch { }
+                                        tempbtye = b;
+                                        goto _0x99;
+                                    }
+                                    else
+                                        continue;
+                                }
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            ErrorMge(22, ee.Message);
+                        }
+                        ////  lock (ListData)
+                        //  {
+                        //      ListData.Add(tempbtye);
+                        //  }
+                        try
+                        {
+                            lock (alldata)
+                            {
+                                tempp = new byte[alldata.Length];
+                                alldata.CopyTo(tempp, 0);
+                                int lle = alldata.Length;
+                                bytesRead = tempbtye.Length;
+                                byte[] temp = new byte[lle + bytesRead];
+                                Array.Copy(alldata, 0, temp, 0, lle);
+                                Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                                alldata = temp;                    //workItem.DataList.Add(tempbtye);
+                            }
+                            unup();
+                            continue;
+                        }
+                        catch
+                        { }
+                    }
+                    else
+                    {
+                        if (alldata.Length > 3)
+                        {
+                            _0x99:
+                            if (alldata[0] == 0x99)
+                            {
+                                timeout = DateTime.Now;
+                                if (alldata.Length > 1)
+                                {
+                                    byte[] b = new byte[alldata.Length - 1];
+                                    try
+                                    {
+                                        Array.Copy(alldata, 1, b, 0, b.Length);
+                                    }
+                                    catch { }
+                                    alldata = b;
+                                    goto _0x99;
+                                }
+                                else
+                                    continue;
+                            }
+                            unup();
+                        }
+                        //else
+                        //    System.Threading.Thread.Sleep(1);
+                        try
+                        {
+                            TimeSpan ts = DateTime.Now - timeout;
+                            if (ts.TotalSeconds > mytimeout)
+                            {
+                                Isline = false;
+                                stop();
+                                //isreceives = false;
+                                if (timeoutevent != null)
+                                    timeoutevent();
+                                if (timeoutobjevent != null)
+                                    timeoutobjevent(this);
+                                if (ErrorMge != null)
+                                    ErrorMge(2, "连接超时，未收到服务器指令");
+                                continue;
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            ErrorMge(21, ee.Message);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (ErrorMge != null)
+                        ErrorMge(2, e.Message);
+                }
+            }
+        }
+    }
+}
