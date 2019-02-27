@@ -171,7 +171,7 @@ namespace Weave.Cloud
                             }
                             else
                             {
-                                if (itp.BytesDataparsing.socketvalidation(_0x01)) //验证_baseModel
+                                if (itp.BytesDataparsing.Socketvalidation(_0x01)) //验证_baseModel
                                     WeaveExcCmd(command, _0x01.Getjson(), soc);
                             }
                         }

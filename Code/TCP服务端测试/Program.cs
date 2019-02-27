@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Weave.Base;
 using Weave.Server;
+using CRC = smsForCsharp.CRC.CRC;
 
 namespace TCP服务端测试
 {
@@ -22,10 +23,10 @@ namespace TCP服务端测试
         static void Main(string[] args)
         {
             
-            wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
-            wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
-            wudp.weaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent;
-            wudp.start(60001);
+            wudp.WeaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
+            wudp.WeaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
+            wudp.WeaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent;
+            wudp.Start(60001);
             //wudp2p.waveReceiveEvent += Wudp2p_waveReceiveEvent;
             //wudp2p.Start(60002);
           //  wudpweb.weaveUpdateSocketListEvent += Wudpweb_weaveUpdateSocketListEvent;

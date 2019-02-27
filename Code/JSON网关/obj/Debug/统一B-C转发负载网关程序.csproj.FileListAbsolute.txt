@@ -90,8 +90,6 @@ D:\WeavingSocket\Code\JSON网关\obj\Debug\统一登录服务.Form1.resources
 D:\WeavingSocket\Code\JSON网关\obj\Debug\统一登录服务.Properties.Resources.resources
 D:\WeavingSocket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.GenerateResource.Cache
 D:\WeavingSocket\Code\JSON网关\bin\Debug\nodeway.xml
-D:\WeavingSocket\Code\JSON网关\bin\Debug\UDTCommon.dll
-D:\WeavingSocket\Code\JSON网关\bin\Debug\UDTLibary.dll
 D:\WeavingSocket\Code\JSON网关\bin\Debug\node.xml
 D:\WeavingSocket\Code\JSON网关\bin\Debug\统一登录服务.exe
 D:\WeavingSocket\Code\JSON网关\bin\Debug\统一登录服务.pdb
@@ -126,8 +124,11 @@ D:\WeavingSocket\Code\JSON网关\bin\Debug\Weave.Server.dll
 D:\WeavingSocket\Code\JSON网关\bin\Debug\Weave.Base.pdb
 D:\WeavingSocket\Code\JSON网关\bin\Debug\Weave.Cloud.pdb
 D:\WeavingSocket\Code\JSON网关\bin\Debug\Weave.TCPClient.pdb
-D:\WeavingSocket\Code\JSON网关\bin\Debug\Newtonsoft.Json.xml
 D:\WeavingSocket\Code\JSON网关\bin\Debug\Weave.Server.pdb
 D:\WeavingSocket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csprojAssemblyReference.cache
 D:\WeavingSocket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.CoreCompileInputs.cache
 D:\WeavingSocket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.CopyComplete
+D:\weavingsocket\Code\JSON网关\obj\Debug\统一登录服务.exe.config
+D:\weavingsocket\Code\JSON网关\bin\Debug\Weave.Base.xml
+D:\weavingsocket\Code\JSON网关\bin\Debug\Weave.TCPClient.xml
+D:\weavingsocket\Code\JSON网关\bin\Debug\Weave.Server.xml

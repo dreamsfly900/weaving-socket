@@ -27,10 +27,10 @@ namespace Weave.Cloud
         {
             // Mycommand comm = new Mycommand(, connectionString);
             ReLoad();
-            DTUSer.weaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
-            DTUSer.weaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
-            DTUSer.weaveReceiveDtuEvent += DTUSer_receiveeventDtu;
-            DTUSer.start(port);
+            DTUSer.WeaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
+            DTUSer.WeaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
+            DTUSer.WeaveReceiveDtuEvent += DTUSer_receiveeventDtu;
+            DTUSer.Start(port);
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
         }
@@ -41,10 +41,10 @@ namespace Weave.Cloud
             filename = _filename;
             _port = port;
             ReloadFlies2(null);
-            DTUSer.weaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
-            DTUSer.weaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
-            DTUSer.weaveReceiveDtuEvent += DTUSer_receiveeventDtu;
-            DTUSer.start(port);
+            DTUSer.WeaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
+            DTUSer.WeaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
+            DTUSer.WeaveReceiveDtuEvent += DTUSer_receiveeventDtu;
+            DTUSer.Start(port);
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
         }
@@ -109,7 +109,7 @@ namespace Weave.Cloud
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
-                        Client.stop();
+                        Client.Stop();
                     }
                 }
                 CommandItemS2.Clear();
@@ -117,7 +117,7 @@ namespace Weave.Cloud
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
-                        Client.stop();
+                        Client.Stop();
                     }
                 }
                 CommandItemS.Clear();
@@ -131,10 +131,10 @@ namespace Weave.Cloud
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
                     ci.Commfun = xn.Attributes["Commfun"].Value;
                     P2Pclient p2p = new P2Pclient(false);
-                    p2p.receiveServerEvent += P2p_receiveServerEvent;
-                    p2p.timeoutevent += P2p_timeoutevent;
+                    p2p.ReceiveServerEvent += P2p_receiveServerEvent;
+                    p2p.Timeoutevent += P2p_timeoutevent;
                     p2p.ErrorMge += P2p_ErrorMge;
-                    if (p2p.start(ci.Ip, ci.Port, false))
+                    if (p2p.Start(ci.Ip, ci.Port, false))
                     {
                         ci.Client.Add(p2p);
                         if (xn.Attributes["type"].Value == "receive")
@@ -167,7 +167,7 @@ namespace Weave.Cloud
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
-                        Client.stop();
+                        Client.Stop();
                     }
                 }
                 CommandItemS2.Clear();
@@ -175,7 +175,7 @@ namespace Weave.Cloud
                 {
                     foreach (P2Pclient Client in ci.Client)
                     {
-                        Client.stop();
+                        Client.Stop();
                     }
                 }
                 CommandItemS.Clear();
@@ -189,10 +189,10 @@ namespace Weave.Cloud
                     ci.CommName = byte.Parse(xn.Attributes["command"].Value);
                     ci.Commfun = xn.Attributes["Commfun"].Value;
                     P2Pclient p2p = new P2Pclient(false);
-                    p2p.receiveServerEvent += P2p_receiveServerEvent;
-                    p2p.timeoutevent += P2p_timeoutevent;
+                    p2p.ReceiveServerEvent += P2p_receiveServerEvent;
+                    p2p.Timeoutevent += P2p_timeoutevent;
                     p2p.ErrorMge += P2p_ErrorMge;
-                    if (p2p.start(ci.Ip, ci.Port, false))
+                    if (p2p.Start(ci.Ip, ci.Port, false))
                     {
                         ci.Client.Add(p2p);
                         if (xn.Attributes["type"].Value == "receive")
@@ -230,10 +230,10 @@ namespace Weave.Cloud
                     int Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     string Commfun= xn.Attributes["Commfun"].Value;
                     DTUclient p2p = new DTUclient();
-                    p2p.receiveServerEvent += P2p_receiveServerEvent3; ;
-                    p2p.timeoutevent += P2p_timeoutevent1;
+                    p2p.ReceiveServerEvent += P2p_receiveServerEvent3; ;
+                    p2p.Timeoutevent += P2p_timeoutevent1;
                     p2p.ErrorMge += P2p_ErrorMge;
-                    if (p2p.start(ip, Port, false))
+                    if (p2p.Start(ip, Port, false))
                     {
                         dl.Tcpdtu = p2p;
                         dl.Token = ip + "|" + Port;

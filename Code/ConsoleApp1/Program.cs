@@ -21,9 +21,9 @@ namespace ConsoleApp1
             foreach (modbus m in modlist)
             {
                 P2Pclient client = new P2Pclient(DataType.custom);
-                client.receiveServerEventbitobj += Client_receiveServerEventbitobj; ;
-                client.timeoutobjevent += Client_timeoutobjevent;
-               if( client.start(m.ip, m.port, false))
+                client.ReceiveServerEventbitobj += Client_receiveServerEventbitobj; ;
+                client.Timeoutobjevent += Client_timeoutobjevent;
+                if ( client.Start(m.ip, m.port, false))
                 m.client = client;
             }
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(gogo));

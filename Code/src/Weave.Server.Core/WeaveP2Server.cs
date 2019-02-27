@@ -33,7 +33,7 @@ namespace Weave.Server
         public WeaveP2Server(WeaveDataTypeEnum weaveDataType) : base(weaveDataType)
         {
             socketLisener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            WeaveDataType = weaveDataType;
+           this.weaveDataType  = weaveDataType;
         }
 
     }

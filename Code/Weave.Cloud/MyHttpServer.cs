@@ -55,7 +55,7 @@ namespace Weave.Cloud
         private void V_receiveServerEvent(byte command, string text)
         {
         }
-        public override void handleGETRequest(HttpProcessor p)
+        public override void HandleGETRequest(HttpProcessor p)
         {
             //Console.WriteLine("request: {0}", p.http_url);
             p.http_url = p.http_url.Substring(1);
@@ -64,7 +64,7 @@ namespace Weave.Cloud
                 return;
             byte command = Convert.ToByte(p.http_url.Substring(0,1), 16);
             string data = p.http_url.Split('&')[1];
-            p.writeSuccess();
+            p.WriteSuccess();
             p.outputStream.WriteLine(fun+"(");
             getdata(p, command, data);
             p.outputStream.WriteLine(")");
@@ -77,15 +77,15 @@ namespace Weave.Cloud
                 if (ci.CommName == command)
                 {
                     P2Pclient p2p = new P2Pclient(false);
-                    p2p.receiveServerEvent += new P2Pclient.receive((c, text) => {
+                    p2p.ReceiveServerEvent += new P2Pclient.receive((c, text) => {
                         returnstr = text;
                     });
                     //p2p.timeoutevent += (V_timeoutevent);
                     p2p.ErrorMge += (V_ErrorMge);
-                    if (p2p.start(ci.Ip, ci.Port, false))
+                    if (p2p.Start(ci.Ip, ci.Port, false))
                     {
                         System.Threading.Thread.Sleep(200);
-                        p2p.send(command, data);
+                        p2p.Send(command, data);
                         int count = 0;
                         while (returnstr == "")
                         {
@@ -122,7 +122,7 @@ namespace Weave.Cloud
             }
             return false;
         }
-        public override void handlePOSTRequest(HttpProcessor p, StreamReader inputData)
+        public override void HandlePOSTRequest(HttpProcessor p, StreamReader inputData)
         {
             //Console.WriteLine("POST request: {0}", p.http_url);
             p.http_url = p.http_url.Substring(1);
@@ -130,7 +130,7 @@ namespace Weave.Cloud
                 return;
             byte command = Convert.ToByte(p.http_url);
             string data = inputData.ReadToEnd();
-            p.writeSuccess();
+            p.WriteSuccess();
             getdata(p, command, data);
             //  _baseModel _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<_baseModel>(data);
             //p.outputStream.WriteLine("<html><body><h1>test server</h1>");

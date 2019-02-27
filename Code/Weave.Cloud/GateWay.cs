@@ -174,12 +174,12 @@ namespace Weave.Cloud
         {
             P2Pclient p2p = new P2Pclient(false);
             if (Wptype == WeavePortTypeEnum.Bytes)
-                p2p.receiveServerEventbit += P2p_receiveServerEventbit;
+                p2p.ReceiveServerEventbit += P2p_receiveServerEventbit;
                 else
-            p2p.receiveServerEvent += (V_receiveServerEvent);
-            p2p.timeoutobjevent += P2p_timeoutobjevent;
+            p2p.ReceiveServerEvent += (V_receiveServerEvent);
+            p2p.Timeoutobjevent += P2p_timeoutobjevent;
             p2p.ErrorMge += (V_ErrorMge);
-            if (p2p.start(Ip, Port, false))
+            if (p2p.Start(Ip, Port, false))
             {
                 return p2p;
             }
@@ -229,7 +229,7 @@ namespace Weave.Cloud
             {
                 foreach (WayItem ci in WayItemS)
                 {
-                    ci.Client.stop();
+                    ci.Client.Stop();
                 }
                 WayItemS.Clear();
                 XmlDocument xml = new XmlDocument();
@@ -241,16 +241,16 @@ namespace Weave.Cloud
                     ci.Port = Convert.ToInt32(xn.Attributes["port"].Value);
                     ci.Token = (xn.Attributes["token"].Value);
                     ci.Client = new P2Pclient(false);
-                    ci.Client.receiveServerEvent += Client_receiveServerEvent;
-                    ci.Client.timeoutobjevent += Client_timeoutobjevent;
+                    ci.Client.ReceiveServerEvent += Client_receiveServerEvent;
+                    ci.Client.Timeoutobjevent += Client_timeoutobjevent;
                     
                     ci.Client.ErrorMge += Client_ErrorMge;
-                    if (ci.Client.start(ci.Ip, ci.Port, false))
+                    if (ci.Client.Start(ci.Ip, ci.Port, false))
                     {
                         WeaveSession oxff = new WeaveSession();
                         oxff.Request = "token";
                         oxff.Root = ci.Token;
-                        ci.Client.send(0xff, oxff.Getjson());
+                        ci.Client.Send(0xff, oxff.Getjson());
                         WayItemS.Add(ci);
                     }
                     else
@@ -303,7 +303,7 @@ namespace Weave.Cloud
                         WeaveSession oxff = new WeaveSession();
                         oxff.Request = "getnum";
                         oxff.Root = wi.Token;
-                        wi.Client.send(0xff, oxff.Getjson());
+                        wi.Client.Send(0xff, oxff.Getjson());
                     }
                 }
                 catch { }
@@ -478,7 +478,7 @@ namespace Weave.Cloud
                         {
                             listsercer.Add(ci.Ip + ci.Port);
                           String  tempip = ci.Ip + ":" + ci.Port;
-                            ci.Client4_10[0, 0, 0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1, 1))].send(0xff, "out|" + tempip);
+                            ci.Client4_10[0, 0, 0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length - 1, 1))].Send(0xff, "out|" + tempip);
                         }
                     }
                 }
@@ -554,7 +554,7 @@ namespace Weave.Cloud
                         if (ci.Client4_10[0,0,0,0] != null)
                         {
                                listsercer.Add(ci.Ip + ci.Port);
-                               ci.Client4_10[0,0,0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length-1,1))].send(0xff, "in|" + cobj.Token);
+                               ci.Client4_10[0,0,0, Convert.ToInt32(clientipe.Port.ToString().Substring(clientipe.Port.ToString().Length-1,1))].Send(0xff, "in|" + cobj.Token);
                         }
                     }
                 }
@@ -614,7 +614,7 @@ namespace Weave.Cloud
                                 byte[] tempdata = new byte[data.Length + b.Length];
                                 Array.Copy(data,0, tempdata,0, data.Length);
                                 Array.Copy(b,0, tempdata, data.Length-1, b.Length);
-                                if (!p2ptemp.send(command, tempdata))
+                                if (!p2ptemp.Send(command, tempdata))
                                 {
                                     p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。");
                                 }
@@ -685,7 +685,7 @@ namespace Weave.Cloud
                             {
                                 if (!p2ptemp.Isline)
                                 { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！");return; }
-                                if (!p2ptemp.send(command, _0x01.Getjson()))
+                                if (!p2ptemp.Send(command, _0x01.Getjson()))
                                 {
                                     p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。" );
                                 }

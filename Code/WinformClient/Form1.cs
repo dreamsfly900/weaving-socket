@@ -15,9 +15,9 @@ namespace winformclient
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            p2pc.receiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
-            p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-           bool vv= p2pc.start("122.114.53.233", 12233, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+            p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
+            p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
+           bool vv= p2pc.Start("122.114.53.233", 12233, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
         }
         [InstallFunAttribute("forever")]//客户端也支持像服务端那样写，刚才看懂返回的内容也是testaabb，所以客户端也要把方法命名testaabb
         public void login(System.Net.Sockets.Socket soc, WeaveSession _0x01)
@@ -58,10 +58,10 @@ namespace winformclient
             for (int i = 0; i < 300; i++)
             {
                 P2Pclient p2pc = new P2Pclient(DataType.custom);
-                p2pc.receiveServerEvent += P2pc_receiveServerEvent ;//接收数据事件
-                p2pc.receiveServerEventbit += P2pc_receiveServerEventbit;
-                p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-                p2pc.start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+                p2pc.ReceiveServerEvent += P2pc_receiveServerEvent ;//接收数据事件
+                p2pc.ReceiveServerEventbit += P2pc_receiveServerEventbit;
+                p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
+                p2pc.Start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
                  
                 p2pc.Send(new byte[1000]);
                 //p2pc.SendRoot<int>(0x01, "login", 99987, 0);
@@ -87,10 +87,10 @@ namespace winformclient
         private void button1_Click_1(object sender, EventArgs e)
         {
             P2Pclient p2pc = new P2Pclient(false);
-            p2pc.receiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
+            p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
 
-            p2pc.timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-            p2pc.start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+            p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
+            p2pc.Start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
             p2pc.Tokan = "123";
             p2pc.SendRoot<int>(0x01, "login", 99987, 0);
             System.Threading.Thread.Sleep(5);
@@ -103,8 +103,8 @@ namespace winformclient
         WeaveUDPclient wudp = new WeaveUDPclient();
         private void button3_Click(object sender, EventArgs e)
         {
-            wudp.receiveServerEvent += Wudp_receiveServerEvent;
-            wudp.start("127.0.0.1", 8989,false);
+            wudp.ReceiveServerEvent += Wudp_receiveServerEvent;
+            wudp.Start("127.0.0.1", 8989,false);
 
         }
 
@@ -115,7 +115,7 @@ namespace winformclient
 
         private void button4_Click(object sender, EventArgs e)
         {
-            wudp.send(0x11, "不知道说什么好，反正成功了。");
+            wudp.Send(0x11, "不知道说什么好，反正成功了。");
         }
     }
 }

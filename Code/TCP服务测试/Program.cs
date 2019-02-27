@@ -24,9 +24,9 @@ namespace TCP服务测试
 
             //Console.ReadLine();
           
-            ptcp.receiveServerEventbit += Ptcp_receiveServerEventbit;
-            ptcp.timeoutobjevent += Ptcp_timeoutobjevent;
-            ptcp.start("127.0.0.1", 1110, false);
+            ptcp.ReceiveServerEventbit += Ptcp_receiveServerEventbit;
+            ptcp.Timeoutobjevent += Ptcp_timeoutobjevent;
+            ptcp.Start("127.0.0.1", 1110, false);
         }
 
         private static void Ptcp_timeoutobjevent(P2Pclient p2pobj)

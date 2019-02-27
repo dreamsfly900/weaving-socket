@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\Weave.TCPClient.Core\Weave.TCPClient.csproj">
+      <Project>{42250739-A4C5-4680-842E-880B85A7D42C}</Project>
+      <Name>Weave.TCPClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

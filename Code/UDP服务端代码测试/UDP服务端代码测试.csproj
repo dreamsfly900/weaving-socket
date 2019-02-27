@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>UDP服务端代码测试</RootNamespace>
     <AssemblyName>UDP服务端代码测试</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,6 +48,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\Weave.Base.Core\Weave.Base.csproj">
+      <Project>{73FA09C1-FC07-4736-BF02-B1C8FF58942B}</Project>
+      <Name>Weave.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Weave.Server.Core\Weave.Server.csproj">
+      <Project>{35EF51F0-3F56-4B96-BD3C-E4ED2DB527C9}</Project>
+      <Name>Weave.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

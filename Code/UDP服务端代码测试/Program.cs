@@ -13,9 +13,9 @@ namespace UDP服务端代码测试
         static WeaveUDPServer wudp = new WeaveUDPServer();
         static void Main(string[] args)
         {
-            wudp.waveReceiveEvent += Wudp_waveReceiveEvent1;
-            wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
-            wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
+            wudp.WaveReceiveEvent += Wudp_waveReceiveEvent1;
+            wudp.WeaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
+            wudp.WeaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
             wudp.Start(8989);
             Console.ReadLine();
         }

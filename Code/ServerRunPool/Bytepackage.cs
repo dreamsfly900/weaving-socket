@@ -74,7 +74,7 @@ namespace 智信构建结构
         /// </summary>
         /// <param name="bm"></param>
         /// <returns></returns>
-        public bool socketvalidation(WeaveSession bm)
+        public bool Socketvalidation(WeaveSession bm)
         {
             //这个方法主要是鉴权，如果内容不正确，返回false将不会继续向下执行
             return true;
@@ -107,5 +107,7 @@ namespace 智信构建结构
             ret.CopyTo(bb);
             return bb;
         }
+
+       
     }
 }
