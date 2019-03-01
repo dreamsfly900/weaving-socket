@@ -143,11 +143,23 @@ namespace Weave.Server
             p.WriteSuccess();
             p.outputStream.WriteLine(fun + "(");
             p.outputStream.Flush();
-            getdata(p, command, System.Web.HttpUtility.UrlDecode(data));
+           
+            getdata(p, command, UrlDecode(data));
             p.outputStream.WriteLine(")");
             p.outputStream.Flush();
         }
+        public static string UrlDecode(string str)
+        {
+            string[] strs = str.TrimStart('%').Split('%');
+            byte[] byStr = new byte[strs.Length];
+            for (int i = 0; i < byStr.Length; i++)
+            {
+                byStr[i] = Convert.ToByte(strs[i], 16);
+            }
 
+
+            return (System.Text.ASCIIEncoding.UTF8.GetString(byStr));
+        }
         /// <summary>
         /// 处理Post请求的方法，是一个虚方法，写有具体的代码的
         /// </summary>
