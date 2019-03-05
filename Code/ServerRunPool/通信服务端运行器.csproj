@@ -138,8 +138,8 @@
       <Project>{73FA09C1-FC07-4736-BF02-B1C8FF58942B}</Project>
       <Name>Weave.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Weave.Cloud\Weave.Cloud.csproj">
-      <Project>{bcb76c92-15dd-436c-9b5c-6d8d9671fa88}</Project>
+    <ProjectReference Include="..\src\Weave.Cloud.Core\Weave.Cloud.csproj">
+      <Project>{505db450-9f10-4074-9505-1a048f568223}</Project>
       <Name>Weave.Cloud</Name>
     </ProjectReference>
   </ItemGroup>
