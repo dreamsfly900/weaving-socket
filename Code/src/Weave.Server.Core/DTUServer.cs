@@ -212,6 +212,7 @@ namespace Weave.Server
 
         void ReceivePageHander(object ias)
         {
+            var w = new SpinWait();
             while (true)
             {
                 try
@@ -229,7 +230,7 @@ namespace Weave.Server
                             }
                         }
                     }
-                    Thread.Sleep(1);
+                    w.SpinOnce();
                 }
                 catch { }
             }
@@ -237,6 +238,7 @@ namespace Weave.Server
 
         void ReceiveHander(object ias)
         {
+            var w = new SpinWait();
             while (true)
             {
                 try
@@ -247,7 +249,7 @@ namespace Weave.Server
                     Getbuffer(netlist, 0, c);
                 }
                 catch { }
-                Thread.Sleep(10);
+                w.SpinOnce();
             }
         }
 

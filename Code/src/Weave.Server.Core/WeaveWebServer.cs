@@ -539,6 +539,7 @@ namespace Weave.Server
 
         void Receive(object ias)
         {
+            var w = new SpinWait();
             while (true)
             {
                 try
@@ -547,7 +548,7 @@ namespace Weave.Server
                     WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                     weaveWorkItemsList.CopyTo(0, netlist, 0, c);
                     Getbuffer(netlist, 0, c, 1, 30);
-                    Thread.Sleep(1);
+                    w.SpinOnce();
                 }
                 catch
                 { }
@@ -867,6 +868,7 @@ namespace Weave.Server
         delegate void receiveconndele(object ias);
         void Receiveconn(object ias)
         {
+            var w = new SpinWait();
             while (true)
             {
                 int c = connlist.Count;
@@ -902,7 +904,7 @@ namespace Weave.Server
                     }
                     catch { }
                 }
-                Thread.Sleep(1);
+                w.SpinOnce();
             }
         }
 

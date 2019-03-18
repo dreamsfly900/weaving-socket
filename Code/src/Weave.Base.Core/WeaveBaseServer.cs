@@ -639,8 +639,10 @@ namespace Weave.Base
         public int Partition = 20000;
         void ReceiveHander(object ias)
         {
+            var w = new SpinWait();
             while (true)
             {
+              
                 try
                 {
                     int c = weaveNetworkItems.Count;
@@ -652,14 +654,18 @@ namespace Weave.Base
                         //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                         //weaveNetworkItems.CopyTo(0, netlist, 0, c);
                         getbuffer(weaveNetworkItems, 0, c);
-                   
+
                     }
-                 
+
                 }
                 catch { }
-              //  System.Threading.Thread.Sleep(1);
+                w.SpinOnce();
+                //  System.Threading.Thread.Sleep(1);
             }
         }
+
+       
+
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
         void getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
         {

@@ -600,6 +600,7 @@ namespace Weave.TCPClient
 
         void Receives(object obj)
         {
+            var w = new SpinWait();
             while (isok)
             {
 
@@ -607,8 +608,9 @@ namespace Weave.TCPClient
                 {
                     if (tcpc.Client == null)
                     {
+                        
                         continue;
-
+                      
                     }
                     int bytesRead = tcpc.Client.Available;
                     if (bytesRead > 0)
@@ -691,8 +693,8 @@ namespace Weave.TCPClient
                             }
                             Unup();
                         }
-                        else
-                            Thread.Sleep(1);
+                      
+                       w.SpinOnce();
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;
