@@ -517,7 +517,7 @@ namespace Weave.TCPClient
                             }
                             catch { }
                             alldata = b;
-                            return;
+                            goto lb0x99;
                         }
                     }
 
@@ -541,7 +541,8 @@ namespace Weave.TCPClient
                                 byte[] temps = new byte[tempbtye.Length - 1];
                                 Array.Copy(tempbtye, 1, temps, 0, temps.Length);
                                 alldata = temps;
-                                goto lb0x99;
+                                //return;
+                                  goto lb0x99;
                             }
                             try
                             {
@@ -554,7 +555,8 @@ namespace Weave.TCPClient
                                     byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
                                     Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
                                     alldata = temps;
-                                    goto lb0x99;
+                                    //return;
+                                    //  goto lb0x99;
                                 }
                                 else if (tempbtye.Length == (len + 4 + a))
                                 { alldata = new byte[0]; }
@@ -693,8 +695,8 @@ namespace Weave.TCPClient
                             }
                             Unup();
                         }
-                      
-                       w.SpinOnce();
+                        else
+                            w.SpinOnce();
                         try
                         {
                             TimeSpan ts = DateTime.Now - timeout;

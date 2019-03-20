@@ -210,7 +210,7 @@ namespace Weave.Base
                             byte[] temps = new byte[tempbtye.Length - 2];
                             Array.Copy(tempbtye, 2, temps, 0, temps.Length);
                             alldata = temps;
-                            goto lb1122;
+                            return alldata;
                         }
                         else if (bytesRead > 4 + a)
                         {
@@ -229,8 +229,8 @@ namespace Weave.Base
                                     byte[] temps = new byte[tempbtye.Length - 1];
                                     Array.Copy(tempbtye, 1, temps, 0, temps.Length);
                                     alldata = temps;
-                                    goto lb1122;
-                                }
+                                return alldata;
+                            }
                             
                             
 
@@ -270,8 +270,8 @@ namespace Weave.Base
                                     me.Databit = bs;
                                     me.Soc = soc;
                                     if (weaveReceiveBitEvent != null)
-                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
-                                    // weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
+                                       System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                     //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
                                     //weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
                                
                                 return alldata;
@@ -397,7 +397,7 @@ namespace Weave.Base
                                     me.Data = temp2;
                                     me.Soc =soc;
                                     if (waveReceiveEvent != null)
-                                        //  waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
+                                         // waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
                                          System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
                                         //receiveeventto(me);
                                         //if (receiveevent != null)
@@ -659,7 +659,7 @@ namespace Weave.Base
 
                 }
                 catch { }
-                w.SpinOnce();
+             //   w.SpinOnce();
                 //  System.Threading.Thread.Sleep(1);
             }
         }
@@ -687,8 +687,10 @@ namespace Weave.Base
                         else if (netc.allDataList.Length > 0 && !netc.IsPage)
                         {
                             netc.IsPage = true;
-                            netc.SocketSession.BeginReceive(netc.Buffer = new byte[0], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
-                          //  System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
+                            //netc.SocketSession.BeginReceive(netc.Buffer = new byte[0], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                            netc.allDataList = packageData(netc.allDataList, netc.SocketSession);
+                            netc.IsPage = false;
+                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
                         }
                         //if (!netc.IsPage)
                         //{
