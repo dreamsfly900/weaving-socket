@@ -1,4 +1,4 @@
- **> 变更开源授权协议 为  Anti 996-License** 
+ **> 变更开源授权许可 为  Anti 996-License** 
 
  
 
