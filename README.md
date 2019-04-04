@@ -1,3 +1,6 @@
+ **> 变更开源授权协议 为  Anti 996-License** 
+
+ 
 
 https://gitee.com/UDCS/WeavingDB
 基于 weaving-socket 通讯架构制作的内存数据库，缓存库。
