@@ -12,22 +12,36 @@ namespace TCP服务测试
 {
     class Program
     {
-        static Weave.Server.WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.custom);
+        static Weave.Server.WeaveWebServer wudp = new WeaveWebServer(WeaveDataTypeEnum.Json);
 
         static P2Pclient ptcp = new P2Pclient(DataType.custom);
 
         static void Main(string[] args)
         {
-            //wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent; ;
+            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
+            wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
+            wudp.WeaveReceiveSslEvent += Wudp_WeaveReceiveSslEvent1;
+            wudp.Start(11110);
 
-            // wudp.Start(12404);
+            Console.ReadLine();
 
-            //Console.ReadLine();
-          
             ptcp.ReceiveServerEventbit += Ptcp_receiveServerEventbit;
             ptcp.Timeoutobjevent += Ptcp_timeoutobjevent;
-            ptcp.Start("127.0.0.1", 1110, false);
+            ptcp.Start("127.0.0.1", 11110, false);
+            Console.ReadLine();
         }
+
+        private static void Wudp_waveReceiveEvent(byte command, string data, Socket soc)
+        {
+            wudp.Send(soc,command, data);
+        }
+
+        private static void Wudp_WeaveReceiveSslEvent1(byte command, string data, System.Net.Security.SslStream soc)
+        {
+        
+        }
+
+        
 
         private static void Ptcp_timeoutobjevent(P2Pclient p2pobj)
         {

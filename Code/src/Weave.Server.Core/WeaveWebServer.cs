@@ -697,6 +697,8 @@ namespace Weave.Server
                                 me.Databit = bs;
                                 me.Soc = soc;
                                 me.Ssl = ssl;
+                                if (ssl != null)
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHanderssl), me);
                                 if (weaveReceiveBitEvent != null)
                                     System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToBitEventHander), me);
                                 //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
@@ -805,6 +807,8 @@ namespace Weave.Server
                                 me.Data = temp2;
                                 me.Soc = soc;
                                 me.Ssl = ssl;
+                                if(ssl!=null)
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHanderssl), me);
                                 if (waveReceiveEvent != null)
                                     // waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
                                     System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHander), me);
@@ -888,11 +892,11 @@ namespace Weave.Server
                                 ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(ReceiveToBitEventHander), me);
                            
                         }
-                        else if (DT == WeaveDataTypeEnum.Bytes)
+                        else if (DT == WeaveDataTypeEnum.Json)
                         {
                             packageDatajson(tempbtye, netc.SocketSession, netc.Stream);
                         }
-                        else if (DT == WeaveDataTypeEnum.Json)
+                        else if (DT == WeaveDataTypeEnum.Bytes)
                         {
                             packageDatabtye(tempbtye, netc.SocketSession, netc.Stream);
                         }
@@ -901,7 +905,7 @@ namespace Weave.Server
                     }
                     catch
                     {
-                       
+                        if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0);
                         netc.IsPage = false; return;
                     }
                     //if (tempbtye == null)
