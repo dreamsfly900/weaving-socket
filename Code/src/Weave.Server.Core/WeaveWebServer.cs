@@ -384,7 +384,8 @@ namespace Weave.Server
 
             } while (byteCount <= 2);
 
-            netc.DataList.Add(listb.ToArray());
+            // netc.DataList.Add(listb.ToArray());
+            netc.Buffer = listb.ToArray();
             PackageData(netc);
             netc.State = 1;
         }
@@ -392,13 +393,13 @@ namespace Weave.Server
         private void ReadCallback3(object ar)
         {
             WeaveNetWorkItems netc = (WeaveNetWorkItems)ar;
-            Socket handler = netc.SocketSession;
+           
             try
             {
-                handler.Receive(netc.Buffer = new byte[netc.SocketSession.Available]);
+                netc.SocketSession.Receive(netc.Buffer = new byte[netc.SocketSession.Available]);
                 byte[] tempbtye = new byte[netc.Buffer.Length];
                 Array.Copy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length);
-                netc.DataList.Add(tempbtye);
+               // netc.DataList.Add(tempbtye);
                 PackageData(netc);
             }
             catch
@@ -574,7 +575,7 @@ namespace Weave.Server
                     {
                         if (netc.SocketSession.Available > 0)
                         {
-                            if (netc.State == state)
+                            if (netc.State == state && !netc.IsPage)
                             {
                                 if (netc.SocketSession.Available > num)
                                 {
@@ -600,7 +601,7 @@ namespace Weave.Server
                                 }
                             }
                         }
-                        else if (netc.DataList.Count > 0 && !netc.IsPage)
+                        else if (netc.allDataList.Length > 0 && !netc.IsPage)
                         {
                             netc.IsPage = true;
                             ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(PackageData), netc);
@@ -623,7 +624,7 @@ namespace Weave.Server
                     int bytesRead = alldata.Length;
                     if (bytesRead == 0)
                     {
-                        //  if (ListData.Count > 0) ListData.RemoveAt(0);
+                        
                         return alldata;
                     };
 
@@ -853,29 +854,45 @@ namespace Weave.Server
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             try
             {
-                int count = netc.DataList.Count;
-                List<byte[]> ListData = netc.DataList;
+               int   bytesRead = netc.Buffer.Length;
+                byte[] tempbtyes = new byte[bytesRead];
+                Array.Copy(netc.Buffer, 0, tempbtyes, 0, tempbtyes.Length);
+                int lle = netc.allDataList.Length;
+
+                byte[] temp = new byte[lle + tempbtyes.Length];
+                Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
+                Array.Copy(tempbtyes, 0, temp, lle, bytesRead);
+                netc.allDataList = temp; //workItem.DataList.Add(tempbtye);
+               
                 int i = 0;
-                if (netc.DataList.Count > 0)
+                
                 {
 
                     DataFrameHeader dfh = null;
-                    int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
-                    if (bytesRead == 0) { if (ListData.Count > 0) ListData.RemoveAt(0); netc.IsPage = false; return; };
-                    byte[] tempbtyes = new byte[bytesRead];
-                    Array.Copy(ListData[i], tempbtyes, tempbtyes.Length);
+                   
                     byte[] masks = new byte[4];
                     int lens = 0;
                     int paylen = 0;
-                    byte[] tempbtye = null;
+                  
                     try
                     {
                         DataFrame df = new DataFrame();
-                        tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
+                        if (tempbtyes.Length <= 2)
+                        {
+                            netc.IsPage = false; return;
+                        }
+                        byte[]  tempbtye = df.GetData(temp, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
-                            if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0);
+                            
                             netc.IsPage = false; return;
+                        }
+                        if (temp.Length >= (lens + dfh.Length))
+                        {
+                            temp = new byte[temp.Length- (lens + dfh.Length)];
+                            Array.Copy(netc.allDataList, lens + dfh.Length, temp, 0, temp.Length);
+                           
+                            netc.allDataList = temp;
                         }
                         if (DT == WeaveDataTypeEnum.custom)
                         {
@@ -900,12 +917,13 @@ namespace Weave.Server
                         {
                             packageDatabtye(tempbtye, netc.SocketSession, netc.Stream);
                         }
-                        if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); netc.IsPage = false; return;
+                        
+                        netc.IsPage = false; return;
                     
                     }
                     catch
                     {
-                        if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0);
+                         
                         netc.IsPage = false; return;
                     }
                     //if (tempbtye == null)
@@ -918,11 +936,7 @@ namespace Weave.Server
             }
             catch
             {
-                try
-                {
-                    if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); 
-                }
-                catch { }
+                
                 netc.IsPage = false; return;
             }
             finally
@@ -935,59 +949,59 @@ namespace Weave.Server
 
 
         public delegate void TestDelegate(string name);
-        string Combine(string temp, byte[] tempbtyes, List<byte[]> ListData)
-        {
-            DataFrameHeader dfh = null;
-            byte[] masks = new byte[4];
-            int lens = 0;
-            int paylen = 0;
-            byte[] tempbtye = null;
-            DataFrame df = new DataFrame();
-            try
-            {
-                tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
-            }
-            catch
-            {
-                if (paylen > tempbtyes.Length)
-                {
-                    ListData.RemoveAt(0);
-                    byte[] temps = new byte[tempbtyes.Length];
-                    Array.Copy(tempbtyes, temps, temps.Length);
-                    tempbtyes = new byte[temps.Length + ListData[0].Length];
-                    Array.Copy(temps, tempbtyes, temps.Length);
-                    Array.Copy(ListData[0], 0, tempbtyes, temps.Length, ListData[0].Length);
-                    ListData[0] = tempbtyes;
-                    temp = Combine(temp, ListData[0], ListData);
-                    return temp;
-                }
-            }
-            try
-            {
-                temp += Encoding.UTF8.GetString(tempbtye);
-                if (ListData[0].Length > tempbtye.Length + lens)
-                {
-                    int aa = ListData[0].Length - (tempbtye.Length + lens);
-                    byte[] temptt = new byte[aa];
-                    Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
-                    ListData[0] = temptt;
-                }
-                else
-                {
-                    ListData.RemoveAt(0);
-                }
-                if (!dfh.FIN)
-                {
-                    while (!(ListData.Count > 0))
-                        Thread.Sleep(100);
-                    temp = Combine(temp, ListData[0], ListData);
-                }
-            }
-            catch
-            {
-            }
-            return temp;
-        }
+        //string Combine(string temp, byte[] tempbtyes, List<byte[]> ListData)
+        //{
+        //    DataFrameHeader dfh = null;
+        //    byte[] masks = new byte[4];
+        //    int lens = 0;
+        //    int paylen = 0;
+        //    byte[] tempbtye = null;
+        //    DataFrame df = new DataFrame();
+        //    try
+        //    {
+        //        tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
+        //    }
+        //    catch
+        //    {
+        //        if (paylen > tempbtyes.Length)
+        //        {
+        //            ListData.RemoveAt(0);
+        //            byte[] temps = new byte[tempbtyes.Length];
+        //            Array.Copy(tempbtyes, temps, temps.Length);
+        //            tempbtyes = new byte[temps.Length + ListData[0].Length];
+        //            Array.Copy(temps, tempbtyes, temps.Length);
+        //            Array.Copy(ListData[0], 0, tempbtyes, temps.Length, ListData[0].Length);
+        //            ListData[0] = tempbtyes;
+        //            temp = Combine(temp, ListData[0], ListData);
+        //            return temp;
+        //        }
+        //    }
+        //    try
+        //    {
+        //        temp += Encoding.UTF8.GetString(tempbtye);
+        //        if (ListData[0].Length > tempbtye.Length + lens)
+        //        {
+        //            int aa = ListData[0].Length - (tempbtye.Length + lens);
+        //            byte[] temptt = new byte[aa];
+        //            Array.Copy(tempbtyes, (tempbtye.Length + lens), temptt, 0, temptt.Length);
+        //            ListData[0] = temptt;
+        //        }
+        //        else
+        //        {
+        //            ListData.RemoveAt(0);
+        //        }
+        //        if (!dfh.FIN)
+        //        {
+        //            while (!(ListData.Count > 0))
+        //                Thread.Sleep(100);
+        //            temp = Combine(temp, ListData[0], ListData);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //    }
+        //    return temp;
+        //}
 
         delegate void receiveconndele(object ias);
         void Receiveconn(object ias)
