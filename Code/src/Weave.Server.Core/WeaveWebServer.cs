@@ -884,8 +884,8 @@ namespace Weave.Server
                         byte[]  tempbtye = df.GetData(temp, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
-                            
-                            netc.IsPage = false; return;
+                            netc.allDataList = new byte[0];
+                             netc.IsPage = false; return;
                         }
                         if (temp.Length >= (lens + dfh.Length))
                         {
