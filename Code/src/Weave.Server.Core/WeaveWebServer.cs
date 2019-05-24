@@ -874,7 +874,7 @@ namespace Weave.Server
                         tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
-                            ListData.RemoveAt(i);
+                            if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0);
                             netc.IsPage = false; return;
                         }
                         if (DT == WeaveDataTypeEnum.custom)
@@ -918,7 +918,12 @@ namespace Weave.Server
             }
             catch
             {
-                if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); netc.IsPage = false; return;
+                try
+                {
+                    if (netc.DataList.Count > 0) netc.DataList.RemoveAt(0); 
+                }
+                catch { }
+                netc.IsPage = false; return;
             }
             finally
             {
