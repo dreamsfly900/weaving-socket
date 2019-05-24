@@ -616,9 +616,7 @@ namespace Weave.Server
         {
             try
             {
-                //int i = 0;
-                //int count = ListData.Count;
-                //  if (count > 0)
+                
                 {
                 lb1122:
                     int bytesRead = alldata.Length;
@@ -813,10 +811,7 @@ namespace Weave.Server
                                 if (waveReceiveEvent != null)
                                     // waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
                                     System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveToEventHander), me);
-                                //receiveeventto(me);
-                                //if (receiveevent != null)
-                                // waveReceiveEvent.BeginInvoke(tempbtye[0], temp, soc, null, null);
-                                //if (ListData.Count > 0) ListData.RemoveAt(i);
+                                 
 
 
                                 return alldata;
