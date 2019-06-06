@@ -14,4 +14,5 @@
     /// 有ten=10, hundred=100, thousand=1000, ten_thousand=10000 三种
     /// </summary>
     public enum WeavePipelineTypeEnum { ten = 10, hundred = 100, thousand = 1000, ten_thousand = 10000 };
+    public enum WeaveReceivesSpeedMode { high=0, middle=1,low=10 };
 }

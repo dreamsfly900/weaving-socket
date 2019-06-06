@@ -39,6 +39,7 @@ namespace Weave.TCPClient
         private readonly bool NATUDP = false;
         public string IP;
         public int PORT;
+        public WeaveReceivesSpeedMode ReceivesSpeedMode= WeaveReceivesSpeedMode.high;
         public bool Isline { get; set; } = false;
         private readonly List<object> objlist = new List<object>();
 
@@ -605,7 +606,9 @@ namespace Weave.TCPClient
             var w = new SpinWait();
             while (isok)
             {
-
+                if (ReceivesSpeedMode != WeaveReceivesSpeedMode.high)
+                    //sleep(10) 
+                    System.Threading.Thread.Sleep((int)ReceivesSpeedMode);
                 try
                 {
                     if (tcpc.Client == null)
