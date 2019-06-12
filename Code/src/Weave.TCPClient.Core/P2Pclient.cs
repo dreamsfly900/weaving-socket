@@ -146,7 +146,7 @@ namespace Weave.TCPClient
                 IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 tcpc = new TcpClient
                 {
-                    ExclusiveAddressUse = false,
+                   // ExclusiveAddressUse = false,
                     ReceiveBufferSize = int.MaxValue
                 };
                 tcpc.Connect(ip, port);
