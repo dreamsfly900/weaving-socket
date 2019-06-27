@@ -646,8 +646,8 @@ namespace Weave.TCPClient
                                         tempbtye = b;
                                         goto _0x99;
                                     }
-                                    else
-                                        continue;
+                                    //else
+                                    //    continue;
                                 }
                             }
                         }
