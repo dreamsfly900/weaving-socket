@@ -506,60 +506,51 @@ namespace Weave.Base
 
         #region 发送
 
-    
-        public bool send(int index, byte command, string text)
-        {
-            try
-            {
-                Socket socket = weaveNetworkItems[index].SocketSession;
-                byte[] sendb = Encoding.UTF8.GetBytes(text);
-                byte[] lens = Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
-               
-                Send(socket, b);
-            }
-            catch { return false; }
-            // tcpc.Close();
-            return true;
-        }
+     
         public bool Send(Socket socket, byte command, string text)
         {
             try
             {
-                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
-                int slen = 40960;
-                if (socketLisener.ProtocolType == ProtocolType.Udp)
-                    slen = 520;
-                int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
-                //lock (socket)
+                if (weaveDataType == WeaveDataTypeEnum.Json)
                 {
-                    //if (count == 0)
-                    //{
+                  
+
+                    byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
+                    byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                    byte[] b = new byte[2 + lens.Length + sendb.Length];
+                    b[0] = command;
+                    b[1] = (byte)lens.Length;
+                    lens.CopyTo(b, 2);
+                    sendb.CopyTo(b, 2 + lens.Length);
+                    int slen = 40960;
+                    if (socketLisener.ProtocolType == ProtocolType.Udp)
+                        slen = 520;
+                    int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
+                    //lock (socket)
+                    {
+                        //if (count == 0)
+                        //{
                         Send(socket, b);
 
-                    //}
-                    //else
-                    //{
-                    //    for (int i = 0; i < count; i++)
-                    //    {
-                    //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
-                    //        byte[] temp = new byte[zz];
-                    //        Array.Copy(b, i * slen, temp, 0, zz);
-                    //        Send(socket, temp);
-                    //        //  System.Threading.Thread.Sleep(1);
-                    //    }
-                    //}
+                        //}
+                        //else
+                        //{
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
+                        //        byte[] temp = new byte[zz];
+                        //        Array.Copy(b, i * slen, temp, 0, zz);
+                        //        Send(socket, temp);
+                        //        //  System.Threading.Thread.Sleep(1);
+                        //    }
+                        //}
+                    }
                 }
+                else if (weaveDataType == WeaveDataTypeEnum.Bytes)
+                {
+                    Send(socket, command, System.Text.Encoding.UTF8.GetBytes(text));
+                }
+              
              
             }
             catch { return false; }
@@ -598,37 +589,47 @@ namespace Weave.Base
         {
             try
             {
-                int slen = 40960;
-                if (socketLisener.ProtocolType == ProtocolType.Udp)
-                    slen = 520;
-                byte[] sendb = text;
-                byte[] lens = ConvertToByteList(sendb.Length);
-                byte[] b = new byte[2 +2+ lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                CRC.ConCRC(ref b, 2 + lens.Length);
-                sendb.CopyTo(b, 2+2 + lens.Length);
-                int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
-              
+                if (weaveDataType == WeaveDataTypeEnum.Json)
                 {
-                    //if (count == 0)
-                    //{
+                    Send(socket, command, System.Text.Encoding.UTF8.GetString(text));
+
+                    
+                }
+                else if (weaveDataType == WeaveDataTypeEnum.Bytes)
+                {
+                    int slen = 40960;
+                    if (socketLisener.ProtocolType == ProtocolType.Udp)
+                        slen = 520;
+                    byte[] sendb = text;
+                    byte[] lens = ConvertToByteList(sendb.Length);
+                    byte[] b = new byte[2 + 2 + lens.Length + sendb.Length];
+                    b[0] = command;
+                    b[1] = (byte)lens.Length;
+                    lens.CopyTo(b, 2);
+                    CRC.ConCRC(ref b, 2 + lens.Length);
+                    sendb.CopyTo(b, 2 + 2 + lens.Length);
+                    int count = (b.Length <= slen ? b.Length / slen : (b.Length / slen) + 1);
+
+                    {
+                        //if (count == 0)
+                        //{
                         // socket.Send(b);
                         Send(socket, b);
-                    //}
-                    //else
-                    //{
-                    //    for (int i = 0; i < count; i++)
-                    //    {
-                    //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
-                    //        byte[] temp = new byte[zz];
-                    //        Array.Copy(b, i * slen, temp, 0, zz);
-                    //        Send(socket, temp);
-                    //        //  System.Threading.Thread.Sleep(1);
-                    //    }
-                    //}
+                        //}
+                        //else
+                        //{
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
+                        //        byte[] temp = new byte[zz];
+                        //        Array.Copy(b, i * slen, temp, 0, zz);
+                        //        Send(socket, temp);
+                        //        //  System.Threading.Thread.Sleep(1);
+                        //    }
+                        //}
+                    }
                 }
+                
             }
             catch { return false; }
             // tcpc.Close();
