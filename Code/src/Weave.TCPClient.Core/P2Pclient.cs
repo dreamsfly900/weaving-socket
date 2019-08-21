@@ -266,15 +266,23 @@ namespace Weave.TCPClient
         {
             try
             {
-                byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
-                byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
-                byte[] b = new byte[2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                sendb.CopyTo(b, 2 + lens.Length);
-                int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
-                Send(b);
+                if (DT == DataType.json)
+                {
+                    byte[] sendb = System.Text.Encoding.UTF8.GetBytes(text);
+                    byte[] lens = System.Text.Encoding.UTF8.GetBytes(sendb.Length.ToString());
+                    byte[] b = new byte[2 + lens.Length + sendb.Length];
+                    b[0] = command;
+                    b[1] = (byte)lens.Length;
+                    lens.CopyTo(b, 2);
+                    sendb.CopyTo(b, 2 + lens.Length);
+                    int count = (b.Length <= 40960 ? b.Length / 40960 : (b.Length / 40960) + 1);
+                    Send(b);
+                }
+                else if (DT == DataType.bytes)
+                {
+                   return Send(command, System.Text.Encoding.UTF8.GetBytes(text));
+                }
+               
             }
             catch (Exception ee)
             {
@@ -298,15 +306,25 @@ namespace Weave.TCPClient
             bool bb = false;
             try
             {
-                byte[] sendb = text;
-                byte[] lens = ConvertToByteList(sendb.Length);
-                byte[] b = new byte[2 + 2 + lens.Length + sendb.Length];
-                b[0] = command;
-                b[1] = (byte)lens.Length;
-                lens.CopyTo(b, 2);
-                CRC.ConCRC(ref b, 2 + lens.Length);
-                sendb.CopyTo(b, 2 + 2 + lens.Length);
-                bb = Send(b);
+                if (DT == DataType.json)
+                {
+                   return Send(command, System.Text.Encoding.UTF8.GetString(text));
+                }
+                else if (DT == DataType.bytes)
+                {
+
+                    byte[] sendb = text;
+                    byte[] lens = ConvertToByteList(sendb.Length);
+                    byte[] b = new byte[2 + 2 + lens.Length + sendb.Length];
+                    b[0] = command;
+                    b[1] = (byte)lens.Length;
+                    lens.CopyTo(b, 2);
+                    CRC.ConCRC(ref b, 2 + lens.Length);
+                    sendb.CopyTo(b, 2 + 2 + lens.Length);
+                    bb = Send(b);
+                   
+                }
+               
             }
             catch (Exception ee)
             {
