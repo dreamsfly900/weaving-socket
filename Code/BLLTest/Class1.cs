@@ -11,13 +11,18 @@ namespace Testclass
     {
         public override byte Getcommand()
         {
-            return 0x01;
+            return 0x01;//头指令
         }
 
         public override bool Run(string data, Socket soc)
         {
             return true;
         }
+        /// <summary>
+        /// 这是一个标记了InstallFun的方法，使客户端可以通过远程RPC模式调用该方法。
+        /// </summary>
+        /// <param name="soc"></param>
+        /// <param name="_0x01"></param>
         [InstallFun("forever")]
         public void login(Socket soc, WeaveSession _0x01)
         {

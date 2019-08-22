@@ -1,0 +1,1 @@
+﻿该运行器是将WEBSOCKET，HTTP，SOCKET等协议进行了封装，使遵守WeaveTCPCommand接口的类，可以装载到运行器中，编码人员只需要关系遵守WeaveTCPCommand的类中的内容与写法，参考BLLTest

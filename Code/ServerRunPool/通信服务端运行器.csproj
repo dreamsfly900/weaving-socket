@@ -132,6 +132,7 @@
     <Content Include="log\TextFile1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="说明.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Weave.Base.Core\Weave.Base.csproj">

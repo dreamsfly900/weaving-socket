@@ -10,11 +10,12 @@ using Weave.TCPClient;
 
 namespace TCP服务测试
 {
+
     class Program
     {
-        static Weave.Server.WeaveWebServer wudp = new WeaveWebServer(WeaveDataTypeEnum.Json);
+        static Weave.Server.WeaveWebServer wudp = new WeaveWebServer(WeaveDataTypeEnum.Json);//这是webscoekt服务端
 
-        static P2Pclient ptcp = new P2Pclient(DataType.custom);
+        
 
         static void Main(string[] args)
         {
@@ -25,9 +26,7 @@ namespace TCP服务测试
 
             Console.ReadLine();
 
-            ptcp.ReceiveServerEventbit += Ptcp_receiveServerEventbit;
-            ptcp.Timeoutobjevent += Ptcp_timeoutobjevent;
-            ptcp.Start("127.0.0.1", 11110, false);
+           
             Console.ReadLine();
         }
 
@@ -42,17 +41,8 @@ namespace TCP服务测试
         }
 
         
-
-        private static void Ptcp_timeoutobjevent(P2Pclient p2pobj)
-        {
-            p2pobj.Restart(false);
-        }
-
-        private static void Ptcp_receiveServerEventbit(byte command, byte[] data)
-        {
-            ptcp.Send(data);
-        }
-
+ 
+       
         private static void Wudp_weaveReceiveBitEvent(byte command, byte[] data, Socket soc)
         {
             wudp.Send(soc, data);
