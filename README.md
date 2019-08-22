@@ -1,10 +1,24 @@
- **> 变更开源授权许可 为  Anti 996-License** 
+>  
 
- 
+### nuget可搜索包Weave.TCPClient与Weave.Server
+
+
+> 这里输入引用文本
+
+ **WeavingDB是一个轻量级的便捷的内存数据库，缓存库。
+基于 weaving-socket ，欢迎大家学习使用
 
 https://gitee.com/UDCS/WeavingDB
+
 基于 weaving-socket 通讯架构制作的内存数据库，缓存库。
 
+
+WsocketAutoUpPrj是一个几个weaving-socket的软件版本自动升级更新程序示例。
+
+https://gitee.com/UDCS/WsocketAutoUpPrj
+
+
+** 
 - https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows/wikis
 
 - 图文版教程:https://my.oschina.net/u/2476624/
