@@ -660,7 +660,7 @@ namespace Weave.Base
 
                 }
                 catch { }
-             //   w.SpinOnce();
+                w.SpinOnce();
                 //  System.Threading.Thread.Sleep(1);
             }
         }
