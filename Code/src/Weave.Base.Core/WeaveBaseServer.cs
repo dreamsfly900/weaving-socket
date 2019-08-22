@@ -655,12 +655,14 @@ namespace Weave.Base
                         //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                         //weaveNetworkItems.CopyTo(0, netlist, 0, c);
                         getbuffer(weaveNetworkItems, 0, c);
-
+                        w.SpinOnce();
                     }
-
+                    else {
+                        System.Threading.Thread.Sleep(1);
+                    }
                 }
                 catch { }
-                w.SpinOnce();
+               
                 //  System.Threading.Thread.Sleep(1);
             }
         }
