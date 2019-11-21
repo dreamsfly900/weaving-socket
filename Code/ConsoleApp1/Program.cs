@@ -16,8 +16,9 @@ namespace ConsoleApp1
          
             modbus mod = new modbus();
             mod.name = "aaa";//这里可以是设备的ID号;
-            mod.ip = "127.0.0.1";
-            mod.port = 8888;
+            mod.ip = "117.159.23.98";
+            mod.port = 3308;
+            modlist.Add(mod);
             foreach (modbus m in modlist)
             {
                 P2Pclient client = new P2Pclient(DataType.custom);

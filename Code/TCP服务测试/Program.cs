@@ -22,12 +22,18 @@ namespace TCP服务测试
             wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
             wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
             wudp.WeaveReceiveSslEvent += Wudp_WeaveReceiveSslEvent1;
+            wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
             wudp.Start(11110);
 
             Console.ReadLine();
 
            
             Console.ReadLine();
+        }
+
+        private static void Wudp_weaveDeleteSocketListEvent(Socket soc)
+        {
+            
         }
 
         private static void Wudp_waveReceiveEvent(byte command, string data, Socket soc)

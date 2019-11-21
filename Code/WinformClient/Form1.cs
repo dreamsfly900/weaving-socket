@@ -11,13 +11,13 @@ namespace winformclient
             InitializeComponent();
         }
         int count = 0;
-        WeaveUDPclient p2pc = new WeaveUDPclient(DataType.json);
+        //WeaveUDPclient p2pc = new WeaveUDPclient(DataType.json);
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
-            p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-           bool vv= p2pc.Start("122.114.53.233", 12233, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+           // p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
+           // p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
+        
         }
         [InstallFunAttribute("forever")]//客户端也支持像服务端那样写，刚才看懂返回的内容也是testaabb，所以客户端也要把方法命名testaabb
         public void login(System.Net.Sockets.Socket soc, WeaveSession _0x01)
@@ -31,6 +31,7 @@ namespace winformclient
         }
         private void P2pc_receiveServerEvent(byte command, string text)
         {
+            p2pc.SendRoot<int>(0x01, "login", 99987, 0);
             count++;
          //   MessageBox.Show(text);
         }
@@ -82,11 +83,11 @@ namespace winformclient
         {
             label1.Invoke((EventHandler)delegate { label1.Text = count.ToString(); });
         }
-    
-       
+
+        P2Pclient p2pc;
         private void button1_Click_1(object sender, EventArgs e)
         {
-            P2Pclient p2pc = new P2Pclient(false);
+             p2pc = new P2Pclient(false);
             p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
 
             p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件

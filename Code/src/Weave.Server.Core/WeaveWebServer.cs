@@ -105,10 +105,19 @@ namespace Weave.Server
                                 continue;
                             if (workItem.State != 0)
                             {
+                                var ok = false;
                                 if (DT != WeaveDataTypeEnum.custom)
+                                {
                                     xintiao[0] = 0x99;
-
-                                if (!Send(workItem.SocketSession, xintiao))
+                                    ok = Send(workItem.SocketSession, xintiao);
+                                }
+                                else {
+                                    if(Certificate!=null)
+                                    ok = Send(workItem.SocketSession, 0x99," ");
+                                    else
+                                     ok = Send(workItem.Stream, 0x99, " ");
+                                } 
+                                if (!ok)
                                 {
                                     workItem.ErrorNum += 1;
                                     if (workItem.ErrorNum > 3)

@@ -356,7 +356,8 @@ namespace Weave.Server
                         {
                             EndPoint ep = workItem.Ep;
                             byte[] b = new byte[] { 0x99 };
-                            socketLisener.SendTo(b, ep);
+                            Send(ep, 0x99, new byte[1]);
+                            //socketLisener.SendTo(b, ep);
                             if ((DateTime.Now - workItem.Lasttime).TotalSeconds > 90)
                             {
                                 ThreadPool.QueueUserWorkItem(new WaitCallback(DeleteSocketListEventHander), workItem.Ep);

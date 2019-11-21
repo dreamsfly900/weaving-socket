@@ -62,6 +62,20 @@ namespace 智信构建结构
         private void Form1_Load(object sender, EventArgs e)
         {
             lab_info.Text = "";
+            WeaveServerPort sp = new WeaveServerPort();
+            sp.Port = 8989;
+            sp.PortType = WeavePortTypeEnum.Json;
+
+            listsp.Add(sp);
+            sp = new WeaveServerPort();
+            sp.Port = 8990;
+            sp.PortType = WeavePortTypeEnum.Web;
+            listsp.Add(sp);
+            sp = new WeaveServerPort();
+            sp.Port = 8991;
+            sp.PortType = WeavePortTypeEnum.Http;
+            listsp.Add(sp);
+            button1_Click(null, null);
         }
         private void button2_Click(object sender, EventArgs e)
         {

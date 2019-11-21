@@ -13,22 +13,22 @@ namespace Weave.Cloud
     /// </summary>
     public class DTUGateWay
     {
-        DTUServer DTUSer;
+        WeaveP2Server DTUSer;
         public int V_ErrorMge { get; private set; }
         public List<CommandItem> CommandItemS = new List<CommandItem>();
         public List<CommandItem> CommandItemS2 = new List<CommandItem>();
         public event Mylog EventMylog;
         public DTUGateWay()
         {
-            DTUSer = new DTUServer();
+            DTUSer = new WeaveP2Server(WeaveDataTypeEnum.custom);
         }
         public bool Run(int port)
         {
             // Mycommand comm = new Mycommand(, connectionString);
             ReLoad();
-            DTUSer.WeaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
-            DTUSer.WeaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
-            DTUSer.WeaveReceiveDtuEvent += DTUSer_receiveeventDtu;
+            DTUSer.weaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
+            DTUSer.weaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
+            DTUSer.weaveReceiveBitEvent += DTUSer_receiveeventDtu;
             DTUSer.Start(port);
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
@@ -40,14 +40,14 @@ namespace Weave.Cloud
             filename = _filename;
             _port = port;
             ReloadFlies2(null);
-            DTUSer.WeaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
-            DTUSer.WeaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
-            DTUSer.WeaveReceiveDtuEvent += DTUSer_receiveeventDtu;
+            DTUSer.weaveDeleteSocketListEvent += DTUSer_EventDeleteConnSoc;
+            DTUSer.weaveUpdateSocketListEvent += DTUSer_EventUpdataConnSoc;
+            DTUSer.weaveReceiveBitEvent += DTUSer_receiveeventDtu;
             DTUSer.Start(port);
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReloadFliesdtu), null);
             return true;
         }
-        private void DTUSer_receiveeventDtu(byte[] data, System.Net.Sockets.Socket soc)
+        private void DTUSer_receiveeventDtu(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
             foreach (CommandItem ci in CommandItemS)
             {

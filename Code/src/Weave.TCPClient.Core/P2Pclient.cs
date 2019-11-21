@@ -396,21 +396,21 @@ namespace Weave.TCPClient
                     byte[] tempbtye = new byte[bytesRead];
 
                     Array.Copy(alldata, tempbtye, tempbtye.Length);
-                    if (tempbtye[0] == 0x99)
-                    {
-                        timeout = DateTime.Now;
-                        if (tempbtye.Length > 1)
-                        {
-                            byte[] b = new byte[bytesRead - 1];
-                            try
-                            {
-                                Array.Copy(tempbtye, 1, b, 0, b.Length);
-                            }
-                            catch { }
-                            alldata = b;
-                            return;
-                        }
-                    }
+                    //if (tempbtye[0] == 0x99)
+                    //{
+                    //    timeout = DateTime.Now;
+                    //    if (tempbtye.Length > 1)
+                    //    {
+                    //        byte[] b = new byte[bytesRead - 1];
+                    //        try
+                    //        {
+                    //            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                    //        }
+                    //        catch { }
+                    //        alldata = b;
+                    //        return;
+                    //    }
+                    //}
 
                     if (bytesRead > 2)
                     {
@@ -454,35 +454,36 @@ namespace Weave.TCPClient
                             }
                             try
                             {
-                                if (DT == DataType.json)
+
+                                temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
+
+                                if (tempbtye[0] == 0xff)
                                 {
-                                    temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-
-                                    if (tempbtye[0] == 0xff)
+                                    if (temp.IndexOf("token") >= 0)
+                                        Tokan = temp.Split('|')[1];
+                                    else if (temp.IndexOf("jump") >= 0)
                                     {
-                                        if (temp.IndexOf("token") >= 0)
-                                            Tokan = temp.Split('|')[1];
-                                        else if (temp.IndexOf("jump") >= 0)
-                                        {
-                                            Tokan = "连接数量满";
-                                            JumpServerEvent(temp.Split('|')[1]);
-                                        }
-                                        else
-                                        {
-                                            ReceiveServerEvent?.Invoke(tempbtye[0], temp);
-
-                                            ReceiveServerEvent?.Invoke(tempbtye[0], temp);
-                                            ReceiveServerEventobj?.Invoke(tempbtye[0], temp, this);
-                                        }
+                                        Tokan = "连接数量满";
+                                        JumpServerEvent(temp.Split('|')[1]);
                                     }
-                                    else if (ReceiveServerEvent != null || ReceiveServerEventobj != null)
+                                    else
                                     {
+                                        ReceiveServerEvent?.Invoke(tempbtye[0], temp);
+
                                         ReceiveServerEvent?.Invoke(tempbtye[0], temp);
                                         ReceiveServerEventobj?.Invoke(tempbtye[0], temp, this);
                                     }
                                 }
+                                else if (tempbtye[0] == 0x99)
+                                    return;
+                                else if (ReceiveServerEvent != null || ReceiveServerEventobj != null)
+                                {
+                                    ReceiveServerEvent?.Invoke(tempbtye[0], temp);
+                                    ReceiveServerEventobj?.Invoke(tempbtye[0], temp, this);
+                                }
 
-                                return;
+
+
                             }
                             catch (Exception e)
                             {
@@ -524,21 +525,21 @@ namespace Weave.TCPClient
                     byte[] tempbtye = new byte[bytesRead];
 
                     Array.Copy(alldata, tempbtye, tempbtye.Length);
-                    if (tempbtye[0] == 0x99)
-                    {
-                        timeout = DateTime.Now;
-                        if (tempbtye.Length > 1)
-                        {
-                            byte[] b = new byte[bytesRead - 1];
-                            try
-                            {
-                                Array.Copy(tempbtye, 1, b, 0, b.Length);
-                            }
-                            catch { }
-                            alldata = b;
-                            goto lb0x99;
-                        }
-                    }
+                    //if (tempbtye[0] == 0x99)
+                    //{
+                    //    timeout = DateTime.Now;
+                    //    if (tempbtye.Length > 1)
+                    //    {
+                    //        byte[] b = new byte[bytesRead - 1];
+                    //        try
+                    //        {
+                    //            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                    //        }
+                    //        catch { }
+                    //        alldata = b;
+                    //        goto lb0x99;
+                    //    }
+                    //}
 
                     if (bytesRead > 2)
                     {
@@ -589,7 +590,8 @@ namespace Weave.TCPClient
                             {
                                 byte[] bs = new byte[len];
                                 Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
-
+                                if (tempbtye[0] == 0x99)
+                                    return;
                                 ReceiveServerEventbit?.Invoke(tempbtye[0], bs);
                                 ReceiveServerEventbitobj?.Invoke(tempbtye[0], bs, this);
 
@@ -600,6 +602,7 @@ namespace Weave.TCPClient
                                 ErrorMge?.Invoke(3, e.StackTrace + "unup122:" + e.Message);
                                 alldata = new byte[0];
                             }
+                          
                         }
                         else
                         {
@@ -649,24 +652,24 @@ namespace Weave.TCPClient
                             }
                             else
                             {
-                            _0x99:
-                                if (tempbtye[0] == 0x99)
-                                {
-                                    timeout = DateTime.Now;
-                                    if (tempbtye.Length > 1)
-                                    {
-                                        byte[] b = new byte[tempbtye.Length - 1];
-                                        try
-                                        {
-                                            Array.Copy(tempbtye, 1, b, 0, b.Length);
-                                        }
-                                        catch { }
-                                        tempbtye = b;
-                                        goto _0x99;
-                                    }
-                                    //else
-                                    //    continue;
-                                }
+                            //_0x99:
+                            //    if (tempbtye[0] == 0x99)
+                            //    {
+                            //        timeout = DateTime.Now;
+                            //        if (tempbtye.Length > 1)
+                            //        {
+                            //            byte[] b = new byte[tempbtye.Length - 1];
+                            //            try
+                            //            {
+                            //                Array.Copy(tempbtye, 1, b, 0, b.Length);
+                            //            }
+                            //            catch { }
+                            //            tempbtye = b;
+                            //            goto _0x99;
+                            //        }
+                            //        //else
+                            //        //    continue;
+                            //    }
                             }
                         }
                         catch (Exception ee)
@@ -696,24 +699,24 @@ namespace Weave.TCPClient
                     {
                         if (alldata.Length > 3)
                         {
-                        _0x99:
-                            if (alldata[0] == 0x99)
-                            {
-                                timeout = DateTime.Now;
-                                if (alldata.Length > 1)
-                                {
-                                    byte[] b = new byte[alldata.Length - 1];
-                                    try
-                                    {
-                                        Array.Copy(alldata, 1, b, 0, b.Length);
-                                    }
-                                    catch { }
-                                    alldata = b;
-                                    goto _0x99;
-                                }
-                                else
-                                    continue;
-                            }
+                        //_0x99:
+                        //    if (alldata[0] == 0x99)
+                        //    {
+                        //        timeout = DateTime.Now;
+                        //        if (alldata.Length > 1)
+                        //        {
+                        //            byte[] b = new byte[alldata.Length - 1];
+                        //            try
+                        //            {
+                        //                Array.Copy(alldata, 1, b, 0, b.Length);
+                        //            }
+                        //            catch { }
+                        //            alldata = b;
+                        //            goto _0x99;
+                        //        }
+                        //        else
+                        //            continue;
+                        //    }
                             Unup();
                         }
                         else
