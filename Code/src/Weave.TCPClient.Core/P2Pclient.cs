@@ -361,8 +361,12 @@ namespace Weave.TCPClient
                 byte[] tempbtye = new byte[bytesRead];
 
                 Array.Copy(alldata, tempbtye, tempbtye.Length);
-                ReceiveServerEventbit?.Invoke(defaultCommand, tempbtye);
-                ReceiveServerEventbitobj?.Invoke(defaultCommand, tempbtye, this);
+                command cc = new command();
+                cc.comm = defaultCommand;
+                cc.bs = tempbtye;
+                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
+                //ReceiveServerEventbit?.BeginInvoke(defaultCommand, tempbtye, null, null);
+                //ReceiveServerEventbitobj?.BeginInvoke(defaultCommand, tempbtye, this, null, null);
 
                 alldata = new byte[0];
                 return;
@@ -468,18 +472,22 @@ namespace Weave.TCPClient
                                     }
                                     else
                                     {
-                                        ReceiveServerEvent?.Invoke(tempbtye[0], temp);
+                                        //ReceiveServerEvent?.Invoke(tempbtye[0], temp);
 
-                                        ReceiveServerEvent?.Invoke(tempbtye[0], temp);
-                                        ReceiveServerEventobj?.Invoke(tempbtye[0], temp, this);
+                                        ReceiveServerEvent?.BeginInvoke(tempbtye[0], temp,null, null);
+                                        ReceiveServerEventobj?.BeginInvoke(tempbtye[0], temp, this, null, null);
                                     }
                                 }
                                 else if (tempbtye[0] == 0x99)
                                     return;
                                 else if (ReceiveServerEvent != null || ReceiveServerEventobj != null)
                                 {
-                                    ReceiveServerEvent?.Invoke(tempbtye[0], temp);
-                                    ReceiveServerEventobj?.Invoke(tempbtye[0], temp, this);
+                                    command cc = new command();
+                                    cc.comm = tempbtye[0];
+                                    cc.str = temp;
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
+                                    //ReceiveServerEvent?.BeginInvoke(tempbtye[0], temp, null, null);
+                                    //ReceiveServerEventobj?.BeginInvoke(tempbtye[0], temp, this, null, null);
                                 }
 
 
@@ -592,8 +600,13 @@ namespace Weave.TCPClient
                                 Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
                                 if (tempbtye[0] == 0x99)
                                     return;
-                                ReceiveServerEventbit?.Invoke(tempbtye[0], bs);
-                                ReceiveServerEventbitobj?.Invoke(tempbtye[0], bs, this);
+
+                                //ReceiveServerEventbit?.BeginInvoke(tempbtye[0], bs,null, null);
+                                //ReceiveServerEventbitobj?.BeginInvoke(tempbtye[0], bs, this, null, null);
+                                command cc = new command();
+                                cc.comm = tempbtye[0];
+                                cc.bs = bs;
+                                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
 
                                 return;
                             }
@@ -621,7 +634,19 @@ namespace Weave.TCPClient
                 alldata = new byte[0];
             }
         }
-
+        void Eventrec(object obj)
+        {
+            command cc = obj as command;
+            ReceiveServerEvent?.BeginInvoke(cc.comm, cc.str, null, null);
+            ReceiveServerEventobj?.BeginInvoke(cc.comm, cc.str, this, null, null);
+        }
+        class command{ public byte comm; public byte[] bs; public string str = ""; }
+        void Eventbit(object obj)
+        {
+            command cc = obj as command;
+            ReceiveServerEventbit?.BeginInvoke(cc.comm, cc.bs, null, null);
+            ReceiveServerEventbitobj?.BeginInvoke(cc.comm, cc.bs, this, null, null);
+        }
         void Receives(object obj)
         {
             var w = new SpinWait();
@@ -647,82 +672,36 @@ namespace Weave.TCPClient
                             timeout = DateTime.Now;
 
                             tcpc.Client.Receive(tempbtye);
-                            if (DT == DataType.custom && ReceiveServerEventbit == null)
-                            {
-                            }
-                            else
-                            {
-                            //_0x99:
-                            //    if (tempbtye[0] == 0x99)
-                            //    {
-                            //        timeout = DateTime.Now;
-                            //        if (tempbtye.Length > 1)
-                            //        {
-                            //            byte[] b = new byte[tempbtye.Length - 1];
-                            //            try
-                            //            {
-                            //                Array.Copy(tempbtye, 1, b, 0, b.Length);
-                            //            }
-                            //            catch { }
-                            //            tempbtye = b;
-                            //            goto _0x99;
-                            //        }
-                            //        //else
-                            //        //    continue;
-                            //    }
-                            }
+                            tempp = new byte[alldata.Length];
+                            alldata.CopyTo(tempp, 0);
+                            int lle = alldata.Length;
+                            bytesRead = tempbtye.Length;
+                            byte[] temp = new byte[lle + bytesRead];
+                            Array.Copy(alldata, 0, temp, 0, lle);
+                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                            alldata = temp;
                         }
                         catch (Exception ee)
                         {
                             ErrorMge(22, ee.Message);
                         }
-                        try
-                        {
-                            lock (alldata)
-                            {
-                                tempp = new byte[alldata.Length];
-                                alldata.CopyTo(tempp, 0);
-                                int lle = alldata.Length;
-                                bytesRead = tempbtye.Length;
-                                byte[] temp = new byte[lle + bytesRead];
-                                Array.Copy(alldata, 0, temp, 0, lle);
-                                Array.Copy(tempbtye, 0, temp, lle, bytesRead);
-                                alldata = temp;                    
-                            }
-                            Unup();
-                            continue;
-                        }
-                        catch
-                        { }
+                      
                     }
-                    else
+
+
+                    if (alldata.Length > 3)
                     {
-                        if (alldata.Length > 3)
-                        {
-                        //_0x99:
-                        //    if (alldata[0] == 0x99)
-                        //    {
-                        //        timeout = DateTime.Now;
-                        //        if (alldata.Length > 1)
-                        //        {
-                        //            byte[] b = new byte[alldata.Length - 1];
-                        //            try
-                        //            {
-                        //                Array.Copy(alldata, 1, b, 0, b.Length);
-                        //            }
-                        //            catch { }
-                        //            alldata = b;
-                        //            goto _0x99;
-                        //        }
-                        //        else
-                        //            continue;
-                        //    }
-                            Unup();
-                        }
-                        else
-                            w.SpinOnce();
-                        try
-                        {
+
+                        Unup();
+                    }
+                    //else
+                    //{
+                    //    if (tcpc.Client.Available == 0)
+                    //        w.SpinOnce();
+                    //}
+
+                    try
+                    {
                             TimeSpan ts = DateTime.Now - timeout;
                             if (ts.TotalSeconds > mytimeout)
                             {
@@ -738,7 +717,7 @@ namespace Weave.TCPClient
                         {
                             ErrorMge(21, ee.Message);
                         }
-                    }
+                    
                 }
                 catch (Exception e)
                 {

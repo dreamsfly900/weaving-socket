@@ -58,15 +58,61 @@ namespace Weave.Base
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, port);
             socketLisener.Bind(localEndPoint);
             socketLisener.Listen(1000000);
+            System.Threading.ThreadPool.SetMaxThreads(100, 100);
             Thread ThreadAcceptHander = new Thread(new ParameterizedThreadStart(AcceptHander));
             Thread ThreadReceiveHander = new Thread(new ParameterizedThreadStart(ReceiveHander));
-          //  Thread ThreadReceivePageHander = new Thread(new ParameterizedThreadStart(ReceivePageHander));
+            //Thread ThreadReceivePageHander = new Thread(new ParameterizedThreadStart(ReceivePageHander));
             Thread ThreadKeepAliveHander = new Thread(new ParameterizedThreadStart(this.KeepAliveHander));
+
             ThreadAcceptHander.Start();
             ThreadReceiveHander.Start();
-          //  ThreadReceivePageHander.Start();
+           // ThreadReceivePageHander.Start();
             ThreadKeepAliveHander.Start();
         }
+
+        //private void ReceivePageHander(object obj)
+        //{
+        //    var w = new SpinWait();
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            WeaveNetWorkItems[] workItems = new WeaveNetWorkItems[weaveNetworkItems.Count];
+        //            weaveNetworkItems.CopyTo(workItems);
+        //            foreach (WeaveNetWorkItems netc in workItems)
+        //            {
+        //                try
+        //                {
+        //                    if (netc == null)
+        //                        continue;
+        //                    if (netc.SocketSession != null)
+        //                    {
+
+        //                        if (netc.allDataList.Length > 3)
+        //                        {
+        //                           // netc.IsPage = true;
+        //                            //netc.SocketSession.BeginReceive(netc.Buffer = new byte[0], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+        //                            //netc.allDataList = packageData(netc.allDataList, netc.SocketSession);
+        //                            //netc.IsPage = false;
+
+        //                            //  allpack?.BeginReceive(netc);
+        //                            System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
+        //                        }
+
+
+        //                    }
+        //                }
+        //                catch
+        //                { }
+        //            }
+        //            w.SpinOnce();
+        //        }
+        //        catch { }
+
+        //    }
+            
+        //}
+
         public int GetNetworkItemCount()
         {
             return weaveNetworkItems.Count;
@@ -272,9 +318,9 @@ namespace Weave.Base
                                     me.Databit = bs;
                                     me.Soc = soc;
                                     if (weaveReceiveBitEvent != null)
-                                       System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                      System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
                                      //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
-                                    //weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
+                                     // weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
                                
                                 return alldata;
                             }
@@ -399,11 +445,11 @@ namespace Weave.Base
                                     me.Data = temp2;
                                     me.Soc =soc;
                                     if (waveReceiveEvent != null)
-                                         // waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
-                                         System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
+                                        //  waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
+                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
                                         //receiveeventto(me);
                                         //if (receiveevent != null)
-                                       // waveReceiveEvent.BeginInvoke(tempbtye[0], temp, soc, null, null);
+                                    //    waveReceiveEvent.BeginInvoke(tempbtye[0], temp, soc, null, null);
                                     //if (ListData.Count > 0) ListData.RemoveAt(i);
                                  
                                  
@@ -441,9 +487,11 @@ namespace Weave.Base
 
         void allpack(object obj)
         {
-            WeaveNetWorkItems workItem = (WeaveNetWorkItems)obj;
-            workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
-            workItem.IsPage = false;
+            WeaveNetWorkItems netc = (WeaveNetWorkItems)obj;
+           
+                netc.allDataList = packageData(netc.allDataList, netc.SocketSession);
+                netc.IsPage = false;
+            
         }
         private void ReadCallback(IAsyncResult ar)
         {
@@ -455,6 +503,17 @@ namespace Weave.Base
                 try
                 {
                     bytesRead = handler.EndReceive(ar);
+                    if (bytesRead <= 0)
+                    {
+                        workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
+                        workItem.IsPage = false;
+                        return;
+                    }
+                    //else if (bytesRead <= 0 && workItem.allDataList.Length < 3) {
+                    //    workItem.IsPage = false;
+                    //    return;
+                    //}
+
                 }
                 catch
                 {
@@ -477,24 +536,27 @@ namespace Weave.Base
                             me.Databit = tempbtye;
                             me.Soc = workItem.SocketSession;
                             if (weaveReceiveBitEvent != null)
-                                // weaveReceiveBitEvent?.BeginInvoke(defaultCommand, tempbtye, workItem.SocketSession,null,null);
+                                // weaveReceiveBitEvent?.Invoke(defaultCommand, tempbtye, workItem.SocketSession);
+                               // ReceiveBitEventHander(me);
                             System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
                                 new System.Threading.WaitCallback(ReceiveBitEventHander), me);
 
-                            //netc.IsPage = false;
+                                //netc.IsPage = false;
 
                         }
 
                     }
                     else
                     {
-                        int lle = workItem.allDataList.Length;
+                       
+                            int lle = workItem.allDataList.Length;
 
-                        byte[] temp = new byte[lle + tempbtye.Length];
-                        Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
-                        Array.Copy(tempbtye, 0, temp, lle, bytesRead);
-                        workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
-                        workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
+                            byte[] temp = new byte[lle + tempbtye.Length];
+                            Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                            workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
+                            workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
+                        
                     }
 
                     workItem.IsPage = false;
@@ -656,10 +718,11 @@ namespace Weave.Base
                     {
                         //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                         //weaveNetworkItems.CopyTo(0, netlist, 0, c);
-                        getbuffer(weaveNetworkItems, 0, c);
-                        w.SpinOnce();
+                        if(getbuffer(weaveNetworkItems, 0, c))
+                              w.SpinOnce();
                     }
                     else {
+                        
                         System.Threading.Thread.Sleep(1);
                     }
                 }
@@ -672,41 +735,56 @@ namespace Weave.Base
        
 
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
-        void getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
+        bool getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
         {
+
+            var bb = true;
             for (int i = index; i < len; i++)
             {
                 if (i >= netlist.Count)
-                    return;
+                    return bb;
                 try
                 {
                     WeaveNetWorkItems netc = netlist[i];
                     if (netc.SocketSession != null)
                     {
-                        if (netc.SocketSession.Available > 0 && !netc.IsPage)
+                        if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 0)
+                            bb = false;
+                        if (!netc.IsPage)
                         {
+                            //  if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 3)
+                          
                             netc.IsPage = true;
                             netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
 
+                            //   System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
+                          
+                            //    {
+                            //        netc.IsPage = true;
+                            //        netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+
+                            //    }
+                            //else if (netc.allDataList.Length > 3)
+                            //{
+                            //    netc.IsPage = true;
+                            //    //netc.allDataList = packageData(netc.allDataList, netc.SocketSession);
+                            //    //netc.IsPage = false;
+                            //    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
+                            //}
+
+
                         }
-                        else if (netc.allDataList.Length > 0 && !netc.IsPage)
-                        {
-                            netc.IsPage = true;
-                            //netc.SocketSession.BeginReceive(netc.Buffer = new byte[0], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
-                            netc.allDataList = packageData(netc.allDataList, netc.SocketSession);
-                            netc.IsPage = false;
-                            //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
-                        }
-                        //if (!netc.IsPage)
-                        //{
-                        //    netc.IsPage = true;
-                        //    netc.IsPage = packageData(netc.allDataList, netc.SocketSession);
-                        //}
+                      
+
+
                     }
                 }
                 catch
                 { }
             }
+            return bb;
+
+
         }
         void AcceptHander(object ias)
         {
