@@ -66,7 +66,7 @@
                             options.jump(text.split('|')[1]);
                 }
                 else if (tempbtye[0] == 0x99) {
-
+                    return;
                 }
                 else
                     if (options.recData != null)

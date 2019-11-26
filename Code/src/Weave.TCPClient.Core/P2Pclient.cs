@@ -694,11 +694,11 @@ namespace Weave.TCPClient
 
                         Unup();
                     }
-                    //else
-                    //{
-                    //    if (tcpc.Client.Available == 0)
-                    //        w.SpinOnce();
-                    //}
+                    else
+                    {
+                        if (tcpc.Client.Available == 0)
+                            w.SpinOnce();
+                    }
 
                     try
                     {
