@@ -44,9 +44,12 @@ namespace Weave.Base
         {
             this.weaveDataType = weaveDataType;
         }
+        WaitCallback ReceiveBitEventHandercback, ReceiveEventHandercback;
         public void Start(int port)
         {
             acallsend = new AsyncCallback(SendDataEnd);
+            ReceiveBitEventHandercback = new System.Threading.WaitCallback(ReceiveBitEventHander);
+            ReceiveEventHandercback = new System.Threading.WaitCallback(ReceiveEventHander);
             Port = port;
             if (weaveDataType == WeaveDataTypeEnum.Json && waveReceiveEvent == null)
                 throw new Exception("没有注册receiveevent事件");
@@ -119,6 +122,7 @@ namespace Weave.Base
         }
          void KeepAliveHander(object obj)
         {
+          var  DeleteSocketListEventHandercallback =   new System.Threading.WaitCallback(DeleteSocketListEventHander);
             while (true)
             {
                 try
@@ -144,7 +148,7 @@ namespace Weave.Base
                                     workItem.ErrorNum += 1;
                                     if (workItem.ErrorNum > 3)
                                     {
-                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(new System.Threading.WaitCallback(DeleteSocketListEventHander), workItem.SocketSession);
+                                        System.Threading.ThreadPool.UnsafeQueueUserWorkItem(DeleteSocketListEventHandercallback, workItem.SocketSession);
 
 
                                         weaveNetworkItems.Remove(workItem);
@@ -164,7 +168,7 @@ namespace Weave.Base
                             if (workItem.ErrorNum > 3)
                             {
                                 System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
-                                    new System.Threading.WaitCallback(DeleteSocketListEventHander),
+                                   DeleteSocketListEventHandercallback,
                                     workItem.SocketSession);
 
                                 try
@@ -318,7 +322,7 @@ namespace Weave.Base
                                     me.Databit = bs;
                                     me.Soc = soc;
                                     if (weaveReceiveBitEvent != null)
-                                      System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                                      System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
                                      //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
                                      // weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
                                
@@ -446,7 +450,7 @@ namespace Weave.Base
                                     me.Soc =soc;
                                     if (waveReceiveEvent != null)
                                         //  waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
-                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ReceiveEventHander), me);
+                                         System.Threading.ThreadPool.QueueUserWorkItem(ReceiveEventHandercback, me);
                                         //receiveeventto(me);
                                         //if (receiveevent != null)
                                     //    waveReceiveEvent.BeginInvoke(tempbtye[0], temp, soc, null, null);
@@ -540,7 +544,7 @@ namespace Weave.Base
                                 // weaveReceiveBitEvent?.Invoke(defaultCommand, tempbtye, workItem.SocketSession);
                                // ReceiveBitEventHander(me);
                             System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
-                                new System.Threading.WaitCallback(ReceiveBitEventHander), me);
+                               ReceiveBitEventHandercback, me);
 
                                 //netc.IsPage = false;
 
@@ -793,6 +797,7 @@ namespace Weave.Base
         }
         void AcceptHander(object ias)
         {
+            var UpdateSocketListEventHandercback = new System.Threading.WaitCallback(UpdateSocketListEventHander);
             while (true)
             {
                 Socket handler = socketLisener.Accept();
@@ -802,7 +807,7 @@ namespace Weave.Base
                 weaveNetworkItems.Add(netc);
               
                 System.Threading.ThreadPool.QueueUserWorkItem(
-                    new System.Threading.WaitCallback(UpdateSocketListEventHander),
+                   UpdateSocketListEventHandercback,
                       handler );
                 
             }
