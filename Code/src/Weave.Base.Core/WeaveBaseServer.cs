@@ -195,7 +195,9 @@ namespace Weave.Base
         private void DeleteSocketListEventHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
-            try { (state as Socket).Close(); }
+            try { (state as Socket).Close();
+                (state as Socket).Dispose();
+            }
             catch { }
         }
         private void UpdateSocketListEventHander(object state)

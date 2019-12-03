@@ -233,7 +233,9 @@ namespace Weave.Server
         private void DeleteSocketListHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
-            try { (state as Socket).Close(); }
+            try { (state as Socket).Close();
+                (state as Socket).Dispose()
+            }
             catch { }
         }
 
