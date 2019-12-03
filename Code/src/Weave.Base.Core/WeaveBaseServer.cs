@@ -507,6 +507,7 @@ namespace Weave.Base
                     {
                         workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
                         workItem.IsPage = false;
+                        ar.AsyncWaitHandle.Close();
                         return;
                     }
                     //else if (bytesRead <= 0 && workItem.allDataList.Length < 3) {
