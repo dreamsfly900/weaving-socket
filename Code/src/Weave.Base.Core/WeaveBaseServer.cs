@@ -507,7 +507,7 @@ namespace Weave.Base
                     {
                         workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession);
                         workItem.IsPage = false;
-                        ar.AsyncWaitHandle.Close();
+                        //ar.AsyncWaitHandle.Close();
                         return;
                     }
                     //else if (bytesRead <= 0 && workItem.allDataList.Length < 3) {
@@ -566,7 +566,7 @@ namespace Weave.Base
             catch
             {
             }
-            ar.AsyncWaitHandle.Close();
+           // ar.AsyncWaitHandle.Close();
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
 
@@ -628,11 +628,13 @@ namespace Weave.Base
             try
             {
                 ((Socket)ar.AsyncState).EndSend(ar);
+                ar.AsyncWaitHandle.Close();
             }
             catch
             {
 
             }
+         
         }
 
         AsyncCallback acallsend;
@@ -707,6 +709,7 @@ namespace Weave.Base
         void ReceiveHander(object ias)
         {
             var w = new SpinWait();
+            ReadCallbackasty = new AsyncCallback(ReadCallback);
             while (true)
             {
               
@@ -734,8 +737,8 @@ namespace Weave.Base
             }
         }
 
-       
 
+        AsyncCallback ReadCallbackasty;
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
         bool getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
         {
@@ -757,7 +760,7 @@ namespace Weave.Base
                             //  if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 3)
                           
                             netc.IsPage = true;
-                            netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, new AsyncCallback(ReadCallback), netc);
+                            netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, ReadCallbackasty, netc);
 
                             //   System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(allpack), netc);
                           

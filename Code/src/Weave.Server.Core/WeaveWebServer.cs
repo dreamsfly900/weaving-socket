@@ -486,6 +486,7 @@ namespace Weave.Server
             try
             {
                 ((Socket)ar.AsyncState).EndSend(ar);
+                ar.AsyncWaitHandle.Close();
             }
             catch
             {
