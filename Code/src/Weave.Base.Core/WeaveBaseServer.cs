@@ -565,6 +565,7 @@ namespace Weave.Base
             catch
             {
             }
+            ar.AsyncWaitHandle.Close();
             //handler.BeginReceive(netc.Buffer, 0, netc.BufferSize, 0, new AsyncCallback(ReadCallback), netc);
         }
 
