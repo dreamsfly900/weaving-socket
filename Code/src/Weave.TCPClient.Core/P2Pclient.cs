@@ -254,6 +254,7 @@ namespace Weave.TCPClient
             try
             {
                 tcpc.Client.BeginSend(b, 0, b.Length, SocketFlags.None, acallsend, tcpc.Client);
+                timeout = DateTime.Now;
                 return true;
             }
             catch
