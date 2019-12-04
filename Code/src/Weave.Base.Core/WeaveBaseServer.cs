@@ -146,7 +146,7 @@ namespace Weave.Base
                             if (!ok)
                                 {
                                     workItem.ErrorNum += 1;
-                                    if (workItem.ErrorNum > 3)
+                                    if (workItem.ErrorNum >= 1)
                                     {
                                         System.Threading.ThreadPool.UnsafeQueueUserWorkItem(DeleteSocketListEventHandercallback, workItem.SocketSession);
 
@@ -178,7 +178,7 @@ namespace Weave.Base
                                 catch (Exception EX_NAME)
                                 {
                                     Console.WriteLine(EX_NAME);
-                                    throw;
+                                    //throw;
                                 }
 
 
@@ -187,7 +187,7 @@ namespace Weave.Base
                         }
                     }
                     Thread.Sleep(5000);
-                    // GC.Collect();
+                     GC.Collect();
                 }
                 catch { }
             }
@@ -602,7 +602,7 @@ namespace Weave.Base
                     {
                         //if (count == 0)
                         //{
-                        Send(socket, b);
+                        return Send(socket, b);
 
                         //}
                         //else
@@ -620,7 +620,7 @@ namespace Weave.Base
                 }
                 else if (weaveDataType == WeaveDataTypeEnum.Bytes)
                 {
-                    Send(socket, command, System.Text.Encoding.UTF8.GetBytes(text));
+                    return Send(socket, command, System.Text.Encoding.UTF8.GetBytes(text));
                 }
               
              
@@ -634,7 +634,8 @@ namespace Weave.Base
             try
             {
                 ((Socket)ar.AsyncState).EndSend(ar);
-                ar.AsyncWaitHandle.Close();
+                
+                //ar.AsyncWaitHandle.Close();
             }
             catch
             {
@@ -665,7 +666,7 @@ namespace Weave.Base
             {
                 if (weaveDataType == WeaveDataTypeEnum.Json)
                 {
-                    Send(socket, command, System.Text.Encoding.UTF8.GetString(text));
+                    return Send(socket, command, System.Text.Encoding.UTF8.GetString(text));
 
                     
                 }
@@ -688,7 +689,7 @@ namespace Weave.Base
                         //if (count == 0)
                         //{
                         // socket.Send(b);
-                        Send(socket, b);
+                     return   Send(socket, b);
                         //}
                         //else
                         //{

@@ -474,7 +474,7 @@ namespace Weave.Server
                         ssl.Stream.Write(bp.GetBytes());
                 }
                 else
-                    Send(soc, b);
+                   return Send(soc, b);
             }
             catch
             {
@@ -488,7 +488,7 @@ namespace Weave.Server
             try
             {
                 ((Socket)ar.AsyncState).EndSend(ar);
-                ar.AsyncWaitHandle.Close();
+               // ar.AsyncWaitHandle.Close();
             }
             catch
             {
