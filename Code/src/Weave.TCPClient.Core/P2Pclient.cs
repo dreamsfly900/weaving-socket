@@ -447,7 +447,7 @@ namespace Weave.TCPClient
                                     byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
                                     Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     alldata = temps;
-                                    goto lb0x99;
+                                  //  goto lb0x99;
                                 }
                                 else if (tempbtye.Length == (len + 2 + a))
                                 { alldata = new byte[0]; }
