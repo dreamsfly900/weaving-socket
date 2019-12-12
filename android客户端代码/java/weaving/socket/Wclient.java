@@ -275,7 +275,12 @@ public class Wclient {
                             { alldata = new byte[0]; return; }
                         }
                         catch(Exception e)
-                        { }
+                        {
+                            byte[] temps = new byte[tempbtye.length - 1];
+                            System.arraycopy(tempbtye, 1, temps, 0, temps.length);
+                            alldata = temps;
+                            return;
+                        }
 
                         try
                         {
@@ -421,9 +426,13 @@ public class Wclient {
         return true;
     }
 
-    private void Stop() {
+    public void Stop() {
         Isline = false;
         alldata = new byte[0];
+        try {
+            socclient.close();
+        } catch (Exception e) {
+        }
     }
 
     public boolean Send(byte command, byte[] text)

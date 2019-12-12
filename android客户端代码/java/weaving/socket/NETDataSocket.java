@@ -6,16 +6,20 @@ import java.io.IOException;
 
 public class NETDataSocket implements WsocketEventInterface {
     Wclient wc=new Wclient(DataType.json,this);
+    final String IP;
+    final int port;
     public  NETDataSocket(String _IP,int _port)
     {
-       final String IP=_IP;
-       final int port=_port;
+        IP=_IP;
+        port=_port;
         new Thread(new Runnable(){
         @Override
         public void run() {
             if(wc.Stat(IP,port,false))
             {
                 wc.Send((byte) 0x01,"你好！1231231");
+            }else {
+                wc.Stop();
             }
         }
     }).start();
@@ -41,7 +45,19 @@ public class NETDataSocket implements WsocketEventInterface {
 
     @Override
     public void Timeoutevent(Wclient soc) {
-       // wc=new Wclient(DataType.bytes,this);
+        soc.Stop();
+        wc=new Wclient(DataType.bytes,this);
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                if(wc.Stat(IP,port,false))
+                {
+
+                }else {
+                    wc.Stop();
+                }
+            }
+        }).start();
         Log.i("-----超时离线----","超时离线");
     }
 
