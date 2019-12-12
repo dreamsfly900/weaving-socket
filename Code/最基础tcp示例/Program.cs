@@ -12,13 +12,13 @@ namespace 最基础tcp示例
     {
         static WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.custom);//自定义类型，最普通的类型，可以用TCP测试工具发送消息
         static WeaveP2Server wudp2 = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//有格式的Bytes类型，发送和接收内容格式为内置的Byte[]内容。
-        static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.Json);//有格式的json，发送内容和接收内容为string
+        static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//有格式的json，发送内容和接收内容为string
         static void Main(string[] args)
         {
             wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
-            wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent1;
-            wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent1;
-            wudp2.weaveReceiveBitEvent += Wudp2_weaveReceiveBitEvent;
+            wudp3.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent1;
+            wudp3.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent1;
+            wudp3.weaveReceiveBitEvent += Wudp2_weaveReceiveBitEvent;
             wudp3.waveReceiveEvent += Wudp3_waveReceiveEvent;
             wudp3.Start(8989);
             
@@ -35,7 +35,8 @@ namespace 最基础tcp示例
         private static void Wudp2_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
             wudp3.Send(soc, 0x01, "现在我知道你发消息了");
-            wudp3.Send(soc, 0x01, new byte[10]);
+          //  wudp3.Send(soc, 0x01, new byte[10]);
+            Console.WriteLine( System.Text.Encoding.UTF8.GetString(data) );
         }
 
         private static void Wudp_weaveUpdateSocketListEvent1(System.Net.Sockets.Socket soc)
