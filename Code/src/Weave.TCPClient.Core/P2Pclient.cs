@@ -433,7 +433,12 @@ namespace Weave.TCPClient
                                 { alldata = new byte[0]; return; }
                             }
                             catch
-                            { }
+                            {
+                                byte[] temps = new byte[tempbtye.Length - 1];
+                                Array.Copy(tempbtye,1, temps, 0, temps.Length);
+                                alldata = temps;
+                                return;
+                            }
 
                             try
                             {

@@ -142,7 +142,8 @@ namespace Weave.Base
                                 //    b = new byte[1];
                                 ok = Send(workItem.SocketSession, new byte[1]);
                             else
-                                ok = Send(workItem.SocketSession, 0x99, b); 
+                                ok = Send(workItem.SocketSession, 0x99, b);
+                           // ok = Send(workItem.SocketSession, new byte[1]);
                             if (!ok)
                                 {
                                     workItem.ErrorNum += 1;
