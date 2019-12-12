@@ -5,7 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 
 public class NETDataSocket implements WsocketEventInterface {
-    Wclient wc=new Wclient(DataType.bytes,this);
+    Wclient wc=new Wclient(DataType.json,this);
     public  NETDataSocket(String _IP,int _port)
     {
        final String IP=_IP;
@@ -24,7 +24,10 @@ public class NETDataSocket implements WsocketEventInterface {
 
     @Override
     public void ReceiveServerEvent(byte command, String text, Wclient soc) {
-
+        try {
+            Log.i("-----进入循环----", text);
+            wc.Send((byte) 0x01,"你好！1231231");
+        }catch (Exception e){}
     }
 
     @Override

@@ -196,7 +196,7 @@ public class Wclient {
                         {
                            final byte[] bs = new byte[len];
                             System.arraycopy(tempbtye, (4 + a), bs, 0, bs.length);
-                            if (tempbtye[0] == 0x99)
+                            if (tempbtye[0]== -103)
                                 return;
                            final byte command=tempbtye[0];
                             Runnable runnable = new Runnable() {
@@ -304,7 +304,7 @@ public class Wclient {
 
                             temp = new String(tempbtye, 2 + a, len, "utf-8");//System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
 
-                            if (tempbtye[0] == 0xff)
+                            if (tempbtye[0]== -128)
                             {
                                 if (temp.indexOf("token") >= 0)
                                     Tokan = temp.split("|")[1];
@@ -336,7 +336,7 @@ public class Wclient {
                                     threadPoolExecutor.execute(runnable);
                                 }
                             }
-                            else if (tempbtye[0] == 0x99)
+                            else if (tempbtye[0]== -103)
                                 return;
                             else
                             {
