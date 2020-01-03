@@ -905,6 +905,12 @@ namespace Weave.Server
                                 netc.allDataList = new byte[0];
                                 netc.IsPage = false; return;
                             }
+                            int lle = netc.allDataList.Length;
+
+                            byte[] temp = new byte[lle + tempbtye.Length];
+                            Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
+                            Array.Copy(tempbtye, 0, temp, lle, tempbtye.Length);
+                            tempbtye = temp;
                         }
                         else
                             tempbtye = tempbtyes;
