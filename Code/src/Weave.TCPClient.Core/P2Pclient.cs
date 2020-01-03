@@ -491,7 +491,7 @@ namespace Weave.TCPClient
                                     command cc = new command();
                                     cc.comm = tempbtye[0];
                                     cc.str = temp;
-                                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
+                                    System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventrec), cc);
                                     //ReceiveServerEvent?.BeginInvoke(tempbtye[0], temp, null, null);
                                     //ReceiveServerEventobj?.BeginInvoke(tempbtye[0], temp, this, null, null);
                                 }
@@ -643,15 +643,15 @@ namespace Weave.TCPClient
         void Eventrec(object obj)
         {
             command cc = obj as command;
-            ReceiveServerEvent?.BeginInvoke(cc.comm, cc.str, null, null);
-            ReceiveServerEventobj?.BeginInvoke(cc.comm, cc.str, this, null, null);
+            ReceiveServerEvent?.Invoke(cc.comm, cc.str);
+            ReceiveServerEventobj?.Invoke(cc.comm, cc.str, this);
         }
         class command{ public byte comm; public byte[] bs; public string str = ""; }
         void Eventbit(object obj)
         {
             command cc = obj as command;
-            ReceiveServerEventbit?.BeginInvoke(cc.comm, cc.bs, null, null);
-            ReceiveServerEventbitobj?.BeginInvoke(cc.comm, cc.bs, this, null, null);
+            ReceiveServerEventbit?.Invoke(cc.comm, cc.bs);
+            ReceiveServerEventbitobj?.Invoke(cc.comm, cc.bs, this);
         }
         void Receives(object obj)
         {

@@ -139,6 +139,10 @@
       <Project>{505db450-9f10-4074-9505-1a048f568223}</Project>
       <Name>Weave.Cloud</Name>
     </ProjectReference>
+    <ProjectReference Include="..\src\Weave.Server.Core\Weave.Server.csproj">
+      <Project>{35ef51f0-3f56-4b96-bd3c-e4ed2db527c9}</Project>
+      <Name>Weave.Server</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\Weave.TCPClient.Core\Weave.TCPClient.csproj">
       <Project>{42250739-A4C5-4680-842E-880B85A7D42C}</Project>
       <Name>Weave.TCPClient</Name>

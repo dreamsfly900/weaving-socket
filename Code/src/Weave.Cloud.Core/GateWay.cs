@@ -643,7 +643,7 @@ namespace Weave.Cloud
                 // JSON.parse<_baseModel>(data);// 
                 WeaveSession _0x01;
                 try
-                {
+                 {
                     _0x01 = Newtonsoft.Json.JsonConvert.DeserializeObject<WeaveSession>(data);
                 }
                 catch

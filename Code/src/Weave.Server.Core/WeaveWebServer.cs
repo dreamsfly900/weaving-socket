@@ -113,9 +113,9 @@ namespace Weave.Server
                                 }
                                 else {
                                     if(Certificate!=null)
-                                    ok = Send(workItem.SocketSession, 0x99," ");
+                                    ok = Send(workItem.SocketSession, 0x99, "000");
                                     else
-                                     ok = Send(workItem.Stream, 0x99, " ");
+                                     ok = Send(workItem.Stream, 0x99, "000");
                                 } 
                                 if (!ok)
                                 {

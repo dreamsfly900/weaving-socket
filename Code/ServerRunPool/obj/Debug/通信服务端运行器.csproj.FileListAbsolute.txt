@@ -145,7 +145,6 @@ D:\weave-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csprojAsse
 D:\weave-socket\Code\ServerRunPool\obj\Debug\智信构建结构.Form1.resources
 D:\weave-socket\Code\ServerRunPool\obj\Debug\智信构建结构.Properties.Resources.resources
 D:\weave-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.GenerateResource.cache
-D:\weave-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CoreCompileInputs.cache
 D:\weave-socket\Code\ServerRunPool\obj\Debug\通信服务端运行器.csproj.CopyComplete
 D:\weave-socket\Code\ServerRunPool\bin\Debug\通用服务运行器.exe.config
 D:\weave-socket\Code\ServerRunPool\bin\Debug\通用服务运行器.exe
@@ -154,3 +153,5 @@ D:\weave-socket\Code\ServerRunPool\bin\Debug\Newtonsoft.Json.pdb
 D:\weave-socket\Code\ServerRunPool\bin\Debug\Newtonsoft.Json.xml
 D:\weave-socket\Code\ServerRunPool\obj\Debug\通用服务运行器.exe
 D:\weave-socket\Code\ServerRunPool\obj\Debug\通用服务运行器.pdb
+D:\weave-socket\Code\ServerRunPool\bin\Debug\Weave.Base.pdb
+D:\weave-socket\Code\ServerRunPool\bin\Debug\Weave.Server.pdb

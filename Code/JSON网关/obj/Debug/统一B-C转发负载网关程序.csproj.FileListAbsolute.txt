@@ -154,7 +154,6 @@ D:\weave-socket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.cspr
 D:\weave-socket\Code\JSON网关\obj\Debug\统一登录服务.Form1.resources
 D:\weave-socket\Code\JSON网关\obj\Debug\统一登录服务.Properties.Resources.resources
 D:\weave-socket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.GenerateResource.cache
-D:\weave-socket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.CoreCompileInputs.cache
 D:\weave-socket\Code\JSON网关\obj\Debug\统一B-C转发负载网关程序.csproj.CopyComplete
 D:\weave-socket\Code\JSON网关\obj\Debug\统一登录服务.exe
 D:\weave-socket\Code\JSON网关\obj\Debug\统一登录服务.pdb

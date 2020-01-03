@@ -50,8 +50,8 @@
                     var len = parseInt(temp2);
                     if (tempbtye.length == (len + 2 + a))
                         text = Utf8ArrayToStr(tempbtye, 2 + a, len);//通过index起点，和len 长度从btye[] 转成utf8 
-                    else
-                        alert('长度不足');
+                    //else
+                    //    alert('长度不足');
                 }
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0) {

@@ -17,10 +17,10 @@
         {
             //这是使用证书时使用
              socket = new UDCsocket({
-                 ip: 'ws://122.114.53.233', port: 18181, conn: function () {
+                 ip: 'ws://127.0.0.1', port: 11001, conn: function () {
                      socket.settakon("123123");
                      alert("连接成功");
-                     //socket.SendData(1, "login", "123123ssdfsdf", "");
+                     socket.SendData(1, "login", "123123ssdfsdf", "");
                  }
                , recData: function (text) { 
                    $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
