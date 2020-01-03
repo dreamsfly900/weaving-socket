@@ -20,7 +20,7 @@
                  ip: 'ws://127.0.0.1', port: 11001, conn: function () {
                      socket.settakon("123123");
                      alert("连接成功");
-                     socket.SendData(1, "login", "123123ssdfsdf", "");
+                     //socket.SendData(1, "login", "123123ssdfsdf", "");
                  }
                , recData: function (text) { 
                    $('#test').append("收到:" + text + '<br/>  ')//这个意思你们都懂了把
@@ -103,17 +103,19 @@
         }
         function SendData()
         {
+            socket.settakon("123123");
+            socket.SendData(0x01, "senddao", {"Imei":"X7ES6VJMS","Text":"按时收费电视","Command":"1"});
             //  if (socket.takon != "") {
             // socket.settakon("123123");
             //socket.SendData(0x01, "chazhuangtai", 99); //物联网控制传感器状态,4是风扇，5是喷淋，0,2是卷帘正转，1,3反转
-            socket.SendData(0x03, "QXZ", 41);//获取大棚气候站传感器
+         //   socket.SendData(0x03, "QXZ", 41);//获取大棚气候站传感器
           //  socket.SendData(0x01, "open",99, 4)
            // } else { alert("socket is null"); }
         }
         function seestate() {
             //  if (socket.takon != "") {
             socket.settakon("123123");
-            socket.SendData(0x01, "tiaojian", 99);//获取上下限的条件
+            socket.SendData(0x01, "senddao", { Imei: "X7ES6VJMS", Text: "按时收费电视", Command: "1" });//获取上下限的条件
             //socket.SendData(0x01, "close", 99, 4)
             // } else { alert("socket is null"); }
         }

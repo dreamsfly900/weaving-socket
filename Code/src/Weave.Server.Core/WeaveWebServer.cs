@@ -859,18 +859,26 @@ namespace Weave.Server
         private void PackageData(object obj)
         {
             WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
+            byte[] tempbtyes ;
             try
             {
                int   bytesRead = netc.Buffer.Length;
-                byte[] tempbtyes = new byte[bytesRead];
-                Array.Copy(netc.Buffer, 0, tempbtyes, 0, tempbtyes.Length);
-                int lle = netc.allDataList.Length;
+                if (bytesRead > 0)
+                {
+                    tempbtyes = new byte[bytesRead];
+                    Array.Copy(netc.Buffer, 0, tempbtyes, 0, tempbtyes.Length);
+                    netc.Buffer = new byte[0];
+                    //int lle = netc.allDataList.Length;
 
-                byte[] temp = new byte[lle + tempbtyes.Length];
-                Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
-                Array.Copy(tempbtyes, 0, temp, lle, bytesRead);
-                netc.allDataList = temp; //workItem.DataList.Add(tempbtye);
-               
+                    //byte[] temp = new byte[lle + tempbtyes.Length];
+                    //Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
+                    //Array.Copy(tempbtyes, 0, temp, lle, bytesRead);
+                    //netc.allDataList = temp; //workItem.DataList.Add(tempbtye);
+                }
+                else {
+                    tempbtyes = new byte[netc.allDataList.Length];
+                    Array.Copy(netc.allDataList, 0, tempbtyes, 0, tempbtyes.Length);
+                }
                 int i = 0;
                 
                 {
@@ -888,19 +896,19 @@ namespace Weave.Server
                         {
                             netc.IsPage = false; return;
                         }
-                        byte[]  tempbtye = df.GetData(temp, ref masks, ref lens, ref paylen, ref dfh);
+                        byte[]  tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
                         if (dfh.OpCode != 2)
                         {
                             netc.allDataList = new byte[0];
                              netc.IsPage = false; return;
                         }
-                        if (temp.Length >= (lens + dfh.Length))
-                        {
-                            temp = new byte[temp.Length- (lens + dfh.Length)];
-                            Array.Copy(netc.allDataList, lens + dfh.Length, temp, 0, temp.Length);
+                        //if (tempbtyes.Length >= (lens + paylen))
+                        //{
+                        //    tempbtye = new byte[tempbtyes.Length- (lens + paylen)];
+                        //    Array.Copy(tempbtyes, lens + paylen, tempbtye, 0, tempbtye.Length);
                            
-                            netc.allDataList = temp;
-                        }
+                        //    netc.allDataList = tempbtye;
+                        //}
                         if (DT == WeaveDataTypeEnum.custom)
                         {
 
@@ -918,20 +926,21 @@ namespace Weave.Server
                         }
                         else if (DT == WeaveDataTypeEnum.Json)
                         {
-                            packageDatajson(tempbtye, netc.SocketSession, netc.Stream);
+                            netc.allDataList= packageDatajson(tempbtye, netc.SocketSession, netc.Stream);
                         }
                         else if (DT == WeaveDataTypeEnum.Bytes)
                         {
-                            packageDatabtye(tempbtye, netc.SocketSession, netc.Stream);
+                            netc.allDataList= packageDatabtye(tempbtye, netc.SocketSession, netc.Stream);
                         }
                         
                         netc.IsPage = false; return;
                     
                     }
-                    catch
+                    catch(Exception e)
                     {
-                         
-                        netc.IsPage = false; return;
+                    
+                        
+                         netc.IsPage = false; return;
                     }
                     //if (tempbtye == null)
                     //{

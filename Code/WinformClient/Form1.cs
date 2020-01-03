@@ -20,7 +20,7 @@ namespace winformclient
         
         }
         [InstallFunAttribute("forever")]//客户端也支持像服务端那样写，刚才看懂返回的内容也是testaabb，所以客户端也要把方法命名testaabb
-        public void login(System.Net.Sockets.Socket soc, WeaveSession _0x01)
+        public void command(System.Net.Sockets.Socket soc, WeaveSession _0x01)
         {
            // MessageBox.Show(_0x01.GetRoot<int>().ToString());
             //  Gw_EventMylog("",_0x01.Getjson());
@@ -88,12 +88,13 @@ namespace winformclient
         private void button1_Click_1(object sender, EventArgs e)
         {
              p2pc = new P2Pclient(false);
+            p2pc.AddListenClass(this);
             p2pc.ReceiveServerEvent += P2pc_receiveServerEvent;//接收数据事件
 
             p2pc.Timeoutevent += P2pc_timeoutevent;//超时（掉线）事件
-            p2pc.Start("127.0.0.1", 8989, false);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
-            p2pc.Tokan = "123";
-            p2pc.SendRoot<int>(0x01, "login", 99987, 0);
+            p2pc.Start("127.0.0.1", 8989, true);//11002 是网关的端口号，刚才WEB网关占用了11001，我改成11002了
+            ;
+            p2pc.SendRoot<String>(0x04, "login","", 0);
             System.Threading.Thread.Sleep(5);
 
          //   p2pc.Tokan = "123";
