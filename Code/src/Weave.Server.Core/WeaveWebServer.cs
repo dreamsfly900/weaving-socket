@@ -891,24 +891,23 @@ namespace Weave.Server
                   
                     try
                     {
-                        DataFrame df = new DataFrame();
-                        if (tempbtyes.Length <= 2)
+                        byte[] tempbtye = new byte[0];
+                        if (bytesRead > 0)
                         {
-                            netc.IsPage = false; return;
+                            DataFrame df = new DataFrame();
+                            if (tempbtyes.Length <= 2)
+                            {
+                                netc.IsPage = false; return;
+                            }
+                            tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
+                            if (dfh.OpCode != 2)
+                            {
+                                netc.allDataList = new byte[0];
+                                netc.IsPage = false; return;
+                            }
                         }
-                        byte[]  tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
-                        if (dfh.OpCode != 2)
-                        {
-                            netc.allDataList = new byte[0];
-                             netc.IsPage = false; return;
-                        }
-                        //if (tempbtyes.Length >= (lens + paylen))
-                        //{
-                        //    tempbtye = new byte[tempbtyes.Length- (lens + paylen)];
-                        //    Array.Copy(tempbtyes, lens + paylen, tempbtye, 0, tempbtye.Length);
-                           
-                        //    netc.allDataList = tempbtye;
-                        //}
+                        else
+                            tempbtye = tempbtyes;
                         if (DT == WeaveDataTypeEnum.custom)
                         {
 
