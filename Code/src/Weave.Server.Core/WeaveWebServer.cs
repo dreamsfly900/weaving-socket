@@ -106,7 +106,7 @@ namespace Weave.Server
                             if (workItem.State != 0)
                             {
                                 var ok = false;
-                                if (DT != WeaveDataTypeEnum.custom)
+                                if (DT == WeaveDataTypeEnum.custom)
                                 {
                                     xintiao[0] = 0x99;
                                     ok = Send(workItem.SocketSession, xintiao);
