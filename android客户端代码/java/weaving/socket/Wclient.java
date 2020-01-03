@@ -1,15 +1,11 @@
-package weaving.socket;
-import android.text.format.Time;
+package chuangzhiwei.com.ledopen.socket;
 import android.util.Log;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Wclient {
     Socket socclient;
     String IP;int Port;
-     public int TimeOutNumber=60;
+     public int TimeOutNumber=30;
     public  boolean Isline=false;
     byte[] alldata =new byte[0];
     Date timeout = new Date(System.currentTimeMillis());
@@ -309,14 +305,14 @@ public class Wclient {
 
                             temp = new String(tempbtye, 2 + a, len, "utf-8");//System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
 
-                            if (tempbtye[0]== -128)
+                            if (tempbtye[0]== -1)
                             {
                                 if (temp.indexOf("token") >= 0)
-                                    Tokan = temp.split("|")[1];
+                                    Tokan = temp.split("\\|")[1];
                                 else if (temp.indexOf("jump") >= 0)
                                 {
                                     Tokan = "连接数量满";
-                                    WEIF.JumpServerEvent(temp.split("|")[1]);
+                                    WEIF.JumpServerEvent(temp.split("\\|")[1]);
                                     Isline=false;
                                 }
                                 else
