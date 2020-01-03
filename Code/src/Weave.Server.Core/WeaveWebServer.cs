@@ -112,7 +112,7 @@ namespace Weave.Server
                                     ok = Send(workItem.SocketSession, xintiao);
                                 }
                                 else {
-                                    if(Certificate!=null)
+                                    if(Certificate==null)
                                     ok = Send(workItem.SocketSession, 0x99, "000");
                                     else
                                      ok = Send(workItem.Stream, 0x99, "000");
