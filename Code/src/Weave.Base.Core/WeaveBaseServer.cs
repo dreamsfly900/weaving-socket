@@ -166,7 +166,7 @@ namespace Weave.Base
                         catch
                         {
                             workItem.ErrorNum += 1;
-                            if (workItem.ErrorNum > 3)
+                            if (workItem.ErrorNum >= 1)
                             {
                                 System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
                                    DeleteSocketListEventHandercallback,
@@ -716,7 +716,7 @@ namespace Weave.Base
         public int Partition = 20000;
         void ReceiveHander(object ias)
         {
-            var w = new SpinWait();
+           // var w = new SpinWait();
             ReadCallbackasty = new AsyncCallback(ReadCallback);
             while (true)
             {
@@ -731,8 +731,9 @@ namespace Weave.Base
                     {
                         //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                         //weaveNetworkItems.CopyTo(0, netlist, 0, c);
-                        if(getbuffer(weaveNetworkItems, 0, c))
-                              w.SpinOnce();
+                        getbuffer(weaveNetworkItems, 0, c);
+                        Thread.Sleep(0);
+                        //w.SpinOnce();
                     }
                     else {
                         
