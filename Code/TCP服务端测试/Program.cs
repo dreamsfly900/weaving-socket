@@ -15,17 +15,17 @@ namespace TCP服务端测试
     {
 
         static List<nqdtu> LISTDTU = new List<nqdtu>();
-        static DTUServer wudp = new DTUServer();
+      //  static DTUServer wudp = new DTUServer();
         static WeaveWebServer wudpweb = new WeaveWebServer(); //这是一般SOCKET
-      //  static WeaveP2Server wudp2p = new WeaveP2Server(); //这是一般SOCKET
+        static WeaveP2Server wudp = new WeaveP2Server(); //这是一般SOCKET
         
              static List<chuganqi> LISTchuganqi = new List<chuganqi>();
         static void Main(string[] args)
         {
             
-            wudp.WeaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
-            wudp.WeaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
-            wudp.WeaveReceiveDtuEvent += Wudp_weaveReceiveDtuEvent;
+            wudp.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent;
+            wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
+            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
             wudp.Start(60001);
             //wudp2p.waveReceiveEvent += Wudp2p_waveReceiveEvent;
             //wudp2p.Start(60002);
@@ -39,8 +39,10 @@ namespace TCP服务端测试
             Console.ReadLine();
         }
 
-    
-
+        private static void Wudp_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
+        {
+             
+        }
 
         private static void zhuangtai(object state)
         {
