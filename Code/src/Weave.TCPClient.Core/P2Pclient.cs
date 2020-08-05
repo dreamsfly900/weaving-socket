@@ -281,8 +281,10 @@ namespace Weave.TCPClient
                 }
                 else if (DT == DataType.bytes)
                 {
-                   return Send(command, System.Text.Encoding.UTF8.GetBytes(text));
+                    return Send(command, System.Text.Encoding.UTF8.GetBytes(text));
                 }
+                else
+                    return Send(System.Text.Encoding.UTF8.GetBytes(text));
                
             }
             catch (Exception ee)
@@ -324,8 +326,9 @@ namespace Weave.TCPClient
                     sendb.CopyTo(b, 2 + 2 + lens.Length);
                     bb = Send(b);
                    
-                }
-                
+                }else
+                    return Send(text);
+
             }
             catch (Exception ee)
             {

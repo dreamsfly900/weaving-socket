@@ -12,7 +12,7 @@ namespace 最基础tcp示例
     {
         static WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.custom);//自定义类型，最普通的类型，可以用TCP测试工具发送消息
         static WeaveP2Server wudp2 = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//有格式的Bytes类型，发送和接收内容格式为内置的Byte[]内容。
-        static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.Json);//有格式的json，发送内容和接收内容为string
+        static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.custom);//有格式的json，发送内容和接收内容为string
         static void Main(string[] args)
         {
             wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;

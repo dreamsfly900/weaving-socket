@@ -16,13 +16,14 @@ namespace ConsoleApp1
          
             modbus mod = new modbus();
             mod.name = "aaa";//这里可以是设备的ID号;
-            mod.ip = "117.159.23.98";
-            mod.port = 3308;
+            mod.ip = "127.0.0.1";
+            mod.port = 8989;
             modlist.Add(mod);
             foreach (modbus m in modlist)
             {
                 P2Pclient client = new P2Pclient(DataType.custom);
-                client.ReceiveServerEventbitobj += Client_receiveServerEventbitobj; ;
+                client.ReceiveServerEventbitobj += Client_receiveServerEventbitobj;
+                client.ReceiveServerEventobj += Client_ReceiveServerEventobj;
                 client.Timeoutobjevent += Client_timeoutobjevent;
                 if ( client.Start(m.ip, m.port, false))
                 m.client = client;
@@ -32,20 +33,26 @@ namespace ConsoleApp1
 
         }
 
+        private static void Client_ReceiveServerEventobj(byte command, string text, P2Pclient soc)
+        {
+            Console.WriteLine(text);
+        }
+
         private static void Client_receiveServerEventbitobj(byte command, byte[] data, P2Pclient soc)
         {
-           
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(data));
         }
 
         static void gogo()
         {
             while (true)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(100);
                 foreach (modbus m in modlist)
                 {
                     //发消息
-                    m.client.Send(new byte[] { 0, 1, 2, 3, 4, 5 });
+                    m.client.Send(0x01,"asdadsasdadad");
+                   // m.client.Send(new byte[] { 0, 1, 2, 3, 4, 5 });
                 }
             }
         }
