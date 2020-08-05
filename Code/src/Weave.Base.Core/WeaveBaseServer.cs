@@ -94,7 +94,7 @@ namespace Weave.Base
         {
             return weaveNetworkItems.Count;
         }
-         void KeepAliveHander(object obj)
+      protected virtual   void KeepAliveHander(object obj)
         {
           var  DeleteSocketListEventHandercallback =   new System.Threading.WaitCallback(DeleteSocketListEventHander);
             while (true)
@@ -110,13 +110,26 @@ namespace Weave.Base
                       //  Thread.Sleep(1);
                         try
                         {
-                            byte[] b = new byte[] { 0x99,0x99 };
+                            byte[] b = new byte[] { 0x99 };
                             var ok = false;
-                            if (weaveDataType == WeaveDataTypeEnum.custom)
-                                //    b = new byte[1];
-                                ok = Send(workItem.SocketSession, new byte[1]);
+                            if(!Setherd(workItem))
+                                continue;
+                            if (Certificate != null)
+                            {
+                                if (weaveDataType == WeaveDataTypeEnum.custom)
+                                    //    b = new byte[1];
+                                    ok = Send(workItem.Stream, new byte[1]);
+                                else
+                                    ok = Send(workItem.Stream, 0x99, b);
+                            }
                             else
-                                ok = Send(workItem.SocketSession, 0x99, b);
+                            {
+                                if (weaveDataType == WeaveDataTypeEnum.custom)
+                                    //    b = new byte[1];
+                                    ok = Send(workItem.SocketSession, new byte[1]);
+                                else
+                                    ok = Send(workItem.SocketSession, 0x99, b);
+                            }
                            // ok = Send(workItem.SocketSession, new byte[1]);
                             if (!ok)
                                 {
@@ -167,6 +180,9 @@ namespace Weave.Base
                 catch { }
             }
         }
+
+      
+
         private void DeleteSocketListEventHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
@@ -315,6 +331,57 @@ namespace Weave.Base
         }
 
         AsyncCallback acallsend;
+        public bool Send(SslStream ssl, byte command, string text)
+        {
+            try
+            {
+                
+                if (Certificate != null)
+                {
+                    byte[] data = sendpage(command, System.Text.Encoding.UTF8.GetBytes(text));
+                    ssl.Write(data);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool Send(SslStream ssl, byte[] vs)
+        {
+            try
+            {
+
+                if (Certificate != null)
+                {
+                     
+                    ssl.Write(vs);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;   
+        }
+        public bool Send(SslStream ssl, byte command, byte[] text)
+        {
+            try
+            {
+
+                if (Certificate != null)
+                {
+                    byte[] data = sendpage(command, text);
+                    ssl.Write(data);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
         public bool Send(Socket socket, byte[] text)
         {
             try

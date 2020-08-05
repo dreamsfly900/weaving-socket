@@ -33,25 +33,25 @@
                 //evt.data blob类型
                 if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(evt.data)) {
                     var tempbtye = new Uint8Array(evt.data);//转成byte[] 类型，或者其他array类型
-                    if (tempbtye[0] == 0x99) {
-                        var myDate = new Date();
-                        timeout = myDate;//记录当前时间
-                        if (bytesRead > 1) {
-                            var b = new byte[bytesRead - 1];
-                            var t = tempbtye;
-                            Array.Copy(t, 1, b, 0, b.Length);//拷贝数据到b
-                            tempbtye = b;
-                            bytesRead = bytesRead - (1);
-                        }
-                        return;
-                    }
+                    //if (tempbtye[0] == 0x99) {
+                    //    var myDate = new Date();
+                    //    timeout = myDate;//记录当前时间
+                    //    if (bytesRead > 1) {
+                    //        var b = new byte[bytesRead - 1];
+                    //        var t = tempbtye;
+                    //        Array.Copy(t, 1, b, 0, b.Length);//拷贝数据到b
+                    //        tempbtye = b;
+                    //        bytesRead = bytesRead - (1);
+                    //    }
+                    //    return;
+                    //}
                     var a = tempbtye[1];
                     var temp2 = Utf8ArrayToStr(tempbtye, 2, a);//通过index起点，和len 长度从btye[] 转成utf8 
                     var len = parseInt(temp2);
                     if (tempbtye.length == (len + 2 + a))
                         text = Utf8ArrayToStr(tempbtye, 2 + a, len);//通过index起点，和len 长度从btye[] 转成utf8 
-                    else
-                        alert('长度不足');
+                    //else
+                    //    alert('长度不足');
                 }
                 if (tempbtye[0] == 0xff) {
                     if (text.indexOf("token") >= 0) {
@@ -64,6 +64,9 @@
                     if (text.indexOf("jump") >= 0)
                         if (options.jump != null)
                             options.jump(text.split('|')[1]);
+                }
+                else if (tempbtye[0] == 0x99) {
+                    return;
                 }
                 else
                     if (options.recData != null)

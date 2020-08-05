@@ -9,7 +9,7 @@ using Weave.Base;
 
 namespace Weave.Server
 {
-   public class WeaveWebSocket: WeaveBaseServer
+   public class WeaveWebServer : WeaveBaseServer
     {
         protected string Handshake = "";
         void init(int port)
@@ -24,7 +24,7 @@ namespace Weave.Server
         /// <summary>
         /// 没有传递参数，那么默认是new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         /// </summary>
-        public WeaveWebSocket()
+        public WeaveWebServer()
         {
             socketLisener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             
@@ -34,7 +34,7 @@ namespace Weave.Server
         /// 传递了weaveDataType枚举类型，那么是new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);定义了基类的weaveDataType类型
         /// </summary>
         /// <param name="weaveDataType"></param>
-        public WeaveWebSocket(WeaveDataTypeEnum weaveDataType) : base(weaveDataType)
+        public WeaveWebServer(WeaveDataTypeEnum weaveDataType) : base(weaveDataType)
         {
             socketLisener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.weaveDataType = weaveDataType;
@@ -49,7 +49,7 @@ namespace Weave.Server
             byte[] data = base.sendpage(command, text);
             DataFrame bp = new DataFrame();
             bp.SetByte(data);
-            return data;
+            return bp.GetBytes();
         }
         protected override byte[] packageData(byte[] alldata, Socket soc, SslStream Stream)
         {
