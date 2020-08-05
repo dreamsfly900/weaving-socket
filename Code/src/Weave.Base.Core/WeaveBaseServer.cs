@@ -26,7 +26,7 @@ namespace Weave.Base
             get; set;
         }
         protected Socket socketLisener = null;
-        List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
+        protected List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
    
    //     public static ManualResetEvent allDone = new ManualResetEvent(false);
