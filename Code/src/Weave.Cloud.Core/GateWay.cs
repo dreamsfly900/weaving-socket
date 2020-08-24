@@ -170,6 +170,7 @@ namespace Weave.Cloud
         P2Pclient newp2p(String Ip, int Port)
         {
             P2Pclient p2p = new P2Pclient(false);
+            p2p.ReceivesSpeedMode = WeaveReceivesSpeedMode.middle;
             if (Wptype == WeavePortTypeEnum.Bytes)
                 p2p.ReceiveServerEventbit += P2p_receiveServerEventbit;
             else

@@ -86,7 +86,7 @@ namespace Weave.Base
             ThreadKeepAliveHander.Start();
         }
 
-        protected virtual bool Setherd(WeaveNetWorkItems netc)
+        protected virtual bool Setherd(WeaveNetWorkItems netc,int xintiao=0)
         {
             return true;
         }
@@ -112,23 +112,28 @@ namespace Weave.Base
                         {
                             byte[] b = new byte[] { 0x99 };
                             var ok = false;
-                            if(!Setherd(workItem))
-                                continue;
-                            if (Certificate != null)
+                            if (!Setherd(workItem, 1))
                             {
-                                if (weaveDataType == WeaveDataTypeEnum.custom)
-                                    //    b = new byte[1];
-                                    ok = Send(workItem.Stream, new byte[1]);
-                                else
-                                    ok = Send(workItem.Stream, 0x99, b);
+                                ok = true;
                             }
                             else
                             {
-                                if (weaveDataType == WeaveDataTypeEnum.custom)
-                                    //    b = new byte[1];
-                                    ok = Send(workItem.SocketSession, new byte[1]);
+                                if (Certificate != null)
+                                {
+                                    if (weaveDataType == WeaveDataTypeEnum.custom)
+                                        //    b = new byte[1];
+                                        ok = Send(workItem.Stream, new byte[1]);
+                                    else
+                                        ok = Send(workItem.Stream, 0x99, b);
+                                }
                                 else
-                                    ok = Send(workItem.SocketSession, 0x99, b);
+                                {
+                                    if (weaveDataType == WeaveDataTypeEnum.custom)
+                                        //    b = new byte[1];
+                                        ok = Send(workItem.SocketSession, new byte[1]);
+                                    else
+                                        ok = Send(workItem.SocketSession, 0x99, b);
+                                }
                             }
                            // ok = Send(workItem.SocketSession, new byte[1]);
                             if (!ok)
@@ -181,9 +186,9 @@ namespace Weave.Base
             }
         }
 
-      
 
-        private void DeleteSocketListEventHander(object state)
+
+        protected void DeleteSocketListEventHander(object state)
         {
             weaveDeleteSocketListEvent?.Invoke(state as Socket);
             try { (state as Socket).Close();
@@ -191,7 +196,7 @@ namespace Weave.Base
             }
             catch { }
         }
-        private void UpdateSocketListEventHander(object state)
+        protected void UpdateSocketListEventHander(object state)
         {
             weaveUpdateSocketListEvent?.Invoke(state as Socket);
         }
@@ -389,7 +394,7 @@ namespace Weave.Base
                 //socket.Send(text);
                 //lock (socket)
                 {
-                    socket.BeginSend(text, 0, text.Length, SocketFlags.None, acallsend, socket);
+                     socket.BeginSend(text, 0, text.Length, SocketFlags.None, acallsend, socket);
                 }
                 //socket.Send(text);
                 return true;
@@ -608,10 +613,13 @@ namespace Weave.Base
              
                 netc.SocketSession = handler;
                 weaveNetworkItems.Add(netc);
-              
-                System.Threading.ThreadPool.QueueUserWorkItem(
+                if (Setherd(netc, 1))
+                {
+                    System.Threading.ThreadPool.QueueUserWorkItem(
                    UpdateSocketListEventHandercback,
-                      handler );
+                      handler);
+                }
+                
                 
             }
         }

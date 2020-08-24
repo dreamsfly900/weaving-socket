@@ -94,11 +94,17 @@ namespace Weave.Server
 
             return messageData.ToString();
         }
-       protected override bool Setherd(WeaveNetWorkItems netc)
+       protected override bool Setherd(WeaveNetWorkItems netc, int xintiao = 0)
         {
             //WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             try
             {
+                if (xintiao == 1)
+                {
+                    if (netc.State == 1)
+                        return true;
+                    return false;
+                }
                 if (netc.State == 1)
                     return true;
                 if (Certificate != null)
@@ -113,26 +119,40 @@ namespace Weave.Server
                 }
                 else
                 {
-                    lb11220:
-                    while (netc.SocketSession.Available < 200)
-                    {
-                        System.Threading.Thread.Sleep(10);
-                        goto lb11220;
-                    }
-                    netc.Buffer = new byte[netc.SocketSession.Available];
-                    if (netc.SocketSession.Available == 0)
+                    //lb11220:
+                    //    while (netc.SocketSession.Available < 200)
+                    //    {
+                    //        System.Threading.Thread.Sleep(10);
+                    //        goto lb11220;
+                    //    }
+                    if (netc.SocketSession.Available < 200)
                         return false;
-                    netc.SocketSession.Receive(netc.Buffer);
-                    if (!Sendhead(netc.SocketSession, netc.Buffer))
-                    {
 
+                     netc.Buffer = new byte[netc.SocketSession.Available];
+                    //if (netc.SocketSession.Available == 0)
+                    //    return false;
+                    netc.SocketSession.Receive(netc.Buffer);
+                    if (Sendhead(netc.SocketSession, netc.Buffer))
+                    {
+                        netc.Buffer = new byte[0];
+                        netc.State = 1;
+                        System.Threading.ThreadPool.QueueUserWorkItem(
+                  new System.Threading.WaitCallback(UpdateSocketListEventHander),
+                     netc.SocketSession);
+                       // UpdateSocketListEventHander(netc.SocketSession);
+                     // base.weaveUpdateSocketListEvent()
+                        // base.weaveUpdateSocketListEvent?.Invoke(netc.SocketSession);
+                        return false;
+
+
+                    }
+                    else
+                    {
                         try { netc.SocketSession.Close(); } catch { }
-                      
                     }
                 }
-                netc.State = 1;
-                return false;
 
+                return false;
 
                 //weaveWorkItemsList.Add(netc);
                 //weaveUpdateSocketListEvent?.Invoke(netc.SocketSession);
@@ -140,14 +160,17 @@ namespace Weave.Server
             catch
             {
 
-             //   try { netc.SocketSession.Close(); } catch { }
+                //   try { netc.SocketSession.Close(); } catch { }
                 return false;
             }
+            finally
+            { netc.IsPage = false; }
         }
         bool Sendhead(Socket handler, byte[] tempbtye)
         {
             byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
-            handler.Send(aaa);
+            Send(handler, aaa);
+          //  handler.Send(aaa);
             return true;
         }
 
