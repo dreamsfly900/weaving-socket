@@ -120,6 +120,8 @@ namespace Weave.Server
                         goto lb11220;
                     }
                     netc.Buffer = new byte[netc.SocketSession.Available];
+                    if (netc.SocketSession.Available == 0)
+                        return false;
                     netc.SocketSession.Receive(netc.Buffer);
                     if (!Sendhead(netc.SocketSession, netc.Buffer))
                     {
@@ -138,7 +140,7 @@ namespace Weave.Server
             catch
             {
 
-                try { netc.SocketSession.Close(); } catch { }
+             //   try { netc.SocketSession.Close(); } catch { }
                 return false;
             }
         }
