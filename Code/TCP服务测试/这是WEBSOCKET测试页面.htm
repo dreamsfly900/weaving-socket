@@ -35,7 +35,9 @@
         var socket;
         function conn() {
             //这是使用证书时使用
+            //
             socket = new UDCsocket({
+                //115.28.26.204
                 ip: 'ws://127.0.0.1', port: 11001, conn: function () {
                   //  socket.settakon("123123");
                     alert("连接成功");
@@ -60,9 +62,20 @@
             list.push(data);
             list.push(data);
             list.push(data);
-            socket.SendData(0x04, "getonlinedanseping", list, "");
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            list.push(data);
+            $('#test').html('收到:<br/>  ');
+            socket.SendData(0x04, "getonlinedalaba", list, "");
         }
         function SendData2() {
+            $('#test').html('收到:<br/>  ');
             socket.SendData(0x02, "GetLISTimei", '', "");
             //socket.SendData(0x04, "getonlinedanseping", "1609092A005", "");
         }

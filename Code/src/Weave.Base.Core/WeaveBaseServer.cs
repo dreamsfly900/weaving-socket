@@ -211,7 +211,7 @@ namespace Weave.Base
             weaveReceiveBitEvent?.Invoke(me.Command, me.Databit, me.Soc);
         }
         encoder myencoder = new encoder();
-        protected virtual byte[] packageData(byte[] alldata, Socket soc, SslStream ssl)
+        protected virtual byte[] packageData(byte[] alldata, Socket soc, SslStream ssl,byte[] tempDataList=null)
         {
             
             try
@@ -268,7 +268,7 @@ namespace Weave.Base
                     bytesRead = handler.EndReceive(ar);
                     if (bytesRead <= 0)
                     {
-                        workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream);
+                        workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream, workItem.tempDataList);
                         workItem.IsPage = false;
                         //ar.AsyncWaitHandle.Close();
                         return;
@@ -294,7 +294,7 @@ namespace Weave.Base
                             Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
                             Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                             workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
-                            workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream);
+                            workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream, workItem.tempDataList);
                         
                     
 
@@ -478,7 +478,7 @@ namespace Weave.Base
                         if (weaveDataType == WeaveDataTypeEnum.custom)
                             Thread.Sleep(5);
                         else
-                        Thread.Sleep(0);
+                        Thread.Sleep(1);
                         //w.SpinOnce();
                     }
                     else {
@@ -564,7 +564,7 @@ namespace Weave.Base
             netc.Buffer = listb.ToArray();
             if (netc.Buffer.Length <= 0)
             {
-                netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream);
+                netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
                 netc.IsPage = false;
                 //ar.AsyncWaitHandle.Close();
                 return;
@@ -578,7 +578,7 @@ namespace Weave.Base
                 Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
                 Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                 netc.allDataList = temp; //workItem.DataList.Add(tempbtye)
-                netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream);
+                netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
                 netc.IsPage = false;
                 return;
             }

@@ -49,7 +49,7 @@ namespace Weave.Base
         }
 
         public byte[] allDataList = new byte[0];
-
+        public byte[] tempDataList = new byte[0];
         public List<byte[]> DataList { get; set; } = new List<byte[]>();
 
         public EndPoint Ep { get; set; }

@@ -51,21 +51,36 @@ namespace Weave.Server
             bp.SetByte(data);
             return bp.GetBytes();
         }
-        protected override byte[] packageData(byte[] alldata, Socket soc, SslStream Stream)
+        protected override byte[] packageData(byte[] alldata, Socket soc, SslStream Stream, byte[] tempDataList)
         {
             if (alldata.Length > 0)
             {
                 DataFrameHeader dfh = null;
-                byte[] tempbtyes = new byte[alldata.Length];
-                Array.Copy(alldata, 0, tempbtyes, 0, tempbtyes.Length);
+                byte[] tempbtyes=null;
+                if (tempDataList.Length > 0)
+                {
+                    tempbtyes = new byte[tempDataList.Length+alldata.Length];
+                    Array.Copy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
+                    Array.Copy(alldata, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
+                }
+                else
+                {
+                    tempbtyes = new byte[alldata.Length];
+                    Array.Copy(alldata, 0, tempbtyes, 0, tempbtyes.Length);
+                }
                 byte[] masks = new byte[4];
                 int lens = 0;
                 int paylen = 0;
                 DataFrame df = new DataFrame();
                 byte[] tempbtye = df.GetData(tempbtyes, ref masks, ref lens, ref paylen, ref dfh);
-                if (dfh==null || dfh.OpCode != 2)
+                if (dfh == null || dfh.OpCode != 2)
                 {
+                    tempDataList = tempbtyes;
                     return new byte[0];
+                }
+                else
+                {
+                    tempDataList = new byte[0];
                 }
                 
                 alldata = tempbtye;
