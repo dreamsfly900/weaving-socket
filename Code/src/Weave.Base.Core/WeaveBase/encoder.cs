@@ -66,7 +66,7 @@ namespace Weave.Base.WeaveBase
                 //int count = ListData.Count;
                 //  if (count > 0)
                 {
-                lb1122:
+              
                     int bytesRead = alldata.Length;
                     if (bytesRead == 0)
                     {
@@ -190,7 +190,7 @@ namespace Weave.Base.WeaveBase
         /// <param name="ReceiveBitEventHandercback"></param>
         /// <param name="ssl"></param>
         /// <param name="ReceiveBitEventHandercbackssl"></param>
-        /// <param name="obj"></param>
+        
         public byte[] packageDatajson(byte[] alldata, Socket soc, WaitCallback ReceiveBitEventHandercback,
             SslStream ssl, WaitCallback ReceiveBitEventHandercbackssl)
         {

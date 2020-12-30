@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../build/version.props" />
+  
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <AssemblyName>Weave.Server</AssemblyName>
-    <RootNamespace>Weave.Server</RootNamespace>
-    <Product>Weave.Server</Product>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Weave.TcpSynClient</AssemblyName>
+    <RootNamespace>Weave.TcpSynClient</RootNamespace>
+    <Product>Weave.TcpSynClient</Product>
     <Copyright>葛杰</Copyright>
     <Company>葛杰</Company>
     <Authors>葛杰、丁川</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Weave;Server;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
-    <Description>Weave.Server是基于weaving-socket的网关应用框架的服务端核心类库。，优化WEBSOCKET数据，在高延迟情况下依然很好的运行</Description>
-    <PackageId>Weave.Server</PackageId>
+    <PackageTags>Weave.TcpSynClient;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
+    <Description>Weave.TcpSynClient是基于weaving-socket的网关应用框架的客户端核心类库。</Description>
+    <PackageId>Weave.TcpSynClient</PackageId>
     <PackageReleaseNotes>U3D、物联网、web、通用、网关、socket通讯等功能扩展及项目通信解决方法</PackageReleaseNotes>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
@@ -20,26 +20,24 @@
     <RepositoryType>git</RepositoryType>
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <Version>2.0.13</Version>
-   
+    <Version>2.0.7</Version>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\output\release\</OutputPath>
-    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Server.xml</DocumentationFile>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.TcpSynClient.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\output\release\</OutputPath>
-    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.Server.xml</DocumentationFile>
+    <DocumentationFile>..\..\output\release\netstandard2.0\Weave.TcpSynClient.xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <Reference Include="System.Web" />
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -318,7 +318,7 @@ namespace Weave.Base
             }
             catch { return false; }
             // tcpc.Close();
-            return true;
+             
         }
         private  void SendDataEnd(IAsyncResult ar)
         {
@@ -413,7 +413,7 @@ namespace Weave.Base
             }
             catch { return false; }
             // tcpc.Close();
-            return true;
+             
         }
 
 

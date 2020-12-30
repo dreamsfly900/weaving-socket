@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Weave.Base;
 
 namespace Weave.TCPClient
@@ -352,7 +353,7 @@ namespace Weave.TCPClient
         }
 
         byte[] tempp = new byte[0];
-        void Unup()
+         void Unup()
         {
             if (DT == DataType.custom)
             {
@@ -368,6 +369,7 @@ namespace Weave.TCPClient
                 command cc = new command();
                 cc.comm = defaultCommand;
                 cc.bs = tempbtye;
+             
                 System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
                 //ReceiveServerEventbit?.BeginInvoke(defaultCommand, tempbtye, null, null);
                 //ReceiveServerEventbitobj?.BeginInvoke(defaultCommand, tempbtye, this, null, null);
@@ -392,7 +394,7 @@ namespace Weave.TCPClient
             try
             {
                 {
-                lb0x99:
+                 
                     int bytesRead = alldata.Length;
 
                     if (bytesRead == 0)
