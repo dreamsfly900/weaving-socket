@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="websocket.js"></script>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script>
+        init();
+        var ws;
+        function init() {
+
+
+            ws = new WebSocket("ws://127.0.0.1:18181");
+            ws.binaryType = "arraybuffer";
+
+          
+            ws.onopen = function (event) { alert("连接成功")  };
+            var timeout;
+            ws.onmessage = function (evt) {
+               
+                    var bytesRead = evt.data.length;
+                    var text;
+                    //evt.data blob类型
+                if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(evt.data)) {
+                    var tempbtye = new Uint8Array(evt.data);
+
+                    var len = parseInt(tempbtye);
+                    if (len == 0)
+                        return;
+                    text = Utf8ArrayToStr(tempbtye, 0, len);
+
+                    console.log(text);
+
+                }
+                    
+
+
+                };
+                ws.onclose = function (event) {
+
+
+                };
+                ws.onerror = function (event) {
+                    
+
+                };
+
+
+        }
+        function Utf8ArrayToStr(array, i, len) {
+            var out, c;
+            var char2, char3;
+
+            out = "";
+
+            len = parseInt(i) + parseInt(len);
+            while (i < len) {
+                c = array[i++];
+                switch (c >> 4) {
+                    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                        // 0xxxxxxx
+                        out += String.fromCharCode(c);
+                        break;
+                    case 12: case 13:
+                        // 110x xxxx   10xx xxxx
+                        char2 = array[i++];
+                        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                        break;
+                    case 14:
+                        // 1110 xxxx  10xx xxxx  10xx xxxx
+                        char2 = array[i++];
+                        char3 = array[i++];
+                        out += String.fromCharCode(((c & 0x0F) << 12) |
+                            ((char2 & 0x3F) << 6) |
+                            ((char3 & 0x3F) << 0));
+                        break;
+                }
+            }
+
+            return out;
+        }
+
+        function send() {
+            var sendb = (JSON.stringify("123123ssdfsdf")).getBytes();
+            var b = new Int8Array(sendb);
+            ws.send(b);
+           // socket.SendData(1, "123123ssdfsdf");
+
+        }
+    </script>
+
+</head>
+<body>
+    <input  type="button" name="测试发送" value="测试发送" onclick="send()"/>
+</body>
+</html>

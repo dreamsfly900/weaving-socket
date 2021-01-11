@@ -184,7 +184,7 @@ namespace Weave.Server
         bool Sendhead(Socket handler, byte[] tempbtye)
         {
             byte[] aaa = ManageHandshake(tempbtye, tempbtye.Length);
-            Send(handler, aaa);
+            Sendbyte(handler, aaa);
           //  handler.Send(aaa);
             return true;
         }

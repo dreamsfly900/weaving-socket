@@ -28,7 +28,7 @@ namespace Weave.Base
         protected Socket socketLisener = null;
         protected List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
-   
+        public int resttime = 1;
    //     public static ManualResetEvent allDone = new ManualResetEvent(false);
         public event WeaveUpdateSocketListEvent weaveUpdateSocketListEvent;
         public event WeaveDeleteSocketListEvent weaveDeleteSocketListEvent;
@@ -353,7 +353,24 @@ namespace Weave.Base
             }
             return true;
         }
-        private bool Send(SslStream ssl, byte[] vs)
+        public bool Send(SslStream ssl, byte[] vs)
+        {
+            try
+            {
+
+                if (Certificate != null)
+                {
+                    byte[] data = sendpage(0, vs);
+                    Sendbyte(ssl, data);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool Sendbyte(SslStream ssl, byte[] vs)
         {
             try
             {
@@ -387,7 +404,7 @@ namespace Weave.Base
             }
             return true;
         }
-        public bool Send(Socket socket, byte[] text)
+       protected  bool Sendbyte(Socket socket, byte[] text)
         {
             try
             {
@@ -402,6 +419,22 @@ namespace Weave.Base
             catch
             { return false; }
         }
+        public bool Send(Socket socket, byte[] text)
+        {
+            try
+            {
+                //socket.Send(text);
+                //lock (socket)
+                {
+                    byte[] data = sendpage(0, text);
+                    socket.BeginSend(data, 0, data.Length, SocketFlags.None, acallsend, socket);
+                }
+                //socket.Send(text);
+                return true;
+            }
+            catch
+            { return false; }
+        }
         public bool Send(Socket socket, byte command, byte[] text)
         {
             try
@@ -409,7 +442,7 @@ namespace Weave.Base
                 byte[] data = sendpage(command, text);
                 
                 
-                return Send(socket, data);
+                return Sendbyte(socket, data);
             }
             catch { return false; }
             // tcpc.Close();
@@ -475,15 +508,15 @@ namespace Weave.Base
                         //WeaveNetWorkItems[] netlist = new WeaveNetWorkItems[c];
                         //weaveNetworkItems.CopyTo(0, netlist, 0, c);
                         getbuffer(weaveNetworkItems, 0, c);
-                        if (weaveDataType == WeaveDataTypeEnum.custom)
-                            Thread.Sleep(5);
-                        else
-                        Thread.Sleep(1);
+                        //if (weaveDataType == WeaveDataTypeEnum.custom)
+                        //    Thread.Sleep(5);
+                        //else
+                        Thread.Sleep(resttime);
                         //w.SpinOnce();
                     }
                     else {
                         
-                        System.Threading.Thread.Sleep(1);
+                        System.Threading.Thread.Sleep(resttime);
                     }
                 }
                 catch { }
