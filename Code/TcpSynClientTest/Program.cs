@@ -19,7 +19,7 @@ namespace TcpSynClientTest
             while (true)
             {
                 tcpSynClient.Send(0x01, "asdasd");
-                var commdata = await tcpSynClient.Receives(null);
+                var commdata =  tcpSynClient.Receives(null);
                 if (commdata == null)
                     break;
                 Console.WriteLine(count++ +":"+System.Text.Encoding.UTF8.GetString(commdata.data));

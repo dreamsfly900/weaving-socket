@@ -61,10 +61,10 @@ namespace Weave.Client
             isok = false;
         }
         byte[] alldata = new byte[0];
-        public  Task<command> Receives(myreceivebitobj funobj)
+        public  command Receives(myreceivebitobj funobj)
         {
-            var task = Task.Run(() =>
-            {
+            //var task = Task.Run(() =>
+            //{
                 var w = new SpinWait();
 
                 while (isok)
@@ -87,6 +87,7 @@ namespace Weave.Client
                                 timeout = DateTime.Now;
 
                                 tcpc.Client.Receive(tempbtye);
+                              
                                 byte[] tempp = new byte[alldata.Length];
                                 alldata.CopyTo(tempp, 0);
                                 int lle = alldata.Length;
@@ -95,9 +96,12 @@ namespace Weave.Client
                                 Array.Copy(alldata, 0, temp, 0, lle);
                                 Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                                 alldata = temp;
+                                if (alldata[0] == 0)
+                                { }
                             }
                             catch (Exception ee)
                             {
+                                throw ee;
                                 // ErrorMge(22, ee.Message);
                             }
 
@@ -109,6 +113,8 @@ namespace Weave.Client
                             var outcommand = Unup(funobj);
                             if (outcommand != null)
                                 return outcommand;
+                            else
+                            { }
                         }
                         else
                         {
@@ -140,8 +146,8 @@ namespace Weave.Client
                 tcpc.Close();
                 Isline = false;
                 return null;
-            });
-            return task;
+           // });
+            //return null;
         }
         command Unup(myreceivebitobj funobj)
         {
@@ -195,6 +201,8 @@ namespace Weave.Client
                     if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
+                    if (a == 0)
+                    { }
                         if (bytesRead > 4 + a)
                         {
                             int len = 0;
@@ -237,25 +245,29 @@ namespace Weave.Client
                                // ErrorMge?.Invoke(3, e.StackTrace + "unup001:" + e.Message + "2 + a" + 2 + a + "---len" + len + "--tempbtye" + tempbtye.Length);
                                 alldata = new byte[0];
                             }
-                            try
-                            {
-                                byte[] bs = new byte[len];
-                                Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
-                                if (tempbtye[0] == 0x99)
-                                    return null;
-                                 
-                                funobj?.Invoke(tempbtye[0], bs, this);
-                                command command = new command();
-                                command.comand = tempbtye[0];
-                                command.data = bs;
+                        try
+                        {
+                            byte[] bs = new byte[len];
+                            Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+                            if (tempbtye[0] == 0x99)
+                                return null;
 
-                                return command;
-                            }
-                            catch (Exception e)
+                            funobj?.Invoke(tempbtye[0], bs, this);
+                            command command = new command();
+                            command.comand = tempbtye[0];
+                            command.data = bs;
+                            if (command.comand == 0)
                             {
-                              //  ErrorMge?.Invoke(3, e.StackTrace + "unup122:" + e.Message);
-                                alldata = new byte[0];
+
+
                             }
+                            return command;
+                        }
+                        catch (Exception e)
+                        {
+                            //  ErrorMge?.Invoke(3, e.StackTrace + "unup122:" + e.Message);
+                            alldata = new byte[0];
+                        }
 
                         }
                         else

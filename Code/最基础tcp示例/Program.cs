@@ -10,15 +10,11 @@ namespace 最基础tcp示例
 {
     class Program
     {
-        static WeaveWebServer wudp = new WeaveWebServer(WeaveDataTypeEnum.Json);//自定义类型，最普通的类型，可以用TCP测试工具发送消息
-        static WeaveP2Server wudp2 = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//有格式的Bytes类型，发送和接收内容格式为内置的Byte[]内容。
+       
         static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//有格式的json，发送内容和接收内容为string
         static void Main(string[] args)
         {
-            wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
-
-
-            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
+           
             wudp3.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent1;
             wudp3.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent1;
             wudp3.weaveReceiveBitEvent += Wudp2_weaveReceiveBitEvent;
@@ -29,20 +25,10 @@ namespace 最基础tcp示例
             Console.ReadLine();
         }
 
-        private static void Wudp_waveReceiveEvent(byte command, string data, System.Net.Sockets.Socket soc)
-        {
-             
-        }
-
-        private static void Wudp3_waveReceiveEvent(byte command, string data, System.Net.Sockets.Socket soc)
-        {
-            wudp3.Send(soc, 0x01, "现在我知道你发消息了");
-            Console.WriteLine(data);
-        }
-
+   
         private static void Wudp2_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
-            wudp3.Send(soc, 0x01, "现在我知道你发消息了");
+            wudp3.Send(soc, 0x01, "{\"cmd\":\"plays\", \"data\":\"ZWD0001, Zqndmls0009, Zqndmls0001\"}");
           //  wudp3.Send(soc, 0x01, new byte[10]);
             Console.WriteLine( System.Text.Encoding.UTF8.GetString(data) );
         }
@@ -57,12 +43,7 @@ namespace 最基础tcp示例
             Console.WriteLine("我知道你走了:");
         }
 
-        private static void Wudp_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
-        {
-            wudp3.Send(soc, 0x01, "现在我知道你发消息了");
-            wudp3.Send(soc, 0x01, new byte[10]);
-            Console.WriteLine("指令:" + command + ".内容:" + data);
-        }
+        
 
     }
 }

@@ -21,7 +21,10 @@
             ws.onmessage = function (evt) {
                
                     var bytesRead = evt.data.length;
-                    var text;
+                var text;
+                if (typeof event.data === String) {
+                    console.log(event.data);
+                }
                     //evt.data blob类型
                 if (/^\[object (?:Uint8Array|ArrayBuffer)(?:Constructor)?\]$/.test(evt.data)) {
                     var tempbtye = new Uint8Array(evt.data);
@@ -29,7 +32,7 @@
                     var len = parseInt(tempbtye);
                     if (len == 0)
                         return;
-                    text = Utf8ArrayToStr(tempbtye, 0, len);
+                    text = Utf8ArrayToStr(tempbtye, 0, tempbtye.length);
 
                     console.log(text);
 
