@@ -66,12 +66,12 @@ namespace Weave.Client
         {
             //var task = Task.Run(() =>
             //{
-                var w = new SpinWait();
-
-                while (isok)
+            //    var w = new SpinWait();
+            DateTime dt=new DateTime();
+            while (isok)
                 {
-
-                    try
+               
+                try
                     {
                         if (tcpc.Client == null)
                         {
@@ -86,10 +86,10 @@ namespace Weave.Client
                             try
                             {
                                 timeout = DateTime.Now;
-
-                                tcpc.Client.Receive(tempbtye);
-                              
-                                byte[] tempp = new byte[alldata.Length];
+                            dt = DateTime.Now;
+                            tcpc.Client.Receive(tempbtye);
+                           
+                            byte[] tempp = new byte[alldata.Length];
                                 alldata.CopyTo(tempp, 0);
                                 int lle = alldata.Length;
                                 bytesRead = tempbtye.Length;
@@ -97,8 +97,7 @@ namespace Weave.Client
                                 Array.Copy(alldata, 0, temp, 0, lle);
                                 Array.Copy(tempbtye, 0, temp, lle, bytesRead);
                                 alldata = temp;
-                                if (alldata[0] == 0)
-                                { }
+                                 
                             }
                             catch (Exception ee)
                             {
@@ -109,19 +108,22 @@ namespace Weave.Client
                         }
 
 
-                        if (alldata.Length > 3)
+                    if (alldata.Length > 3)
+                    {
+                        var outcommand = Unup(funobj);
+
+                        if (outcommand != null)
                         {
-                            var outcommand = Unup(funobj);
-                            if (outcommand != null)
-                                return outcommand;
-                            else
-                            { }
+                            DateTime dt2 = DateTime.Now;
+                            //  Console.WriteLine("TcpSynClient:" + (dt2 - dt).TotalMilliseconds);
+                            return outcommand;
                         }
                         else
-                        {
-                            if (tcpc.Client.Available == 0)
-                                w.SpinOnce();
-                        }
+                        { }
+                    }
+                    else
+                    { System.Threading.Thread.Yield(); }
+                        
 
                         try
                         {

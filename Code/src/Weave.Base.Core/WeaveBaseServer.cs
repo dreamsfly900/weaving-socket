@@ -258,6 +258,7 @@ namespace Weave.Base
       
         private void ReadCallback(IAsyncResult ar)
         {
+         
             WeaveNetWorkItems workItem = (WeaveNetWorkItems)ar.AsyncState;
             Socket handler = workItem.SocketSession;
             try
@@ -271,6 +272,8 @@ namespace Weave.Base
                         if(workItem.allDataList.Length>3)
                           workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream, workItem.tempDataList);
                         workItem.IsPage = false;
+                        //DateTime dt3 = DateTime.Now;
+                        //Console.WriteLine((dt3 - dt).TotalMilliseconds);
                         //ar.AsyncWaitHandle.Close();
                         return;
                     }
@@ -281,7 +284,8 @@ namespace Weave.Base
                     //netc.Soc.Close();
                     //listconn.Remove(netc);
                 }
-                bytesRead=workItem.Buffer.Length;
+
+                bytesRead =workItem.Buffer.Length;
                 byte[] tempbtye = new byte[bytesRead];
                 //if (bytesRead > 0)
                 {
@@ -303,6 +307,8 @@ namespace Weave.Base
 
                     workItem.IsPage = false;
                 }
+                //DateTime dt2 = DateTime.Now;
+                //Console.WriteLine((dt2 - dt).TotalMilliseconds);
             }
             catch
             {
@@ -514,12 +520,18 @@ namespace Weave.Base
                         //if (weaveDataType == WeaveDataTypeEnum.custom)
                         //    Thread.Sleep(5);
                         //else
+                        if(resttime>0)
                         Thread.Sleep(resttime);
+                        else
+                        Thread.Yield();
                         //w.SpinOnce();
                     }
                     else {
-                        
-                        System.Threading.Thread.Sleep(resttime);
+                        if (resttime > 0)
+                            Thread.Sleep(resttime);
+                        else
+                            Thread.Yield();
+                        // System.Threading.Thread.Sleep(resttime);
                     }
                 }
                 catch { }
@@ -528,7 +540,7 @@ namespace Weave.Base
             }
         }
 
-
+       public DateTime dt = DateTime.Now;
         AsyncCallback ReadCallbackasty;
         delegate void getbufferdelegate(WeaveNetWorkItems[] netlist, int index, int len);
         bool getbuffer(List< WeaveNetWorkItems> netlist, int index, int len)
@@ -561,8 +573,13 @@ namespace Weave.Base
                             }
                             else
                             {
-                                netc.IsPage = true;
-                                netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, ReadCallbackasty, netc);
+                                if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 0)
+                                {
+                                    dt = DateTime.Now;
+                                    netc.IsPage = true;
+                                 
+                                    netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, ReadCallbackasty, netc);
+                                }
                             }
                           
 

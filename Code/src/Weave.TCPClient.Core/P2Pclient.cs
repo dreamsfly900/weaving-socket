@@ -660,7 +660,7 @@ namespace Weave.TCPClient
         }
         void Receives(object obj)
         {
-            var w = new SpinWait();
+          //  var w = new SpinWait();
             while (isok)
             {
                 if (ReceivesSpeedMode != WeaveReceivesSpeedMode.high)
@@ -708,7 +708,7 @@ namespace Weave.TCPClient
                     else
                     {
                         if (tcpc.Client.Available == 0)
-                            w.SpinOnce();
+                            System.Threading.Thread.Sleep(1);
                     }
 
                     try

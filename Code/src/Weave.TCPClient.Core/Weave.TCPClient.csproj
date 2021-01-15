@@ -10,7 +10,7 @@
     <Authors>葛杰、丁川</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Weave;TCPClient;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
-    <Description>Weave.TCPClient是基于weaving-socket的网关应用框架的客户端核心类库。兼容1.0版本建议使用。</Description>
+    <Description>Weave.TCPClient是基于weaving-socket的网关应用框架的客户端核心类库。兼容1.0版本建议使用。效率提升。</Description>
     <PackageId>Weave.TCPClient</PackageId>
     <PackageReleaseNotes>U3D、物联网、web、通用、网关、socket通讯等功能扩展及项目通信解决方法</PackageReleaseNotes>
     <PackageIconUrl></PackageIconUrl>
@@ -20,7 +20,7 @@
     <RepositoryType>git</RepositoryType>
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <Version>2.0.7</Version>
+    <Version>2.0.8</Version>
     
   </PropertyGroup>
 
