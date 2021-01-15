@@ -59,6 +59,7 @@ namespace Weave.Client
         public void Stop()
         {
             isok = false;
+            tcpc.Close();
         }
         byte[] alldata = new byte[0];
         public  command Receives(myreceivebitobj funobj)
