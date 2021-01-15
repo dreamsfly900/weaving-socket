@@ -5,6 +5,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Weave.Base.WeaveBase
 {
@@ -75,14 +76,14 @@ namespace Weave.Base.WeaveBase
                     };
 
                     byte[] tempbtye = new byte[bytesRead];
-                    Array.Copy(alldata, tempbtye, tempbtye.Length);
+                    Buffer.BlockCopy(alldata,0, tempbtye,0, tempbtye.Length);
                     if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
                         if (a == 0)
                         {
                             byte[] temps = new byte[tempbtye.Length - 2];
-                            Array.Copy(tempbtye, 2, temps, 0, temps.Length);
+                            Buffer.BlockCopy(tempbtye, 2, temps, 0, temps.Length);
                             alldata = temps;
                             return alldata;
                         }
@@ -91,17 +92,17 @@ namespace Weave.Base.WeaveBase
                             int len = 0;
 
                             byte[] bbcrc = new byte[4 + a];
-                            Array.Copy(tempbtye, 0, bbcrc, 0, 4 + a);
+                            Buffer.BlockCopy(tempbtye, 0, bbcrc, 0, 4 + a);
                             if (CRC.DataCRC(ref bbcrc, 4 + a))
                             {
                                 byte[] bb = new byte[a];
-                                Array.Copy(tempbtye, 2, bb, 0, a);
+                                Buffer.BlockCopy(tempbtye, 2, bb, 0, a);
                                 len = ConvertToInt(bb);
                             }
                             else
                             {
                                 byte[] temps = new byte[tempbtye.Length - 1];
-                                Array.Copy(tempbtye, 1, temps, 0, temps.Length);
+                                Buffer.BlockCopy(tempbtye, 1, temps, 0, temps.Length);
                                 alldata = temps;
                                 return alldata;
                             }
@@ -118,7 +119,7 @@ namespace Weave.Base.WeaveBase
                                 try
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
-                                    Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
+                                    Buffer.BlockCopy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                 }
                                 catch
@@ -137,7 +138,7 @@ namespace Weave.Base.WeaveBase
 
                                 //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 byte[] bs = new byte[len];
-                                Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+                                Buffer.BlockCopy(tempbtye, (4 + a), bs, 0, bs.Length);
                                 WeaveEvent me = new WeaveEvent();
                                 me.Command = tempbtye[0];
                                 me.Data = "";
@@ -145,9 +146,12 @@ namespace Weave.Base.WeaveBase
                                 me.Soc = soc;
                                 me.Ssl = ssl;
                                 if (ssl == null)
-                                    System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
+                                {
+                                    //  Task.Run(() => { ReceiveBitEventHandercback(me); });
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercback, me);
+                                }
                                 else
-                                    System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
+                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
                                 // if (weaveReceiveBitEvent != null)
                                // System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
                                 //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
@@ -208,14 +212,14 @@ namespace Weave.Base.WeaveBase
                     };
 
                     byte[] tempbtye = new byte[bytesRead];
-                    Array.Copy(alldata, tempbtye, tempbtye.Length);
+                     Buffer.BlockCopy(alldata,0, tempbtye,0, tempbtye.Length);
                     if (bytesRead > 2)
                     {
                         int a = tempbtye[1];
                         if (a == 0)
                         {
                             byte[] temps = new byte[tempbtye.Length - 2];
-                            Array.Copy(tempbtye, 2, temps, 0, temps.Length);
+                            Buffer.BlockCopy(tempbtye, 2, temps, 0, temps.Length);
                             alldata = temps;
                             goto lb1122;
                         }
@@ -237,7 +241,7 @@ namespace Weave.Base.WeaveBase
                                 try
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    Buffer.BlockCopy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                 }
                                 catch

@@ -284,15 +284,17 @@ namespace Weave.Base
                 byte[] tempbtye = new byte[bytesRead];
                 //if (bytesRead > 0)
                 {
-                     
-                         Array.Copy(workItem.Buffer, 0, tempbtye, 0, tempbtye.Length);
+
+                            Buffer.BlockCopy(workItem.Buffer, 0, tempbtye, 0, tempbtye.Length);
                      
                        
                             int lle = workItem.allDataList.Length;
 
                             byte[] temp = new byte[lle + tempbtye.Length];
-                            Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
-                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                             Buffer.BlockCopy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+                    // Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+
+                             Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
                             workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
                             workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream, workItem.tempDataList);
                         
