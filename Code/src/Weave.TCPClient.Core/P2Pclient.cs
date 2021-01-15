@@ -11,6 +11,7 @@ namespace Weave.TCPClient
 {
     public class P2Pclient
     {
+        public int resttime = 1;
         readonly WeaveBaseManager xmhelper = new WeaveBaseManager();
         public TcpClient tcpc;
         public delegate void receive(byte command, string text);
@@ -708,7 +709,10 @@ namespace Weave.TCPClient
                     else
                     {
                         if (tcpc.Client.Available == 0)
-                            System.Threading.Thread.Sleep(1);
+                            if (resttime > 0)
+                                System.Threading.Thread.Sleep(1);
+                        else
+                            System.Threading.Thread.Yield();
                     }
 
                     try
