@@ -18,6 +18,7 @@ namespace 最基础tcp示例
             wudp3.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent1;
             wudp3.weaveUpdateSocketListEvent += Wudp_weaveUpdateSocketListEvent1;
             wudp3.weaveReceiveBitEvent += Wudp2_weaveReceiveBitEvent;
+            wudp3.resttime = 0;
           //  wudp3.waveReceiveEvent += Wudp3_waveReceiveEvent;
             wudp3.Start(9903);
             

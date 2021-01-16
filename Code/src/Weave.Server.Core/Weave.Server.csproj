@@ -20,7 +20,7 @@
     <RepositoryType>git</RepositoryType>
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <Version>2.0.17</Version>
+    <Version>2.0.18</Version>
    
   </PropertyGroup>
 
@@ -40,10 +40,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Web" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Weave.Base.Core\Weave.Base.csproj" />
   </ItemGroup>
 
 </Project>
