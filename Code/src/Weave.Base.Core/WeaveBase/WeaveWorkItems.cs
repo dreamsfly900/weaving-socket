@@ -59,31 +59,4 @@ namespace Weave.Base
         public SslStream Stream { get; set; }
     }
 
-    public class WeaveUdpWorkItems
-    {
-        public int Port
-        {
-            get; set;
-        }
-
-        public IPEndPoint Iep
-        {
-            get; set;
-        }
-
-        public IPEndPoint Localiep
-        {
-            get; set;
-        }
-
-        public Socket SocketSession
-        {
-            get; set;
-        }
-
-        public DateTime Timeout
-        {
-            get; set;
-        }
-    }
 }

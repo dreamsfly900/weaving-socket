@@ -42,4 +42,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Weave.Base.Core\Weave.Base.csproj" />
+  </ItemGroup>
+
 </Project>
