@@ -80,12 +80,20 @@ namespace Weave.Server
                 }
                 else
                 {
-                    tempDataList = new byte[0];
+                    if (tempbtyes.Length > lens + paylen)
+                    {
+                        tempDataList = new byte[tempbtyes.Length- (lens + paylen)];
+                        Buffer.BlockCopy(tempbtyes, lens+ paylen, tempDataList, 0, tempDataList.Length);
+
+                    } else if (tempbtyes.Length == lens + paylen)
+                    {
+                        tempDataList = new byte[0];
+                    }
                 }
                 
                 alldata = tempbtye;
             }
-           return base.packageData(alldata, soc, Stream);
+           return base.packageData(alldata, soc, Stream, tempDataList);
          }
         static string ReadMessage(SslStream sslStream)
         {

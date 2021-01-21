@@ -11,7 +11,7 @@ namespace 最基础tcp示例
     class Program
     {
 
-        static WeaveP2Server wudp3 = new WeaveP2Server(WeaveDataTypeEnum.custom);
+        static WeaveWebServer wudp3 = new WeaveWebServer(WeaveDataTypeEnum.custom);
         static void Main(string[] args)
         {
            
@@ -29,10 +29,10 @@ namespace 最基础tcp示例
    
         private static void Wudp2_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
-            wudp3.Send(soc, data);
+            //wudp3.Send(soc, data);
           //  wudp3.Send(soc, 0x01, "{\"cmd\":\"plays\", \"data\":\"ZWD0001, Zqndmls0009, Zqndmls0001\"}");
           //  wudp3.Send(soc, 0x01, new byte[10]);
-          //  Console.WriteLine( System.Text.Encoding.UTF8.GetString(data) );
+            Console.WriteLine( System.Text.Encoding.UTF8.GetString(data) );
         }
 
         private static void Wudp_weaveUpdateSocketListEvent1(System.Net.Sockets.Socket soc)

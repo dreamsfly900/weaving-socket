@@ -6,10 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using Weave.Base.Interface;
 using Weave.Base.WeaveBase;
@@ -214,16 +212,17 @@ namespace Weave.Base
         encoder myencoder = new encoder();
         protected virtual byte[] packageData(byte[] alldata, Socket soc, SslStream ssl,byte[] tempDataList=null)
         {
-            
+
             try
             {
+                byte[] aall=new byte[0];
                 if (weaveDataType == WeaveDataTypeEnum.Json)
                 {
-                    return myencoder.packageDatajson(alldata, soc,ReceiveEventHandercback, ssl, ReceiveToEventHanderssl);
+                    aall= myencoder.packageDatajson(alldata, soc, ReceiveEventHandercback, ssl, ReceiveToEventHanderssl);
                 }
                 else if (weaveDataType == WeaveDataTypeEnum.Bytes)
                 {
-                    return myencoder.packageDatabtye(alldata, soc,ReceiveBitEventHandercback,ssl, ReceiveToEventHanderssl);
+                    aall= myencoder.packageDatabtye(alldata, soc, ReceiveBitEventHandercback, ssl, ReceiveToEventHanderssl);
                 }
                 if (weaveDataType == WeaveDataTypeEnum.custom)
                 {
@@ -235,24 +234,38 @@ namespace Weave.Base
                         //me.Databit = alldata;
                         //me.Soc = soc;
                         if (weaveReceiveBitEvent != null)
-                             weaveReceiveBitEvent?.Invoke(defaultCommand, alldata, soc);
-                             //ReceiveBitEventHander(me);
-                            //System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
-                            //   ReceiveBitEventHandercback, me);
+                            weaveReceiveBitEvent?.Invoke(defaultCommand, alldata, soc);
+                        //ReceiveBitEventHander(me);
+                        //System.Threading.ThreadPool.UnsafeQueueUserWorkItem(
+                        //   ReceiveBitEventHandercback, me);
 
                         //netc.IsPage = false;
 
 
                     }
-                    return new byte[0];
+
+                     aall=new byte[0];
                 }
                 //netc.IsPage = false;
-                return alldata;
+                if (tempDataList != null && tempDataList.Length > 0)
+                {
+                    if (aall.Length == 0)
+                        return tempDataList;
+                    byte[]  tempbtyes = new byte[tempDataList.Length + aall.Length];
+                    Array.Copy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
+                    Array.Copy(aall, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
+                    return tempbtyes;
+                }
+                return aall;
             }
             catch //(Exception e)
             {
                 // netc.IsPage = false;
                 return new byte[0];
+            }
+            finally
+            {
+               
             }
                         
         }
@@ -304,11 +317,11 @@ namespace Weave.Base
                             workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
                             workItem.allDataList = packageData(workItem.allDataList, workItem.SocketSession, workItem.Stream, workItem.tempDataList);
 
-                    if (workItem.SocketSession.Available > 0)
-                    {
-                        workItem.SocketSession.BeginReceive(workItem.Buffer = new byte[workItem.SocketSession.Available], 0, workItem.Buffer.Length, 0, ReadCallbackasty, workItem);
-                    }
-                    else 
+                    //if (workItem.SocketSession.Available > 0)
+                    //{
+                    //    workItem.SocketSession.BeginReceive(workItem.Buffer = new byte[workItem.SocketSession.Available], 0, workItem.Buffer.Length, 0, ReadCallbackasty, workItem);
+                    //}
+                    //else 
                     workItem.IsPage = false;
                 }
                 //DateTime dt2 = DateTime.Now;
@@ -503,11 +516,24 @@ namespace Weave.Base
         #endregion
 
         public int Partition = 20000;
-        
+        delegate void packageDataEvent(WeaveNetWorkItems netc);
+        packageDataEvent packageDatacall;
+        void packageDataHander(WeaveNetWorkItems netc)
+        {
+          //  WeaveNetWorkItems netc= ar.AsyncState as WeaveNetWorkItems;
+            netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
+            netc.IsPage = false;
+        }
+        private static void callBackMethod(IAsyncResult ar)
+        {
+            packageDataEvent caller = ar.AsyncState as packageDataEvent;
+            caller.EndInvoke(ar);
+        }
         void ReceiveHander(object ias)
         {
            // var w = new SpinWait();
             ReadCallbackasty = new AsyncCallback(ReadCallback);
+            packageDatacall = new packageDataEvent(packageDataHander);
             //MM_BeginPeriod(1);
             int a = 0;
             while (true)
@@ -561,8 +587,6 @@ namespace Weave.Base
         //public static extern uint MM_BeginPeriod(uint uMilliseconds);
         //[DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
         //public static extern uint MM_EndPeriod(uint uMilliseconds);
-     
-       
 
         public DateTime dt = DateTime.Now;
         AsyncCallback ReadCallbackasty;
@@ -597,13 +621,22 @@ namespace Weave.Base
                             }
                             else
                             {
-                                if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 0)
+                                if (netc.SocketSession.Available > 0 )
                                 {
                                     dt = DateTime.Now;
                                     netc.IsPage = true;
                                     // netc.SocketSession.ReceiveAsync
                                   
                                     netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, ReadCallbackasty, netc);
+                                }
+                                else if (netc.allDataList.Length > 0)
+                                {
+                                    dt = DateTime.Now;
+                                    netc.IsPage = true;
+                                    // netc.SocketSession.ReceiveAsync
+                                    packageDatacall.BeginInvoke(netc, callBackMethod, packageDatacall);
+                                   
+                                     //netc.SocketSession.BeginReceive(netc.Buffer = new byte[netc.SocketSession.Available], 0, netc.Buffer.Length, 0, ReadCallbackasty, netc);
                                 }
                             }
                           

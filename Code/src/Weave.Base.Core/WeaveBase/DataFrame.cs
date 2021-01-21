@@ -68,8 +68,9 @@ namespace Weave.Base
             //消息体
             if (_extend.Length == 0)
             {
-                payload_len = _content.Length;
+               
                 _content = new byte[_header.Length];
+                payload_len = _content.Length;
                 lens = _extend.Length + _mask.Length + 2;
                 try
                 {
