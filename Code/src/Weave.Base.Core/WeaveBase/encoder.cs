@@ -85,6 +85,7 @@ namespace Weave.Base.WeaveBase
                             byte[] temps = new byte[tempbtye.Length - 2];
                             Buffer.BlockCopy(tempbtye, 2, temps, 0, temps.Length);
                             alldata = temps;
+                            Console.WriteLine("a == 0");
                             return alldata;
                         }
                         else if (bytesRead > 4 + a)
@@ -104,6 +105,7 @@ namespace Weave.Base.WeaveBase
                                 byte[] temps = new byte[tempbtye.Length - 1];
                                 Buffer.BlockCopy(tempbtye, 1, temps, 0, temps.Length);
                                 alldata = temps;
+                                Console.WriteLine("DataCRC == false");
                                 return alldata;
                             }
 
@@ -122,9 +124,9 @@ namespace Weave.Base.WeaveBase
                                     Buffer.BlockCopy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                 }
-                                catch
+                                catch(Exception e)
                                 {
-
+                                    Console.WriteLine("tempbtye.Length > (len + 4 + a):" + e.Message);
                                     return alldata;
                                 }
                                 //netc.IsPage = false; return;
@@ -159,8 +161,9 @@ namespace Weave.Base.WeaveBase
 
                                 return alldata;
                             }
-                            catch //(Exception e)
+                            catch (Exception e)
                             {
+                                Console.WriteLine("ee:" + e.Message);
                                 // netc.IsPage = false;
                                 return new byte[0];
                             }
@@ -178,8 +181,9 @@ namespace Weave.Base.WeaveBase
                     }
                 }
             }
-            catch
+            catch(Exception ee)
             {
+                Console.WriteLine("all:" + ee.Message);
 
                 return new byte[0];
             }
