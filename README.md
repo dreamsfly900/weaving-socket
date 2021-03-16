@@ -3,19 +3,31 @@
 ### nuget可搜索包Weave.TCPClient与Weave.Server
 
 
-> 这里输入引用文本
-
- **WeavingDB是一个轻量级的便捷的内存数据库，缓存库。
-基于 weaving-socket ，欢迎大家学习使用
-
-https://gitee.com/UDCS/WeavingDB
-
-基于 weaving-socket 通讯架构制作的内存数据库，缓存库。
+ ** 
+相关延申项目介绍** 
 
 
-WsocketAutoUpPrj是一个几个weaving-socket的软件版本自动升级更新程序示例。
+> WeaveMicro
+> 支持.net core 2.x-5.x，正常使用
+> https://gitee.com/UDCS/weave-micro
+> 介绍
+> Weave微服务架构 主要目的，尽量简化和减少开发复杂度和难度，尽量双击可使用。 尽量不集成操作数据库等内容，由开发习惯自己选择。只负责最核心内容。 尽量简化调用方法和启动的方式方法
 
-https://gitee.com/UDCS/WsocketAutoUpPrj
+
+
+> WeavingDB是一个轻量级的便捷的内存数据库，缓存库。
+> 基于 weaving-socket ，欢迎大家学习使用
+> 
+> https://gitee.com/UDCS/WeavingDB
+> 
+> 基于 weaving-socket 通讯架构制作的内存数据库，缓存库。
+
+
+
+> 
+> WsocketAutoUpPrj是一个几个weaving-socket的软件版本自动升级更新程序示例。
+> 
+> https://gitee.com/UDCS/WsocketAutoUpPrj
 
 
 ** 
