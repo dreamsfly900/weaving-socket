@@ -31,6 +31,7 @@
 
 
 ### 其他说明
+  由于版本变化，一些视频内容与版本不服，仅供参考
 - https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows/wikis
 
 - 图文版教程:https://my.oschina.net/u/2476624/
