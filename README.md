@@ -30,7 +30,7 @@
 > https://gitee.com/UDCS/WsocketAutoUpPrj
 
 
-** 
+### 其他说明
 - https://gitee.com/dreamsfly900/universal-Data-Communication-System-for-windows/wikis
 
 - 图文版教程:https://my.oschina.net/u/2476624/
