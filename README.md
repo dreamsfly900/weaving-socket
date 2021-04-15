@@ -1,4 +1,5 @@
 >  
+版权所有-河南创志威科技有限公司
 
 ### nuget可搜索包Weave.TCPClient与Weave.Server
 
