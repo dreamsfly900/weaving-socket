@@ -99,7 +99,7 @@ public class Wclient {
         int i = 0;
         for (byte item : list)
         {
-            ret += (item << i);
+            ret += ((item& 0xFF) << i);
             i += 8;
         }
         return ret;
