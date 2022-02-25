@@ -58,25 +58,6 @@
 
 
 
-### 视频教程架构：
-** 
-教程1
-
-[http://v.youku.com/v_show/id_XMTYxNTg4ODU2MA==.html](http://v.youku.com/v_show/id_XMTYxNTg4ODU2MA==.html)
-
-教程2
-
-[http://v.youku.com/v_show/id_XMTYxNTg4OTYyMA==.html](http://v.youku.com/v_show/id_XMTYxNTg4OTYyMA==.html)
-
-进阶教程，网关的使用
-
-[http://v.youku.com/v_show/id_XMTczOTAzMjAyOA==.html?from=y1.7-2](http://v.youku.com/v_show/id_XMTczOTAzMjAyOA==.html?from=y1.7-2)
-
-高级教程：物联网开发：硬件数据到客户端的项目讲解
-
-[http://v.youku.com/v_show/id_XMTc0MDEzNTkyMA==.html](http://v.youku.com/v_show/id_XMTc0MDEzNTkyMA==.html)
-
-
 ### 架构简述：
 
 通用数据通讯构建,设计基于TCP通信的交互框架。是编写物联网，消息队列，websocket应用，移动通信应用，IM等完美的选择。可规范先后台交互处理，可支持，B/C,C/S,手机移动标准化的通信方式
@@ -113,10 +94,6 @@ QQ交流群17375149 联系QQ：20573886
  
 
 
-> 架构通讯使用的数据封包协议示意图
-> 
-![架构通讯使用的数据封包协议示意图](https://images.gitee.com/uploads/images/2018/1130/132516_ece8ae62_598831.png "架构数据包协议.png")
-### **简单示例** 
 
 
 服务端：
