@@ -25,6 +25,8 @@ namespace Weave.Base
             get; set;
         }
         protected Socket socketLisener = null;
+        public bool Active_heartbeat = true;
+        public int timeout_min = 10;
         protected List<WeaveNetWorkItems> weaveNetworkItems = new List<WeaveNetWorkItems>();
         public event WaveReceiveEventEvent waveReceiveEvent;
         public int resttime = 0;
@@ -110,30 +112,41 @@ namespace Weave.Base
                       //  Thread.Sleep(1);
                         try
                         {
-                            byte[] b = new byte[] { 0x99 };
                             var ok = false;
-                            if (!Setherd(workItem, 1))
+                            if (Active_heartbeat)
                             {
-                                ok = true;
-                            }
-                            else
-                            {
-                                if (Certificate != null)
+                                byte[] b = new byte[] { 0x99 };
+                             
+                                if (!Setherd(workItem, 1))
                                 {
-                                    if (weaveDataType == WeaveDataTypeEnum.custom)
-                                        //    b = new byte[1];
-                                        ok = Send(workItem.Stream, new byte[1]);
-                                    else
-                                        ok = Send(workItem.Stream, 0x99, b);
+                                    ok = true;
                                 }
                                 else
                                 {
-                                    if (weaveDataType == WeaveDataTypeEnum.custom)
-                                        //    b = new byte[1];
-                                        ok = Send(workItem.SocketSession, new byte[1]);
+                                    if (Certificate != null)
+                                    {
+                                        if (weaveDataType == WeaveDataTypeEnum.custom)
+                                            //    b = new byte[1];
+                                            ok = Send(workItem.Stream, new byte[1]);
+                                        else
+                                            ok = Send(workItem.Stream, 0x99, b);
+                                    }
                                     else
-                                        ok = Send(workItem.SocketSession, 0x99, b);
+                                    {
+                                        if (weaveDataType == WeaveDataTypeEnum.custom)
+                                            //    b = new byte[1];
+                                            ok = Send(workItem.SocketSession, new byte[1]);
+                                        else
+                                            ok = Send(workItem.SocketSession, 0x99, b);
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                if ((workItem.Lasttime - DateTime.Now).TotalMinutes > timeout_min)
+                                    ok = false;
+                                else
+                                    ok = true;
                             }
                            // ok = Send(workItem.SocketSession, new byte[1]);
                             if (!ok)
@@ -622,7 +635,10 @@ namespace Weave.Base
                     if (netc.SocketSession != null)
                     {
                         if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 0)
+                        {
+                            netc.Lasttime = DateTime.Now;
                             bb = false;
+                        }
                         if (!netc.IsPage && Setherd(netc))
                         {
                             //  if (netc.SocketSession.Available > 0 || netc.allDataList.Length > 3)
