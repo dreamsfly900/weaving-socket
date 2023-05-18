@@ -137,7 +137,8 @@ static void  Main(string[] args)
             });
   socket.SendData(0x02, "GetLISTimei", '', ""); //发送内容
 ```
-
+## Python 客户端示例
+ [Python 客户端 使用说明](https://gitee.com/dotnetchina/weaving-socket/tree/New/python%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81)
 
 # 相关延申项目介绍
 
