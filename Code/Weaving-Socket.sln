@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端类库", "服务端类库", "{AFDAF284-45F3-406D-A585-AE187827F28A}"
 EndProject
@@ -12,6 +12,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "客户端示例", "客户端示例", "{71078A48-C6BA-4E2E-A22A-229EEBB665B9}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSocketClient", "WebSocketClient\WebSocketClient\", "{9B59A779-118D-4497-97F4-074C0E43FBDD}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53640"
+		Debug.AspNetCompiler.PhysicalPath = "test\WebSocketClient\WebSocketClient\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53640\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53640"
+		Release.AspNetCompiler.PhysicalPath = "test\WebSocketClient\WebSocketClient\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53640\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "53640"
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_53640"
@@ -54,10 +72,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB JS库", "WEB JS库", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UDP服务端测试", "UDP服务端测试", "{656C73AE-9D47-48BD-81FE-97C33FD4B7BE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "多协议的服务端运行器", "多协议的服务端运行器", "{65521F22-2C4D-45C4-B560-26CE9E429BF1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "测试业务逻辑", "测试业务逻辑", "{A1371C0C-2B04-4132-B99E-B10A254731BC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDP服务端代码测试", "UDP服务端代码测试\UDP服务端代码测试.csproj", "{C91D683E-4322-4544-A60C-CCBFD08B2E31}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "服务端简单示例", "服务端简单示例", "{F0282893-2485-49FA-8F2B-408E06C4D8A6}"
@@ -65,8 +79,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCP服务物联网测试", "TCP服务端测试\TCP服务物联网测试.csproj", "{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "测试Test", "测试Test", "{D36CC134-8E0A-4C87-B1AE-BDBBAC0DEB6E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "负载网关测试", "负载网关测试", "{E015DB35-C42D-4CB3-9CAC-841007256F00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "winformclient", "test\WinformClient\winformclient.csproj", "{C8898E06-FBB3-48F1-B685-E955E9145CC6}"
 EndProject
@@ -463,12 +475,9 @@ Global
 		{17C94CA5-24EB-4DFB-918D-661CCE96E851} = {41BBBA6D-5ECA-476F-93DA-6795C01E4145}
 		{6C7E3149-7F97-4B41-992B-0B25CBD4FCF3} = {17C94CA5-24EB-4DFB-918D-661CCE96E851}
 		{656C73AE-9D47-48BD-81FE-97C33FD4B7BE} = {D36CC134-8E0A-4C87-B1AE-BDBBAC0DEB6E}
-		{65521F22-2C4D-45C4-B560-26CE9E429BF1} = {D36CC134-8E0A-4C87-B1AE-BDBBAC0DEB6E}
-		{A1371C0C-2B04-4132-B99E-B10A254731BC} = {65521F22-2C4D-45C4-B560-26CE9E429BF1}
 		{C91D683E-4322-4544-A60C-CCBFD08B2E31} = {656C73AE-9D47-48BD-81FE-97C33FD4B7BE}
 		{F0282893-2485-49FA-8F2B-408E06C4D8A6} = {D36CC134-8E0A-4C87-B1AE-BDBBAC0DEB6E}
 		{7524AAC7-4F08-436F-9E39-31FD3FE9BDB3} = {F0282893-2485-49FA-8F2B-408E06C4D8A6}
-		{E015DB35-C42D-4CB3-9CAC-841007256F00} = {D36CC134-8E0A-4C87-B1AE-BDBBAC0DEB6E}
 		{C8898E06-FBB3-48F1-B685-E955E9145CC6} = {83FCC670-FF22-4C0B-8383-093BD954246B}
 		{179E2F22-50C2-4C73-840D-1E7DE5A37AB3} = {F0282893-2485-49FA-8F2B-408E06C4D8A6}
 		{790ACC5D-36A5-4E43-BA39-D83AA1F1004E} = {F0282893-2485-49FA-8F2B-408E06C4D8A6}
