@@ -23,6 +23,13 @@ weaving-socket，已.net core 为基础，设计基于TCP通信的交互框架�
  - WeaveWebServer wbesocket服务端类库
  - HttpServer HTTP协议类库
  - WeaveUDPServer  UDP服务端类库
+ - 服务类库中事件包括
+ weaveReceiveBitEvent - Bytes, custom 类型接收事件
+ waveReceiveEvent  Json  类型接收事件
+ WeaveReceiveSslEvent  ssl 证书加密接收事件
+ weaveDeleteSocketListEvent  客户端断链事件
+ weaveUpdateSocketListEvent  客户端连接上线 事件
+- Send(soc,command, data); 服务端发送数据方法
 ### 异步客户端类 Weave.TCPClient 包
  - P2Pclient socket客户端端类库 
  - WeaveUDPclient  UDP客户端端类库
@@ -30,6 +37,12 @@ weaving-socket，已.net core 为基础，设计基于TCP通信的交互框架�
 - [python客户端代码示例](https://gitee.com/dotnetchina/weaving-socket/tree/New/python%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81)
 - [安卓/java 代码示例](https://gitee.com/dotnetchina/weaving-socket/tree/New/android%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81)
 - [websocket 客户端JS](https://gitee.com/dotnetchina/weaving-socket/blob/New/Code/test/WEB%20JS%E5%BA%93/websocket.js)
+
+- 客户类库中事件包括
+ ReceiveServerEventbit - Bytes, custom 类型接收事件
+ ReceiveServerEvent  Json  类型接收事件
+ Timeoutevent  客户端断链事件
+ - Send()客户端发送数据方法
 ### 同步客户端类 Weave.TcpSynClient 包
 - TcpSynClient 同步客户端类库，只有收到服务端返回响应才算完成请求。
 
