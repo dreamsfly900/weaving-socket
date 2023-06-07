@@ -60,13 +60,13 @@ namespace Weave.Server
                 if (tempDataList.Length > 0)
                 {
                     tempbtyes = new byte[tempDataList.Length+alldata.Length];
-                    Array.Copy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
-                    Array.Copy(alldata, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
+                    Buffer.BlockCopy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
+                    Buffer.BlockCopy(alldata, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
                 }
                 else
                 {
                     tempbtyes = new byte[alldata.Length];
-                    Array.Copy(alldata, 0, tempbtyes, 0, tempbtyes.Length);
+                    Buffer.BlockCopy(alldata, 0, tempbtyes, 0, tempbtyes.Length);
                 }
                 byte[] masks = new byte[4];
                 int lens = 0;
@@ -211,7 +211,7 @@ namespace Weave.Server
             byte[] last8Bytes = new byte[8];
             UTF8Encoding decoder = new UTF8Encoding();
             String rawClientHandshake = Encoding.UTF8.GetString(receivedDataBuffer);
-            Array.Copy(receivedDataBuffer, HandshakeLength - 8, last8Bytes, 0, 8);
+            Buffer.BlockCopy(receivedDataBuffer, HandshakeLength - 8, last8Bytes, 0, 8);
             //现在使用的是比较新的Websocket协议
             if (rawClientHandshake.IndexOf(header) != -1)
             {
@@ -251,8 +251,8 @@ namespace Weave.Server
             byte[] HandshakeText = Encoding.UTF8.GetBytes(Handshake);
             byte[] serverHandshakeResponse = new byte[HandshakeText.Length + 16];
             byte[] serverKey = BuildServerFullKey(last8Bytes);
-            Array.Copy(HandshakeText, serverHandshakeResponse, HandshakeText.Length);
-            Array.Copy(serverKey, 0, serverHandshakeResponse, HandshakeText.Length, 16);
+            Buffer.BlockCopy(HandshakeText, 0, serverHandshakeResponse, 0, HandshakeText.Length);
+            Buffer.BlockCopy(serverKey, 0, serverHandshakeResponse, HandshakeText.Length, 16);
             return serverHandshakeResponse;
         }
         private void BuildServerPartialKey(int keyNum, string clientKey)
@@ -285,9 +285,9 @@ namespace Weave.Server
         private byte[] BuildServerFullKey(byte[] last8Bytes)
         {
             byte[] concatenatedKeys = new byte[16];
-            Array.Copy(ServerKey1, 0, concatenatedKeys, 0, 4);
-            Array.Copy(ServerKey2, 0, concatenatedKeys, 4, 4);
-            Array.Copy(last8Bytes, 0, concatenatedKeys, 8, 8);
+            Buffer.BlockCopy(ServerKey1, 0, concatenatedKeys, 0, 4);
+            Buffer.BlockCopy(ServerKey2, 0, concatenatedKeys, 4, 4);
+            Buffer.BlockCopy(last8Bytes, 0, concatenatedKeys, 8, 8);
             // MD5 Hash
             MD5 MD5Service = MD5.Create();
             return MD5Service.ComputeHash(concatenatedKeys);

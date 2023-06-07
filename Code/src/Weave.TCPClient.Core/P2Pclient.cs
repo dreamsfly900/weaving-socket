@@ -366,11 +366,11 @@ namespace Weave.TCPClient
                 }
                 byte[] tempbtye = new byte[bytesRead];
 
-                Array.Copy(alldata, tempbtye, tempbtye.Length);
+                Buffer.BlockCopy(alldata, 0, tempbtye, 0, tempbtye.Length);
                 command cc = new command();
                 cc.comm = defaultCommand;
                 cc.bs = tempbtye;
-             
+                //Eventbit(cc)
                 System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
                 //ReceiveServerEventbit?.BeginInvoke(defaultCommand, tempbtye, null, null);
                 //ReceiveServerEventbitobj?.BeginInvoke(defaultCommand, tempbtye, this, null, null);
@@ -406,7 +406,7 @@ namespace Weave.TCPClient
 
                     byte[] tempbtye = new byte[bytesRead];
 
-                    Array.Copy(alldata, tempbtye, tempbtye.Length);
+                    Buffer.BlockCopy(alldata, 0, tempbtye, 0, tempbtye.Length);
                     //if (tempbtye[0] == 0x99)
                     //{
                     //    timeout = DateTime.Now;
@@ -415,7 +415,7 @@ namespace Weave.TCPClient
                     //        byte[] b = new byte[bytesRead - 1];
                     //        try
                     //        {
-                    //            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                    //            Buffer.BlockCopy(tempbtye, 1, b, 0, b.Length);
                     //        }
                     //        catch { }
                     //        alldata = b;
@@ -441,7 +441,7 @@ namespace Weave.TCPClient
                             catch
                             {
                                 byte[] temps = new byte[tempbtye.Length - 1];
-                                Array.Copy(tempbtye,1, temps, 0, temps.Length);
+                                Buffer.BlockCopy(tempbtye,1, temps, 0, temps.Length);
                                 alldata = temps;
                                 return;
                             }
@@ -456,7 +456,7 @@ namespace Weave.TCPClient
                                 else if (tempbtye.Length > (len + 2 + a))
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    Buffer.BlockCopy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                   //  goto lb0x99;
                                 }
@@ -544,7 +544,7 @@ namespace Weave.TCPClient
 
                     byte[] tempbtye = new byte[bytesRead];
 
-                    Array.Copy(alldata, tempbtye, tempbtye.Length);
+                    Buffer.BlockCopy(alldata, 0, tempbtye, 0, tempbtye.Length);
                     //if (tempbtye[0] == 0x99)
                     //{
                     //    timeout = DateTime.Now;
@@ -553,7 +553,7 @@ namespace Weave.TCPClient
                     //        byte[] b = new byte[bytesRead - 1];
                     //        try
                     //        {
-                    //            Array.Copy(tempbtye, 1, b, 0, b.Length);
+                    //            Buffer.BlockCopy(tempbtye, 1, b, 0, b.Length);
                     //        }
                     //        catch { }
                     //        alldata = b;
@@ -569,17 +569,17 @@ namespace Weave.TCPClient
                             int len = 0;
 
                             byte[] bbcrc = new byte[4 + a];
-                            Array.Copy(tempbtye, 0, bbcrc, 0, 4 + a);
+                            Buffer.BlockCopy(tempbtye, 0, bbcrc, 0, 4 + a);
                             if (CRC.DataCRC(ref bbcrc, 4 + a))
                             {
                                 byte[] bb = new byte[a];
-                                Array.Copy(tempbtye, 2, bb, 0, a);
+                                Buffer.BlockCopy(tempbtye, 2, bb, 0, a);
                                 len = ConvertToInt(bb);
                             }
                             else
                             {
                                 byte[] temps = new byte[tempbtye.Length - 1];
-                                Array.Copy(tempbtye, 1, temps, 0, temps.Length);
+                                Buffer.BlockCopy(tempbtye, 1, temps, 0, temps.Length);
                                 alldata = temps;
                                 //return;
                                   goto lb0x99;
@@ -593,7 +593,7 @@ namespace Weave.TCPClient
                                 else if (tempbtye.Length > (len + 4 + a))
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
-                                    Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
+                                    Buffer.BlockCopy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                     //return;
                                     //  goto lb0x99;
@@ -609,7 +609,7 @@ namespace Weave.TCPClient
                             try
                             {
                                 byte[] bs = new byte[len];
-                                Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+                                Buffer.BlockCopy(tempbtye, (4 + a), bs, 0, bs.Length);
                                 if (tempbtye[0] == 0x99)
                                     return;
 
@@ -618,6 +618,7 @@ namespace Weave.TCPClient
                                 command cc = new command();
                                 cc.comm = tempbtye[0];
                                 cc.bs = bs;
+                               // Eventbit(cc);
                                 System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(Eventbit), cc);
 
                                 return;
@@ -689,8 +690,8 @@ namespace Weave.TCPClient
                             int lle = alldata.Length;
                             bytesRead = tempbtye.Length;
                             byte[] temp = new byte[lle + bytesRead];
-                            Array.Copy(alldata, 0, temp, 0, lle);
-                            Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                            Buffer.BlockCopy(alldata, 0, temp, 0, lle);
+                            Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
                             alldata = temp;
                         }
                         catch (Exception ee)

@@ -266,8 +266,8 @@ namespace Weave.Base
                     if (aall.Length == 0)
                         return tempDataList;
                     byte[]  tempbtyes = new byte[tempDataList.Length + aall.Length];
-                    Array.Copy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
-                    Array.Copy(aall, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
+                    Buffer.BlockCopy(tempDataList, 0, tempbtyes, 0, tempDataList.Length);
+                    Buffer.BlockCopy(aall, 0, tempbtyes, tempDataList.Length, tempbtyes.Length);
                     return tempbtyes;
                 }
                 //Console.WriteLine((soc.RemoteEndPoint as IPEndPoint).Address.ToString() + "+packageData：" + aall.Length);
@@ -327,7 +327,7 @@ namespace Weave.Base
 
                             byte[] temp = new byte[lle + tempbtye.Length];
                              Buffer.BlockCopy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
-                    // Array.Copy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
+                    // Buffer.BlockCopy(workItem.allDataList, 0, temp, 0, workItem.allDataList.Length);
 
                              Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
                             workItem.allDataList = temp; //workItem.DataList.Add(tempbtye);
@@ -719,11 +719,11 @@ namespace Weave.Base
             else {
                int   bytesRead = netc.Buffer.Length;
                 byte[] tempbtye = new byte[bytesRead];
-                Array.Copy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length); 
+                Buffer.BlockCopy(netc.Buffer, 0, tempbtye, 0, tempbtye.Length); 
                 int lle = netc.allDataList.Length; 
                 byte[] temp = new byte[lle + tempbtye.Length];
-                Array.Copy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
-                Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+                Buffer.BlockCopy(netc.allDataList, 0, temp, 0, netc.allDataList.Length);
+                Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
                 netc.allDataList = temp; //workItem.DataList.Add(tempbtye)
                 netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
                 netc.IsPage = false;

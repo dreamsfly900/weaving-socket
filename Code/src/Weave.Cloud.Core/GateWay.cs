@@ -613,8 +613,8 @@ namespace Weave.Cloud
                                 if (!p2ptemp.Isline)
                                 { p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，已断开连接！"); return; }
                                 byte[] tempdata = new byte[data.Length + b.Length];
-                                Array.Copy(data, 0, tempdata, 0, data.Length);
-                                Array.Copy(b, 0, tempdata, data.Length - 1, b.Length);
+                                Buffer.BlockCopy(data, 0, tempdata, 0, data.Length);
+                                Buffer.BlockCopy(b, 0, tempdata, data.Length - 1, b.Length);
                                 if (!p2ptemp.Send(command, tempdata))
                                 {
                                     p2psev.Send(soc, 0xff, "你所请求的服务暂不能使用，发送错误。");

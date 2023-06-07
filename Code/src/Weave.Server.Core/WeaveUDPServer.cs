@@ -108,7 +108,7 @@ namespace Weave.Server
                 byte[] tempbtye = new byte[bytesRead];
                 if (bytesRead > 0)
                 {
-                    Array.Copy(workItem.Buffer, 0, tempbtye, 0, bytesRead);
+                    Buffer.BlockCopy(workItem.Buffer, 0, tempbtye, 0, bytesRead);
                     var query = weaveNetworkItems.Where(p => p.Ep.Equals(ep));
                     foreach (WeaveNetWorkItems wnw in query)
                     {
@@ -173,7 +173,7 @@ namespace Weave.Server
                     if (weaveDataType == WeaveDataTypeEnum.custom)
                     {
                         byte[] tempbtyec = new byte[ListData[i].Length];
-                        Array.Copy(ListData[i], tempbtyec, tempbtyec.Length);
+                        Buffer.BlockCopy(ListData[i], 0,tempbtyec,0, tempbtyec.Length);
                         WeaveEvent me = new WeaveEvent
                         {
                             Command = 0x0,
@@ -188,7 +188,7 @@ namespace Weave.Server
                         return;
                     }
                     byte[] tempbtye = new byte[bytesRead];
-                    Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                    Buffer.BlockCopy(ListData[i],0, tempbtye,0, tempbtye.Length);
                     if (bytesRead > 2)
                     {
                         netc.Lasttime = DateTime.Now;
@@ -199,7 +199,7 @@ namespace Weave.Server
                             if (weaveDataType == WeaveDataTypeEnum.Bytes)
                             {
                                 byte[] bb = new byte[a];
-                                Array.Copy(tempbtye, 2, bb, 0, a);
+                                Buffer.BlockCopy(tempbtye, 2, bb, 0, a);
                                 len = ConvertToInt(bb);
                             }
                             else
@@ -215,10 +215,10 @@ namespace Weave.Server
                                     {
                                         ListData.RemoveAt(i);
                                         byte[] temps = new byte[tempbtye.Length];
-                                        Array.Copy(tempbtye, temps, temps.Length);
+                                        Buffer.BlockCopy(tempbtye,0, temps,0, temps.Length);
                                         byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                                        Array.Copy(temps, tempbtyes, temps.Length);
-                                        Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                        Buffer.BlockCopy(temps, 0,tempbtyes,0, temps.Length);
+                                        Buffer.BlockCopy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
                                         ListData[i] = tempbtyes;
                                     }
                                 }
@@ -232,7 +232,7 @@ namespace Weave.Server
                                 try
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                    Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                    Buffer.BlockCopy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                     ListData[i] = temps;
                                 }
                                 catch
@@ -257,7 +257,7 @@ namespace Weave.Server
                                 else if (weaveDataType == WeaveDataTypeEnum.Bytes)
                                 {
                                     byte[] bs = new byte[len];
-                                    Array.Copy(tempbtye, (2 + a), bs, 0, bs.Length);
+                                    Buffer.BlockCopy(tempbtye, (2 + a), bs, 0, bs.Length);
                                     WeaveEvent me = new WeaveEvent
                                     {
                                         Command = tempbtye[0],
@@ -281,10 +281,10 @@ namespace Weave.Server
                             {
                                 ListData.RemoveAt(i);
                                 byte[] temps = new byte[tempbtye.Length];
-                                Array.Copy(tempbtye, temps, temps.Length);
+                                Buffer.BlockCopy(tempbtye,0, temps, 0,temps.Length);
                                 byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                                Array.Copy(temps, tempbtyes, temps.Length);
-                                Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                Buffer.BlockCopy(temps, 0, tempbtyes, 0, temps.Length);
+                                Buffer.BlockCopy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
                                 ListData[i] = tempbtyes;
                             }
                             netc.IsPage = false; return;
@@ -298,10 +298,10 @@ namespace Weave.Server
                             {
                                 ListData.RemoveAt(i);
                                 byte[] temps = new byte[tempbtye.Length];
-                                Array.Copy(tempbtye, temps, temps.Length);
+                                Buffer.BlockCopy(tempbtye, 0, temps, 0, temps.Length);
                                 byte[] tempbtyes = new byte[temps.Length + ListData[i].Length];
-                                Array.Copy(temps, tempbtyes, temps.Length);
-                                Array.Copy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
+                                Buffer.BlockCopy(temps, 0, tempbtyes, 0, temps.Length);
+                                Buffer.BlockCopy(ListData[i], 0, tempbtyes, temps.Length, ListData[i].Length);
                                 ListData[i] = tempbtyes;
                             }
                         }
@@ -411,7 +411,7 @@ namespace Weave.Server
                     {
                         int zz = b.Length - (i * slen) > slen ? slen : b.Length - (i * slen);
                         byte[] temp = new byte[zz];
-                        Array.Copy(b, i * slen, temp, 0, zz);
+                        Buffer.BlockCopy(b, i * slen, temp, 0, zz);
                         socketLisener.SendTo(temp, ee);
                         Thread.Sleep(100);
                     }

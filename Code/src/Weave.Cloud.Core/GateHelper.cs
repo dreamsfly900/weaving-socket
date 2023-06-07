@@ -109,12 +109,12 @@ namespace Weave.Cloud
         public static ConnObj GetConnItemlistByindex(ClientItem[,,,] ConnItemlist, byte[] b, WeavePipelineTypeEnum pipeline)
         {
             byte[] v = new byte[4];
-            Array.Copy(b, v, 4);
+            Buffer.BlockCopy(b, 0, v, 0, 4);
             IPAddress ipa = new IPAddress(v);
 
             String ip = ipa.ToString();
             byte[] p = new byte[2];
-            Array.Copy(b, 0, p, 3, 2);
+            Buffer.BlockCopy(b, 0, p, 3, 2);
             int port = ConvertToInt(p);
 
 

@@ -270,7 +270,7 @@ namespace Weave.TCPClient
                     {
                         int zz = b.Length - (i * 520) > 520 ? 520 : b.Length - (i * 520);
                         byte[] temp = new byte[zz];
-                        Array.Copy(b, i * 520, temp, 0, zz);
+                        Buffer.BlockCopy(b, i * 520, temp, 0, zz);
                         IPEndPoint server = new IPEndPoint(IPAddress.Parse(IP), PORT);
                         EndPoint ep = server;
                         tcpc.Client.SendTo(temp, ep);
@@ -355,7 +355,7 @@ namespace Weave.TCPClient
                         int bytesRead = ListData[0] != null ? ListData[0].Length : 0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
-                        Array.Copy(ListData[0], tempbtye, tempbtye.Length);
+                        Buffer.BlockCopy(ListData[0], 0, tempbtye, 0, tempbtye.Length);
 
                         if (bytesRead > 2)
                         {
@@ -366,7 +366,7 @@ namespace Weave.TCPClient
                                 if (DT == DataType.bytes)
                                 {
                                     byte[] bb = new byte[a];
-                                    Array.Copy(tempbtye, 2, bb, 0, a);
+                                    Buffer.BlockCopy(tempbtye, 2, bb, 0, a);
                                     len = ConvertToInt(bb);
                                 }
                                 else
@@ -391,10 +391,10 @@ namespace Weave.TCPClient
                                         {
                                             ListData.RemoveAt(0);
                                             byte[] temps = new byte[ListData[0].Length];
-                                            Array.Copy(ListData[0], temps, temps.Length);
+                                            Buffer.BlockCopy(ListData[0], 0, temps, 0, temps.Length);
                                             byte[] temps2 = new byte[tempbtye.Length + temps.Length];
-                                            Array.Copy(tempbtye, 0, temps2, 0, tempbtye.Length);
-                                            Array.Copy(temps, 0, temps2, tempbtye.Length, temps.Length);
+                                            Buffer.BlockCopy(tempbtye, 0, temps2, 0, tempbtye.Length);
+                                            Buffer.BlockCopy(temps, 0, temps2, tempbtye.Length, temps.Length);
                                             ListData[0] = temps2;
                                         }
                                         else
@@ -406,7 +406,7 @@ namespace Weave.TCPClient
                                     else if (tempbtye.Length > (len + 2 + a))
                                     {
                                         byte[] temps = new byte[tempbtye.Length - (len + 2 + a)];
-                                        Array.Copy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
+                                        Buffer.BlockCopy(tempbtye, (len + 2 + a), temps, 0, temps.Length);
                                         ListData[0] = temps;
                                     }
                                     else if (tempbtye.Length == (len + 2 + a))
@@ -453,7 +453,7 @@ namespace Weave.TCPClient
                                     if (DT == DataType.bytes)
                                     {
                                         byte[] bs = new byte[len - 2 + a];
-                                        Array.Copy(tempbtye, bs, bs.Length);
+                                        Buffer.BlockCopy(tempbtye, 0, bs, 0, bs.Length);
                                         Temppake str = new Temppake
                                         {
                                             command = tempbtye[0],
@@ -516,7 +516,7 @@ namespace Weave.TCPClient
                                     byte[] b = new byte[bytesRead - 1];
                                     try
                                     {
-                                        Array.Copy(tempbtye, 1, b, 0, b.Length);
+                                        Buffer.BlockCopy(tempbtye, 1, b, 0, b.Length);
                                     }
                                     catch { }
                                     tempbtye = b;

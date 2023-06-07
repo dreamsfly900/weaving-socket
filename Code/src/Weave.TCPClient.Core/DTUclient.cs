@@ -131,7 +131,7 @@ namespace Weave.TCPClient
                         int bytesRead = ListData[i] != null ? ListData[i].Length : 0;
                         if (bytesRead == 0) continue;
                         byte[] tempbtye = new byte[bytesRead];
-                        Array.Copy(ListData[i], tempbtye, tempbtye.Length);
+                        Buffer.BlockCopy(ListData[i], 0, tempbtye, 0, tempbtye.Length);
                         try
                         {
                             ListData.RemoveAt(0);

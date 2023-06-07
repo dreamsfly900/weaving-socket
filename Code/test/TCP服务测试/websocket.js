@@ -39,7 +39,7 @@
                     //    if (bytesRead > 1) {
                     //        var b = new byte[bytesRead - 1];
                     //        var t = tempbtye;
-                    //        Array.Copy(t, 1, b, 0, b.Length);//拷贝数据到b
+                    //        Buffer.BlockCopy(t, 1, b, 0, b.Length);//拷贝数据到b
                     //        tempbtye = b;
                     //        bytesRead = bytesRead - (1);
                     //    }

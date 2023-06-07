@@ -94,8 +94,9 @@ namespace Weave.Client
                                 int lle = alldata.Length;
                                 bytesRead = tempbtye.Length;
                                 byte[] temp = new byte[lle + bytesRead];
-                                Array.Copy(alldata, 0, temp, 0, lle);
-                                Array.Copy(tempbtye, 0, temp, lle, bytesRead);
+
+                            Buffer.BlockCopy(alldata, 0, temp, 0, lle);
+                            Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
                                 alldata = temp;
                                  
                             }
@@ -164,7 +165,7 @@ namespace Weave.Client
                 }
                 byte[] tempbtye = new byte[bytesRead];
 
-                Array.Copy(alldata, tempbtye, tempbtye.Length);
+                Buffer.BlockCopy(alldata,0, tempbtye, 0,tempbtye.Length);
                 funobj?.Invoke(0x0, tempbtye, this);
              
                 alldata = new byte[0];
@@ -198,7 +199,7 @@ namespace Weave.Client
 
                     byte[] tempbtye = new byte[bytesRead];
 
-                    Array.Copy(alldata, tempbtye, tempbtye.Length);
+                Buffer.BlockCopy(alldata,0, tempbtye,0, tempbtye.Length);
                    
 
                     if (bytesRead > 2)
@@ -211,17 +212,17 @@ namespace Weave.Client
                             int len = 0;
 
                             byte[] bbcrc = new byte[4 + a];
-                            Array.Copy(tempbtye, 0, bbcrc, 0, 4 + a);
+                        Buffer.BlockCopy(tempbtye, 0, bbcrc, 0, 4 + a);
                             if (CRC.DataCRC(ref bbcrc, 4 + a))
                             {
                                 byte[] bb = new byte[a];
-                                Array.Copy(tempbtye, 2, bb, 0, a);
+                            Buffer.BlockCopy(tempbtye, 2, bb, 0, a);
                                 len = ConvertToInt(bb);
                             }
                             else
                             {
                                 byte[] temps = new byte[tempbtye.Length - 1];
-                                Array.Copy(tempbtye, 1, temps, 0, temps.Length);
+                            Buffer.BlockCopy(tempbtye, 1, temps, 0, temps.Length);
                                 alldata = temps;
                                 //return;
                                 goto lb0x99;
@@ -235,7 +236,7 @@ namespace Weave.Client
                                 else if (tempbtye.Length > (len + 4 + a))
                                 {
                                     byte[] temps = new byte[tempbtye.Length - (len + 4 + a)];
-                                    Array.Copy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
+                                Buffer.BlockCopy(tempbtye, (len + 4 + a), temps, 0, temps.Length);
                                     alldata = temps;
                                     //return;
                                     //  goto lb0x99;
@@ -251,7 +252,7 @@ namespace Weave.Client
                         try
                         {
                             byte[] bs = new byte[len];
-                            Array.Copy(tempbtye, (4 + a), bs, 0, bs.Length);
+                            Buffer.BlockCopy(tempbtye, (4 + a), bs, 0, bs.Length);
                             if (tempbtye[0] == 0x99)
                                 return null;
 
