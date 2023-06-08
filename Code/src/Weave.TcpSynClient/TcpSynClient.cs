@@ -63,6 +63,110 @@ namespace Weave.Client
         }
         byte[] alldata = new byte[0];
         List<command> commands = new List<command>();
+        public List<command> ReceiveList(myreceivebitobj funobj)
+        {
+            //var task = Task.Run(() =>
+            //{
+            //    var w = new SpinWait();
+            DateTime dt = new DateTime();
+            if (tcpc.Client == null)
+            {
+
+                return null;
+
+            }
+            while (isok)
+            {
+
+                try
+                {
+
+                    int bytesRead = tcpc.Client.Available;
+                    if (bytesRead > 0)
+                    {
+                        byte[] tempbtye = new byte[bytesRead];
+                        try
+                        {
+                            timeout = DateTime.Now;
+                            dt = DateTime.Now;
+                            tcpc.Client.Receive(tempbtye);
+
+                            byte[] tempp = new byte[alldata.Length];
+                            alldata.CopyTo(tempp, 0);
+                            int lle = alldata.Length;
+                            bytesRead = tempbtye.Length;
+                            byte[] temp = new byte[lle + bytesRead];
+
+                            Buffer.BlockCopy(alldata, 0, temp, 0, lle);
+                            Buffer.BlockCopy(tempbtye, 0, temp, lle, bytesRead);
+                            alldata = temp;
+
+                        }
+                        catch (Exception ee)
+                        {
+                            throw ee;
+                            // ErrorMge(22, ee.Message);
+                        }
+
+                    }
+                // DateTime dt3 = DateTime.Now;
+                lb1100:
+                    if (alldata.Length > 3)
+                    {
+                        //  
+                        var outcommand = Unup(funobj);
+                        if (outcommand != null)
+                        {
+                            commands.Add(outcommand);
+                            goto lb1100;
+
+                        }
+
+
+                    }
+                    else if (alldata.Length == 0)
+                    {
+                        if (commands.Count > 0)
+                        {
+                            //DateTime dt4 = DateTime.Now;
+                            //Console.WriteLine("Receives:" + (dt4 - dt3).TotalMilliseconds);
+                            DateTime dt2 = DateTime.Now;
+                            //  Console.WriteLine("TcpSynClient:" + (dt2 - dt).TotalMilliseconds);
+                            return commands;
+                        }
+
+                    }
+                    else
+                    { System.Threading.Thread.Yield(); }
+
+
+                    try
+                    {
+                        TimeSpan ts = DateTime.Now - timeout;
+                        if (ts.TotalSeconds > mintimeout)
+                        {
+                            Isline = false;
+
+                            break;
+                        }
+                    }
+                    catch (Exception ee)
+                    {
+                        throw ee;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            tcpc.Close();
+            Isline = false;
+            return null;
+            // });
+            //return null;
+        }
         public  command Receives(myreceivebitobj funobj)
         {
             //var task = Task.Run(() =>
@@ -110,32 +214,21 @@ namespace Weave.Client
 
                         }
                    // DateTime dt3 = DateTime.Now;
-                lb1100:
+                
                     if (alldata.Length > 3)
                     {
                       //  
                         var outcommand = Unup(funobj);
                         if (outcommand != null)
                         {
-                            commands.Add(outcommand);
-                            goto lb1100;
+                            return outcommand;
+                           
                           
                         }
                         
                        
                     }
-                    else if(alldata.Length==0)
-                    {
-                        if (commands.Count >0  )
-                        {
-                            //DateTime dt4 = DateTime.Now;
-                            //Console.WriteLine("Receives:" + (dt4 - dt3).TotalMilliseconds);
-                            DateTime dt2 = DateTime.Now;
-                            //  Console.WriteLine("TcpSynClient:" + (dt2 - dt).TotalMilliseconds);
-                            return commands[commands.Count-1];
-                        }
-                       
-                    }
+                    
                     else
                     { System.Threading.Thread.Yield(); }
 
