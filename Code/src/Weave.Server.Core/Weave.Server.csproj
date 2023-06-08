@@ -7,7 +7,7 @@
     <Product>Weave.Server</Product>
     <Copyright>葛杰</Copyright>
     <Company>葛杰</Company>
-    <Authors>葛杰、丁川</Authors>
+    <Authors>葛杰</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Weave;Server;applicationframework;netframework;dotnetcore;aspnetcore;iot;socket;</PackageTags>
     <Description>Weave.Server是基于weaving-socket的网关应用框架的服务端核心类库。，优化WEBSOCKET数据，在高延迟情况下依然很好的运行</Description>
@@ -20,7 +20,7 @@
     <RepositoryType>git</RepositoryType>
     <!-- Disable warning for Controller/Action/Method not have block comment -->
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <Version>2.0.20</Version>
+    <Version>2.0.21</Version>
    
   </PropertyGroup>
 

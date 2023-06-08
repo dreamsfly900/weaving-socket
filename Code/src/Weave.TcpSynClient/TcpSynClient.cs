@@ -62,23 +62,25 @@ namespace Weave.Client
             tcpc.Close();
         }
         byte[] alldata = new byte[0];
+        List<command> commands = new List<command>();
         public  command Receives(myreceivebitobj funobj)
         {
             //var task = Task.Run(() =>
             //{
             //    var w = new SpinWait();
             DateTime dt=new DateTime();
+            if (tcpc.Client == null)
+            {
+
+                return null;
+
+            }
             while (isok)
                 {
                
                 try
                     {
-                        if (tcpc.Client == null)
-                        {
-
-                            return null;
-
-                        }
+                        
                         int bytesRead = tcpc.Client.Available;
                         if (bytesRead > 0)
                         {
@@ -107,27 +109,39 @@ namespace Weave.Client
                             }
 
                         }
-
-
+                   // DateTime dt3 = DateTime.Now;
+                lb1100:
                     if (alldata.Length > 3)
                     {
+                      //  
                         var outcommand = Unup(funobj);
-
                         if (outcommand != null)
                         {
+                            commands.Add(outcommand);
+                            goto lb1100;
+                          
+                        }
+                        
+                       
+                    }
+                    else if(alldata.Length==0)
+                    {
+                        if (commands.Count >0  )
+                        {
+                            //DateTime dt4 = DateTime.Now;
+                            //Console.WriteLine("Receives:" + (dt4 - dt3).TotalMilliseconds);
                             DateTime dt2 = DateTime.Now;
                             //  Console.WriteLine("TcpSynClient:" + (dt2 - dt).TotalMilliseconds);
-                            return outcommand;
+                            return commands[commands.Count-1];
                         }
-                        else
-                        { }
+                       
                     }
                     else
                     { System.Threading.Thread.Yield(); }
-                        
 
-                        try
-                        {
+                
+                    try
+                    {
                             TimeSpan ts = DateTime.Now - timeout;
                             if (ts.TotalSeconds > mintimeout)
                             {
