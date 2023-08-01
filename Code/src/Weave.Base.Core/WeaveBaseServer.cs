@@ -134,12 +134,18 @@ namespace Weave.Base
                                     else
                                     {
                                         if (weaveDataType == WeaveDataTypeEnum.custom)
+                                        {
                                             //    b = new byte[1];
                                             ok = Send(workItem.SocketSession, new byte[1]);
+                                        }
                                         else
+                                        {
                                             ok = Send(workItem.SocketSession, 0x99, b);
+                                            Console.WriteLine($"发送心跳:{ok}");
+                                        }
                                     }
                                 }
+                                
                             }
                             else
                             {
@@ -148,12 +154,16 @@ namespace Weave.Base
                                 else
                                     ok = true;
                             }
-                           // ok = Send(workItem.SocketSession, new byte[1]);
+
+                            // ok = Send(workItem.SocketSession, new byte[1]);
+                            if (ok)
+                               ok= workItem.SocketSession.Connected;
                             if (!ok)
                                 {
                                     workItem.ErrorNum += 1;
                                     if (workItem.ErrorNum >= 1)
                                     {
+                                       Console.WriteLine("断线连接");
                                         System.Threading.ThreadPool.UnsafeQueueUserWorkItem(DeleteSocketListEventHandercallback, workItem.SocketSession);
 
 
@@ -367,7 +377,7 @@ namespace Weave.Base
         {
             try
             {
-                ((Socket)ar.AsyncState).EndSend(ar);
+               int aaa= ((Socket)ar.AsyncState).EndSend(ar);
                 
                 //ar.AsyncWaitHandle.Close();
             }

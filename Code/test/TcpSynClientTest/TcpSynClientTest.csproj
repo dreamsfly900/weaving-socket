@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>TcpSynClientTest.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Weave.TcpSynClient\Weave.TcpSynClient.csproj" />
+    <ProjectReference Include="..\..\src\Weave.Server.Core\Weave.Server.csproj" />
+    <ProjectReference Include="..\..\src\Weave.TcpSynClient\Weave.TcpSynClient.csproj" />
   </ItemGroup>
 
 </Project>

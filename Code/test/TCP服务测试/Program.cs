@@ -13,16 +13,15 @@ namespace TCP服务测试
 
     class Program
     {
-        static Weave.Server.WeaveWebServer wudp = new WeaveWebServer(WeaveDataTypeEnum.Json);//这是webscoekt服务端
+        static Weave.Server.WeaveP2Server wudp = new WeaveP2Server(WeaveDataTypeEnum.Bytes);//这是webscoekt服务端
 
 
        
         static void Main(string[] args)
         {
              
-            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent;
-            wudp.waveReceiveEvent += Wudp_waveReceiveEvent;
-            wudp.WeaveReceiveSslEvent += Wudp_WeaveReceiveSslEvent1;
+           
+            wudp.weaveReceiveBitEvent += Wudp_weaveReceiveBitEvent1;
             wudp.weaveDeleteSocketListEvent += Wudp_weaveDeleteSocketListEvent;
             wudp.Start(11110);
 
@@ -32,7 +31,10 @@ namespace TCP服务测试
             Console.ReadLine();
         }
 
-    
+        private static void Wudp_weaveReceiveBitEvent1(byte command, byte[] data, Socket soc)
+        {
+            
+        }
 
         private static void Wudp_weaveDeleteSocketListEvent(Socket soc)
         {
@@ -54,7 +56,7 @@ namespace TCP服务测试
        
         private static void Wudp_weaveReceiveBitEvent(byte command, byte[] data, Socket soc)
         {
-            wudp.Send(soc, data);
+           // wudp.Send(soc, data);
         }
 
       
