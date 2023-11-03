@@ -141,7 +141,7 @@ namespace Weave.Base
                                         else
                                         {
                                             ok = Send(workItem.SocketSession, 0x99, b);
-                                            Console.WriteLine($"发送心跳:{ok}");
+                                           // Console.WriteLine($"发送心跳:{ok}");
                                         }
                                     }
                                 }
