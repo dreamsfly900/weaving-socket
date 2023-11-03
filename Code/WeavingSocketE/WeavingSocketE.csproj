@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Weave.Server" Version="2.0.22" />
+    <PackageReference Include="Weave.TCPClient" Version="2.0.10" />
   </ItemGroup>
 
 </Project>
