@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using Weave.Server;
 
 namespace WeavingSocketE
@@ -40,20 +41,21 @@ namespace WeavingSocketE
                     Console.WriteLine("连接端口12345");
                     tCPClient.Start("127.0.0.1", 12345, false);
                     DateTime stattime2 = DateTime.Now;
-                    for (var i = 0; i < 50000; i++)
+                    for (var i = 0; i < 10000; i++)
                         tCPClient.Send(0x01, new byte[200]);
                     double shijian = (DateTime.Now - stattime2).TotalMilliseconds;
 
-                    Console.WriteLine("发送50000次200字符内容已完成");
+                    Console.WriteLine("异步发送10000次200字符内容已完成");
                     Console.WriteLine("耗时：" + shijian + "毫秒");
-                    tCPClient.Stop();
+                   
                 }
             }
         }
 
         private static void TCPClient_ReceiveServerEventbit(byte command, byte[] data)
         {
-             
+            Console.WriteLine("服务器接收完毕：");
+            tCPClient.Stop();
         }
 
         static int count=0;
@@ -71,15 +73,21 @@ namespace WeavingSocketE
         static DateTime stattime=DateTime.Now;
         private static void WeaveP2Server_weaveReceiveBitEvent(byte command, byte[] data, System.Net.Sockets.Socket soc)
         {
-            count++;
+          //  lock(weaveP2Server)
+            {
+                count++;
+               // Console.WriteLine(count);
+            }
             if (count == 1)
             {
                 stattime = DateTime.Now;
             }
-            if (count >= 50000)
+            if (count >= 10000)
             {
+                
+                weaveP2Server.Send(soc, 0x01,"接收完毕");
                 double shijian = (DateTime.Now - stattime).TotalMilliseconds;
-                Console.WriteLine("接收耗时：" + shijian + "毫秒");
+                Console.WriteLine("接收并分割包内容耗时：" + shijian + "毫秒");
             }
 
         }

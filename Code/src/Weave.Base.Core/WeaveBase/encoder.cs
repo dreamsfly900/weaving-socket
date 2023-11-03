@@ -58,8 +58,8 @@ namespace Weave.Base.WeaveBase
             ret.CopyTo(bb);
             return bb;
         }
-        public byte[] packageDatabtye(byte[] alldata, Socket soc, WaitCallback ReceiveBitEventHandercback,
-            SslStream ssl, WaitCallback ReceiveBitEventHandercbackssl)
+        public byte[] packageDatabtye(byte[] alldata, Socket soc, WeaveReceiveBitEvent ReceiveBitEventHandercback,
+            SslStream ssl, WeaveReceiveSslEvent ReceiveBitEventHandercbackssl)
         {
             try
             {
@@ -141,23 +141,25 @@ namespace Weave.Base.WeaveBase
                                 //  temp = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
                                 byte[] bs = new byte[len];
                                 Buffer.BlockCopy(tempbtye, (4 + a), bs, 0, bs.Length);
-                                WeaveEvent me = new WeaveEvent();
-                                me.Command = tempbtye[0];
-                                me.Data = "";
-                                me.Databit = bs;
-                                me.Soc = soc;
-                                me.Ssl = ssl;
+                                //WeaveEvent me = new WeaveEvent();
+                                //me.Command = tempbtye[0];
+                                //me.Data = "";
+                                //me.Databit = bs;
+                                //me.Soc = soc;
+                                //me.Ssl = ssl;
                                 if (ssl == null)
                                 {
                                     //  Task.Run(() => { ReceiveBitEventHandercback(me); });
-                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercback, me);
+                                    ReceiveBitEventHandercback(tempbtye[0], bs, soc);
+                                    //System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercback, me);
                                 }
                                 else
-                                    System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
-                                // if (weaveReceiveBitEvent != null)
-                               // System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
-                                //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
-                                // weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
+                                    ReceiveBitEventHandercbackssl(tempbtye[0], System.Text.UTF8Encoding.UTF8.GetString(bs) , ssl); ;
+                                    //System.Threading.ThreadPool.UnsafeQueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
+                                    // if (weaveReceiveBitEvent != null)
+                                    // System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
+                                    //weaveReceiveBitEvent?.Invoke(tempbtye[0], bs, soc);
+                                    // weaveReceiveBitEvent?.BeginInvoke(tempbtye[0], bs, soc,null,null);
 
                                 return alldata;
                             }
@@ -199,8 +201,8 @@ namespace Weave.Base.WeaveBase
         /// <param name="ssl"></param>
         /// <param name="ReceiveBitEventHandercbackssl"></param>
         
-        public byte[] packageDatajson(byte[] alldata, Socket soc, WaitCallback ReceiveBitEventHandercback,
-            SslStream ssl, WaitCallback ReceiveBitEventHandercbackssl)
+        public byte[] packageDatajson(byte[] alldata, Socket soc, WaveReceiveEventEvent ReceiveBitEventHandercback,
+            SslStream ssl, WeaveReceiveSslEvent ReceiveBitEventHandercbackssl)
         {
 
             try
@@ -263,17 +265,20 @@ namespace Weave.Base.WeaveBase
                             {
 
                                 String temp2 = System.Text.Encoding.UTF8.GetString(tempbtye, 2 + a, len);
-                                WeaveEvent me = new WeaveEvent();
-                                me.Command = tempbtye[0];
-                                me.Data = temp2;
-                                me.Soc = soc;
-                                me.Ssl = ssl;
+                                //WeaveEvent me = new WeaveEvent();
+                                //me.Command = tempbtye[0];
+                                //me.Data = temp2;
+                                //me.Soc = soc;
+                                //me.Ssl = ssl;
                                 //if (waveReceiveEvent != null)
-                                //  waveReceiveEvent?.Invoke(tempbtye[0], temp, soc);
-                                if (ssl==null)
-                                    System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
+                              
+                                if (ssl == null)
+                                    ReceiveBitEventHandercback?.Invoke(tempbtye[0], temp2, soc);
+                                
+                                // System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercback, me);
                                 else
-                                    System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
+                                    ReceiveBitEventHandercbackssl?.Invoke(tempbtye[0], temp2, ssl);
+                                //System.Threading.ThreadPool.QueueUserWorkItem(ReceiveBitEventHandercbackssl, me);
 
                                 //receiveeventto(me);
                                 //if (receiveevent != null)

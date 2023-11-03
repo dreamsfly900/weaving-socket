@@ -242,11 +242,11 @@ namespace Weave.Base
                 byte[] aall=new byte[0];
                 if (weaveDataType == WeaveDataTypeEnum.Json)
                 {
-                    aall= myencoder.packageDatajson(alldata, soc, ReceiveEventHandercback, ssl, ReceiveToEventHanderssl);
+                    aall= myencoder.packageDatajson(alldata, soc, waveReceiveEvent, ssl, WeaveReceiveSslEvent);
                 }
                 else if (weaveDataType == WeaveDataTypeEnum.Bytes)
                 {
-                    aall= myencoder.packageDatabtye(alldata, soc, ReceiveBitEventHandercback, ssl, ReceiveToEventHanderssl);
+                    aall= myencoder.packageDatabtye(alldata, soc, weaveReceiveBitEvent, ssl, WeaveReceiveSslEvent);
                 }
                 if (weaveDataType == WeaveDataTypeEnum.custom)
                 {
@@ -557,9 +557,13 @@ namespace Weave.Base
         void packageDataHanderobj(object obj)
         {
               WeaveNetWorkItems netc= obj as WeaveNetWorkItems;
-           // Console.WriteLine("packageDataHanderobj:" + netc.allDataList.Length);
+            // Console.WriteLine("packageDataHanderobj:" + netc.allDataList.Length);
+           lb1222:
             netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
-
+            if (netc.SocketSession.Available == 0 && netc.allDataList.Length > 5)
+            {
+                goto lb1222;
+            }
             netc.IsPage = false;
            // Console.WriteLine("netc.IsPage:" + netc.IsPage);
         }

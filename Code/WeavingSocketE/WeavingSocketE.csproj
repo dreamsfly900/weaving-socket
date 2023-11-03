@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Weave.Server" Version="2.0.22" />
     <PackageReference Include="Weave.TCPClient" Version="2.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Weave.Server.Core\Weave.Server.csproj" />
   </ItemGroup>
 
 </Project>
