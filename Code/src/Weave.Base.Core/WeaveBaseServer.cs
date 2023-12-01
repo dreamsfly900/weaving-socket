@@ -556,17 +556,25 @@ namespace Weave.Base
         }
         void packageDataHanderobj(object obj)
         {
-              WeaveNetWorkItems netc= obj as WeaveNetWorkItems;
+            WeaveNetWorkItems netc = obj as WeaveNetWorkItems;
             // Console.WriteLine("packageDataHanderobj:" + netc.allDataList.Length);
-           lb1222:
-            netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
-            if (netc.SocketSession.Available == 0 && netc.allDataList.Length > 5)
+            try
             {
-                goto lb1222;
+              lb1222:
+                int templen = netc.allDataList.Length;
+          
+                netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
+                if (netc.SocketSession.Available == 0 && netc.allDataList.Length > 5 && templen != netc.allDataList.Length)
+                {
+                    goto lb1222;
+                }
+             
             }
+            catch (Exception e) { Console.WriteLine(e.StackTrace); }
             netc.IsPage = false;
-           // Console.WriteLine("netc.IsPage:" + netc.IsPage);
+            // Console.WriteLine("netc.IsPage:" + netc.IsPage);
         }
+       
         private static void callBackMethod(IAsyncResult ar)
         {
            // Console.WriteLine("callBackMethod:");
