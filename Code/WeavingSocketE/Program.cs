@@ -39,6 +39,7 @@ namespace WeavingSocketE
                 if (args[0] == "clientsend")
                 {
                     Console.WriteLine("连接端口12345");
+                    weaveP2Server.Start(12345);
                     tCPClient.Start("127.0.0.1", 12345, false);
                     DateTime stattime2 = DateTime.Now;
                     for (var i = 0; i < 10000; i++)
@@ -47,7 +48,7 @@ namespace WeavingSocketE
 
                     Console.WriteLine("异步发送10000次200字符内容已完成");
                     Console.WriteLine("耗时：" + shijian + "毫秒");
-                   
+                    Console.ReadLine();
                 }
             }
         }

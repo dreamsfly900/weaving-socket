@@ -564,7 +564,13 @@ namespace Weave.Base
                 int templen = netc.allDataList.Length;
           
                 netc.allDataList = packageData(netc.allDataList, netc.SocketSession, netc.Stream, netc.tempDataList);
-                if (netc.SocketSession.Available == 0 && netc.allDataList.Length > 5 && templen != netc.allDataList.Length)
+                if (netc.SocketSession == null)
+                {
+                    netc.IsPage = false;
+                    return;
+                }
+                
+                if (netc.SocketSession.Available == 0 && netc.allDataList.Length >= 5 && templen != netc.allDataList.Length)
                 {
                     goto lb1222;
                 }
